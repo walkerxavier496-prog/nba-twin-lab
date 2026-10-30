@@ -56,6 +56,10 @@ jobs:
           cp data/game-science-report.json /tmp/science-report.json
           for attempt in 1 2 3 4 5 6 7 8; do
             git fetch origin main
+            if ! git diff --quiet "$GITHUB_SHA" origin/main -- scripts/game_science.cjs scripts/v8_research.cjs predict/science.js data/v7-intelligence.json data/historical-games.json; then
+              echo "Model code or historical inputs changed during this run; skip stale publication. A newer workflow will publish."
+              exit 0
+            fi
             git reset --hard origin/main
             cp /tmp/science-report.json data/game-science-report.json
             if git diff --quiet -- data/game-science-report.json && git ls-files --error-unmatch data/game-science-report.json >/dev/null 2>&1; then
