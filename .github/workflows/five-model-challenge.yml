@@ -1,0 +1,63 @@
+name: Five Model Challenge audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/five_model_challenge.cjs'
+      - 'scripts/v8_research.cjs'
+      - 'scripts/game_science.cjs'
+      - 'scripts/roster_research.cjs'
+      - 'predict/engine.js'
+      - 'predict/science.js'
+      - 'predict/roster.js'
+      - 'data/v7-intelligence.json'
+      - 'data/rotation-history.json'
+      - 'data/historical-games.json'
+      - 'tests/five_model_challenge.test.cjs'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nba-twin-lab-five-model-challenge
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test chronology, weighting and lock integration
+        run: node --test tests/five_model_challenge.test.cjs tests/daily_audit.test.cjs tests/site_navigation.test.cjs
+      - name: Rebuild common-game challenge
+        run: node scripts/five_model_challenge.cjs data/five-model-report.json --simulations=400
+      - name: Verify generated report
+        run: node --test tests/five_model_challenge.test.cjs
+      - name: Publish audited report
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/five-model-report.json
+          if git diff --cached --quiet; then
+            echo 'Challenge report unchanged' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git commit -m 'Publish Five Model Challenge audit'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo 'Published Five Model Challenge report' >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 3
+          done
+          exit 1

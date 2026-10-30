@@ -10,6 +10,7 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 |---|---|---|
 | **Game Predictor** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/predict/) | Live Elo baseline, alternative simulation, score projections and historical validation |
 | **Team Intelligence** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/team-intelligence/) | Real opponent-adjusted team strength, recent efficiency momentum, eFG, shooting styles, turnovers, offensive rebounds, free-throw rate and pace |
+| **Five Model Challenge** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/challenge/) | Common-game leaderboard for five pregame methods plus a nested earlier-season weighted ensemble |
 | **Model Research** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/models/) | All historical backtests and experiments, including the basketball-science walk-forward audit |
 | **Accuracy Ledger** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/audit/) | Immutable daily pregame locks, separate final-result reviews, calibration and longitudinal model/player metrics |
 | **Player Twins** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/twins/) | Original season-adjusted statistical twin finder, moved from the home page without deleting its features |
@@ -23,6 +24,14 @@ The original Elo baseline still carries last season's team quality into the new 
 `build_v7_intelligence.py` now separately exports a compact `data/rotation-history.json` of historical pregame player IDs and expected minutes (no target-game results). `scripts/roster_research.cjs` runs a 2023–2026 rolling-origin comparison against both Elo and the previously tested V8 combined player-adjusted model; it publishes `data/roster-priors.json` and `data/roster-research-report.json`. The browser shows an explicitly experimental roster forecast when verified inputs are available and otherwise fails closed to the unchanged Elo baseline.
 
 **Important:** rotation membership is inferred from earlier appearances, not verified transactions, official injuries or confirmed lineups. A missing player may be injured rather than traded; an early-season roster with few games is particularly uncertain. No roster model is promoted automatically.
+
+## Five Model Challenge
+
+`scripts/five_model_challenge.cjs` evaluates five separately specified pregame game-winner models and a sixth weighted ensemble: M1 Elo, M2 Basketball Science, M3 Player / Roster, M4 seeded possession Monte Carlo, M5 fixed-L2 regularized logistic machine learning, and M6 nested weighted ensemble. The models overlap in inputs and are not described as statistically independent.
+
+The primary leaderboard uses only games where all six predictions are available. Every fitted base model trains only on seasons earlier than its evaluation season. For evaluation season `S`, ensemble weights are selected exclusively from complete out-of-fold predictions in seasons earlier than `S`; the games being scored never choose their own weights. Brier score is primary, with accuracy, log loss, ECE, confidence intervals and score MAE where the model actually produces scores. Player PTS/REB/AST/3PM MAE remains a separate daily-ledger evaluation.
+
+Future daily locks store every available challenge probability, supported score, Monte Carlo seed, ensemble weights, model version and source cutoff. Unavailable models are recorded explicitly. The original 31 October 2026 pretip lock is immutable and is not regenerated or rewritten.
 
 ## Basketball-science research
 

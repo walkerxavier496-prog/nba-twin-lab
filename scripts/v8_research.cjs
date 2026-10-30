@@ -33,6 +33,7 @@ function pregameFeatures(item,elo){
   const y=item.game.homeScore>item.game.awayScore?1:0;
   if(item.game.homeScore===item.game.awayScore)throw Error('Tied final');
   return {id:item.game.id,season:item.game.season,date:item.game.date,y,p:elo.homeWin,
+    homeScore:elo.homeScore,awayScore:elo.awayScore,
     features:{
       elo:clamp(logit(elo.homeWin),-4,4),
       player:clamp((Number(h.player_delta||0)-Number(a.player_delta||0))/4,-2,2),

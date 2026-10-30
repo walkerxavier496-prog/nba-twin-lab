@@ -2,12 +2,20 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const root=path.join(__dirname,'..');
 test('primary site routes, audit ledger and data-backed twin finder exist',()=>{
- for(const route of ['index.html','predict/index.html','team-intelligence/index.html','models/index.html','audit/index.html','twins/index.html'])
+ for(const route of ['index.html','predict/index.html','team-intelligence/index.html','models/index.html','challenge/index.html','audit/index.html','twins/index.html'])
   assert.ok(fs.existsSync(path.join(root,route)),route);
  const twins=fs.readFileSync(path.join(root,'twins/index.html'),'utf8');
  assert.ok(twins.includes('../data/seasons.json'),'Player Twins must fetch original data from new route');
  const home=fs.readFileSync(path.join(root,'index.html'),'utf8');
- assert.ok(home.includes('./predict/')&&home.includes('./team-intelligence/')&&home.includes('./models/')&&home.includes('./audit/')&&home.includes('./twins/'));
+ assert.ok(home.includes('./predict/')&&home.includes('./team-intelligence/')&&home.includes('./challenge/')&&home.includes('./audit/')&&home.includes('./twins/'));
+});
+test('Five Model Challenge exposes a verified common-game report and separate player tracking',()=>{
+ const page=fs.readFileSync(path.join(root,'challenge/index.html'),'utf8');
+ const app=fs.readFileSync(path.join(root,'challenge/app.js'),'utf8');
+ assert.ok(page.includes('../data/five-model-report.json'));
+ assert.ok(page.includes('PTS · REB · AST · 3PM'));
+ assert.ok(app.includes('nba-twin-lab-five-model-challenge-v1'));
+ assert.ok(app.includes('../data/audit-ledger.json'));
 });
 test('production Elo is the explicit default and roster beta remains a research comparison',()=>{
  const predictor=fs.readFileSync(path.join(root,'predict/index.html'),'utf8');

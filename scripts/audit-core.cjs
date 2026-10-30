@@ -7,6 +7,12 @@ const MODEL_LABELS = {
   production_elo_v7: 'Production Elo v7',
   possession_monte_carlo_v5: 'Possession Monte Carlo v5',
   roster_beta_v1: 'Roster-aware beta v1',
+  m1_elo: 'M1 · Elo baseline',
+  m2_science: 'M2 · Basketball Science',
+  m3_player_roster: 'M3 · Player / Roster',
+  m4_monte_carlo: 'M4 · Possession Monte Carlo',
+  m5_regularized_ml: 'M5 · Regularized ML',
+  m6_ensemble: 'M6 · Nested weighted ensemble',
 };
 
 const mean = values => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
@@ -217,6 +223,16 @@ function modelRowsForGame(forecast, actual) {
     label: MODEL_LABELS.roster_beta_v1,
     p: finite(roster.home_win_probability), home_score: null, away_score: null,
   });
+  for (const [modelId, prediction] of Object.entries(forecast?.challenge_predictions || {})) {
+    if (prediction?.available !== true || finite(prediction.home_win_probability) === null) continue;
+    entries.push({
+      model_id: modelId,
+      label: MODEL_LABELS[modelId] || modelId,
+      p: finite(prediction.home_win_probability),
+      home_score: finite(prediction.projected_score?.home),
+      away_score: finite(prediction.projected_score?.away),
+    });
+  }
   return entries.filter(entry => entry.p !== null).map(entry => ({
     ...entry,
     actual: actualHome,

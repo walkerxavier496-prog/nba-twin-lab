@@ -6,6 +6,7 @@ const path = require('node:path');
 const E = require('../predict/engine.js');
 const R = require('../predict/roster.js');
 const A = require('./audit-core.cjs');
+const C = require('./five_model_challenge.cjs');
 
 const ROOT = path.join(__dirname, '..');
 const DATA = path.join(ROOT, 'data');
@@ -157,6 +158,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
   const context = readJson(path.join(DATA, 'context.json'));
   const rosterPriors = readJson(path.join(DATA, 'roster-priors.json'));
   const rosterReport = readJson(path.join(DATA, 'roster-research-report.json'));
+  const challengeReport = readJson(path.join(DATA, 'five-model-report.json'));
   const games = (gameData.games || []).filter(game => A.melbourneDate(game.date) === date).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
   if (!games.length) throw new Error(`No validated NBA games discovered for Melbourne date ${date}`);
   if (games.some(game => game.status !== 'scheduled')) throw new Error('At least one target game is no longer pregame; lock refused');
@@ -182,6 +184,8 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
     const primary = E.forecast(game, state, profiles);
     const simulation = E.monteCarlo(game, state, profiles, { simulations, seed: `daily-audit-v2|${game.id}|${game.date}|${simulations}` });
     const roster = R.modelForecast({ game, baseline: primary, snapshot, priorRotations: rosterPriors, report: rosterReport, now });
+    const challenge = C.predictLiveModels({ game, baseline: primary, snapshot, rosterForecast: roster,
+      report: challengeReport, gameData, simulations });
     forecasts.push({
       game_id: String(game.id), tip_utc: new Date(game.date).toISOString(), tip_melbourne: A.melbourneDisplay(game.date),
       away: { id: String(game.away.id), name: game.away.name, abbr: game.away.abbr },
@@ -205,6 +209,15 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
           source_built_at: roster.sourceBuiltAt, uncertainty: roster.rosterUncertainty,
         } : { model_id: 'roster_beta_v1', version_status: 'unavailable', reason: roster.reason },
       },
+      challenge_predictions: Object.fromEntries(Object.entries(challenge).map(([modelId, prediction]) => [modelId, prediction.available ? {
+        model_id: modelId, model_version: challengeReport.version, version_status: 'research_only_not_promoted',
+        available: true, home_win_probability: prediction.home_win_probability,
+        away_win_probability: 1 - prediction.home_win_probability,
+        projected_score: prediction.projected_score,
+        simulations: prediction.simulations, seed: prediction.seed, weights: prediction.weights,
+        weights_training_seasons: prediction.weights_training_seasons,
+        availability: prediction.availability, roster_uncertainty: prediction.roster_uncertainty,
+      } : { model_id: modelId, model_version: challengeReport.version, version_status: 'unavailable', available: false, reason: prediction.reason }])),
       v9_player_projections: v9Projections(game, teams),
     });
   }
@@ -219,7 +232,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
     },
     model_policy: {
       production: 'production_elo_v7',
-      research_comparisons: ['possession_monte_carlo_v5', 'roster_beta_v1', 'v9_conditional_player_stats'],
+      research_comparisons: [...C.ALL_IDS, 'v9_conditional_player_stats'],
       promotion: 'No automatic promotion. Research must beat the production model prospectively on probability and error metrics before a reviewed code change.',
     },
     source_provenance: {
@@ -227,6 +240,8 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
       team_context: { name: context.source?.name, url: context.source?.url, built_at_utc: context.built_at_utc },
       v9_player_rotation: { name: 'NBA Stats-derived pregame player logs via repository V9 builder', built_at_utc: playerBuilt, strict_no_future_data: true },
       roster_research: { generated_at_utc: rosterReport.generated_at_utc, status: rosterReport.status },
+      five_model_challenge: { generated_at_utc: challengeReport.generated_at_utc, version: challengeReport.version,
+        schema: challengeReport.schema, status: challengeReport.status, strict_no_future_data: challengeReport.strict_no_future_data },
       injuries: { name: 'No verified automated official injury feed', status: 'unavailable_not_inferred', effect: 'V9 outputs remain explicitly conditional on playing; no availability is invented' },
     },
     review_protocol: {
