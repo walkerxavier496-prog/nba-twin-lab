@@ -1,0 +1,61 @@
+name: One-off pregame six-model challenge sidecar
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/challenge-supplement-2026-10-31.yml'
+      - 'scripts/challenge_supplement.cjs'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nba-twin-2026-10-31-shadow
+  cancel-in-progress: false
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and immutable-original tests
+        run: |
+          node --check scripts/challenge_supplement.cjs
+          node --test tests/five_model_challenge.test.cjs tests/daily_audit.test.cjs
+      - name: Create once, only when genuinely before the first tip
+        run: node scripts/challenge_supplement.cjs lock
+      - name: Validate SHA256-integrity and game alignment
+        run: node scripts/challenge_supplement.cjs verify
+      - name: Publish the independent challenge sidecar if it exists
+        run: |
+          f=audit/supplements/2026-10-31/challenge.lock.json
+          if [ ! -s "$f" ]; then
+            echo 'No pregame sidecar could be ethically locked before tipoff' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$f"
+          if git diff --cached --quiet; then
+            echo 'Existing sidecar unchanged' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git commit -m 'Lock six-model 31 Oct pregame shadow comparison'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo 'Published pretip six-model sidecar' >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 3
+          done
+          exit 1
