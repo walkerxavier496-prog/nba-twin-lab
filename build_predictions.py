@@ -22,7 +22,6 @@ import requests
 ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
 OUTPUT = pathlib.Path(__file__).parent / "data" / "games.json"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; NBATwinLabResearch/1.0)",
     "Accept": "application/json",
 }
 
@@ -96,7 +95,7 @@ def months(start: dt.date, end: dt.date):
 
 def fetch_range(session: requests.Session, start: dt.date, end: dt.date) -> list[dict]:
     params = {
-        "dates": f"{start:%Y%m%d}-{end:%Y%m%d}",
+        "dates": f"{start:%Y%m}",  # ESPN Site API stopped accepting date ranges in September 2026
         "seasontype": 2,
         "limit": 500,
     }
