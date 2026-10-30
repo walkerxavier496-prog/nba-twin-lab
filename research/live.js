@@ -20,7 +20,7 @@ try{
   const now=Date.now(),upcoming=games.filter(g=>g.status==='scheduled'&&Date.parse(g.date)>=now-900000&&Date.parse(g.date)<now+8*86400000).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date)).slice(0,18);
   if(!upcoming.length){status.textContent='No scheduled games found in the verified snapshot.';return;}
   const rotationsByTeam=new Map(rotations.teams.map(t=>[canonical(t.abbr),t]));
-  const profiles={};for(const t of context.teams.filter(t=>t.season===2026))profiles[canonical(t.abbr)]={...t,abbr:canonical(t.abbr)};
+  const profiles={};for(const t of context.teams.filter(t=>t.season===2026)){const p={...t,abbr:canonical(t.abbr)};profiles[canonical(t.abbr)]=p;profiles[t.abbr]=p;}for(const g of games)for(const t of [g.home,g.away])if(profiles[canonical(t.abbr)])profiles[t.abbr]=profiles[canonical(t.abbr)];
   const model=report.training.fits['2027'];
   const net=s=>{
     const c=s.season||{},p=s.prior||{},n=Number(s.games)||0;
