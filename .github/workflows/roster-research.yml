@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - predict/roster.js
+      - predict/app.js
+      - predict/index.html
+      - tests/site_navigation.test.cjs
       - scripts/roster_research.cjs
       - tests/roster_research.test.cjs
       - .github/workflows/roster-research.yml
@@ -27,8 +30,9 @@ jobs:
       - name: Verify source and safety tests
         run: |
           node --check predict/roster.js
+          node --check predict/app.js
           node --check scripts/roster_research.cjs
-          node --test tests/roster_research.test.cjs tests/v8_research.test.cjs
+          node --test tests/roster_research.test.cjs tests/v8_research.test.cjs tests/site_navigation.test.cjs
       - name: Fit strictly earlier seasons and test rolling origin
         run: node scripts/roster_research.cjs
       - name: Verify audit, coverage and finite probabilities
