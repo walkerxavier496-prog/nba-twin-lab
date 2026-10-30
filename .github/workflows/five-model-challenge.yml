@@ -40,8 +40,14 @@ jobs:
           node-version: '22'
       - name: Test challenge chronology and weighting
         run: node --test tests/five_model_challenge.test.cjs
-      - name: Test immutable lock integration
-        run: node --test tests/daily_audit.test.cjs
+      - name: Test Melbourne time handling
+        run: node --test --test-name-pattern='Melbourne date' tests/daily_audit.test.cjs
+      - name: Test immutable lock integrity
+        run: node --test --test-name-pattern='integrity detects' tests/daily_audit.test.cjs
+      - name: Test results and DNP scoring
+        run: node --test --test-name-pattern='ESPN result|review metrics' tests/daily_audit.test.cjs
+      - name: Test locked forecast reproduction
+        run: node --test --test-name-pattern='daily builder reproduces' tests/daily_audit.test.cjs
       - name: Test challenge site routes
         run: node --test tests/site_navigation.test.cjs
       - name: Rebuild common-game challenge
