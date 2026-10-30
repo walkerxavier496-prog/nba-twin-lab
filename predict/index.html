@@ -29,7 +29,7 @@
   <div>
    <div class="eyebrow"><span class="pulse"></span> NBA TWIN LAB / V5 ENGINE · V6 AUDIT</div>
    <h1>Know the matchup.<br><em>Understand the edge.</em></h1>
-   <p>Up to 100,000 possession-by-possession simulations per matchup, built from verified results and team style — with honest held-out testing against the Elo baseline.</p>
+   <p>The five-season winner, Elo, is the default forecast. Switch to the V5 possession model to inspect up to 100,000 simulations, team style and outcome ranges.</p>
    <div class="hero-actions"><a class="primary" href="#matchups">Explore matchups <span aria-hidden="true">↗</span></a><a class="secondary" href="#method">See the methodology</a></div>
   </div>
   <div class="hero-panel">
@@ -53,7 +53,7 @@
  <section id="matchups" class="section">
   <div class="sectionhead">
    <div><div class="eyebrow">01 / UPCOMING GAMES</div><h2>Game Prediction Lab</h2><p>Pick a game to inspect the pregame model and team-by-team breakdown.</p></div>
-   <div class="toolbar"><label for="simulations" class="sr">Simulation count</label><select id="simulations" title="Possession simulations per matchup"><option value="1000">1,000 simulations</option><option value="10000" selected>10,000 simulations</option><option value="100000">100,000 simulations</option></select><label for="range" class="sr">Game range</label><select id="range"><option value="7">Next 7 days</option><option value="21" selected>Next 21 days</option><option value="all">All scheduled</option><option value="final">Recent results</option></select><label for="team-search" class="sr">Filter team</label><input id="team-search" placeholder="Search team…" autocomplete="off"></div>
+   <div class="toolbar"><label for="model-choice" class="sr">Forecast model</label><select id="model-choice" title="Forecast model"><option value="elo" selected>Elo · validated default</option><option value="mc">V5 Monte Carlo</option></select><label for="simulations" class="sr">Simulation count</label><select id="simulations" title="Possession simulations per matchup"><option value="1000">1,000 simulations</option><option value="10000" selected>10,000 simulations</option><option value="100000">100,000 simulations</option></select><label for="range" class="sr">Game range</label><select id="range"><option value="7">Next 7 days</option><option value="21" selected>Next 21 days</option><option value="all">All scheduled</option><option value="final">Recent results</option></select><label for="team-search" class="sr">Filter team</label><input id="team-search" placeholder="Search team…" autocomplete="off"></div>
   </div>
   <div class="matchup-layout">
    <div id="games" class="games" aria-live="polite"><div class="empty">Loading scheduled games…</div></div>

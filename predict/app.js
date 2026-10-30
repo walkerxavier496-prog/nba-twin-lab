@@ -127,21 +127,24 @@ function renderDetail(){
  const g=games.find(x=>x.id===selected);
  if(!g){$('detail').innerHTML='<div class="placeholder"><div class="placeholder-icon">◎</div><h3>No game selected</h3><p>Choose an upcoming NBA matchup.</p></div>';return}
  if(!hasHistory){$('detail').innerHTML='<div class="placeholder"><h3>Insufficient verified history</h3><p>The model requires at least 800 completed games from the previous season. No probabilities will be shown until this data is available.</p></div>';return}
- const state=E.ratings(games,g.date),simulations=Number($('simulations').value),cacheKey=g.id+'|'+g.date+'|'+simulations;
+ const state=E.ratings(games,g.date),simulations=Number($('simulations').value),mode=$('model-choice').value,cacheKey=g.id+'|'+g.date+'|'+simulations;
  if(!simulationCache.has(cacheKey))simulationCache.set(cacheKey,E.monteCarlo(g,state,profiles,{simulations}));
- const p=simulationCache.get(cacheKey),base=p.baseline,h=base.home,a=base.away;
+ const simulation=simulationCache.get(cacheKey),base=simulation.baseline;
+ const p=mode==='elo'?{...simulation,homeWin:base.homeWin,awayWin:base.awayWin,homeScore:base.homeScore,awayScore:base.awayScore,total:base.total,margin:base.margin}:simulation;
+ const h=base.home,a=base.away;
  const h2h=E.matchupHistory(games,g);
  const hp=profiles[g.home.abbr]||Object.values(profiles).find(t=>t.name===g.home.name),ap=profiles[g.away.abbr]||Object.values(profiles).find(t=>t.name===g.away.name);
  const style=t=>t?metric('Net rating',one(t.n_rtg))+metric('Offensive rating',one(t.o_rtg))+metric('Defensive rating',one(t.d_rtg))+metric('Pace',one(t.pace))+metric('3-point attempt rate',Number.isFinite(t.x3p_ar)?one(100*t.x3p_ar)+'%':'—')+metric('Effective FG%',Number.isFinite(t.e_fg_percent)?one(100*t.e_fg_percent)+'%':'—')+metric('Turnover rate',Number.isFinite(t.tov_percent)?one(t.tov_percent)+'%':'—')+metric('Offensive rebounding',Number.isFinite(t.orb_percent)?one(t.orb_percent)+'%':'—'):'Prior-year team stats unavailable';
  const hWin=p.homeWin>=.5;
- const tag=g.status==='final'?'ARCHIVED PREGAME ESTIMATE':g.status==='live'?'PREGAME MODEL · LIVE GAME':'PREGAME ESTIMATE';
+ const modelName=mode==='elo'?'ELO · VALIDATED DEFAULT':'V5 POSSESSION MONTE CARLO';
+ const tag=(g.status==='final'?'ARCHIVED PREGAME':g.status==='live'?'PREGAME · LIVE GAME':'PREGAME')+' · '+modelName;
  $('detail').innerHTML=
  '<div class="headrow"><span class="eyebrow">'+esc(fmt(g.date))+'</span><span class="badge">'+tag+'</span></div>'+
  '<h3>'+esc(g.away.name)+' <span class="muted">at</span> '+esc(g.home.name)+'</h3>'+
  '<div class="odds"><div><div class="name">'+esc(g.away.abbr)+' · Away</div><div class="pct">'+pct(p.awayWin)+'</div></div>'+
  '<div><div class="name">'+esc(g.home.abbr)+' · Home</div><div class="pct">'+pct(p.homeWin)+'</div></div></div>'+
  '<div class="bar" role="img" aria-label="'+esc(g.away.abbr)+' '+pct(p.awayWin)+', '+esc(g.home.abbr)+' '+pct(p.homeWin)+'"><span style="width:'+100*p.awayWin+'%"></span></div>'+
- '<div class="forecast"><div><strong>'+round(p.awayScore)+' – '+round(p.homeScore)+'</strong><small>Mean score · Away–Home</small></div><div><strong>'+round(p.awayRange[0])+'–'+round(p.awayRange[1])+' / '+round(p.homeRange[0])+'–'+round(p.homeRange[1])+'</strong><small>80% score ranges · A / H</small></div><div><strong>'+one(p.possessions)+'</strong><small>Mean possessions/team</small></div><div><strong>'+simulations.toLocaleString()+'</strong><small>Games simulated</small></div></div>'+
+ '<div class="forecast"><div><strong>'+round(p.awayScore)+' – '+round(p.homeScore)+'</strong><small>'+(mode==='elo'?'Elo projected':'Simulated mean')+' score · Away–Home</small></div><div><strong>'+round(simulation.awayRange[0])+'–'+round(simulation.awayRange[1])+' / '+round(simulation.homeRange[0])+'–'+round(simulation.homeRange[1])+'</strong><small>Monte Carlo 80% ranges · A / H</small></div><div><strong>'+one(simulation.possessions)+'</strong><small>Simulated possessions/team</small></div><div><strong>'+simulations.toLocaleString()+'</strong><small>Diagnostic simulations</small></div></div>'+
  '<div class="split"><div><h4>'+esc(g.away.abbr)+' · Away</h4>'+
  metric('Elo',round(a.elo))+metric('Record',a.wins+'–'+a.losses)+metric('Points/game',a.games?one(a.points/a.games):'No games')+
  metric('Allowed/game',a.games?one(a.allowed/a.games):'No games')+metric('Last 5',a.recent.slice(-5).map(x=>x.win?'W':'L').join(' ')||'—')+
@@ -152,10 +155,10 @@ function renderDetail(){
  metric('Rest before tip',base.homeRest===null?'Unknown':base.homeRest+' days')+metric('Turnover chance',one(100*p.homeProfile.turnover)+'%')+metric('3-point attempt rate',one(100*p.homeProfile.threeRate)+'%')+'</div></div>'+
  '<h4 class="small">PRIOR-SEASON TEAM STYLE · '+(seasonYear-2)+'–'+String(seasonYear-1).slice(2)+'</h4><div class="split"><div><h4>'+esc(g.away.abbr)+'</h4>'+style(ap)+'</div><div><h4>'+esc(g.home.abbr)+'</h4>'+style(hp)+'</div></div><p class="disclaimer">Verified team advanced statistics are previous-season context, not live current-season ratings. They do not adjust for offseason roster changes.</p>'+ 
  '<h4 class="small">MATCHUP EXPLANATION</h4><div class="context">'+
- '<p><b>'+esc(hWin?g.home.name:g.away.name)+'</b> wins '+pct(hWin?p.homeWin:p.awayWin)+' of '+simulations.toLocaleString()+' seeded simulations. The possession model uses the baseline matchup expectation of '+one(Math.abs(base.eloEdge))+' rating points, then plays turnovers, free throws, 2s, 3s, misses and offensive rebounds using validated historical team rates.</p>'+
+ '<p><b>'+esc(hWin?g.home.name:g.away.name)+'</b> has a '+pct(hWin?p.homeWin:p.awayWin)+' '+(mode==='elo'?'Elo win estimate. Elo is the default because it beat standalone V5 Monte Carlo on the untouched five-season audit.':'win rate across '+simulations.toLocaleString()+' seeded possession simulations.')+' The matchup expectation is '+one(Math.abs(base.eloEdge))+' rating points; Monte Carlo separately plays turnovers, free throws, 2s, 3s, misses and offensive rebounds using validated historical team rates.</p>'+
  '<p>Last '+h2h.length+' head-to-head meeting'+(h2h.length===1?'':'s')+': '+(h2h.length?h2h.map(x=>esc(x.away.abbr)+' '+x.awayScore+'–'+x.homeScore+' '+esc(x.home.abbr)).join(' · '):'No verified recent meetings')+'. Head-to-head history is context only, not a separate predictive weight.</p></div>'+
  (g.status==='final'?'<p class="context"><b>Actual final:</b> '+esc(g.away.abbr)+' '+g.awayScore+' – '+g.homeScore+' '+esc(g.home.abbr)+'. This forecast was recomputed using only games before tip-off.</p>':'')+
- '<p class="disclaimer">'+esc(base.confidence)+'. Seeded Monte Carlo result: identical inputs reproduce the same estimate. No injury, confirmed-lineup, player-minutes, trade, travel or betting-market input. Prior-season style can miss offseason changes; a probability is never a guarantee. This is not betting advice.</p>';
+ '<p class="disclaimer">'+esc(base.confidence)+'. Selected model: '+modelName+'. Seeded Monte Carlo diagnostics reproduce with identical inputs. No injury, confirmed-lineup, player-minutes, trade, travel or betting-market input. Prior-season style can miss offseason changes; a probability is never a guarantee. This is not betting advice.</p>';
 }
 function renderTeams(){
  const state=E.ratings(games,new Date(Date.now()+1000).toISOString());
@@ -167,5 +170,6 @@ function renderTeams(){
 $('range').addEventListener('change',renderGames);
 $('team-search').addEventListener('input',renderGames);
 $('simulations').addEventListener('change',()=>{simulationCache.clear();renderDetail()});
+$('model-choice').addEventListener('change',renderDetail);
 Promise.all([loadContext(),loadReport()]).then(load);
 })();
