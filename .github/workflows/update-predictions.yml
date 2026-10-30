@@ -8,6 +8,8 @@ on:
     paths:
       - build_predictions.py
       - predict/engine.js
+      - predict/app.js
+      - mvp/index.html
       - tests/prediction_engine.test.cjs
       - tests/test_predictions.py
       - .github/workflows/update-predictions.yml
@@ -31,6 +33,11 @@ jobs:
       - run: pip install -r requirements.txt pytest
       - run: python -m pytest -q tests/test_predictions.py
       - run: node --test tests/prediction_engine.test.cjs
+      - run: node --check predict/engine.js && node --check predict/app.js
+      - name: Syntax check MVP Lab inline JavaScript
+        run: |
+          python -c "from pathlib import Path; s=Path('mvp/index.html').read_text(); Path('/tmp/nba_mvp_ui.js').write_text(s.split('<script>')[1].split('</script>')[0])"
+          node --check /tmp/nba_mvp_ui.js
       - run: python build_predictions.py
       - name: Publish verified scoreboard snapshot
         run: |
