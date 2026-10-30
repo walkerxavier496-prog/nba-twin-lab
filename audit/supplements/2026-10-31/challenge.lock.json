@@ -1,0 +1,934 @@
+{
+  "schema": "nba-twin-lab-challenge-sidecar-v1",
+  "locked_at_utc": "2026-10-30T22:29:08.078Z",
+  "melbourne_date": "2026-10-31",
+  "first_tip_utc": "2026-10-30T23:00:00.000Z",
+  "original_forecast_path": "practice/2026-10-31-melbourne/forecast.lock.json",
+  "original_forecast_sha256": "9ff9f4246e2376ab515fe2a37972258131cf09b75962bbcab70ae874da490295",
+  "provenance": {
+    "games": "2026-10-30T14:03:59.000Z",
+    "player_rotations": "2026-10-30T16:15:22.000Z",
+    "historical_report": "2026-10-30T22:22:37.666Z",
+    "context": "2026-10-30T14:05:33.000Z",
+    "roster_report": "2026-10-30T16:20:19.733Z"
+  },
+  "research_model_version": "1.0.0",
+  "rule": "Immutable separate pre-tip challenger forecasts. Never merge into or replace the original 08:49 AEDT practice lock.",
+  "limitations": "Inferred rotations are not official injury confirmations; unavailable models remain unscored.",
+  "games": [
+    {
+      "game_id": "401909277",
+      "tip_utc": "2026-10-30T23:00:00.000Z",
+      "home": "WSH",
+      "away": "CHA",
+      "predictions": {
+        "m1_elo": {
+          "available": true,
+          "home_win_probability": 0.20674107431349784,
+          "projected_score": {
+            "home": 110.0210895130165,
+            "away": 117.80759882937645
+          },
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m2_science": {
+          "available": true,
+          "home_win_probability": 0.249339744900751,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m3_player_roster": {
+          "available": true,
+          "home_win_probability": 0.27442080367312605,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.35429589965251274
+        },
+        "m4_monte_carlo": {
+          "available": true,
+          "home_win_probability": 0.4576,
+          "projected_score": {
+            "home": 112.6312,
+            "away": 114.3648
+          },
+          "simulations": 10000,
+          "seed": "five-model-live-v1|401909277|2026-10-30T23:00Z|10000",
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m5_regularized_ml": {
+          "available": true,
+          "home_win_probability": 0.23263818710427975,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m6_ensemble": {
+          "available": true,
+          "home_win_probability": 0.24258326079585543,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ],
+          "availability": null,
+          "roster_uncertainty": null
+        }
+      }
+    },
+    {
+      "game_id": "401909278",
+      "tip_utc": "2026-10-30T23:30:00.000Z",
+      "home": "BOS",
+      "away": "CHI",
+      "predictions": {
+        "m1_elo": {
+          "available": true,
+          "home_win_probability": 0.9075669484883306,
+          "projected_score": {
+            "home": 122.53806074807575,
+            "away": 109.31070900458657
+          },
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m2_science": {
+          "available": true,
+          "home_win_probability": 0.8815912273493768,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m3_player_roster": {
+          "available": true,
+          "home_win_probability": 0.8997302396911719,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.3175132601042134
+        },
+        "m4_monte_carlo": {
+          "available": true,
+          "home_win_probability": 0.7613,
+          "projected_score": {
+            "home": 121.7138,
+            "away": 110.1336
+          },
+          "simulations": 10000,
+          "seed": "five-model-live-v1|401909278|2026-10-30T23:30Z|10000",
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m5_regularized_ml": {
+          "available": true,
+          "home_win_probability": 0.8791390435166736,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m6_ensemble": {
+          "available": true,
+          "home_win_probability": 0.8881591928661887,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ],
+          "availability": null,
+          "roster_uncertainty": null
+        }
+      }
+    },
+    {
+      "game_id": "401909279",
+      "tip_utc": "2026-10-30T23:30:00.000Z",
+      "home": "BKN",
+      "away": "DET",
+      "predictions": {
+        "m1_elo": {
+          "available": true,
+          "home_win_probability": 0.13220078366390284,
+          "projected_score": {
+            "home": 107.30701153922708,
+            "away": 118.20281452620422
+          },
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m2_science": {
+          "available": true,
+          "home_win_probability": 0.15635567424042787,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m3_player_roster": {
+          "available": true,
+          "home_win_probability": 0.16731927446408734,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.3781796408407399
+        },
+        "m4_monte_carlo": {
+          "available": true,
+          "home_win_probability": 0.3707,
+          "projected_score": {
+            "home": 108.9316,
+            "away": 114.1405
+          },
+          "simulations": 10000,
+          "seed": "five-model-live-v1|401909279|2026-10-30T23:30Z|10000",
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m5_regularized_ml": {
+          "available": true,
+          "home_win_probability": 0.14242405568207972,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m6_ensemble": {
+          "available": true,
+          "home_win_probability": 0.1488702941148643,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ],
+          "availability": null,
+          "roster_uncertainty": null
+        }
+      }
+    },
+    {
+      "game_id": "401909280",
+      "tip_utc": "2026-10-30T23:30:00.000Z",
+      "home": "PHI",
+      "away": "NY",
+      "predictions": {
+        "m1_elo": {
+          "available": true,
+          "home_win_probability": 0.5928821677927624,
+          "projected_score": {
+            "home": 114.13071470388321,
+            "away": 111.95407119948531
+          },
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m2_science": {
+          "available": true,
+          "home_win_probability": 0.5275518325334784,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m3_player_roster": {
+          "available": true,
+          "home_win_probability": 0.5863421428456635,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.18135464788337813
+        },
+        "m4_monte_carlo": {
+          "available": true,
+          "home_win_probability": 0.5375,
+          "projected_score": {
+            "home": 113.7261,
+            "away": 112.2595
+          },
+          "simulations": 10000,
+          "seed": "five-model-live-v1|401909280|2026-10-30T23:30Z|10000",
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m5_regularized_ml": {
+          "available": true,
+          "home_win_probability": 0.5250811695602124,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m6_ensemble": {
+          "available": true,
+          "home_win_probability": 0.5502395613691028,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ],
+          "availability": null,
+          "roster_uncertainty": null
+        }
+      }
+    },
+    {
+      "game_id": "401909281",
+      "tip_utc": "2026-10-30T23:30:00.000Z",
+      "home": "TOR",
+      "away": "ORL",
+      "predictions": {
+        "m1_elo": {
+          "available": true,
+          "home_win_probability": 0.6443909786703369,
+          "projected_score": {
+            "home": 115.38740941455885,
+            "away": 111.94505365655075
+          },
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m2_science": {
+          "available": true,
+          "home_win_probability": 0.6436777436092933,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m3_player_roster": {
+          "available": true,
+          "home_win_probability": 0.6717184202256502,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.1401109445369131
+        },
+        "m4_monte_carlo": {
+          "available": true,
+          "home_win_probability": 0.6726,
+          "projected_score": {
+            "home": 116.6924,
+            "away": 109.7303
+          },
+          "simulations": 10000,
+          "seed": "five-model-live-v1|401909281|2026-10-30T23:30Z|10000",
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m5_regularized_ml": {
+          "available": true,
+          "home_win_probability": 0.6570224312960778,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m6_ensemble": {
+          "available": true,
+          "home_win_probability": 0.6601680827123755,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ],
+          "availability": null,
+          "roster_uncertainty": null
+        }
+      }
+    },
+    {
+      "game_id": "401909282",
+      "tip_utc": "2026-10-31T00:00:00.000Z",
+      "home": "MIA",
+      "away": "IND",
+      "predictions": {
+        "m1_elo": {
+          "available": true,
+          "home_win_probability": 0.7796923483474294,
+          "projected_score": {
+            "home": 120.30971865849365,
+            "away": 112.99113611144593
+          },
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m2_science": {
+          "available": true,
+          "home_win_probability": 0.7438089815041232,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m3_player_roster": {
+          "available": true,
+          "home_win_probability": 0.7356476765771733,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.2639577846500552
+        },
+        "m4_monte_carlo": {
+          "available": true,
+          "home_win_probability": 0.6709,
+          "projected_score": {
+            "home": 120.197,
+            "away": 113.0958
+          },
+          "simulations": 10000,
+          "seed": "five-model-live-v1|401909282|2026-10-31T00:00Z|10000",
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m5_regularized_ml": {
+          "available": true,
+          "home_win_probability": 0.7625740309578541,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m6_ensemble": {
+          "available": true,
+          "home_win_probability": 0.7562079563826074,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ],
+          "availability": null,
+          "roster_uncertainty": null
+        }
+      }
+    },
+    {
+      "game_id": "401909283",
+      "tip_utc": "2026-10-31T00:00:00.000Z",
+      "home": "DAL",
+      "away": "HOU",
+      "predictions": {
+        "m1_elo": {
+          "available": true,
+          "home_win_probability": 0.26590476045900385,
+          "projected_score": {
+            "home": 111.64777001731316,
+            "away": 117.52812062063215
+          },
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m2_science": {
+          "available": true,
+          "home_win_probability": 0.2812721614454899,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m3_player_roster": {
+          "available": true,
+          "home_win_probability": 0.2550817657851061,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.26724892684426627
+        },
+        "m4_monte_carlo": {
+          "available": true,
+          "home_win_probability": 0.4724,
+          "projected_score": {
+            "home": 113.5161,
+            "away": 114.8084
+          },
+          "simulations": 10000,
+          "seed": "five-model-live-v1|401909283|2026-10-31T00:00Z|10000",
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m5_regularized_ml": {
+          "available": true,
+          "home_win_probability": 0.2921203078421788,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m6_ensemble": {
+          "available": true,
+          "home_win_probability": 0.2783871904867395,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ],
+          "availability": null,
+          "roster_uncertainty": null
+        }
+      }
+    },
+    {
+      "game_id": "401909284",
+      "tip_utc": "2026-10-31T00:00:00.000Z",
+      "home": "MIN",
+      "away": "LAC",
+      "predictions": {
+        "m1_elo": {
+          "available": true,
+          "home_win_probability": 0.7153234570251225,
+          "projected_score": {
+            "home": 116.29056824408902,
+            "away": 110.95522446409696
+          },
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m2_science": {
+          "available": true,
+          "home_win_probability": 0.6789605922076853,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m3_player_roster": {
+          "available": true,
+          "home_win_probability": 0.7551802476338926,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.3188573172200909
+        },
+        "m4_monte_carlo": {
+          "available": true,
+          "home_win_probability": 0.645,
+          "projected_score": {
+            "home": 115.8078,
+            "away": 109.9789
+          },
+          "simulations": 10000,
+          "seed": "five-model-live-v1|401909284|2026-10-31T00:00Z|10000",
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m5_regularized_ml": {
+          "available": true,
+          "home_win_probability": 0.6881214305270791,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m6_ensemble": {
+          "available": true,
+          "home_win_probability": 0.7109592783089275,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ],
+          "availability": null,
+          "roster_uncertainty": null
+        }
+      }
+    },
+    {
+      "game_id": "401909285",
+      "tip_utc": "2026-10-31T02:00:00.000Z",
+      "home": "GS",
+      "away": "LAL",
+      "predictions": {
+        "m1_elo": {
+          "available": true,
+          "home_win_probability": 0.38908842366004415,
+          "projected_score": {
+            "home": 114.66911948017068,
+            "away": 117.28152008173444
+          },
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m2_science": {
+          "available": true,
+          "home_win_probability": 0.4014781712293969,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m3_player_roster": {
+          "available": true,
+          "home_win_probability": 0.5018004242496361,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.3206635140848829
+        },
+        "m4_monte_carlo": {
+          "available": true,
+          "home_win_probability": 0.5485,
+          "projected_score": {
+            "home": 116.1766,
+            "away": 114.2649
+          },
+          "simulations": 10000,
+          "seed": "five-model-live-v1|401909285|2026-10-31T02:00Z|10000",
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m5_regularized_ml": {
+          "available": true,
+          "home_win_probability": 0.43342650761154183,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m6_ensemble": {
+          "available": true,
+          "home_win_probability": 0.4495048742078203,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ],
+          "availability": null,
+          "roster_uncertainty": null
+        }
+      }
+    },
+    {
+      "game_id": "401909286",
+      "tip_utc": "2026-10-31T02:00:00.000Z",
+      "home": "PHX",
+      "away": "DEN",
+      "predictions": {
+        "m1_elo": {
+          "available": true,
+          "home_win_probability": 0.46402731944746434,
+          "projected_score": {
+            "home": 114.56564949985126,
+            "away": 115.400304210214
+          },
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m2_science": {
+          "available": true,
+          "home_win_probability": 0.5277543715728014,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m3_player_roster": {
+          "available": true,
+          "home_win_probability": 0.47034899167263927,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.2928395294259523
+        },
+        "m4_monte_carlo": {
+          "available": true,
+          "home_win_probability": 0.5459,
+          "projected_score": {
+            "home": 116.0603,
+            "away": 114.1549
+          },
+          "simulations": 10000,
+          "seed": "five-model-live-v1|401909286|2026-10-31T02:00Z|10000",
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m5_regularized_ml": {
+          "available": true,
+          "home_win_probability": 0.49901649466350306,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": null,
+          "weights_training_seasons": null,
+          "availability": null,
+          "roster_uncertainty": null
+        },
+        "m6_ensemble": {
+          "available": true,
+          "home_win_probability": 0.48691732624464,
+          "projected_score": null,
+          "simulations": null,
+          "seed": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ],
+          "availability": null,
+          "roster_uncertainty": null
+        }
+      }
+    }
+  ],
+  "integrity": {
+    "algorithm": "sha256",
+    "canonical_payload_without_integrity": "6fcebc17914c6be7ad95b5ea1a1d4d7682eb31666ec0ebca1d115d819db47aa4"
+  }
+}
