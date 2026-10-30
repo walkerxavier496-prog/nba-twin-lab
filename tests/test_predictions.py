@@ -51,7 +51,8 @@ def test_team_context_requires_complete_coherent_season():
     out = ctx.parse_teams(rows)
     assert len(out) == 30
     rows[0]["w"] = "3"
-    assert not ctx.parse_teams(rows) or len(ctx.parse_teams(rows)) < 30
+    with pytest.raises(ValueError, match="No recent complete"):
+        ctx.parse_teams(rows)
 
 
 def test_mvp_awards_need_exactly_one_winner():
