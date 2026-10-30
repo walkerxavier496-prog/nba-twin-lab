@@ -30,6 +30,8 @@ test('courtside design reaches main site routes without official NBA branding',(
 
 test('homepage sports desk uses the immutable original game predictions',async()=>{
  const ledger=JSON.parse(read('data/audit-ledger.json'));
+ ledger.entries=ledger.entries.filter(e=>e.melbourne_date==='2026-10-31');
+ assert.equal(ledger.entries.length,1,'Fixture pregame lock must remain available');
  const locked=JSON.parse(read('practice/2026-10-31-melbourne/forecast.lock.json'));
  const elements=new Map();
  const get=id=>{
@@ -56,6 +58,8 @@ test('homepage sports desk uses the immutable original game predictions',async()
 
 test('daily basketball scorebug and ticker preserve actual locked model comparisons',async()=>{
  const ledger=JSON.parse(read('data/audit-ledger.json'));
+ ledger.entries=ledger.entries.filter(e=>e.melbourne_date==='2026-10-31');
+ assert.equal(ledger.entries.length,1,'Fixture pregame lock must remain available');
  const locked=JSON.parse(read('practice/2026-10-31-melbourne/forecast.lock.json'));
  const sidecar=JSON.parse(read('audit/supplements/2026-10-31/challenge.lock.json'));
  const elements=new Map();
