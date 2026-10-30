@@ -6,7 +6,25 @@ const short={m1_elo:'M1',m2_science:'M2',m3_player_roster:'M3',m4_monte_carlo:'M
 const colors={m1_elo:'#8ad4ff',m2_science:'#80ebc7',m3_player_roster:'#f5c46c',m4_monte_carlo:'#c6a6ff',m5_regularized_ml:'#ff9caa'};
 let report,view='common',selected='m5_regularized_ml';
 function slice(id){const m=report.models[id];return /^20\d\d$/.test(view)?m.by_season[view]:m[view]}
-function leaderboard(){const rows=ids.map(id=>({id,m:slice(id)})).sort((a,b)=>(a.m?.brier??9)-(b.m?.brier??9));$('leaderboard').innerHTML=rows.map((row,index)=>{const d=report.model_definitions[row.id],m=row.m||{},ci=view==='common'?report.models[row.id].confidence_95_day_clustered?.brier:null;return '<tr data-id="'+row.id+'" class="'+(selected===row.id?'selected':'')+'"><td class="rank">'+(index+1)+'</td><td><span class="model-name">'+esc(d.label)+'<small>'+esc(d.technique)+'</small></span></td><td>'+Number(m.games||0).toLocaleString()+'</td><td>'+pct(m.accuracy)+'</td><td class="'+(index===0?'best':'')+'">'+num(m.brier)+'</td><td>'+((ci||[]).map(x=>num(x)).join('–')||'—')+'</td><td>'+num(m.logLoss)+'</td><td>'+num(m.ece)+'</td><td>'+num(m.scoreMAE,2)+'</td></tr>'}).join('');document.querySelectorAll('#leaderboard tr').forEach(row=>row.onclick=()=>{selected=row.dataset.id;leaderboard();calibration()});calibration()}
+function leaderboard(){
+ const rows=ids.map(id=>({id,m:slice(id)})).sort((a,b)=>(a.m?.brier??9)-(b.m?.brier??9));
+ $('leaderboard').innerHTML=rows.map((row,index)=>{
+  const d=report.model_definitions[row.id],m=row.m||{},ci=view==='common'?report.models[row.id].confidence_95_day_clustered?.brier:null;
+  return '<tr data-id="'+row.id+'" class="'+(selected===row.id?'selected':'')+'"><td class="rank">'+(index+1)+'</td><td><span class="model-name">'+esc(d.label)+'<small>'+esc(d.technique)+'</small></span></td><td>'+Number(m.games||0).toLocaleString()+'</td><td>'+pct(m.accuracy)+'</td><td class="'+(index===0?'best':'')+'">'+num(m.brier)+'</td><td>'+((ci||[]).map(x=>num(x)).join('–')||'—')+'</td><td>'+num(m.logLoss)+'</td><td>'+num(m.ece)+'</td><td>'+num(m.scoreMAE,2)+'</td></tr>';
+ }).join('');
+ $('leaderboard-cards').innerHTML=rows.map((row,index)=>{
+  const d=report.model_definitions[row.id],m=row.m||{},active=selected===row.id;
+  return '<button type="button" class="rank-card" data-id="'+row.id+'" aria-pressed="'+active+'" aria-label="Rank '+(index+1)+' '+esc(d.label)+' view calibration">'+
+    '<div class="rank-card__head"><strong>'+esc(d.label)+'</strong><span>#'+(index+1)+' · '+Number(m.games||0).toLocaleString()+' games</span></div>'+
+    '<div class="rank-card__stats"><div><small>WIN ACCURACY</small><b>'+pct(m.accuracy)+'</b></div><div><small>BRIER ↓</small><b>'+num(m.brier)+'</b></div><div><small>LOG LOSS ↓</small><b>'+num(m.logLoss,3)+'</b></div></div>'+
+    '<div class="rank-card__foot"><span>ECE '+num(m.ece,3)+' · Score MAE '+num(m.scoreMAE,2)+'</span><b>View calibration ↗</b></div></button>';
+ }).join('');
+ document.querySelectorAll('#leaderboard tr,#leaderboard-cards .rank-card').forEach(item=>item.onclick=()=>{
+  selected=item.dataset.id;leaderboard();calibration();
+  if(item.classList?.contains('rank-card'))$('calibration')?.scrollIntoView?.({behavior:'smooth',block:'center'});
+ });
+ calibration();
+}
 function calibration(){const m=slice(selected)||{},bins=m.calibration||[];$('calibration-label').textContent=(report.model_definitions[selected]?.label||selected)+' · forecast band versus observed home-win rate';$('calibration').innerHTML=bins.length?bins.map(b=>'<div class="cal-row"><span>'+Math.round(b.low*100)+'–'+Math.round(b.high*100)+'%</span><div class="bar" style="--forecast:'+Math.round(b.confidence*100)+'%;--actual:'+Math.round(b.actual*100)+'%"><i class="forecast"></i><i class="actual"></i></div><span>'+b.count+' games</span></div>').join(''):'<p>No calibration bins are available for this slice.</p>'}
 function weights(){const rows=Object.entries(report.ensemble_weights_by_season).filter(([,w])=>w.available);$('weights').innerHTML=rows.map(([season,w])=>'<div class="weight-row"><strong>'+((Number(season)-1)+'–'+String(season).slice(2))+'</strong><div><div class="weight-stack">'+Object.entries(w.weights).filter(([,v])=>v>0).map(([id,v])=>'<span title="'+esc(id)+' '+pct(v)+'" style="width:'+(v*100)+'%;background:'+colors[id]+'">'+short[id]+' '+Math.round(v*100)+'</span>').join('')+'</div><div class="fine">fit on '+w.training_seasons.join(', ')+' · '+w.training_games.toLocaleString()+' earlier OOF games</div></div></div>').join('')}
 function cards(){$('overlap').textContent=report.overlap_disclosure;$('model-cards').innerHTML=ids.map(id=>{const d=report.model_definitions[id];return '<article class="model-card"><div class="eyebrow">'+short[id]+'</div><h3>'+esc(d.label.replace(/^M\d · /,''))+'</h3><p>'+esc(d.technique)+'</p><div class="chips">'+(d.inputs||[]).map(x=>'<span class="chip">'+esc(x)+'</span>').join('')+'</div></article>'}).join('')}
