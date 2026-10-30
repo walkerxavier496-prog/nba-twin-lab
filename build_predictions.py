@@ -148,6 +148,30 @@ def build(session: requests.Session, today: dt.date) -> dict:
     # Reject stray All-Star, postponed or NBA Cup Final events.
     if previous_end >= 2026 and len(prev_final) != 1230:
         raise ValueError(f"Previous season {previous_end} has {len(prev_final)} finals, expected 1230; refusing a contaminated Elo baseline")
+    # Cross-reference every team's 82-game W-L record against the separately
+    # sourced Basketball Reference team summaries, when available.
+    context_path = pathlib.Path(__file__).parent / "data" / "context.json"
+    if context_path.exists():
+        context = json.loads(context_path.read_text(encoding="utf-8"))
+        expected = {t["abbr"]: t for t in context.get("teams", [])
+                    if t.get("season") == previous_end}
+        if len(expected) == 30:
+            alias = {"GS": "GSW", "NY": "NYK", "SA": "SAS", "NO": "NOP",
+                     "UTAH": "UTA", "WSH": "WAS", "PHX": "PHO",
+                     "BKN": "BRK", "CHA": "CHO"}
+            tallies = {}
+            for g in prev_final:
+                for side in ("home", "away"):
+                    t = g[side]
+                    abbr = alias.get(t["abbr"], t["abbr"])
+                    rec = tallies.setdefault(abbr, {"w": 0, "l": 0})
+                    win = (g["homeScore"] > g["awayScore"]) if side == "home" else (g["awayScore"] > g["homeScore"])
+                    rec["w" if win else "l"] += 1
+            for abbr, team in expected.items():
+                record = tallies.get(abbr)
+                if not record or record["w"] != team["w"] or record["l"] != team["l"]:
+                    raise ValueError(f"ESPN / team-summary mismatch for {abbr}: {record} vs {team['w']}-{team['l']}")
+            print(f"Cross-checked all 30 team records for {previous_end} against independent advanced team summaries")
     # Current-season data can legitimately be empty before opening night.
     if len(ordered) != len({g["id"] for g in ordered}):
         raise ValueError("Duplicate ESPN game IDs")
