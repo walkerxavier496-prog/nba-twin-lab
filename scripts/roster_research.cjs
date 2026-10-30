@@ -17,7 +17,7 @@ const MODE={
 };
 function buildRows(intel,baseRows,rotationHistory){
  if(!intel.strict_no_future_data||intel.coverage?.evaluated_games!==6150)throw Error('Unverified historical feature set');
- if(!rotationHistory?.strict_no_future_data||!Array.isArray(rotationHistory.games)||rotationHistory.games.length!==intel.games.length)
+ if(!rotationHistory?.strict_no_future_data||!Array.isArray(rotationHistory.games)||rotationHistory.games.length<intel.games.length)
   throw Error('Missing compact strictly pregame rotation history');
  const byRotation=new Map(rotationHistory.games.map(g=>[String(g.result_id),g]));
  const index=R.priorRotationIndex(rotationHistory.games.map(g=>({...g,pregame:{
