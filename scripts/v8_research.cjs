@@ -54,7 +54,7 @@ function solve(A,b){
   return M.map(r=>r[n]);
 }
 function fit(rows,mode){
-  const names=modes[mode],d=names.length+1;
+  const names=Array.isArray(mode)?mode:modes[mode],d=names.length+1;
   // Fixed regularisation, no search on the evaluated or fresh season.
   const lambda=18,prior=Array(d).fill(0);
   if(names.includes('elo'))prior[names.indexOf('elo')+1]=1;
@@ -156,4 +156,4 @@ if(require.main===module){
   console.log('Wrote '+output);
   for(const [k,v] of Object.entries(report.models))console.log(k,'rolling',v.rolling,'fresh',v.fresh);
 }
-module.exports={pregameFeatures,fit,predict,metrics,pairedBootstrap,audit};
+module.exports={pregameFeatures,fit,predict,metrics,pairedBootstrap,buildRows,audit};
