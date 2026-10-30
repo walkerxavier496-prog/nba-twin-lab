@@ -56,7 +56,7 @@ function rosterPanel(game,baseline,roster){
   '<p>Previous-season rotation minutes retained (inferred): <b>'+esc(h)+' '+rh+'%</b> · <b>'+esc(a)+' '+ra+'%</b>. Missing players can also reflect injuries, so these are not official transaction figures.</p>'+
   '<p>Roster-aware model: <b>'+esc(h)+' '+pct(roster.homeWin)+'</b> · <b>'+esc(a)+' '+pct(roster.awayWin)+'</b>. Legacy Elo: '+esc(h)+' '+pct(baseline.homeWin)+'.</p>'+
   (large?'<p><b>High uncertainty:</b> This is a heavily changed matchup. The old Elo number should not be treated as a reliable high-confidence forecast.</p>':'')+
-  '<p>This beta was fitted on earlier seasons only. Current roster status is inferred, not confirmed. The improvement over our previous player-adjusted model is not statistically conclusive.</p></div>';
+  '<p>Historical rolling-origin sample: '+Number(rosterReport.sample.rolling).toLocaleString()+' games · roster Brier '+Number(rosterReport.models.roster.rolling.brier).toFixed(4)+' versus Elo '+Number(rosterReport.models.elo.rolling.brier).toFixed(4)+'. Current roster status is inferred, not confirmed; improvement over our previous player-adjusted model is not statistically conclusive.</p></div>';
 }
 function sciencePanel(game,baseline){
  if(game.status!=='scheduled')return '';
