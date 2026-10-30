@@ -1,0 +1,54 @@
+name: V7 player and matchup intelligence audit
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 12 * * *'
+  push:
+    branches: [main]
+    paths:
+      - build_v7_intelligence.py
+      - scripts/v7_backtest.cjs
+      - predict/engine.js
+      - intelligence/**
+      - data/v7-*.json
+      - tests/test_v7_intelligence.py
+      - tests/v7_report.test.cjs
+      - requirements.txt
+      - .github/workflows/v7-audit.yml
+permissions:
+  contents: write
+concurrency:
+  group: nba-twin-lab-v7
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: pip install -r requirements.txt pytest
+      - run: python -m pytest -q tests/test_v7_intelligence.py
+      - run: node --test tests/monte_carlo.test.cjs tests/v7_report.test.cjs
+      - run: node --check predict/engine.js && node --check intelligence/app.js && node --check scripts/v7_backtest.cjs
+      - name: Reproduce lower-depth V7 audit
+        run: node scripts/v7_backtest.cjs --simulations 100 --bootstrap 100 --output /tmp/v7-model-report.json
+      - name: Refresh current inferred rotations
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: python build_v7_intelligence.py --output /tmp/v7-intelligence.json --current-output data/v7-current.json
+      - name: Publish validated current snapshot
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/v7-current.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh V7 player intelligence snapshot'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

@@ -1,6 +1,7 @@
-/* NBA Twin Lab prediction engine v5.
-   Transparent Elo baseline plus a seeded possession-by-possession Monte Carlo model.
-   No odds, injury or betting inputs.
+/* NBA Twin Lab prediction engine v7.
+   Transparent Elo/V5 baselines plus an independent rolling possession model.
+   No odds or betting inputs. Player availability is used only when explicitly
+   supplied as a timestamped or clearly labelled inferred pregame feature.
    Browser global: TwinPredict; Node: require('./engine.js').
 */
 (function(root,factory){
@@ -197,6 +198,84 @@ function possessionProfile(team,prior,opponentPrior,targetScore,pace){
   return {pace:gamePace,targetPpp,turnover,threeRate,freeThrowTrip,orb,threePct,twoPct,ftPct:.78,
     source:prior?'validated prior-season team profile':'league-average fallback'};
 }
+function rollingValues(snapshot,config={}){
+  const window=['last5','last10','season'].includes(config.window)?config.window:'last10';
+  const current=snapshot?.[window]||{},prior=snapshot?.prior||{};
+  const n=Number(current.games)||0,priorGames=clamp(Number(config.priorGames)||12,0,40);
+  const weight=n/(n+priorGames||1),keys=['ortg','drtg','adj_ortg','adj_drtg','pace','efg','opp_efg','three_rate','opp_three_rate','tov_rate','opp_tov_rate','orb_rate','drb_rate','ftr','opp_ftr','two_pct','three_pct','ft_pct'];
+  const out={games:Number(snapshot?.games)||0,weight,window};
+  for(const k of keys){
+    const a=safe(Number(current[k])),b=safe(Number(prior[k]));
+    out[k]=a!==null&&b!==null?weight*a+(1-weight)*b:a??b;
+  }
+  return out;
+}
+function calibratedEventProfile(values,targetPpp,pace){
+  const turnover=clamp(Number(values.turnover)||.13,.07,.22);
+  const threeRate=clamp(Number(values.threeRate)||.4,.20,.62);
+  const freeThrowTrip=clamp((Number(values.ftr)||.25)*.44,.05,.18);
+  const orb=clamp(Number(values.orb)||.25,.10,.42);
+  const rawEfg=clamp(Number(values.efg)||.545,.44,.66);
+  let lo=.36,hi=.72;
+  for(let i=0;i<26;i++){
+    const efg=(lo+hi)/2;
+    const threePct=clamp((Number(values.threePct)||.36)+(efg-rawEfg)*.72,.24,.50);
+    const twoPct=clamp((efg-1.5*threeRate*threePct)/(1-threeRate),.34,.76);
+    const make=threeRate*threePct+(1-threeRate)*twoPct;
+    const miss=(1-freeThrowTrip)*(1-make);
+    const attempt=freeThrowTrip*2*(Number(values.ftPct)||.78)+(1-freeThrowTrip)*(threeRate*threePct*3+(1-threeRate)*twoPct*2);
+    const expected=(1-turnover)*attempt/(1-miss*orb);
+    if(expected<targetPpp)lo=efg;else hi=efg;
+  }
+  const efg=(lo+hi)/2,threePct=clamp((Number(values.threePct)||.36)+(efg-rawEfg)*.72,.24,.50);
+  const twoPct=clamp((efg-1.5*threeRate*threePct)/(1-threeRate),.34,.76);
+  return {pace,targetPpp:clamp(targetPpp,.84,1.42),turnover,threeRate,freeThrowTrip,orb,
+    threePct,twoPct,ftPct:clamp(Number(values.ftPct)||.78,.62,.92),source:'pregame rolling team and matchup features'};
+}
+function independentExpectation(game,intelligence,config={}){
+  if(!intelligence?.home||!intelligence?.away)throw Error('Independent model requires home and away pregame features');
+  const h=rollingValues(intelligence.home,config),a=rollingValues(intelligence.away,config);
+  const league=mean([Number(intelligence.home.league_ortg),Number(intelligence.away.league_ortg)].filter(Number.isFinite))||113;
+  const pace=clamp(mean([h.pace,a.pace].filter(Number.isFinite))||99,88,110);
+  const venue=Number(config.homeCourt??1.8),playerWeight=Number(config.playerWeight)||0;
+  const restImpact=s=>s?.rest_days===0?-1.15:0;
+  const player=s=>clamp(Number(s?.player_delta)||0,-8,8)*playerWeight;
+  // No Elo or final-score target enters these efficiency estimates.
+  const homeRtg=clamp(clamp(mean([h.adj_ortg??h.ortg,a.adj_drtg??a.drtg].filter(Number.isFinite))||league,90,135)+venue+restImpact(intelligence.home)+player(intelligence.home),88,140);
+  const awayRtg=clamp(clamp(mean([a.adj_ortg??a.ortg,h.adj_drtg??h.drtg].filter(Number.isFinite))||league,90,135)-venue+restImpact(intelligence.away)+player(intelligence.away),88,140);
+  const homeScore=homeRtg*pace/100,awayScore=awayRtg*pace/100,margin=homeScore-awayScore;
+  const homeWin=clamp(1/(1+Math.exp(-margin/(Number(config.marginScale)||7.4))),.01,.99);
+  const rates=(own,opp)=>({
+    turnover:mean([own.tov_rate,opp.opp_tov_rate].filter(Number.isFinite))||.13,
+    threeRate:mean([own.three_rate,opp.opp_three_rate].filter(Number.isFinite))||.4,
+    ftr:mean([own.ftr,opp.opp_ftr].filter(Number.isFinite))||.25,
+    orb:mean([own.orb_rate,Number.isFinite(opp.drb_rate)?1-opp.drb_rate:null].filter(Number.isFinite))||.25,
+    efg:mean([own.efg,opp.opp_efg].filter(Number.isFinite))||.545,
+    threePct:own.three_pct,ftPct:own.ft_pct});
+  return {homeWin,awayWin:1-homeWin,homeScore,awayScore,margin,total:homeScore+awayScore,pace,
+    homeRtg,awayRtg,home:rollingValues(intelligence.home,config),away:rollingValues(intelligence.away,config),
+    homeRates:rates(h,a),awayRates:rates(a,h),config:{window:config.window||'last10',priorGames:Number(config.priorGames)||12,playerWeight}};
+}
+function independentMonteCarlo(game,intelligence,options={}){
+  const expectation=independentExpectation(game,intelligence,options);
+  const simulations=clamp(Math.round(Number(options.simulations)||10000),100,100000);
+  const hp=calibratedEventProfile(expectation.homeRates,expectation.homeRtg/100,expectation.pace);
+  const ap=calibratedEventProfile(expectation.awayRates,expectation.awayRtg/100,expectation.pace);
+  const seed=options.seed??('v7|'+game.id+'|'+game.date+'|'+simulations);
+  const random=seededRandom(seed),homeScores=new Array(simulations),awayScores=new Array(simulations),margins=new Array(simulations);
+  let wins=0,homeTotal=0,awayTotal=0,possessionTotal=0,ot=0;
+  for(let i=0;i<simulations;i++){
+    const r=simulateOne(hp,ap,expectation.pace,random);
+    wins+=r.homeScore>r.awayScore?1:0;homeTotal+=r.homeScore;awayTotal+=r.awayScore;
+    possessionTotal+=r.possessions;ot+=r.overtime>0?1:0;
+    homeScores[i]=r.homeScore;awayScores[i]=r.awayScore;margins[i]=r.homeScore-r.awayScore;
+  }
+  const homeWin=clamp(wins/simulations,.001,.999),homeScore=homeTotal/simulations,awayScore=awayTotal/simulations;
+  return {simulations,seed,homeWin,awayWin:1-homeWin,homeScore,awayScore,total:homeScore+awayScore,
+    margin:homeScore-awayScore,possessions:possessionTotal/simulations,overtimeRate:ot/simulations,
+    homeRange:[quantile(homeScores,.1),quantile(homeScores,.9)],awayRange:[quantile(awayScores,.1),quantile(awayScores,.9)],
+    marginRange:[quantile(margins,.1),quantile(margins,.9)],homeProfile:hp,awayProfile:ap,expectation};
+}
 function possession(profile,rng){
   if(rng()<profile.turnover)return 0;
   let points=0;
@@ -310,6 +389,7 @@ function matchupHistory(games,game){
     ((g.home.id===game.home.id&&g.away.id===game.away.id)||(g.home.id===game.away.id&&g.away.id===game.home.id)));
   return arr.slice(-5).reverse();
 }
-return {normalise,merge,ratings,forecast,monteCarlo,evaluate,evaluateComparison,calibration,
-  possessionProfile,teamTable,matchupHistory,logistic,restDays,seededRandom};
+return {normalise,merge,ratings,forecast,monteCarlo,independentExpectation,independentMonteCarlo,
+  evaluate,evaluateComparison,calibration,possessionProfile,rollingValues,teamTable,matchupHistory,
+  logistic,restDays,seededRandom};
 });

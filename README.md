@@ -1,4 +1,4 @@
-# NBA Twin Lab V6 — Historical model audit
+# NBA Twin Lab V7 — Player and matchup intelligence
 
 **Website:** https://walkerxavier496-prog.github.io/nba-twin-lab/
 
@@ -10,6 +10,7 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 |---|---|---|
 | Game Predictor | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/predict/) | Up to 100,000 possession-by-possession simulations, projected score ranges, team strength, advanced context, recent form, rest and held-out model comparison |
 | Historical Model Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/history/) | Five complete seasons, 6,150 pre-tipoff predictions, Elo/Monte Carlo/blend comparisons, calibration, confidence intervals, ablations and condition splits |
+| V7 Intelligence Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/intelligence/) | Rolling-origin six-model scorecard, independent possession simulation, inferred rotations, matchup factors, data freshness and limitations |
 | Season Test | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/season-test/) | Strict opening-night walk-forward backtest, first 1/3/5 games, predicted versus actual conference standings, 82-game strength projections and preseason A/B test |
 | MVP Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/mvp/) | Historical statistical MVP index, season breakdowns and actual award voting |
 | Championship Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/championship/) | NBA champions and Finals MVPs, playoff paths, championship team SRS and advanced statistics |
@@ -29,6 +30,23 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 - **Champions:** 58 title seasons and Finals MVPs from **1969 through 2026**, including the [2026 New York Knicks](https://www.nba.com/news/history-nba-champions). Player-by-player ring totals are not yet validated.
 
 Coverage changes only when imports succeed. No missing scores, players, titles or awards are invented.
+
+## V7 rolling-origin result
+
+V7 does **not** relabel the already examined 2025–26 season as untouched. It uses rolling origins: each of 2022–23, 2023–24, 2024–25 and 2025–26 is predicted with model settings chosen only from earlier seasons. That produces 4,920 scored games. A separate 71-game 2026–27 check uses parameters frozen from 2021–22 through 2025–26, but is described as small-sample corroboration rather than a preregistered holdout.
+
+| Model · rolling origin (4,920 games) | Accuracy | Brier | Log loss | ECE | Score MAE / team |
+|---|---:|---:|---:|---:|---:|
+| Elo baseline | 65.7% | 0.2152 | 0.6197 | 0.0348 | **9.38** |
+| V5 possession Monte Carlo | 65.7% | 0.2224 | 0.6360 | 0.0640 | 9.51 |
+| V6 locked blend | 65.4% | 0.2139 | 0.6160 | **0.0151** | **9.38** |
+| Independent rolling team model | 62.1% | 0.2254 | 0.6418 | 0.0793 | 9.54 |
+| Player-adjusted independent model | 63.2% | 0.2244 | 0.6399 | 0.0710 | 9.53 |
+| V7 rolling combination | **65.7%** | **0.2139** | **0.6160** | 0.0247 | 9.39 |
+
+The V7 combination's paired Brier difference versus Elo is **−0.0014** (95% bootstrap interval **−0.0022 to −0.0006**), but its difference versus the already-fixed V6 blend is effectively zero (**−0.00004**, interval **−0.0009 to +0.0007**). The player proxy's **−0.0009** Brier point estimate versus its independent team base is inconclusive (interval **−0.0020 to +0.0002**), and both independent variants still trail Elo standalone. The fresh 71-game check is 60.6% / 0.2187 for V7 versus 62.0% / 0.2200 for Elo—far too small and mixed for a strong deployment claim. Therefore V7 is exposed as a research model while Elo remains the simple live default. No model reaches a credible 70% out-of-sample accuracy threshold.
+
+V7's source feed has all 1,230 games and NBA Stats-derived player logs for each evaluated season. It publishes derived pregame aggregates only. The upstream `llimllib/nba_data` repository did not declare a license at build time, so raw parquet files are not vendored. Historical official pregame injury reports were not available as a reproducible archive; every player availability label is explicitly **inferred**, and target-game minutes or participation never enter a forecast.
 
 ## Game prediction methodology
 

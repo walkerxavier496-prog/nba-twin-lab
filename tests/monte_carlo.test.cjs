@@ -49,6 +49,22 @@ test('100,000 simulations complete and return exactly that sample size',()=>{
   assert.ok(Number.isFinite(result.margin));
 });
 
+test('V7 independent simulator never needs an Elo state or target score',()=>{
+  const snap=(ortg,drtg,delta=0)=>({games:20,rest_days:2,league_ortg:114,player_delta:delta,
+    prior:{games:82,ortg:113,drtg:113,pace:99,efg:.55,opp_efg:.55,three_rate:.4,opp_three_rate:.4,tov_rate:.13,opp_tov_rate:.13,orb_rate:.25,drb_rate:.75,ftr:.25,opp_ftr:.25,two_pct:.55,three_pct:.36,ft_pct:.78},
+    last10:{games:10,ortg,drtg,pace:101,efg:.57,opp_efg:.53,three_rate:.44,opp_three_rate:.38,tov_rate:.11,opp_tov_rate:.15,orb_rate:.29,drb_rate:.77,ftr:.27,opp_ftr:.21,two_pct:.57,three_pct:.38,ft_pct:.8},
+    last5:{games:5,ortg,drtg,pace:101},season:{games:20,ortg,drtg,pace:100}});
+  const g=game('v7',iso(2025,10,25),null,null,2026,'scheduled');
+  const intel={home:snap(121,108,2),away:snap(109,118,-1)};
+  const a=E.independentMonteCarlo(g,intel,{simulations:1000,seed:'v7-independent',playerWeight:.5});
+  const b=E.independentMonteCarlo(g,intel,{simulations:1000,seed:'v7-independent',playerWeight:.5});
+  assert.deepEqual(a,b);
+  assert.equal(a.simulations,1000);
+  assert.ok(a.homeWin>.5);
+  assert.equal(a.expectation.config.playerWeight,.5);
+  assert.equal(a.homeProfile.source,'pregame rolling team and matchup features');
+});
+
 test('model comparison is strictly walk-forward and reports every requested metric',()=>{
   const games=history();
   for(let i=0;i<8;i++)games.push(game('t'+i,new Date(Date.UTC(2025,9,21+i)).toISOString(),i%2?109:121,108,2026));
