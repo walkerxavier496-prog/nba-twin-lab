@@ -32,7 +32,13 @@ function drawGameDetail(){
  const game=(data.lock.forecasts||[]).find(game=>String(game.game_id)===String(selected));
  if(!game){$('game-detail').textContent='No game selected';return}
  const actual=scoreFor(selected),predictions=modelsFor(game),baseline=game.primary_forecast;
+ const audited=data.sidecarReview?.games?.find(row=>String(row.game_id)===String(game.game_id));
+ const scoredModels=audited?.models||(data.sidecar?null:actual?.models)||{};
  const score=actual?'<p class="score">Final: '+esc(actual.away.abbr)+' '+esc(actual.away.score)+' · '+esc(actual.home.abbr)+' '+esc(actual.home.score)+'</p>':'';
+ const availableProbabilities=ids.map(id=>predictions[id]).filter(p=>p?.available===true&&isNumber(p.home_win_probability));
+ const homePicks=availableProbabilities.filter(p=>p.home_win_probability>=0.5).length;
+ const awayPicks=availableProbabilities.length-homePicks;
+ const consensus=availableProbabilities.length?'<p class="muted">'+(homePicks===0||awayPicks===0?'All '+availableProbabilities.length+' models agree on the winner':awayPicks+' predict '+esc(game.away.abbr)+' · '+homePicks+' predict '+esc(game.home.abbr))+' · shared inputs mean these are not independent votes</p>':'';
  const rows=ids.map(id=>{
   const model=predictions[id];
   const available=model?.available===true && isNumber(model.home_win_probability);
@@ -42,15 +48,18 @@ function drawGameDetail(){
   const forecastScore=model?.projected_score;
   const scoreText=forecastScore&&isNumber(forecastScore.away)&&isNumber(forecastScore.home)?dec(forecastScore.away,0)+'–'+dec(forecastScore.home,0):'—';
   const reason=!available&&model?.reason?'<small class="muted"> '+esc(model.reason)+'</small>':'';
-  return '<tr><td>'+esc(labels[id])+reason+'</td><td>'+esc(winner)+'</td><td class="'+(available?'green':'')+'">'+confidence+'</td><td>'+pct(p)+'</td><td>'+esc(scoreText)+'</td></tr>'
+  const graded=scoredModels[id];
+  const verdict=graded?(graded.correct?'<span class="green">Correct</span>':'<span class="wrong">Wrong</span>'):'—';
+  const brier=graded?dec(graded.brier,4):'—';
+  return '<tr><td>'+esc(labels[id])+reason+'</td><td>'+esc(winner)+'</td><td class="'+(available?'green':'')+'">'+confidence+'</td><td>'+pct(p)+'</td><td>'+esc(scoreText)+'</td><td>'+verdict+'</td><td>'+brier+'</td></tr>'
  }).join('');
  const noChallenge=ids.every(id=>!predictions[id]);
  $('game-detail').innerHTML='<div class="match-title">'+esc(game.away.name)+' @ '+esc(game.home.name)+'</div>'+
   '<div class="muted">'+esc(fullTime(game.tip_utc))+'</div>'+score+
-  '<p>Original production Elo: <b>'+esc(baseline.winner)+' '+pct(baseline.winner_probability)+'</b> · projected '+dec(baseline.projected_score?.away,0)+'–'+dec(baseline.projected_score?.home,0)+'</p>'+
+  '<p>Original production Elo: <b>'+esc(baseline.winner)+' '+pct(baseline.winner_probability)+'</b> · projected '+dec(baseline.projected_score?.away,0)+'–'+dec(baseline.projected_score?.home,0)+'</p>'+consensus+
   (noChallenge?'<p class="callout">No pregame six-model lock exists for this matchup. It will not be backfilled.</p>':'')+
-  '<div class="tablewrap"><table><thead><tr><th>Model</th><th>Pick</th><th>Pick chance</th><th>Home win %</th><th>Score (away–home)</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
-  '<p class="muted">M1 may differ slightly from the original Elo lock because the challengers have a distinct, later pretip timestamp. A missing model is excluded from performance comparisons.</p>';
+  '<div class="tablewrap"><table><thead><tr><th>Model</th><th>Pick</th><th>Pick chance</th><th>Home win %</th><th>Score (away–home)</th><th>Result</th><th>Brier ↓</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+  '<p class="muted">M1 may differ slightly from the original Elo lock because the challengers have a distinct, later pretip timestamp. Model-level results appear only after the separately locked review is published; missing models are excluded.</p>';
 }
 function drawPlayers(){
  const game=data.lock.forecasts.find(game=>String(game.game_id)===String($('player-game').value));
