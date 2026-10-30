@@ -22,6 +22,7 @@
    <a href="./" class="active">Game Predictor</a>
    <a href="../team-intelligence/">Team Intelligence</a>
    <a href="../models/">Model Research</a>
+   <a href="../audit/">Accuracy Ledger</a>
    <a href="../twins/">Player Twins</a>
    <a href="#validation">Validation</a><a href="#power">Power Rankings</a>
   </nav>
@@ -32,7 +33,7 @@
   <div>
    <div class="eyebrow"><span class="pulse"></span> NBA TWIN LAB / GAME FORECAST · VALIDATED DEFAULT</div>
    <h1>Know the matchup.<br><em>Understand the edge.</em></h1>
-   <p>The roster-aware beta uses opponent-adjusted team form, inferred rotation turnover and learned probability calibration. Compare it with historical Elo or experimental possession simulations. No model guarantees a result.</p>
+   <p>The validated Elo baseline is the production forecast. Compare it with roster-aware beta and experimental possession simulations; research models stay separate until prospective evidence supports a reviewed promotion.</p>
    <div class="hero-actions"><a class="primary" href="#matchups">Explore matchups <span aria-hidden="true">↗</span></a><a class="secondary" href="#method">See the methodology</a></div>
   </div>
   <div class="hero-panel">
@@ -40,7 +41,7 @@
    <div class="hero-value" id="hero-count">—</div><div class="muted">NBA games in verified dataset</div>
    <div class="hr"></div>
    <div class="minirow"><span>Source</span><strong>ESPN scoreboard*</strong></div>
-   <div class="minirow"><span>Model</span><strong>Possession Monte Carlo + Elo</strong></div>
+   <div class="minirow"><span>Production model</span><strong>Elo baseline</strong></div>
    <div class="minirow"><span>Data refreshed</span><strong id="freshness">Checking…</strong></div>
   </div>
  </div>
@@ -56,7 +57,7 @@
  <section id="matchups" class="section">
   <div class="sectionhead">
    <div><div class="eyebrow">01 / UPCOMING GAMES</div><h2>Game Prediction Lab</h2><p>Pick a game to inspect the pregame model and team-by-team breakdown.</p></div>
-   <div class="toolbar"><label for="model-choice" class="sr">Forecast model</label><select id="model-choice" title="Forecast model"><option value="roster" selected>Roster-aware · beta</option><option value="elo">Elo · historical baseline</option><option value="mc">V5 Monte Carlo</option></select><label for="simulations" class="sr">Simulation count</label><select id="simulations" title="Possession simulations per matchup"><option value="1000">1,000 simulations</option><option value="10000" selected>10,000 simulations</option><option value="100000">100,000 simulations</option></select><label for="range" class="sr">Game range</label><select id="range"><option value="7">Next 7 days</option><option value="21" selected>Next 21 days</option><option value="all">All scheduled</option><option value="final">Recent results</option></select><label for="team-search" class="sr">Filter team</label><input id="team-search" placeholder="Search team…" autocomplete="off"></div>
+   <div class="toolbar"><label for="model-choice" class="sr">Forecast model</label><select id="model-choice" title="Forecast model"><option value="elo" selected>Elo · production baseline</option><option value="roster">Roster-aware · research beta</option><option value="mc">V5 Monte Carlo · diagnostic</option></select><label for="simulations" class="sr">Simulation count</label><select id="simulations" title="Possession simulations per matchup"><option value="1000">1,000 simulations</option><option value="10000" selected>10,000 simulations</option><option value="100000">100,000 simulations</option></select><label for="range" class="sr">Game range</label><select id="range"><option value="7">Next 7 days</option><option value="21" selected>Next 21 days</option><option value="all">All scheduled</option><option value="final">Recent results</option></select><label for="team-search" class="sr">Filter team</label><input id="team-search" placeholder="Search team…" autocomplete="off"></div>
   </div>
   <div class="matchup-layout">
    <div id="games" class="games" aria-live="polite"><div class="empty">Loading scheduled games…</div></div>
@@ -66,7 +67,7 @@
  <section id="science" class="section">
   <div class="sectionhead"><div><div class="eyebrow">02 / BASKETBALL SCIENCE</div><h2>Which tendencies really predict wins?</h2>
    <p>Team strength, opponent-adjusted form, shot selection, turnovers, offensive rebounds, free-throw pressure, rest and head-to-head history are being tested on strictly pregame data. No arbitrary rivalry or winning-streak bonuses.</p></div></div>
-  <div class="notice">The roster-aware beta improved historical Brier score versus Elo, but has not demonstrated a statistically clear improvement over the prior player-adjusted model. It falls back to Elo when verified roster inputs are missing. Other science models remain research-only. <a href="../team-intelligence/">Compare team tendencies</a> · <a href="../models/">Inspect historical evidence</a>.</div>
+  <div class="notice">Elo remains production. The roster-aware beta improved historical Brier score versus Elo, but has not demonstrated a statistically clear improvement over the prior player-adjusted model. Research models are tracked in the <a href="../audit/">immutable accuracy ledger</a> and never auto-promoted. <a href="../team-intelligence/">Compare team tendencies</a> · <a href="../models/">Inspect historical evidence</a>.</div>
  </section>
  <section id="validation" class="section">
   <div class="sectionhead"><div><div class="eyebrow">03 / HELD-OUT VALIDATION</div><h2>Monte Carlo vs current Elo</h2><p>The exact same games, reconstructed immediately before tip-off with no future results.</p></div><div class="rightlabel" id="validation-sample">Loading scorecard…</div></div>

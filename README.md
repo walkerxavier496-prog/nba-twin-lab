@@ -11,6 +11,7 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 | **Game Predictor** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/predict/) | Live Elo baseline, alternative simulation, score projections and historical validation |
 | **Team Intelligence** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/team-intelligence/) | Real opponent-adjusted team strength, recent efficiency momentum, eFG, shooting styles, turnovers, offensive rebounds, free-throw rate and pace |
 | **Model Research** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/models/) | All historical backtests and experiments, including the basketball-science walk-forward audit |
+| **Accuracy Ledger** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/audit/) | Immutable daily pregame locks, separate final-result reviews, calibration and longitudinal model/player metrics |
 | **Player Twins** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/twins/) | Original season-adjusted statistical twin finder, moved from the home page without deleting its features |
 
 **Legacy experiments remain available under Model Research:** [V6 historical audit](https://walkerxavier496-prog.github.io/nba-twin-lab/history/), [V7 intelligence](https://walkerxavier496-prog.github.io/nba-twin-lab/intelligence/), [V8 research](https://walkerxavier496-prog.github.io/nba-twin-lab/research/), [V9 player stats](https://walkerxavier496-prog.github.io/nba-twin-lab/player-stats/), [Season Test](https://walkerxavier496-prog.github.io/nba-twin-lab/season-test/), [MVP Lab](https://walkerxavier496-prog.github.io/nba-twin-lab/mvp/) and [Championship Archive](https://walkerxavier496-prog.github.io/nba-twin-lab/championship/).
@@ -163,11 +164,18 @@ python -m http.server 8000
 - Champions and Finals MVPs: .github/workflows/update-championships.yml (weekly)
 - Opening-night projected vs actual standings and preseason A/B test: .github/workflows/season-test.yml (daily)
 - Player stat forecasts and historical audit: .github/workflows/v9-player-stats.yml (daily)
+- Immutable pregame locks and nightly final-result reviews: .github/workflows/daily-audit.yml (hourly trigger, Melbourne-time safe windows)
 - Static website deployment: .github/workflows/static.yml
 - Historical five-season audit: .github/workflows/historical-audit.yml
 
 GitHub Pages is configured under **Settings → Pages → GitHub Actions**, using the **Static HTML** workflow. A failed importer leaves the last valid published dataset unchanged. The page shows its actual refresh time rather than claiming to be current.
 
+### Daily accuracy ledger
+
+The hourly trigger is deliberate: GitHub cron uses UTC and does not follow Australian daylight saving. `scripts/daily_tracker.cjs` converts every timestamp with the `Australia/Melbourne` IANA timezone, discovers that local date's slate, and writes exactly one lock only 45–180 minutes before the first tip. A lock is refused when schedule or V9 data is stale, future-dated, incomplete, already live or post-tip. Existing locks are never overwritten.
+
+After 8 p.m. Melbourne time and at least four hours after the last scheduled tip, the same workflow retries the ESPN public summary feed until every game is final and each team has a valid player table. Results are written to a separate review artifact. Player MAE includes only provider-listed players with minutes greater than zero; explicit DNPs and absent box-score rows are excluded rather than scored as zero. `data/audit-ledger.json` is a reproducible derived index with per-model win accuracy, Brier, log loss, score MAE, calibration and PTS/REB/AST/3PM MAE. Production remains `production_elo_v7`; research models are versioned comparisons and cannot promote themselves.
+
 ## Roadmap
 
-Add timestamped injury/availability and expected-minutes snapshots; ingest leakage-safe same-season possession event rates; model travel and roster continuity; preserve a newly untouched season for every future model change; add playoff-bracket simulations and championship probabilities; match historical championship rosters for player ring counts; complete 2025–26 and 2026–27 player advanced-stat coverage.
+Add an automated, timestamped official injury feed (daily V9 locks currently state that availability is inferred and projections are conditional on playing); ingest leakage-safe same-season possession event rates; model travel and roster continuity; preserve a newly untouched season for every future model change; add playoff-bracket simulations and championship probabilities; match historical championship rosters for player ring counts; complete 2025–26 and 2026–27 player advanced-stat coverage.

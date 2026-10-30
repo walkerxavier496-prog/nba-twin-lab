@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#081420"><meta name="description" content="Immutable NBA Twin Lab pregame forecasts, final results, calibration and longitudinal accuracy metrics.">
+<title>NBA Twin Lab · Accuracy Ledger</title><link rel="stylesheet" href="./styles.css"></head><body>
+<header><a class="brand" href="../">TL<span>✦</span> NBA TWIN LAB</a><nav aria-label="Main navigation"><a href="../predict/">Game Predictor</a><a href="../team-intelligence/">Team Intelligence</a><a href="../models/">Model Research</a><a class="active" href="./">Accuracy Ledger</a><a href="../twins/">Player Twins</a></nav></header>
+<main><div class="eyebrow">IMMUTABLE / REPRODUCIBLE / NO POST-TIP EDITS</div><h1>Every forecast.<br><em>Held to account.</em></h1>
+<p class="lead">Daily predictions are timestamped and hashed before tipoff. Final scores and participating-player box scores are written to separate review files, so a prediction can never be quietly rewritten after the game.</p>
+<div id="status" class="status" role="status">Loading the published audit ledger…</div>
+<section class="tiles" aria-label="Ledger status"><article><small>Locked slates</small><strong id="slates">—</strong><span id="latest">No ledger loaded</span></article><article><small>Reviewed games</small><strong id="games">—</strong><span>Only complete final box scores count</span></article><article><small>Production policy</small><strong class="policy">Elo v7</strong><span>Research models never auto-promote</span></article></section>
+
+<section class="panel"><div class="eyebrow">01 / VERSIONED GAME MODELS</div><h2>Longitudinal accuracy</h2><p>Accuracy measures the picked winner. Brier and log loss measure probability quality. Score MAE is the mean absolute error across both team scores. Empty cells mean the metric is not available—not zero.</p>
+<div class="tablewrap"><table><thead><tr><th>Model</th><th>Games</th><th>Win %</th><th>Brier ↓</th><th>Log loss ↓</th><th>Score MAE ↓</th></tr></thead><tbody id="models"><tr><td colspan="6">Awaiting reviewed games.</td></tr></tbody></table></div></section>
+
+<section class="panel"><div class="eyebrow">02 / V9 PLAYER STATS</div><h2>Conditional-on-playing error</h2><p>A player is scored only when the results provider lists more than zero minutes. DNPs and absent rows are excluded rather than treated as zero. V9 remains research-only and official availability can be unknown at lock time.</p>
+<div class="stats" id="player-stats"><article><small>PTS MAE</small><strong>—</strong></article><article><small>REB MAE</small><strong>—</strong></article><article><small>AST MAE</small><strong>—</strong></article><article><small>3PM MAE</small><strong>—</strong></article></div></section>
+
+<section class="panel"><div class="eyebrow">03 / CALIBRATION</div><h2>Forecast confidence versus outcomes</h2><p>Calibration groups the production model’s locked home-win probabilities into ten-point bands. It becomes informative only after many games; small samples are shown without overclaiming.</p>
+<div class="tablewrap"><table><thead><tr><th>Probability band</th><th>Games</th><th>Mean forecast</th><th>Observed home wins</th></tr></thead><tbody id="calibration"><tr><td colspan="4">Awaiting reviewed games.</td></tr></tbody></table></div></section>
+
+<section class="panel"><div class="eyebrow">04 / DOWNLOADABLE LEDGER</div><h2>Daily snapshots and reviews</h2><p>Each row links to its exact forecast lock and, once complete, the separate results review. File hashes are included in the machine-readable ledger.</p>
+<p><a class="button" href="../data/audit-ledger.json" download>Download complete audit ledger (JSON)</a></p><div id="entries" class="entries"><p>No entries loaded.</p></div></section>
+<footer>Provider facts and model outputs are never invented. Missing, stale or malformed core feeds fail closed. ESPN’s public scoreboard is unofficial and undocumented; every published review records source URLs and response hashes. This is research, not betting advice.</footer>
+</main><script src="./app.js"></script></body></html>

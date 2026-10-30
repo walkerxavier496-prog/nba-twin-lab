@@ -1,0 +1,62 @@
+name: Daily immutable prediction and results ledger
+
+on:
+  workflow_dispatch:
+    inputs:
+      melbourne_date:
+        description: Optional Melbourne date (YYYY-MM-DD); normally discovered automatically
+        required: false
+        type: string
+  schedule:
+    # GitHub cron is UTC and cannot follow Australian DST. Run hourly; the script
+    # discovers Australia/Melbourne time and acts only in its safe pre/post windows.
+    - cron: '37 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nba-twin-lab-daily-audit
+  cancel-in-progress: false
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TRACKER_DATE: ${{ inputs.melbourne_date }}
+      TRACKER_SIMULATIONS: '20000'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test lock, timezone and scoring rules
+        run: node --test tests/daily_audit.test.cjs tests/prediction_engine.test.cjs tests/monte_carlo.test.cjs tests/site_navigation.test.cjs
+      - name: Lock eligible slate or ingest complete finals
+        run: node scripts/daily_tracker.cjs run
+      - name: Verify immutable artifacts and derived ledger
+        run: node scripts/daily_tracker.cjs verify
+      - name: Publish new append-only artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audit data/audit-ledger.json
+          if git diff --cached --quiet; then
+            echo 'No eligible ledger change this run' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git commit -m 'Update immutable NBA prediction audit ledger'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo 'Published immutable forecast or results review' >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo 'Could not publish after 5 non-destructive retries' >&2
+          exit 1

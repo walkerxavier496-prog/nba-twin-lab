@@ -1,0 +1,43 @@
+{
+  "schema": "nba-twin-lab-audit-ledger-v2",
+  "generated_at_utc": "2026-10-30T22:00:00.000Z",
+  "timezone": "Australia/Melbourne",
+  "production_policy": "production_elo_v7 remains production; research models are comparisons only and are never promoted automatically",
+  "entries": [
+    {
+      "melbourne_date": "2026-10-31",
+      "status": "locked_awaiting_results",
+      "game_count": 10,
+      "player_projection_count": 228,
+      "locked_at_utc": "2026-10-30T21:49:42.885Z",
+      "locked_at_melbourne": "Saturday, 31 October 2026 at 8:49:42 am AEDT",
+      "lock_path": "practice/2026-10-31-melbourne/forecast.lock.json",
+      "lock_sha256": "9ff9f4246e2376ab515fe2a37972258131cf09b75962bbcab70ae874da490295",
+      "lock_integrity_sha256": "f3b82c10744ed6fba16b40146f60f4db372ad4dc33d8e4f1f1cb9be3cb1e96ed",
+      "review_path": null,
+      "review_sha256": null,
+      "summary": null
+    }
+  ],
+  "longitudinal": {
+    "models": {},
+    "player_stats": {
+      "pts": {
+        "count": 0,
+        "mae": null
+      },
+      "reb": {
+        "count": 0,
+        "mae": null
+      },
+      "ast": {
+        "count": 0,
+        "mae": null
+      },
+      "three_pm": {
+        "count": 0,
+        "mae": null
+      }
+    }
+  }
+}
