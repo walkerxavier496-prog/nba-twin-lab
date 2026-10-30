@@ -15,16 +15,28 @@ const MODE={
  roster_light:['elo','player','team','rest','continuity','rosterShock','eloUncertainty'],
  roster:['elo','player','team','rest','continuity','rosterShock','eloUncertainty','currentChange']
 };
-function buildRows(intel,baseRows){
+function buildRows(intel,baseRows,rotationHistory){
  if(!intel.strict_no_future_data||intel.coverage?.evaluated_games!==6150)throw Error('Unverified historical feature set');
- const index=R.priorRotationIndex(intel.games);
+ if(!rotationHistory?.strict_no_future_data||!Array.isArray(rotationHistory.games)||rotationHistory.games.length!==intel.games.length)
+  throw Error('Missing compact strictly pregame rotation history');
+ const byRotation=new Map(rotationHistory.games.map(g=>[String(g.result_id),g]));
+ const index=R.priorRotationIndex(rotationHistory.games.map(g=>({...g,pregame:{
+  home:{as_of:g.date,rotation:g.home.rotation},
+  away:{as_of:g.date,rotation:g.away.rotation}
+ }})));
  const byId=new Map(baseRows.map(r=>[String(r.id),r]));
  let complete=0,missing=0,earlyComplete=0;
  const rows=intel.games.map(f=>{
   const row=byId.get(String(f.result_id));
   if(!row||row.season!==f.season)throw Error('Mismatched historical pregame '+f.result_id);
-  const home=f.pregame?.home,away=f.pregame?.away;
-  if(!home||!away||home.as_of!==f.date||away.as_of!==f.date)throw Error('Pregame timestamp mismatch '+f.result_id);
+  const rotation=byRotation.get(String(f.result_id));
+  if(!rotation||rotation.date!==f.date||rotation.season!==f.season||
+     R.canonical(rotation.home.abbr)!==R.canonical(f.home.abbr)||
+     R.canonical(rotation.away.abbr)!==R.canonical(f.away.abbr))
+    throw Error('Missing matching pregame rotation '+f.result_id);
+  const home={...f.pregame?.home,rotation:rotation.home.rotation},
+        away={...f.pregame?.away,rotation:rotation.away.rotation};
+  if(!home.as_of||home.as_of!==f.date||away.as_of!==f.date)throw Error('Pregame timestamp mismatch '+f.result_id);
   const pH=index.get((f.season-1)+'|'+R.canonical(f.home.abbr));
   const pA=index.get((f.season-1)+'|'+R.canonical(f.away.abbr));
   if((pH&&pH.date>=f.date)||(pA&&pA.date>=f.date))throw Error('Previous-season snapshot leaked future');
@@ -98,8 +110,8 @@ function currentPriorRotations(index,season=FRESH){
   availability:'Inferred; not an official transaction or injury report',teams};
 }
 if(require.main===module){
- const intel=read('v7-intelligence.json'),base=V8.buildRows();
- const {rows,index,coverage}=buildRows(intel,base);
+ const intel=read('v7-intelligence.json'),rotation=read('rotation-history.json'),base=V8.buildRows();
+ const {rows,index,coverage}=buildRows(intel,base,rotation);
  const report=evaluate(rows);
  report.coverage=coverage;
  fs.writeFileSync(path.join(ROOT,'data/roster-research-report.json'),JSON.stringify(report));
