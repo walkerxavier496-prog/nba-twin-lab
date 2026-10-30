@@ -1,22 +1,27 @@
-# NBA Twin Lab V9 — Player stat projections and matchup intelligence
+# NBA Twin Lab — Evidence-led basketball predictions
 
 **Website:** https://walkerxavier496-prog.github.io/nba-twin-lab/
 
 NBA Twin Lab is an independent, open-source basketball research platform hosted on GitHub Pages. It combines a statistical player twin finder, an explainable next-game prediction baseline, retrospective MVP analysis, and a verified NBA championship archive.
 
-## Sections
+## Primary website
 
-| Lab | URL | Features |
+| Section | URL | Purpose |
 |---|---|---|
-| V9 Player Stat Predictor | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/player-stats/) | Experimental pregame PTS, REB, AST, 3PM, STL, BLK, TOV and minutes by upcoming matchup; inferred participation, source-backed recent per-36 rates and conditional-on-playing historical MAE audit |
-| Game Predictor | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/predict/) | Up to 100,000 possession-by-possession simulations, projected score ranges, team strength, advanced context, recent form, rest and held-out model comparison |
-| Historical Model Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/history/) | Five complete seasons, 6,150 pre-tipoff predictions, Elo/Monte Carlo/blend comparisons, calibration, confidence intervals, ablations and condition splits |
-| [V8 Research Lab](https://walkerxavier496-prog.github.io/nba-twin-lab/research/) | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/research/) | Experimental direct Elo calibration with inferred player availability, opponent-adjusted efficiency, rest and rotation continuity; strict rolling-origin results, no automatic promotion |
-| V7 Intelligence Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/intelligence/) | Rolling-origin six-model scorecard, independent possession simulation, inferred rotations, matchup factors, data freshness and limitations |
-| Season Test | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/season-test/) | Strict opening-night walk-forward backtest, first 1/3/5 games, predicted versus actual conference standings, 82-game strength projections and preseason A/B test |
-| MVP Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/mvp/) | Historical statistical MVP index, season breakdowns and actual award voting |
-| Championship Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/championship/) | NBA champions and Finals MVPs, playoff paths, championship team SRS and advanced statistics |
-| Player Twins | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/) | 13-stat classic and 18-stat advanced player comparisons, careers, peaks and best seasons |
+| **Game Predictor** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/predict/) | Live Elo baseline, alternative simulation, score projections and historical validation |
+| **Team Intelligence** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/team-intelligence/) | Real opponent-adjusted team strength, recent efficiency momentum, eFG, shooting styles, turnovers, offensive rebounds, free-throw rate and pace |
+| **Model Research** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/models/) | All historical backtests and experiments, including the basketball-science walk-forward audit |
+| **Player Twins** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/twins/) | Original season-adjusted statistical twin finder, moved from the home page without deleting its features |
+
+**Legacy experiments remain available under Model Research:** [V6 historical audit](https://walkerxavier496-prog.github.io/nba-twin-lab/history/), [V7 intelligence](https://walkerxavier496-prog.github.io/nba-twin-lab/intelligence/), [V8 research](https://walkerxavier496-prog.github.io/nba-twin-lab/research/), [V9 player stats](https://walkerxavier496-prog.github.io/nba-twin-lab/player-stats/), [Season Test](https://walkerxavier496-prog.github.io/nba-twin-lab/season-test/), [MVP Lab](https://walkerxavier496-prog.github.io/nba-twin-lab/mvp/) and [Championship Archive](https://walkerxavier496-prog.github.io/nba-twin-lab/championship/).
+
+## Basketball-science research
+
+The new `scripts/game_science.cjs` uses exactly the same `predict/science.js` feature definitions as the Team Intelligence dashboard. It tests opponent-adjusted team strength, recent efficiency momentum (last five versus season, shrunk), rest, **Four Factors** (effective field-goal percentage, turnovers, offensive rebounding and free-throw rate), three-point shot style, pace and strictly earlier head-to-head meetings.
+
+Each candidate is a fixed-regularization logistic model trained only on seasons **earlier than the predicted season**. Four rolling-origin evaluation seasons (2022–23 to 2025–26; 4,920 games) are scored on Brier, log loss, winner accuracy and calibration, with day-clustered paired bootstrap confidence intervals. The already inspected 71 games in 2026–27 are shown separately, **not** as a new untouched test. Comparisons against *calibrated Elo* and *adjusted-strength Elo* distinguish actual incremental basketball information from merely rescaling win probabilities.
+
+The historical audit is generated by `.github/workflows/game-science.yml` into `data/game-science-report.json`. The live forecast stays on Elo until genuinely new, prospective, preregistered results justify promotion. **Head-to-head is not an emotional rivalry bonus**, and the system does not claim access to verified injuries, travel mileage, coaching strategy or lineups.
 
 ## V9 player stat forecasting
 
