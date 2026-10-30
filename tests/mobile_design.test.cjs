@@ -72,3 +72,56 @@ test('mobile daily forecast has real, wired search/sort and accessible responsiv
  assert.match(html,/max-width:620px/);
  assert.match(file('assets/site-shell.css'),/safe-area-inset-bottom/);
 });
+
+test('daily phone view renders real locked data and functioning matchup/player search',async()=>{
+ const locked=JSON.parse(file('practice/2026-10-31-melbourne/forecast.lock.json'));
+ const sidecar=JSON.parse(file('audit/supplements/2026-10-31/challenge.lock.json'));
+ const ledger=JSON.parse(file('data/audit-ledger.json'));
+ const content={
+  '../data/audit-ledger.json':ledger,
+  ['../'+ledger.entries[0].lock_path]:locked,
+  '../audit/supplements/2026-10-31/challenge.lock.json':sidecar
+ };
+ const elements=new Map();
+ const get=id=>{
+  if(!elements.has(id))elements.set(id,{id,innerHTML:'',textContent:'',value:id==='player-team'?'all':'',
+                                      onchange:null,oninput:null,className:''});
+  return elements.get(id);
+ };
+ const document={getElementById:get,querySelectorAll:()=>[]};
+ const fetch=async uri=>({ok:uri in content,status:uri in content?200:404,json:async()=>content[uri]});
+ vm.runInNewContext(file('challenge/daily.js'),{document,fetch,Date,Intl,console,Promise},
+    {filename:'challenge/daily.js'});
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(get('error').innerHTML,'');
+ assert.equal(get('stat-games').textContent,'10');
+ assert.equal(get('stat-models').textContent,'6');
+ assert.equal(get('stat-players').textContent,'228');
+ assert.match(get('game-detail').innerHTML,/M6 · Weighted Ensemble/);
+ assert.match(get('player-cards').innerHTML,/Brandon Miller/);
+ get('match-search').value='lakers';get('match-search').oninput();
+ assert.match(get('game-count').textContent,/1 of 10/);
+ assert.match(get('game-selector').innerHTML,/LAL/);
+ get('match-search').value='';get('match-search').oninput();
+ get('player-search').value='Brandon';get('player-search').oninput();
+ assert.match(get('player-count').textContent,/1 of/);
+ assert.equal((get('player-cards').innerHTML.match(/class="player-card"/g)||[]).length,1);
+});
+
+test('historical six-model page creates accessible mobile cards from audited report',async()=>{
+ const report=JSON.parse(file('data/five-model-report.json'));
+ const ledger=JSON.parse(file('data/audit-ledger.json'));
+ const elements=new Map();
+ const get=id=>{
+  if(!elements.has(id))elements.set(id,{id,innerHTML:'',textContent:'',className:'',dataset:{}});
+  return elements.get(id);
+ };
+ const document={getElementById:get,querySelectorAll:()=>[]};
+ const fetch=async uri=>({ok:true,json:async()=>uri.includes('five-model-report')?report:ledger});
+ vm.runInNewContext(file('challenge/app.js'),{document,fetch,Date,Intl,console,Promise},
+  {filename:'challenge/app.js'});
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal((get('leaderboard-cards').innerHTML.match(/class="rank-card"/g)||[]).length,6);
+ assert.match(get('leaderboard-cards').innerHTML,/aria-pressed/);
+ assert.match(get('leaderboard-cards').innerHTML,/BRIER/);
+});
