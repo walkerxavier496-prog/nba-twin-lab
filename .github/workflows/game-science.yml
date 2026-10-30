@@ -7,6 +7,7 @@ on:
     branches: [main]
     paths:
       - scripts/game_science.cjs
+      - predict/science.js
       - scripts/v8_research.cjs
       - tests/game_science.test.cjs
       - .github/workflows/game-science.yml
@@ -28,6 +29,7 @@ jobs:
           node-version: '22'
       - name: Verify tests and syntax
         run: |
+          node --check predict/science.js
           node --check scripts/game_science.cjs
           node --test tests/game_science.test.cjs tests/v8_research.test.cjs
       - name: Run strictly pregame rolling-origin comparison
