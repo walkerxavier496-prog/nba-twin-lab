@@ -22,7 +22,7 @@ function monthRanges(start,end){
 const ymd=d=>d.toISOString().slice(0,10).replace(/-/g,'');
 async function espnRange(start,end){
  const u=new URL('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard');
- u.searchParams.set('dates',ymd(start)+'-'+ymd(end));u.searchParams.set('seasontype','2');u.searchParams.set('limit','500');
+ u.searchParams.set('dates',start.getUTCFullYear()+String(start.getUTCMonth()+1).padStart(2,'0')); // Month queries work; hyphenated ranges return HTTP 400u.searchParams.set('seasontype','2');u.searchParams.set('limit','500');
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),16000);
  try{const r=await fetch(u,{signal:controller.signal,cache:'no-store'});if(!r.ok)throw Error('ESPN HTTP '+r.status);
    return E.normalise(await r.json());}finally{clearTimeout(timer)}
@@ -44,7 +44,7 @@ async function load(){
    render();
    try{
      const start=new Date(today.getTime()-3*86400000),end=new Date(today.getTime()+16*86400000);
-     const fresh=await espnRange(start,end);
+     const fresh=(await Promise.all(monthRanges(start,end).map(([a,b])=>espnRange(a,b)))).flat();
      if(fresh.length){games=E.merge(games,fresh);source='GitHub snapshot + ESPN browser refresh';loadedAt=new Date().toISOString()}
      else note('Historical snapshot loaded; live ESPN returned no games for the selected dates. Predictions may be stale.');
    }catch(err){note('Using the last validated GitHub snapshot. Live scoreboard refresh unavailable ('+err.message+'). Predictions may be stale.')}
