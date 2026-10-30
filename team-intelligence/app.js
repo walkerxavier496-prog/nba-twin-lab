@@ -55,7 +55,8 @@ function draw(){
  $('metrics').innerHTML=rows.join('');
  const a=S.matchup(home,away),b=S.matchup(away,home);
  const factors=[
-  ['Three-point shot profile','Combines each offense’s 3PA share and accuracy with the opponent’s 3PA share allowed.','shooting',x=>fmt(x,3)],
+  ['Shooting efficiency','Combines each offense’s eFG% with the opponent’s eFG% allowed.','shooting',pct],
+  ['Three-point shot profile','Combines each offense’s 3PA share and accuracy with the opponent’s 3PA share allowed.','threePointStyle',x=>fmt(x,3)],
   ['Turnover pressure','Combines ball-security tendency with opponent turnover-forcing rate.','turnovers',x=>fmt(-x*100,1)+'%'],
   ['Offensive glass','Expected offensive rebound opportunity from own ORB and opponent defensive rebounding.','rebounding',pct],
   ['Free-throw opportunities','Own free-throw rate paired with opponent free throws allowed.','freeThrows',x=>fmt(x,3)]
