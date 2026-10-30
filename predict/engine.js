@@ -46,6 +46,7 @@ function merge(...lists){
   const m=new Map();
   for(const list of lists)for(const g of list||[]){
     if(!g?.id||!g?.date||!g.home?.id||!g.away?.id||!Number.isFinite(dateMs(g.date)))continue;
+    if(![g.home.id,g.away.id].every(id=>Number.isInteger(Number(id))&&Number(id)>=1&&Number(id)<=30))continue; // exclude All-Star exhibitions
     const prev=m.get(String(g.id));
     if(!prev||g.status==='final'||(prev.status!=='final'&&g.status==='live'))m.set(String(g.id),g);
   }
