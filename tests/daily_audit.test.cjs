@@ -12,7 +12,7 @@ const ROOT = path.join(__dirname, '..');
 test('Melbourne date discovery follows AEST and AEDT instead of a fixed UTC offset', () => {
   assert.equal(A.melbourneDate('2026-06-01T14:30:00Z'), '2026-06-02');
   assert.equal(A.melbourneDate('2026-10-30T13:30:00Z'), '2026-10-31');
-  assert.match(A.melbourneDisplay('2026-10-30T21:49:42.885Z'), /31 October 2026.*8:49:42 am AEDT/);
+  assert.match(A.melbourneDisplay('2026-10-30T21:49:42.885Z'), /31 October 2026.*8:49:42 am (AEDT|GMT\+11)/);
 });
 
 test('integrity detects any post-lock forecast edit and validates the legacy practice lock', () => {

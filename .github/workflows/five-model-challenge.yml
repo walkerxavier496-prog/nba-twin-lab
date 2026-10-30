@@ -35,8 +35,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Test chronology, weighting and lock integration
-        run: node --test tests/five_model_challenge.test.cjs tests/daily_audit.test.cjs tests/site_navigation.test.cjs
+      - name: Test challenge chronology and weighting
+        run: node --test tests/five_model_challenge.test.cjs
+      - name: Test immutable lock integration
+        run: node --test tests/daily_audit.test.cjs
+      - name: Test challenge site routes
+        run: node --test tests/site_navigation.test.cjs
       - name: Rebuild common-game challenge
         run: node scripts/five_model_challenge.cjs data/five-model-report.json --simulations=400
       - name: Verify generated report
