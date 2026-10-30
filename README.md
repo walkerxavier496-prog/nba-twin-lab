@@ -1,4 +1,4 @@
-# NBA Twin Lab V4 — Independent NBA analytics
+# NBA Twin Lab V5 — Independent NBA analytics
 
 **Website:** https://walkerxavier496-prog.github.io/nba-twin-lab/
 
@@ -8,13 +8,13 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 
 | Lab | URL | Features |
 |---|---|---|
-| Game Predictor | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/predict/) | Upcoming matchups, win probabilities, projected scores, team strength, advanced team context, recent form, rest, historical matchups and accuracy tracking |
+| Game Predictor | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/predict/) | Up to 100,000 possession-by-possession simulations, projected score ranges, team strength, advanced context, recent form, rest and held-out model comparison |
 | Season Test | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/season-test/) | Strict opening-night walk-forward backtest, first 1/3/5 games, predicted versus actual conference standings, 82-game strength projections and preseason A/B test |
 | MVP Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/mvp/) | Historical statistical MVP index, season breakdowns and actual award voting |
 | Championship Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/championship/) | NBA champions and Finals MVPs, playoff paths, championship team SRS and advanced statistics |
 | Player Twins | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/) | 13-stat classic and 18-stat advanced player comparisons, careers, peaks and best seasons |
 
-## Verified coverage at V4 launch
+## Verified coverage at V5 launch
 
 - **2025–26 regular season:** exactly **1,230 final games**, with all 30 team W–L records independently cross-checked against the Basketball Reference team summaries. The importer excludes All-Star exhibitions, postponed 0–0 fixtures and the non-standings 2025 NBA Cup final.
 - **2026–27:** current completed NBA games and upcoming schedule, refreshed daily from the ESPN scoreboard when available. Each page displays its data freshness.
@@ -27,17 +27,29 @@ Coverage changes only when imports succeed. No missing scores, players, titles o
 
 ## Game prediction methodology
 
-This is a **transparent heuristic baseline**, not a trained neural network or betting-market model.
+This is a **transparent simulation model**, not a trained neural network or betting-market model. The original Elo forecast remains intact as the comparison baseline.
 
 1. Process regular-season games chronologically. Update each team's Elo rating using the opponent's strength and a margin-of-victory multiplier.
 2. Regress team Elo 32% toward league average between seasons, including *before* the new season's first final.
 3. Calculate pregame win probability using a fixed +65 Elo home-court adjustment and a ±26 Elo back-to-back rest adjustment.
 4. If verified prior-season team SRS is available, start with **20% prior-year SRS / 80% Elo** and exponentially reduce the prior weight as regular-season games accumulate. A separately verified preseason sample gets only ~11% of a normal game's Elo update and decays rapidly. The previous-season context is never taken from a future game.
-5. Project team scores using shrinkage-adjusted points scored and allowed, plus the projected Elo margin. These are **not possession-adjusted offensive or defensive ratings**.
-6. Display team style context from the prior season: offensive/defensive/net rating, pace, three-point attempt rate, eFG%, turnover rate and offensive rebounding. Previous head-to-head games are shown for context, not used as an extra model weight.
-7. Backtest every completed current-season game **walk-forward**, using only games before tip-off. Track winner accuracy, Brier score and projected-score error. Run the reproducible scorecard script.
+5. Build a matchup possession profile from validated prior-season pace, offensive/defensive rating, eFG%, opponent eFG%, turnover rate, opponent turnover rate, three-point attempt rate, free-throw rate, offensive rebound rate and defensive rebound rate. Current-season scoring is blended in only from earlier games.
+6. Simulate each possession as a turnover, free-throw trip, 2-point or 3-point attempt, miss, and possible offensive rebound. Game pace varies stochastically; tied games play simulated overtime. The engine is seeded so identical inputs reproduce identical results and is capped at **100,000 games per matchup**.
+7. Display mean scores, 10th–90th percentile score ranges, expected possessions and the underlying rates. Previous head-to-head games are context only, not a separate predictive weight.
+8. Backtest every completed current-season game **strictly walk-forward**, using only games before tip-off and advanced profiles from seasons before the predicted game. Compare Monte Carlo with the same Elo baseline using winner accuracy, Brier score, expected calibration error (ECE) and score MAE.
 
-**Not yet included:** verified injuries, expected starters, trades, minutes restrictions, current possession-based matchup data, travel distances or betting odds. Probabilities are not yet calibrated on a multi-season out-of-sample dataset. An early-season win percentage is not proof of a predictive edge. This is not betting or financial advice.
+### Current held-out result
+
+Reproducible scorecard from `node scripts/model_report.cjs`, using 10,000 possession simulations for each of 71 completed 2026–27 games in the validated snapshot:
+
+| Model | Accuracy | Brier | Calibration error (ECE) | Score MAE / team |
+|---|---:|---:|---:|---:|
+| Possession Monte Carlo | 66.2% | 0.2209 | 0.0741 | 10.16 points |
+| Current Elo baseline | 62.0% | 0.2223 | 0.1629 | 10.05 points |
+
+The Monte Carlo model is better on accuracy, Brier score and calibration in this small sample, while Elo is 0.11 points better on score MAE. **Seventy-one games are not enough to claim a stable predictive edge.** These are implementation-validation results, not betting evidence.
+
+**Not yet included:** verified injuries, expected starters, player minutes, trades, travel distances, same-season play-by-play team event rates or betting odds. Prior-season team style may miss offseason changes. Probabilities have not been validated across multiple held-out seasons. An early-season win percentage is not proof of a predictive edge. This is not betting or financial advice.
 
 ## MVP index
 
@@ -75,6 +87,7 @@ Python 3.12+ and Node.js 22+ recommended:
 python -m pip install -r requirements.txt pytest
 python -m pytest -q
 node --test tests/prediction_engine.test.cjs
+node --test tests/monte_carlo.test.cjs
 node --check predict/engine.js
 node --check predict/app.js
 
@@ -103,4 +116,4 @@ GitHub Pages is configured under **Settings → Pages → GitHub Actions**, usin
 
 ## Roadmap
 
-Validate injury and starting-lineup feeds; add minutes and player projections; train and calibrate the model across multiple out-of-sample seasons; add playoff-bracket simulations and championship probabilities; match historical championship rosters for player ring counts; complete 2025–26 and 2026–27 player advanced-stat coverage.
+Validate injury and starting-lineup feeds; add minutes and player projections; ingest same-season possession event rates; validate and calibrate the model across multiple out-of-sample seasons; add playoff-bracket simulations and championship probabilities; match historical championship rosters for player ring counts; complete 2025–26 and 2026–27 player advanced-stat coverage.

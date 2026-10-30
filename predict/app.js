@@ -1,4 +1,4 @@
-/* NBA Twin Lab V4 prediction dashboard — no invented NBA data. */
+/* NBA Twin Lab V5 prediction dashboard — no invented NBA data. */
 (()=>{
 'use strict';
 const E=window.TwinPredict,$=id=>document.getElementById(id);
@@ -9,9 +9,11 @@ const one=x=>Number.isFinite(x)?x.toFixed(1):'—';
 const round=x=>Number.isFinite(x)?Math.round(x):'—';
 const today=new Date();
 const seasonYear=today.getUTCFullYear()+(today.getUTCMonth()>=6?1:0);
-let games=[],selected=null,source='',loadedAt=null,hasHistory=false,context=null,profiles={};
+let games=[],selected=null,source='',loadedAt=null,hasHistory=false,context=null,profiles={},modelReport=null;
+const simulationCache=new Map();
 const alias={GS:'GSW',NY:'NYK',SA:'SAS',NO:'NOP',UTAH:'UTA',WSH:'WAS',PHX:'PHO',BKN:'BRK',CHA:'CHO'};
 async function loadContext(){try{const r=await fetch('../data/context.json',{cache:'no-store'});if(!r.ok)return;const d=await r.json();if(d.schema!==1||!Array.isArray(d.teams))return;context=d;const prior=d.teams.filter(t=>t.season===seasonYear-1);for(const t of prior)profiles[t.abbr]=t;for(const [from,to] of Object.entries(alias))if(profiles[to])profiles[from]=profiles[to];}catch(e){console.warn('Team advanced context unavailable:',e)}}
+async function loadReport(){try{const r=await fetch('../data/model-report.json',{cache:'no-store'});if(!r.ok)return;const d=await r.json();if(d.schema===1&&d.strict_no_future_data)modelReport=d;}catch(e){console.warn('Model scorecard unavailable:',e)}}
 function note(message,type=''){const n=$('notice');n.textContent=message;n.className='notice '+type}
 function monthRanges(start,end){
  const out=[];let y=start.getUTCFullYear(),m=start.getUTCMonth();
@@ -24,7 +26,8 @@ function monthRanges(start,end){
 const ymd=d=>d.toISOString().slice(0,10).replace(/-/g,'');
 async function espnRange(start,end){
  const u=new URL('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard');
- u.searchParams.set('dates',start.getUTCFullYear()+String(start.getUTCMonth()+1).padStart(2,'0')); // Month queries work; hyphenated ranges return HTTP 400u.searchParams.set('seasontype','2');u.searchParams.set('limit','500');
+ u.searchParams.set('dates',start.getUTCFullYear()+String(start.getUTCMonth()+1).padStart(2,'0')); // Month queries work; hyphenated ranges return HTTP 400.
+ u.searchParams.set('seasontype','2');u.searchParams.set('limit','500');
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),16000);
  try{const r=await fetch(u,{signal:controller.signal,cache:'no-store'});if(!r.ok)throw Error('ESPN HTTP '+r.status);
    return E.normalise(await r.json());}finally{clearTimeout(timer)}
@@ -81,12 +84,20 @@ function render(){
  $('games-played').textContent=currentFinals.toLocaleString();
  if(hasHistory)note('Using '+source+'. Historical baseline: '+prevFinals+' completed games from '+(seasonYear-2)+'–'+String(seasonYear-1).slice(2)+'. Forecasts exclude injuries and confirmed lineups.','good');
  else note('Only '+prevFinals+' previous-season finals available; require at least 800 before issuing probabilities. No forecasts will be fabricated.','bad');
- const stats=hasHistory?E.evaluate(games,seasonYear,profiles):{count:0};
- $('accuracy').textContent=stats.count>=10?pct(stats.accuracy):'—';
- $('brier').textContent=stats.count>=10?stats.brier.toFixed(3):'—';
- $('mae').textContent=stats.count>=10?one(stats.scoreMAE):'—';
- $('accuracy-sub').textContent=stats.count>=10?stats.count+' walk-forward games':stats.count+' games evaluated · need 10+';
+ renderScorecard();
  renderGames();renderTeams();
+}
+function renderScorecard(){
+ const mc=modelReport?.monte_carlo,elo=modelReport?.elo,count=modelReport?.held_out_games||0;
+ $('accuracy').textContent=count?pct(mc.accuracy):'—';
+ $('brier').textContent=count?mc.brier.toFixed(3):'—';
+ $('elo-brier').textContent=count?elo.brier.toFixed(3):'—';
+ $('ece').textContent=count?mc.ece.toFixed(3):'—';
+ $('mae').textContent=count?one(mc.scoreMAE):'—';
+ $('accuracy-sub').textContent=count?count+' pre-tipoff games':'Scorecard unavailable';
+ $('validation-sample').textContent=count?count+' games · '+Number(modelReport.simulations_per_game).toLocaleString()+' sims/game':'Scorecard unavailable';
+ for(const [id,val] of Object.entries({'mc-accuracy':count?pct(mc.accuracy):'—','mc-brier':count?mc.brier.toFixed(4):'—','mc-ece':count?mc.ece.toFixed(4):'—','mc-mae':count?one(mc.scoreMAE)+' pts':'—','elo-accuracy':count?pct(elo.accuracy):'—','elo-brier-table':count?elo.brier.toFixed(4):'—','elo-ece':count?elo.ece.toFixed(4):'—','elo-mae':count?one(elo.scoreMAE)+' pts':'—'}))$(id).textContent=val;
+ if(count){const stamp=new Date(modelReport.generated_at_utc).toLocaleString();$('validation-note').textContent='Strict walk-forward holdout generated '+stamp+'. Every forecast uses only earlier finals and previous-season advanced profiles. Brier and expected calibration error are lower-is-better. The sample is too small to claim a durable edge.'}
 }
 function available(){
  const range=$('range').value,term=$('team-search').value.trim().toLowerCase(),now=Date.now();
@@ -116,7 +127,9 @@ function renderDetail(){
  const g=games.find(x=>x.id===selected);
  if(!g){$('detail').innerHTML='<div class="placeholder"><div class="placeholder-icon">◎</div><h3>No game selected</h3><p>Choose an upcoming NBA matchup.</p></div>';return}
  if(!hasHistory){$('detail').innerHTML='<div class="placeholder"><h3>Insufficient verified history</h3><p>The model requires at least 800 completed games from the previous season. No probabilities will be shown until this data is available.</p></div>';return}
- const state=E.ratings(games,g.date),p=E.forecast(g,state,profiles),h=p.home,a=p.away;
+ const state=E.ratings(games,g.date),simulations=Number($('simulations').value),cacheKey=g.id+'|'+g.date+'|'+simulations;
+ if(!simulationCache.has(cacheKey))simulationCache.set(cacheKey,E.monteCarlo(g,state,profiles,{simulations}));
+ const p=simulationCache.get(cacheKey),base=p.baseline,h=base.home,a=base.away;
  const h2h=E.matchupHistory(games,g);
  const hp=profiles[g.home.abbr]||Object.values(profiles).find(t=>t.name===g.home.name),ap=profiles[g.away.abbr]||Object.values(profiles).find(t=>t.name===g.away.name);
  const style=t=>t?metric('Net rating',one(t.n_rtg))+metric('Offensive rating',one(t.o_rtg))+metric('Defensive rating',one(t.d_rtg))+metric('Pace',one(t.pace))+metric('3-point attempt rate',Number.isFinite(t.x3p_ar)?one(100*t.x3p_ar)+'%':'—')+metric('Effective FG%',Number.isFinite(t.e_fg_percent)?one(100*t.e_fg_percent)+'%':'—')+metric('Turnover rate',Number.isFinite(t.tov_percent)?one(t.tov_percent)+'%':'—')+metric('Offensive rebounding',Number.isFinite(t.orb_percent)?one(t.orb_percent)+'%':'—'):'Prior-year team stats unavailable';
@@ -128,21 +141,21 @@ function renderDetail(){
  '<div class="odds"><div><div class="name">'+esc(g.away.abbr)+' · Away</div><div class="pct">'+pct(p.awayWin)+'</div></div>'+
  '<div><div class="name">'+esc(g.home.abbr)+' · Home</div><div class="pct">'+pct(p.homeWin)+'</div></div></div>'+
  '<div class="bar" role="img" aria-label="'+esc(g.away.abbr)+' '+pct(p.awayWin)+', '+esc(g.home.abbr)+' '+pct(p.homeWin)+'"><span style="width:'+100*p.awayWin+'%"></span></div>'+
- '<div class="forecast"><div><strong>'+round(p.awayScore)+' – '+round(p.homeScore)+'</strong><small>Projected score · Away–Home</small></div><div><strong>'+one(p.total)+'</strong><small>Projected total</small></div><div><strong>'+esc((hWin?g.home.abbr:g.away.abbr))+' '+one(Math.abs(p.margin))+'</strong><small>Projected winner & margin</small></div></div>'+
+ '<div class="forecast"><div><strong>'+round(p.awayScore)+' – '+round(p.homeScore)+'</strong><small>Mean score · Away–Home</small></div><div><strong>'+round(p.awayRange[0])+'–'+round(p.awayRange[1])+' / '+round(p.homeRange[0])+'–'+round(p.homeRange[1])+'</strong><small>80% score ranges · A / H</small></div><div><strong>'+one(p.possessions)+'</strong><small>Mean possessions/team</small></div><div><strong>'+simulations.toLocaleString()+'</strong><small>Games simulated</small></div></div>'+
  '<div class="split"><div><h4>'+esc(g.away.abbr)+' · Away</h4>'+
  metric('Elo',round(a.elo))+metric('Record',a.wins+'–'+a.losses)+metric('Points/game',a.games?one(a.points/a.games):'No games')+
  metric('Allowed/game',a.games?one(a.allowed/a.games):'No games')+metric('Last 5',a.recent.slice(-5).map(x=>x.win?'W':'L').join(' ')||'—')+
- metric('Rest before tip',p.awayRest===null?'Unknown':p.awayRest+' days')+'</div>'+
+ metric('Rest before tip',base.awayRest===null?'Unknown':base.awayRest+' days')+metric('Turnover chance',one(100*p.awayProfile.turnover)+'%')+metric('3-point attempt rate',one(100*p.awayProfile.threeRate)+'%')+'</div>'+
  '<div><h4>'+esc(g.home.abbr)+' · Home</h4>'+
  metric('Elo',round(h.elo))+metric('Record',h.wins+'–'+h.losses)+metric('Points/game',h.games?one(h.points/h.games):'No games')+
  metric('Allowed/game',h.games?one(h.allowed/h.games):'No games')+metric('Last 5',h.recent.slice(-5).map(x=>x.win?'W':'L').join(' ')||'—')+
- metric('Rest before tip',p.homeRest===null?'Unknown':p.homeRest+' days')+'</div></div>'+
+ metric('Rest before tip',base.homeRest===null?'Unknown':base.homeRest+' days')+metric('Turnover chance',one(100*p.homeProfile.turnover)+'%')+metric('3-point attempt rate',one(100*p.homeProfile.threeRate)+'%')+'</div></div>'+
  '<h4 class="small">PRIOR-SEASON TEAM STYLE · '+(seasonYear-2)+'–'+String(seasonYear-1).slice(2)+'</h4><div class="split"><div><h4>'+esc(g.away.abbr)+'</h4>'+style(ap)+'</div><div><h4>'+esc(g.home.abbr)+'</h4>'+style(hp)+'</div></div><p class="disclaimer">Verified team advanced statistics are previous-season context, not live current-season ratings. They do not adjust for offseason roster changes.</p>'+ 
  '<h4 class="small">MATCHUP EXPLANATION</h4><div class="context">'+
- '<p><b>'+esc(hWin?g.home.name:g.away.name)+'</b> is favoured by '+one(Math.abs(p.eloEdge))+' model rating points. The estimate includes home court (+65 Elo), back-to-back rest, and '+(p.priorUsed?'a prior-year team-SRS contribution that starts at 20% and fades as current-season results accumulate.':'Elo alone because verified prior-year team SRS is missing.')+'</p>'+
+ '<p><b>'+esc(hWin?g.home.name:g.away.name)+'</b> wins '+pct(hWin?p.homeWin:p.awayWin)+' of '+simulations.toLocaleString()+' seeded simulations. The possession model uses the baseline matchup expectation of '+one(Math.abs(base.eloEdge))+' rating points, then plays turnovers, free throws, 2s, 3s, misses and offensive rebounds using validated historical team rates.</p>'+
  '<p>Last '+h2h.length+' head-to-head meeting'+(h2h.length===1?'':'s')+': '+(h2h.length?h2h.map(x=>esc(x.away.abbr)+' '+x.awayScore+'–'+x.homeScore+' '+esc(x.home.abbr)).join(' · '):'No verified recent meetings')+'. Head-to-head history is context only, not a separate predictive weight.</p></div>'+
  (g.status==='final'?'<p class="context"><b>Actual final:</b> '+esc(g.away.abbr)+' '+g.awayScore+' – '+g.homeScore+' '+esc(g.home.abbr)+'. This forecast was recomputed using only games before tip-off.</p>':'')+
- '<p class="disclaimer">'+esc(p.confidence)+'. Elo baseline + scoring estimates; no verified injury/lineup adjustments, possession-based matchup metrics or betting-market input. Win probabilities are uncalibrated until sufficient backtesting. This is not betting advice.</p>';
+ '<p class="disclaimer">'+esc(base.confidence)+'. Seeded Monte Carlo result: identical inputs reproduce the same estimate. No injury, confirmed-lineup, player-minutes, trade, travel or betting-market input. Prior-season style can miss offseason changes; a probability is never a guarantee. This is not betting advice.</p>';
 }
 function renderTeams(){
  const state=E.ratings(games,new Date(Date.now()+1000).toISOString());
@@ -153,5 +166,6 @@ function renderTeams(){
 }
 $('range').addEventListener('change',renderGames);
 $('team-search').addEventListener('input',renderGames);
-loadContext().then(load);
+$('simulations').addEventListener('change',()=>{simulationCache.clear();renderDetail()});
+Promise.all([loadContext(),loadReport()]).then(load);
 })();

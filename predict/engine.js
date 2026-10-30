@@ -1,5 +1,6 @@
-/* NBA Twin Lab prediction engine v4.
-   Transparent, deterministic Elo baseline. No odds, injury or betting inputs.
+/* NBA Twin Lab prediction engine v5.
+   Transparent Elo baseline plus a seeded possession-by-possession Monte Carlo model.
+   No odds, injury or betting inputs.
    Browser global: TwinPredict; Node: require('./engine.js').
 */
 (function(root,factory){
@@ -17,6 +18,24 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const mean=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:null;
 const logistic=x=>1/(1+Math.pow(10,-x/400));
 const key=x=>String(x??'').trim();
+const quantile=(values,q)=>{
+  if(!values.length)return null;
+  const a=values.slice().sort((x,y)=>x-y),i=(a.length-1)*q,lo=Math.floor(i),hi=Math.ceil(i);
+  return a[lo]+(a[hi]-a[lo])*(i-lo);
+};
+function seed32(value){
+  let h=2166136261;
+  for(const c of String(value)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}
+  return h>>>0;
+}
+function seededRandom(seed){
+  let a=typeof seed==='number'?seed>>>0:seed32(seed);
+  return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296};
+}
+function gaussian(rng){
+  const u=Math.max(rng(),1e-12),v=rng();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+}
 function normalise(payload){
   if(!payload||!Array.isArray(payload.events))throw Error('Invalid ESPN scoreboard: missing events');
   const out=[];
@@ -119,7 +138,8 @@ function forecast(game,state,profiles={}){
   // Profiles MUST come from the season before the predicted game, never the same season.
   const ch=profiles[game.home.abbr]||profiles[game.home.id];
   const ca=profiles[game.away.abbr]||profiles[game.away.id];
-  const validPrior=ch&&ca&&Number.isFinite(ch.srs)&&Number.isFinite(ca.srs);
+  const beforeGame=p=>p&&Number.isFinite(p.srs)&&(p.season===undefined||Number(p.season)<Number(game.season));
+  const validPrior=beforeGame(ch)&&beforeGame(ca);
   const priorEdge=validPrior?(ch.srs-ca.srs)*25+HOME+restEdge:null;
   // Previous-season context matters most in the first few games.
   // As actual current-season results accumulate, the prior fades smoothly.
@@ -138,6 +158,117 @@ function forecast(game,state,profiles={}){
     confidence:state.finals<150?'Insufficient historical data':gamesCurrent<16?'Early-season baseline':'Model estimate',
     history:state.finals};
 }
+function profileBeforeGame(profiles,team,season){
+  const p=profiles?.[team.abbr]||profiles?.[team.id];
+  return p&&(p.season===undefined||Number(p.season)<Number(season))?p:null;
+}
+function possessionProfile(team,prior,opponentPrior,targetScore,pace){
+  const n=team?.games||0;
+  const priorPace=safe(Number(prior?.pace))||100;
+  const opponentPace=safe(Number(opponentPrior?.pace))||100;
+  const gamePace=clamp((priorPace+opponentPace)/2,91,108);
+  const currentPpp=n&&pace?clamp((team.points/n)/pace,.85,1.35):null;
+  const priorPpp=Number.isFinite(Number(prior?.o_rtg))?Number(prior.o_rtg)/100:1.14;
+  const defensePpp=Number.isFinite(Number(opponentPrior?.d_rtg))?Number(opponentPrior.d_rtg)/100:1.14;
+  const historical=(priorPpp+defensePpp)/2;
+  const scorePpp=Number.isFinite(targetScore)?targetScore/gamePace:historical;
+  const targetPpp=clamp(.5*scorePpp+.32*historical+.18*(currentPpp??historical),.86,1.38);
+  const turnover=clamp(((Number(prior?.tov_percent)||13)+(Number(opponentPrior?.opp_tov_percent)||13))/200,.075,.19);
+  const threeRate=clamp(Number(prior?.x3p_ar)||.4,.22,.58);
+  const freeThrowTrip=clamp((Number(prior?.f_tr)||.24)*.44,.055,.17);
+  const orb=clamp(((Number(prior?.orb_percent)||25)+(100-(Number(opponentPrior?.drb_percent)||75)))/200,.14,.38);
+  const rawEfg=clamp(((Number(prior?.e_fg_percent)||.545)+(Number(opponentPrior?.opp_e_fg_percent)||.545))/2,.46,.63);
+  // Calibrate shot making to the forecast's expected points per possession while
+  // retaining the team's validated turnover, shot mix, foul and rebounding style.
+  let lo=.38,hi=.70;
+  for(let i=0;i<24;i++){
+    const efg=(lo+hi)/2;
+    const threePct=clamp(.36+(efg-rawEfg)*.72,.27,.46);
+    const twoPct=clamp((efg-1.5*threeRate*threePct)/(1-threeRate),.38,.72);
+    const make=threeRate*threePct+(1-threeRate)*twoPct;
+    const miss=(1-freeThrowTrip)*(1-make);
+    const attemptPoints=freeThrowTrip*1.56+(1-freeThrowTrip)*(threeRate*threePct*3+(1-threeRate)*twoPct*2);
+    const expected=(1-turnover)*attemptPoints/(1-miss*orb);
+    if(expected<targetPpp)lo=efg;else hi=efg;
+  }
+  const efg=clamp((lo+hi)/2,.38,.70);
+  const threePct=clamp(.36+(efg-rawEfg)*.72,.27,.46);
+  const twoPct=clamp((efg-1.5*threeRate*threePct)/(1-threeRate),.38,.72);
+  return {pace:gamePace,targetPpp,turnover,threeRate,freeThrowTrip,orb,threePct,twoPct,ftPct:.78,
+    source:prior?'validated prior-season team profile':'league-average fallback'};
+}
+function possession(profile,rng){
+  if(rng()<profile.turnover)return 0;
+  let points=0;
+  for(let chance=0;chance<4;chance++){
+    if(rng()<profile.freeThrowTrip){
+      points+=(rng()<profile.ftPct?1:0)+(rng()<profile.ftPct?1:0);
+      return points;
+    }
+    const three=rng()<profile.threeRate,hit=rng()<(three?profile.threePct:profile.twoPct);
+    if(hit)return points+(three?3:2);
+    if(rng()>=profile.orb)return points;
+  }
+  return points;
+}
+function simulateOne(home,away,pace,rng){
+  const possessions=clamp(Math.round(pace+gaussian(rng)*4.5),82,121);
+  let homeScore=0,awayScore=0;
+  for(let i=0;i<possessions;i++){
+    awayScore+=possession(away,rng);
+    homeScore+=possession(home,rng);
+  }
+  let overtime=0;
+  while(homeScore===awayScore&&overtime<6){
+    overtime++;
+    const extra=Math.max(4,Math.round(possessions*5/48));
+    for(let i=0;i<extra;i++){
+      awayScore+=possession(away,rng);
+      homeScore+=possession(home,rng);
+    }
+  }
+  if(homeScore===awayScore)(rng()<.5?()=>homeScore++:()=>awayScore++)();
+  return {homeScore,awayScore,possessions,overtime};
+}
+function monteCarlo(game,state,profiles={},options={}){
+  const baseline=forecast(game,state,profiles);
+  const simulations=clamp(Math.round(Number(options.simulations)||10000),100,100000);
+  const homePrior=profileBeforeGame(profiles,game.home,game.season);
+  const awayPrior=profileBeforeGame(profiles,game.away,game.season);
+  const priorPace=clamp(((Number(homePrior?.pace)||100)+(Number(awayPrior?.pace)||100))/2,91,108);
+  const hp=possessionProfile(baseline.home,homePrior,awayPrior,baseline.homeScore,priorPace);
+  const ap=possessionProfile(baseline.away,awayPrior,homePrior,baseline.awayScore,priorPace);
+  const pace=(hp.pace+ap.pace)/2;
+  const rng=seededRandom(options.seed??(game.id+'|'+game.date+'|'+simulations));
+  let wins=0,homeTotal=0,awayTotal=0,possessionTotal=0,ot=0;
+  const homeScores=new Array(simulations),awayScores=new Array(simulations),margins=new Array(simulations);
+  for(let i=0;i<simulations;i++){
+    const r=simulateOne(hp,ap,pace,rng);
+    wins+=r.homeScore>r.awayScore?1:0;homeTotal+=r.homeScore;awayTotal+=r.awayScore;
+    possessionTotal+=r.possessions;ot+=r.overtime>0?1:0;
+    homeScores[i]=r.homeScore;awayScores[i]=r.awayScore;margins[i]=r.homeScore-r.awayScore;
+  }
+  const homeWin=clamp(wins/simulations,.001,.999),homeScore=homeTotal/simulations,awayScore=awayTotal/simulations;
+  return {simulations,seed:options.seed??(game.id+'|'+game.date+'|'+simulations),homeWin,awayWin:1-homeWin,
+    homeScore,awayScore,total:homeScore+awayScore,margin:homeScore-awayScore,
+    possessions:possessionTotal/simulations,overtimeRate:ot/simulations,
+    homeRange:[quantile(homeScores,.1),quantile(homeScores,.9)],awayRange:[quantile(awayScores,.1),quantile(awayScores,.9)],
+    marginRange:[quantile(margins,.1),quantile(margins,.9)],homeProfile:hp,awayProfile:ap,baseline};
+}
+function calibration(picks,bins=10){
+  const rows=[];
+  for(let i=0;i<bins;i++){
+    const low=i/bins,high=(i+1)/bins,inBin=picks.filter(x=>x.p>=low&&(i===bins-1?x.p<=high:x.p<high));
+    if(!inBin.length)continue;
+    rows.push({low,high,count:inBin.length,confidence:mean(inBin.map(x=>x.p)),actual:mean(inBin.map(x=>x.actual))});
+  }
+  return {bins:rows,ece:picks.length?rows.reduce((s,b)=>s+b.count/picks.length*Math.abs(b.confidence-b.actual),0):null};
+}
+function metrics(picks){
+  const c=calibration(picks);
+  return {count:picks.length,accuracy:picks.length?mean(picks.map(x=>x.correct?1:0)):null,
+    brier:mean(picks.map(x=>x.brier)),scoreMAE:mean(picks.map(x=>x.scoreError)),ece:c.ece,calibration:c.bins};
+}
 function evaluate(games,season,profiles={}){
   const finals=merge(games).filter(g=>g.status==='final'&&g.season===season);
   const picks=[];
@@ -150,8 +281,22 @@ function evaluate(games,season,profiles={}){
       correct:(p.homeWin>=.5)===(actual===1),brier:(p.homeWin-actual)**2,
       scoreError:(Math.abs(p.homeScore-g.homeScore)+Math.abs(p.awayScore-g.awayScore))/2});
   }
-  return {count:picks.length,accuracy:picks.length?mean(picks.map(x=>x.correct?1:0)):null,
-    brier:mean(picks.map(x=>x.brier)),scoreMAE:mean(picks.map(x=>x.scoreError)),picks};
+  return {...metrics(picks),picks};
+}
+function evaluateComparison(games,season,profiles={},options={}){
+  const finals=merge(games).filter(g=>g.status==='final'&&g.season===season);
+  const elo=[],simulation=[];
+  for(const g of finals){
+    const state=ratings(games,g.date);
+    if(state.finals<120||g.homeScore===g.awayScore)continue;
+    const e=forecast(g,state,profiles),m=monteCarlo(g,state,profiles,{simulations:options.simulations||2000,seed:'backtest|'+g.id});
+    const actual=g.homeScore>g.awayScore?1:0;
+    for(const [arr,p,hs,as] of [[elo,e.homeWin,e.homeScore,e.awayScore],[simulation,m.homeWin,m.homeScore,m.awayScore]]){
+      arr.push({id:g.id,date:g.date,p,actual,correct:(p>=.5)===(actual===1),brier:(p-actual)**2,
+        scoreError:(Math.abs(hs-g.homeScore)+Math.abs(as-g.awayScore))/2});
+    }
+  }
+  return {season,strictWalkForward:true,simulationsPerGame:options.simulations||2000,elo:{...metrics(elo),picks:elo},monteCarlo:{...metrics(simulation),picks:simulation}};
 }
 function teamTable(state){
   return [...state.teams.values()].filter(t=>t.games>0).sort((a,b)=>b.elo-a.elo)
@@ -163,5 +308,6 @@ function matchupHistory(games,game){
     ((g.home.id===game.home.id&&g.away.id===game.away.id)||(g.home.id===game.away.id&&g.away.id===game.home.id)));
   return arr.slice(-5).reverse();
 }
-return {normalise,merge,ratings,forecast,evaluate,teamTable,matchupHistory,logistic,restDays};
+return {normalise,merge,ratings,forecast,monteCarlo,evaluate,evaluateComparison,calibration,
+  possessionProfile,teamTable,matchupHistory,logistic,restDays,seededRandom};
 });

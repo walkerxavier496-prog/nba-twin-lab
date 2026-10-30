@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""NBA Twin Lab V4 scoreboard importer.
+"""NBA Twin Lab V5 scoreboard importer.
 
 ESPN's unauthenticated scoreboard is an *unofficial, undocumented* source.
 Never manufacture games, odds, injuries, advanced ratings, or future results.
