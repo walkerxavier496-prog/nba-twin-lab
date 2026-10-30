@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08121f"><meta name="description" content="NBA Twin Lab V9: transparent pregame player-stat projections with inferred availability and historical error audits.">
+<title>NBA Twin Lab · Player Stat Predictor</title><link rel="stylesheet" href="./styles.css">
+<script defer src="./app.js"></script></head><body>
+<header class="nav"><a href="../" class="brand">TL✦ <span>NBA TWIN LAB</span></a>
+<nav aria-label="Site sections"><a href="../predict/">Game Predictor</a><a href="../intelligence/">V7 Matchups</a><a href="../research/">V8 Research</a><a class="active" href="./">V9 Player Stats</a><a href="../history/">Historical Audit</a></nav></header>
+<main>
+<div class="eyebrow">V9 / PLAYER INTELLIGENCE</div>
+<h1>Predict the player.<br><em>Not just the winner.</em></h1>
+<p class="lead">Player-by-player projections for upcoming NBA games, using recent verified game logs, expected minutes and matchup pace. Availability is inferred—not a confirmed injury report.</p>
+<div id="status" role="status" class="status">Loading verified player projections…</div>
+<div class="summary">
+<div><small>Available NBA teams</small><strong id="team-count">—</strong></div>
+<div><small>Player stat categories</small><strong>7</strong></div>
+<div><small>Snapshot date</small><strong id="snapshot-date">—</strong></div>
+<div><small>Historical audit</small><strong id="audit-games">—</strong></div>
+</div>
+<section class="panel">
+<div class="section-heading"><div><div class="eyebrow">01 / GAME DAY</div><h2>Choose a matchup</h2><p>Upcoming fixtures come from the verified NBA schedule snapshot. Projections are experimental and never replace the main game predictor.</p></div></div>
+<div class="controls">
+<label for="matchup">NBA game<select id="matchup"><option value="">Loading upcoming games…</option></select></label>
+<label for="mode">Projection view<select id="mode"><option value="conditional">If player participates</option><option value="unconditional">Including inferred DNP risk</option></select></label>
+</div>
+<div class="switcher" role="group" aria-label="Select team"><button id="away" class="selected" type="button">Away team</button><button id="home" type="button">Home team</button></div>
+<div id="game-meta" class="game-meta">Select an upcoming fixture.</div>
+<div class="tablewrap"><table class="projections"><thead><tr><th>Player</th><th>Play chance*</th><th>Minutes</th><th>PTS</th><th>REB</th><th>AST</th><th>3PM</th><th>STL</th><th>BLK</th><th>TOV</th></tr></thead><tbody id="players"><tr><td colspan="10">Loading player data…</td></tr></tbody></table></div>
+<p class="footnote">* Play chance is inferred from previous appearances, not a verified injury designation. Conditional predictions assume the player plays; the alternative view includes estimated DNP risk. Matchup adjustments are modest, heuristic and not independently validated. An unavailable statistic is shown as —, never as a fabricated zero.</p>
+</section>
+<section class="panel"><div class="eyebrow">02 / HISTORICAL VALIDATION</div><h2>Do the projections beat a simple baseline?</h2><p>Historical predictions are made before each game. We compare absolute stat error against the player's recent per-game average. These scores include <strong>only players who actually appeared</strong>; they do not validate our play probabilities.</p>
+<div class="tablewrap"><table><thead><tr><th>Statistic</th><th>Matched player games</th><th>V9 MAE ↓</th><th>Recent-average MAE ↓</th><th>Difference</th></tr></thead><tbody id="audit"><tr><td colspan="5">Waiting for historical audit…</td></tr></tbody></table></div>
+<p id="audit-note" class="footnote">Historical source and limitations will appear when the verified report is published.</p>
+</section>
+<section class="panel"><div class="eyebrow">03 / WHAT COMES NEXT</div><h2>From player projections to Twin League</h2><div class="cards"><article><b>V9 · Player stats</b><p>Pregame minutes and seven box-score categories with historical error tracking.</p></article><article><b>V10 · Full box scores</b><p>Make individual projections add up to realistic team totals and simulate player-stat distributions.</p></article><article><b>Twin League · Franchise simulator</b><p>Separate persistent fictional seasons with trades, development, draft classes, standings and simulated games.</p></article></div></section>
+<footer>NBA Twin Lab is independent and not affiliated with the NBA. Historical player logs are NBA Stats-derived through an unofficial third-party dataset. <a href="https://github.com/walkerxavier496-prog/nba-twin-lab">View source and methodology</a>.</footer>
+</main></body></html>
