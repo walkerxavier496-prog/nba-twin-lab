@@ -12,8 +12,8 @@
 <div class="status" id="status" role="status">Loading verified research report…</div>
 <section class="panel"><div class="eyebrow">01 / SCIENCE OF THE GAME</div><h2>Which basketball signals improve predictions?</h2>
 <p>Opponent-adjusted strength, efficiency momentum, shooting style, turnover pressure, offensive rebounding, free-throw tendencies, rest, pace and prior head-to-head meetings. Head-to-head history is a testable signal—not a special rivalry bonus. We also compare each experiment with calibrated Elo to distinguish real basketball insight from a simple probability adjustment.</p>
-<div class="tablewrap"><table><thead><tr><th>Model</th><th>Win accuracy</th><th>Brier ↓</th><th>Log loss ↓</th><th>ECE ↓</th><th>Seasons better than Elo</th></tr></thead><tbody id="science"><tr><td colspan="6">Waiting for the audited report…</td></tr></tbody></table></div>
-<p class="muted" id="science-note">Lower Brier and log loss mean better probability estimates. Winner accuracy is not the only success metric.</p></section>
+<div class="tablewrap"><table><thead><tr><th>Model</th><th>Win accuracy</th><th>Brier ↓</th><th>Log loss ↓</th><th>ECE ↓</th><th>Δ Brier vs calibrated Elo</th><th>95% day-clustered CI</th></tr></thead><tbody id="science"><tr><td colspan="7">Waiting for the audited report…</td></tr></tbody></table></div>
+<p id="takeaway"></p><p class="muted" id="science-note">Lower Brier and log loss mean better probability estimates. Winner accuracy is not the only success metric.</p></section>
 <section class="panel"><div class="eyebrow">02 / PREVIOUS EXPERIMENTS</div><h2>Research archive</h2><p>Older versions remain available for transparency, but they no longer clutter the main navigation.</p>
 <div class="archive">
 <article><h3>V6 · Five-season historical model audit</h3><p>Elo versus possession Monte Carlo, probability calibration, score errors and historical testing.</p><a href="../history/">Open historical audit</a></article>
@@ -37,8 +37,16 @@
   if(!d.strict_no_future_data||d.status!=='research_only_not_promoted'||d.sample.rolling!==4920)throw Error('Report failed provenance checks');
   document.getElementById('games').textContent=d.sample.rolling.toLocaleString();
   document.getElementById('status').textContent='Research verified · '+new Date(d.generated_at_utc).toLocaleString()+' · Live Elo remains unchanged';
-  document.getElementById('science').innerHTML=Object.entries(d.models).map(([key,v])=>'<tr><td>'+names[key]+'</td><td>'+percent(v.rolling.accuracy)+'</td><td>'+number(v.rolling.brier)+'</td><td>'+number(v.rolling.logLoss)+'</td><td>'+number(v.rolling.ece)+'</td><td>'+(key==='elo'?'baseline':d.comparisons[key+'_minus_elo'].season_wins_count+'/4')+'</td></tr>').join('');
+  document.getElementById('science').innerHTML=Object.entries(d.models).map(([key,v])=>{
+    const comp=d.comparisons[key+'_minus_calibrated'];
+    return '<tr><td>'+names[key]+'</td><td>'+percent(v.rolling.accuracy)+'</td><td>'+number(v.rolling.brier)+'</td><td>'+number(v.rolling.logLoss)+'</td><td>'+number(v.rolling.ece)+'</td><td>'+(comp?number(comp.delta_brier):'reference')+'</td><td>'+(comp?comp.ci95_day_clustered.map(number).join(' to '):'—')+'</td></tr>';
+  }).join('');
+  const form=d.comparisons.form_minus_calibrated,factors=d.comparisons.four_factors_minus_calibrated;
+  if(form&&factors){
+    const significant=form.ci95_day_clustered[1]<0;
+    document.getElementById('takeaway').textContent='Versus calibrated Elo, recent form and rest '+(significant?'show a day-clustered Brier improvement.':'have not yet demonstrated a clear Brier improvement.')+' Four Factors '+(factors.ci95_day_clustered[1]<0?'also show measurable incremental improvement.':'do not yet show clear incremental improvement.');
+  }
   document.getElementById('science-note').textContent='Rolling-origin 2022–23 through 2025–26. Paired day-clustered bootstrap intervals are in the source JSON. The inspected 2026–27 games are not a fresh holdout. No model was promoted automatically.';
- }catch(e){document.getElementById('status').textContent=e.message;document.getElementById('science').innerHTML='<tr><td colspan="6">Historical science results will appear once the audit passes. Elo is still the live default.</td></tr>';}
+ }catch(e){document.getElementById('status').textContent=e.message;document.getElementById('science').innerHTML='<tr><td colspan="7">Historical science results will appear once the audit passes. Elo is still the live default.</td></tr>';}
 })();
 </script></body></html>
