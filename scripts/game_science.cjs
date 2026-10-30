@@ -18,9 +18,9 @@ const modeFeatures={
   strength:['elo','team'],
   form:['elo','team','momentum','restScience'],
   four_factors:['elo','team','shooting','turnovers','rebounding','freeThrows'],
-  styles:['elo','team','shooting','turnovers','rebounding','freeThrows','pace'],
+  styles:['elo','team','shooting','threePointStyle','turnovers','rebounding','freeThrows','pace'],
   head_to_head:['elo','team','h2h'],
-  full:['elo','team','momentum','restScience','shooting','turnovers','rebounding','freeThrows','pace','h2h']
+  full:['elo','team','momentum','restScience','shooting','threePointStyle','turnovers','rebounding','freeThrows','pace','h2h']
 };
 const {blended,matchup,scienceFeatures}=require('../predict/science.js');
 function pairKey(a,b){return [canonical(a),canonical(b)].sort().join('|');}
@@ -123,14 +123,15 @@ function evaluate(rows){
     decision:'Do not automatically promote. Require robust lower Brier AND log loss in at least 3/4 seasons plus uncertainty review and new forward-only monitoring.',
     warnings:['Momentum is an opponent-adjusted short-term efficiency trend, not psychological momentum.',
       'Head-to-head is a prior-meetings residual signal, NOT an emotional rivalry bonus; sample is tiny and confounded by roster changes.',
-      'Four-factor matchup adjustments and momentum may be redundant with Elo; only measured lift counts.',
+      'Four-factor matchup adjustments and momentum may be redundant with Elo; comparisons versus calibrated Elo and adjusted strength are required.',
       'No verified historical injuries, travel mileage, coaching tactics or confirmed lineups. No fictional features are inserted.',
       'This research evaluates game winners, not margin accuracy or total score accuracy.',
       'This 2026-27 season is an inspected diagnostic sample, not a new untouched holdout.'],
     features:{
       momentum:'Shrunk difference between opponent-adjusted last-five and season net ratings',
       restScience:'Pregame days-rest advantage capped at three days',
-      shooting:'Three-point shot volume × recent/prior 3P accuracy, adjusted for opponent allowed 3PA share',
+      shooting:'Four Factors: expected eFG% from offense shooting and opponent eFG% allowed',
+      threePointStyle:'Three-point attempt share × accuracy adjusted for opponent allowed 3PA share',
       turnovers:'Team turnover rate paired with opponent forced-turnover rate',
       rebounding:'Offensive rebound share paired with opponent defensive rebound share',
       freeThrows:'Team free-throw rate paired with opponent fouls allowed',
@@ -154,6 +155,22 @@ function evaluate(rows){
       return c.brier<b.brier&&c.logLoss<b.logLoss;
     });
     result.comparisons[mode+'_minus_elo']={...pair,season_wins:seasonWins,season_wins_count:seasonWins.length};
+  }
+  // These comparisons isolate whether basketball features add information
+  // beyond simply calibrating Elo's probability scale.
+  for(const [candidate,baseline] of [
+    ['strength','calibrated'],['form','calibrated'],['four_factors','calibrated'],
+    ['styles','calibrated'],['head_to_head','calibrated'],['full','calibrated'],
+    ['form','strength'],['four_factors','strength'],['styles','strength'],
+    ['head_to_head','strength'],['full','form']]){
+    const c=predictions[candidate].filter(r=>SEASONS.includes(r.season));
+    const b=predictions[baseline].filter(r=>SEASONS.includes(r.season));
+    const pair=pairedDayBootstrap(c,b);
+    const seasonsBetter=SEASONS.filter(season=>{
+      const x=result.models[candidate].by_season[season],y=result.models[baseline].by_season[season];
+      return x.brier<y.brier&&x.logLoss<y.logLoss;
+    });
+    result.comparisons[candidate+'_minus_'+baseline]={...pair,season_wins:seasonsBetter,season_wins_count:seasonsBetter.length};
   }
   return result;
 }
