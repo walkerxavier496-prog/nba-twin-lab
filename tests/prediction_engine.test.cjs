@@ -71,3 +71,9 @@ test('verified previous-season SRS contributes to matchup forecast without chang
  assert.ok(anchored.homeWin>baseline.homeWin);
  assert.equal(state.finals,0);
 });
+
+test('exhibition teams cannot enter Elo training',()=>{
+ const exhibition={...game('allstar',iso(2026,2,15),50,48),home:{id:'132375',name:'Team Stripes',abbr:'STR'}};
+ assert.equal(E.merge([exhibition]).length,0);
+ assert.equal(E.ratings([exhibition],iso(2026,2,16)).finals,0);
+});
