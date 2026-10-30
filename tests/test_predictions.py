@@ -72,3 +72,12 @@ def test_all_star_teams_are_excluded_from_regular_season():
     exhibition = event("allstar")
     exhibition["competitions"][0]["competitors"][0]["team"]["id"] = "132375"
     assert pred.parse_events({"events": [exhibition]}) == []
+
+
+def test_postponed_zero_zero_and_nba_cup_final_excluded():
+    postponed = event("postponed")
+    for t in postponed["competitions"][0]["competitors"]:
+        t["score"] = "0"
+    cup = event("401809839")
+    cup["competitions"][0]["notes"] = [{"headline": "NBA Cup Championship"}]
+    assert pred.parse_events({"events": [postponed, cup]}) == []
