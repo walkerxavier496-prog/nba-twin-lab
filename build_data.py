@@ -70,7 +70,7 @@ def fetch(url, session=requests, retries=3):
     raise RuntimeError(f'Cannot retrieve {url}: {last}')
 
 def load_csv(url, session=requests):
-    rows = list(csv.DictReader(io.StringIO(fetch(url,session))))
+    rows = list(csv.DictReader(io.StringIO(fetch(url,session), newline='')))
     if len(rows) < 50: raise ValueError(f'Insufficient rows from {url}: {len(rows)}')
     return rows
 
