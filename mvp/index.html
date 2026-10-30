@@ -8,6 +8,7 @@
 <main class="shell">
 <section class="hero"><div class="eyebrow">NBA TWIN LAB / HISTORICAL ANALYSIS</div><h1>Who had the<br><em>strongest MVP case?</em></h1><p>Explore a transparent, season-by-season statistical MVP index, compare it with real MVP voting and discover the strongest individual seasons. The model is not the official award result.</p></section>
 <div class="notice" id="notice" role="status">Loading verified historical player statistics and MVP voting…</div>
+<div id="latest-award" class="winner" style="margin:0 0 18px"><span>Checking latest official MVP award…</span></div>
 <div class="controls"><label>NBA season<select id="season"></select></label><label>Minimum minutes<select id="minutes"><option value="1000">1,000 · Broad field</option><option value="1800" selected>1,800 · Standard</option><option value="2400">2,400 · Full season</option></select></label><label>Find player<input id="search" placeholder="Search leaderboard…" autocomplete="off"></label></div>
 <div class="layout"><section class="panel"><div class="eyebrow">01 / SEASON LEADERBOARD</div><h2>Statistical MVP Index</h2><div id="actual" class="winner"><span>Waiting for verified MVP votes…</span></div><div id="leaders">Loading…</div></section>
 <aside class="panel detail"><div class="eyebrow">02 / PLAYER REPORT</div><div id="detail"><h3>Choose a player</h3><p class="muted">Select a season and a player to inspect the statistical case.</p></div></aside></div>
@@ -67,6 +68,8 @@ $('search').oninput=render;
 Promise.all([fetch('../data/seasons.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Player data HTTP '+r.status);return r.json()}),fetch('../data/context.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([data,c])=>{
  if(data.schema!==3||!Array.isArray(data.rows))throw Error('Invalid player dataset');
  players=data.rows;context=c&&c.schema===1?c:null;
+ const latest=(context?.mvp||[]).filter(x=>x.winner).sort((a,b)=>b.season-a.season)[0];
+ $('latest-award').innerHTML=latest?'<div><small>LATEST VERIFIED NBA MVP · '+(latest.season-1)+'–'+String(latest.season).slice(2)+'</small><strong>'+esc(latest.player)+'</strong><small>Official award result; separate from statistical MVP index</small></div><div class="vote">'+(100*(latest.share||0)).toFixed(1)+'%<small>vote share</small></div>':'<span>Latest official MVP result unavailable.</span>';
  const years=(data.seasons||[]).filter(x=>!x.provisional&&x.season<=data.latest_complete_season).map(x=>x.season).sort((a,b)=>b-a);
  if(!years.length)throw Error('No verified complete NBA seasons');
  $('season').innerHTML=years.map(y=>'<option value="'+y+'">'+(y-1)+'–'+String(y).slice(2)+'</option>').join('');
