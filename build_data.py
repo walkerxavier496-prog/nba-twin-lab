@@ -292,6 +292,16 @@ def main():
     parser.add_argument('--output',type=Path,default=ROOT/'data'/'seasons.json')
     args=parser.parse_args()
     payload=build(include_current=not args.no_current)
+    # Avoid a new multi-megabyte Git commit when only the build timestamp changes.
+    if args.output.exists():
+        try:
+            previous=json.loads(args.output.read_text(encoding='utf-8'))
+            stable_keys=('schema','latest_complete_season','latest_available_season','metrics','seasons','sources','rows')
+            if all(previous.get(k)==payload.get(k) for k in stable_keys):
+                print(f"No statistical changes across {len(payload['rows'])} player-seasons; keeping existing dataset")
+                return
+        except (OSError,ValueError):
+            pass
     args.output.parent.mkdir(parents=True,exist_ok=True)
     tmp=args.output.with_suffix('.json.tmp')
     tmp.write_text(json.dumps(payload,separators=(',',':'),ensure_ascii=False,allow_nan=False),encoding='utf-8')
