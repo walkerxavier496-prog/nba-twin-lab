@@ -257,3 +257,19 @@ body.sports-theme .court-ticker a:focus-visible{outline-offset:-3px!important}
  .court-ticker__item{padding:8px 12px}
  .court-ticker__item b{font-size:14px}
 }
+
+/* Original basketball playbook illustration, never mistaken for player/team branding */
+body.sports-home .hero-terminal{position:relative;isolation:isolate}
+body.sports-home .hero-terminal:before{
+ content:"";position:absolute;inset:0;z-index:-1;opacity:.14;pointer-events:none;
+ background:url("./court-lines.svg") center center / 135% auto no-repeat;
+}
+body.sports-home .sports-feature:before,
+body.sports-daily .sports-scorebug:before {
+ content:"";position:absolute;inset:0;pointer-events:none;opacity:.15;
+ background:url("./court-lines.svg") 58% 57% / 78% auto no-repeat;
+}
+body.sports-daily .sports-scorebug:before{background-size:90% auto;opacity:.12}
+@media(max-width:620px) {
+ body.sports-home .sports-feature:before,body.sports-daily .sports-scorebug:before{background-size:auto 100%;opacity:.08}
+}
