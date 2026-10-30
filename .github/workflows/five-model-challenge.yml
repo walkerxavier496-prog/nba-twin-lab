@@ -5,6 +5,7 @@ on:
   push:
     branches: [main]
     paths:
+      - '.github/workflows/five-model-challenge.yml'
       - 'scripts/five_model_challenge.cjs'
       - 'scripts/v8_research.cjs'
       - 'scripts/game_science.cjs'
@@ -16,6 +17,8 @@ on:
       - 'data/rotation-history.json'
       - 'data/historical-games.json'
       - 'tests/five_model_challenge.test.cjs'
+      - 'tests/daily_audit.test.cjs'
+      - 'tests/site_navigation.test.cjs'
 
 permissions:
   contents: write
