@@ -6,6 +6,8 @@ on:
       - 'index.html'
       - 'assets/site-shell.css'
       - 'assets/site-shell.js'
+      - 'assets/courtside.css'
+      - 'assets/court-lines.svg'
       - 'assets/home.js'
       - 'challenge/**'
       - 'audit/index.html'
@@ -19,6 +21,7 @@ on:
       - 'history/index.html'
       - 'research/index.html'
       - 'tests/mobile_design.test.cjs'
+      - 'tests/courtside.test.cjs'
       - 'tests/site_navigation.test.cjs'
       - 'tests/challenge_daily.test.cjs'
       - '.github/workflows/site-mobile.yml'
@@ -42,4 +45,4 @@ jobs:
           node --check challenge/app.js
           node --check predict/app.js
       - name: Test responsive routes and original pregame data safeguards
-        run: node --test tests/mobile_design.test.cjs tests/site_navigation.test.cjs tests/challenge_daily.test.cjs
+        run: node --test tests/mobile_design.test.cjs tests/site_navigation.test.cjs tests/challenge_daily.test.cjs tests/courtside.test.cjs
