@@ -75,8 +75,10 @@ function standing(rows,n){
    const subset=items.filter(t=>t.conference===conf);
    const actual=subset.slice().sort((a,b)=>b.actualPct-a.actualPct||b.actualWins-a.actualWins||a.abbr.localeCompare(b.abbr));
    const projected=subset.slice().sort((a,b)=>b.expectedPct-a.expectedPct||b.expectedWins-a.expectedWins||a.abbr.localeCompare(b.abbr));
-   actual.forEach((t,i)=>t.actualRank=i+1);
-   projected.forEach((t,i)=>t.projectedRank=i+1);
+   // Tied win percentages share a standings position. NBA official seeding
+   // uses head-to-head/division/conference tiebreakers not modelled here.
+   actual.forEach((t,i)=>t.actualRank=1+actual.filter(u=>u.actualPct>t.actualPct+1e-9).length);
+   projected.forEach((t,i)=>t.projectedRank=1+projected.filter(u=>u.expectedPct>t.expectedPct+1e-9).length);
  }
  return items.sort((a,b)=>a.conference.localeCompare(b.conference)||a.projectedRank-b.projectedRank)
    .map(t=>({...t,actualPct:round(t.actualPct,4),expectedPct:round(t.expectedPct,4),
