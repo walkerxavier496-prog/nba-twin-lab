@@ -44,20 +44,24 @@ jobs:
           for(const m of Object.values(r.models))if(!Number.isFinite(m.rolling.brier)||!Number.isFinite(m.rolling.logLoss))throw Error('Invalid model metrics');
           console.log('Validated 4,920 rolling-origin predictions; no live model promotion');
           JS
-      - name: Commit report with retries for concurrent data refreshes
+      - name: Publish report safely across concurrent workflow commits
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/game-science-report.json
-          if ! git diff --cached --quiet; then
+          cp data/game-science-report.json /tmp/science-report.json
+          for attempt in 1 2 3 4 5 6 7 8; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/science-report.json data/game-science-report.json
+            if git diff --quiet -- data/game-science-report.json && git ls-files --error-unmatch data/game-science-report.json >/dev/null 2>&1; then
+              echo "Verified report is already published"
+              exit 0
+            fi
+            git add data/game-science-report.json
             git commit -m 'Publish basketball science rolling-origin research report'
-            for attempt in 1 2 3 4 5 6 7 8; do
-              git fetch origin main
-              git rebase origin/main
-              if git push origin HEAD:main; then exit 0; fi
-              echo "Concurrent branch update; retry $attempt"
-              sleep 3
-            done
-            echo "Could not publish after retries" >&2
-            exit 1
-          fi
+            if git push origin HEAD:main; then exit 0; fi
+            echo "Concurrent branch update; retry $attempt"
+            sleep 3
+          done
+          echo "Could not publish after retries" >&2
+          exit 1
