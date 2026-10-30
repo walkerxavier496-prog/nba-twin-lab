@@ -19,10 +19,12 @@ async function loadSciencePreview(){
   const [s,r]=await Promise.all([
    fetch('../data/v7-current.json',{cache:'no-store'}),
    fetch('../data/game-science-report.json',{cache:'no-store'})]);
-  if(!s.ok||!r.ok)return;
-  const snapshot=await s.json(),report=await r.json();
-  if(snapshot.strict_no_future_data&&report.strict_no_future_data&&report.status==='research_only_not_promoted'){
-   scienceSnapshot=snapshot;scienceReport=report;
+  if(!s.ok)return;
+  const snapshot=await s.json();
+  if(snapshot.strict_no_future_data&&snapshot.teams?.length===30)scienceSnapshot=snapshot;
+  if(r.ok){
+   const report=await r.json();
+   if(report.strict_no_future_data&&report.status==='research_only_not_promoted')scienceReport=report;
   }
  }catch(e){console.warn('Experimental science preview unavailable:',e)}
 }
@@ -54,7 +56,7 @@ function rosterPanel(game,baseline,roster){
   '<p>Previous-season rotation minutes retained (inferred): <b>'+esc(h)+' '+rh+'%</b> · <b>'+esc(a)+' '+ra+'%</b>. Missing players can also reflect injuries, so these are not official transaction figures.</p>'+
   '<p>Roster-aware model: <b>'+esc(h)+' '+pct(roster.homeWin)+'</b> · <b>'+esc(a)+' '+pct(roster.awayWin)+'</b>. Legacy Elo: '+esc(h)+' '+pct(baseline.homeWin)+'.</p>'+
   (large?'<p><b>High uncertainty:</b> This is a heavily changed matchup. The old Elo number should not be treated as a reliable high-confidence forecast.</p>':'')+
-  '<p>This model was fitted on earlier seasons only. Current roster status is inferred, not confirmed; its probability remains experimental.</p></div>';
+  '<p>This beta was fitted on earlier seasons only. Current roster status is inferred, not confirmed. The improvement over our previous player-adjusted model is not statistically conclusive.</p></div>';
 }
 function sciencePanel(game,baseline){
  if(game.status!=='scheduled')return '';
@@ -190,7 +192,7 @@ function renderDetail(){
  const hp=profiles[g.home.abbr]||Object.values(profiles).find(t=>t.name===g.home.name),ap=profiles[g.away.abbr]||Object.values(profiles).find(t=>t.name===g.away.name);
  const style=t=>t?metric('Net rating',one(t.n_rtg))+metric('Offensive rating',one(t.o_rtg))+metric('Defensive rating',one(t.d_rtg))+metric('Pace',one(t.pace))+metric('3-point attempt rate',Number.isFinite(t.x3p_ar)?one(100*t.x3p_ar)+'%':'—')+metric('Effective FG%',Number.isFinite(t.e_fg_percent)?one(100*t.e_fg_percent)+'%':'—')+metric('Turnover rate',Number.isFinite(t.tov_percent)?one(t.tov_percent)+'%':'—')+metric('Offensive rebounding',Number.isFinite(t.orb_percent)?one(t.orb_percent)+'%':'—'):'Prior-year team stats unavailable';
  const hWin=p.homeWin>=.5;
- const modelName=mode==='elo'?'ELO · HISTORICAL BASELINE':mode==='roster'?(roster.available?'ROSTER-AWARE · EXPERIMENTAL':'ROSTER DATA UNAVAILABLE · ELO FALLBACK'):'V5 POSSESSION MONTE CARLO';
+ const modelName=mode==='elo'?'ELO · HISTORICAL BASELINE':mode==='roster'?(roster.available?'ROSTER-AWARE · BETA':'ROSTER DATA UNAVAILABLE · ELO FALLBACK'):'V5 POSSESSION MONTE CARLO';
  const tag=(g.status==='final'?'ARCHIVED PREGAME':g.status==='live'?'PREGAME · LIVE GAME':'PREGAME')+' · '+modelName;
  $('detail').innerHTML=
  '<div class="headrow"><span class="eyebrow">'+esc(fmt(g.date))+'</span><span class="badge">'+tag+'</span></div>'+
