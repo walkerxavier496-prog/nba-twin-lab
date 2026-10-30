@@ -5,7 +5,7 @@ on:
     - cron: '25 13 * * *'
   push:
     branches: [main]
-    paths: ['build_data.py', 'requirements.txt', 'tests/**', '.github/workflows/update-data.yml']
+    paths: ['build_data.py', 'requirements.txt', 'tests/test_build_data.py', '.github/workflows/update-data.yml']
 permissions:
   contents: write
 concurrency:
