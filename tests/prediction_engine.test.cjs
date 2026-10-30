@@ -77,3 +77,14 @@ test('exhibition teams cannot enter Elo training',()=>{
  assert.equal(E.merge([exhibition]).length,0);
  assert.equal(E.ratings([exhibition],iso(2026,2,16)).finals,0);
 });
+
+test('opening-night forecast regresses previous season before first new-season final',()=>{
+ const historical=[];
+ for(let i=0;i<130;i++)historical.push(game('last'+i,new Date(Date.UTC(2025,9,21+i)).toISOString(),118,105,2026));
+ const last=E.ratings(historical,iso(2026,4,14));
+ const opening=E.ratings(historical,iso(2026,10,20));
+ assert.equal(opening.season,2027);
+ assert.equal(opening.teams.get('1').games,0);
+ assert.equal(opening.teams.get('1').prev.games,130);
+ assert.ok(Math.abs(opening.teams.get('1').elo-1500)<Math.abs(last.teams.get('1').elo-1500));
+});
