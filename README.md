@@ -1,4 +1,4 @@
-# NBA Twin Lab V7 — Player and matchup intelligence
+# NBA Twin Lab V9 — Player stat projections and matchup intelligence
 
 **Website:** https://walkerxavier496-prog.github.io/nba-twin-lab/
 
@@ -8,6 +8,7 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 
 | Lab | URL | Features |
 |---|---|---|
+| V9 Player Stat Predictor | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/player-stats/) | Experimental pregame PTS, REB, AST, 3PM, STL, BLK, TOV and minutes by upcoming matchup; inferred participation, source-backed recent per-36 rates and conditional-on-playing historical MAE audit |
 | Game Predictor | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/predict/) | Up to 100,000 possession-by-possession simulations, projected score ranges, team strength, advanced context, recent form, rest and held-out model comparison |
 | Historical Model Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/history/) | Five complete seasons, 6,150 pre-tipoff predictions, Elo/Monte Carlo/blend comparisons, calibration, confidence intervals, ablations and condition splits |
 | [V8 Research Lab](https://walkerxavier496-prog.github.io/nba-twin-lab/research/) | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/research/) | Experimental direct Elo calibration with inferred player availability, opponent-adjusted efficiency, rest and rotation continuity; strict rolling-origin results, no automatic promotion |
@@ -16,6 +17,14 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 | MVP Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/mvp/) | Historical statistical MVP index, season breakdowns and actual award voting |
 | Championship Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/championship/) | NBA champions and Finals MVPs, playoff paths, championship team SRS and advanced statistics |
 | Player Twins | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/) | 13-stat classic and 18-stat advanced player comparisons, careers, peaks and best seasons |
+
+## V9 player stat forecasting
+
+The player stat lab forecasts seven individual box-score categories for upcoming NBA games, based on verified historical NBA Stats-derived player logs. The V7 player importer now computes a pregame-only, exponentially weighted recent per-36 rate for each statistic and multiplies it by expected minutes **conditional on playing**. The dashboard offers both conditional projections and projections discounted by an **inferred** play probability. Matchup pace and opponent defensive efficiency add modest, capped heuristic adjustments; these are not yet statistically validated.
+
+The new `data/v9-player-report.json` evaluates the historical conditional point estimates against a naive recent per-game average on matched appearances. Because official DNP and pregame injury archives are absent, **only actual participating players are scored**; this is a selected sample and cannot validate the model's play probabilities. The player forecast does not yet have calibrated intervals, correlated full-game box-score simulation, official starting lineups or validated injuries. Historical accuracy is shown only after the audited report is generated successfully.
+
+V9 is a research-only feature. It does not modify the live game predictor or establish an edge in betting markets. The later **Twin League** franchise simulator will maintain an entirely separate fictional league state, never mixed with real prediction training data.
 
 ## Verified historical coverage
 
@@ -140,6 +149,7 @@ python -m http.server 8000
 - NBA schedule, results and model audit: .github/workflows/update-predictions.yml (daily)
 - Champions and Finals MVPs: .github/workflows/update-championships.yml (weekly)
 - Opening-night projected vs actual standings and preseason A/B test: .github/workflows/season-test.yml (daily)
+- Player stat forecasts and historical audit: .github/workflows/v9-player-stats.yml (daily)
 - Static website deployment: .github/workflows/static.yml
 - Historical five-season audit: .github/workflows/historical-audit.yml
 
