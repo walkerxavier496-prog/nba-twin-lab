@@ -46,9 +46,9 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/v7-current.json
+          git add data/v7-current.json data/rotation-history.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Refresh V7 player intelligence snapshot'
+            git commit -m 'Refresh V7 pregame team and rotation history snapshots'
             git pull --rebase origin main
             git push origin HEAD:main
           fi
