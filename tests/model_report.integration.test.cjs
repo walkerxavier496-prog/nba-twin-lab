@@ -17,6 +17,7 @@ test('validated repository snapshot produces a complete strict held-out comparis
   for(const model of [report.elo,report.monteCarlo]){
     assert.ok(Number.isFinite(model.accuracy));
     assert.ok(Number.isFinite(model.brier));
+    assert.ok(Number.isFinite(model.logLoss));
     assert.ok(Number.isFinite(model.ece));
     assert.ok(Number.isFinite(model.scoreMAE));
   }

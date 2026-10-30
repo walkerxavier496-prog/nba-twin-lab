@@ -1,4 +1,4 @@
-# NBA Twin Lab V5 — Independent NBA analytics
+# NBA Twin Lab V6 — Historical model audit
 
 **Website:** https://walkerxavier496-prog.github.io/nba-twin-lab/
 
@@ -9,12 +9,17 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 | Lab | URL | Features |
 |---|---|---|
 | Game Predictor | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/predict/) | Up to 100,000 possession-by-possession simulations, projected score ranges, team strength, advanced context, recent form, rest and held-out model comparison |
+| Historical Model Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/history/) | Five complete seasons, 6,150 pre-tipoff predictions, Elo/Monte Carlo/blend comparisons, calibration, confidence intervals, ablations and condition splits |
 | Season Test | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/season-test/) | Strict opening-night walk-forward backtest, first 1/3/5 games, predicted versus actual conference standings, 82-game strength projections and preseason A/B test |
 | MVP Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/mvp/) | Historical statistical MVP index, season breakdowns and actual award voting |
 | Championship Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/championship/) | NBA champions and Finals MVPs, playoff paths, championship team SRS and advanced statistics |
 | Player Twins | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/) | 13-stat classic and 18-stat advanced player comparisons, careers, peaks and best seasons |
 
-## Verified coverage at V5 launch
+## Verified historical coverage
+
+- **Five evaluated seasons:** all **6,150** regular-season games from 2021–22 through 2025–26, plus all **1,080** games from 2020–21 as Elo warm-up history.
+- **Independent reconciliation:** every season's game count and all 30 team W–L records match the separately sourced Basketball Reference team summaries. The three non-standings NBA Cup title games are explicitly excluded; other Cup games count normally.
+- **Strict chronology:** all 6,150 forecasts passed an automated check that every state input was timestamped before tipoff. Advanced profiles always come from the previous completed season.
 
 - **2025–26 regular season:** exactly **1,230 final games**, with all 30 team W–L records independently cross-checked against the Basketball Reference team summaries. The importer excludes All-Star exhibitions, postponed 0–0 fixtures and the non-standings 2025 NBA Cup final.
 - **2026–27:** current completed NBA games and upcoming schedule, refreshed daily from the ESPN scoreboard when available. Each page displays its data freshness.
@@ -38,18 +43,21 @@ This is a **transparent simulation model**, not a trained neural network or bett
 7. Display mean scores, 10th–90th percentile score ranges, expected possessions and the underlying rates. Previous head-to-head games are context only, not a separate predictive weight.
 8. Backtest every completed current-season game **strictly walk-forward**, using only games before tip-off and advanced profiles from seasons before the predicted game. Compare Monte Carlo with the same Elo baseline using winner accuracy, Brier score, expected calibration error (ECE) and score MAE.
 
-### Current held-out result
+### V6 historical result
 
-Reproducible scorecard from `node scripts/model_report.cjs`, using 10,000 possession simulations for each of 71 completed 2026–27 games in the validated snapshot:
+The V6 audit trains the combined model only on 2021–22 through 2023–24, uses 2024–25 as validation, and keeps 2025–26 untouched for the final test. Historical Monte Carlo uses 1,000 seeded possession simulations per game; the live matchup simulator still supports 100,000.
 
-| Model | Accuracy | Brier | Calibration error (ECE) | Score MAE / team |
-|---|---:|---:|---:|---:|
-| Possession Monte Carlo | 66.2% | 0.2209 | 0.0741 | 10.16 points |
-| Current Elo baseline | 62.0% | 0.2223 | 0.1629 | 10.05 points |
+| Model · untouched 2025–26 | Accuracy | Brier | Log loss | ECE | Score MAE / team |
+|---|---:|---:|---:|---:|---:|
+| Current Elo baseline | **69.2%** | 0.2056 | 0.5992 | 0.0366 | **9.59** points |
+| V5 possession Monte Carlo | 67.7% | 0.2164 | 0.6237 | 0.0816 | 9.72 points |
+| Trained combination | 68.9% | **0.2054** | **0.5980** | **0.0330** | **9.59** points |
 
-The Monte Carlo model is better on accuracy, Brier score and calibration in this small sample, while Elo is 0.11 points better on score MAE. **Seventy-one games are not enough to claim a stable predictive edge.** These are implementation-validation results, not betting evidence.
+The trained combination is 80% Elo / 20% Monte Carlo, with a calibration slope of 0.90 and bias of −0.05. It has the best point-estimate Brier, log loss and ECE, but its paired Brier improvement over Elo is only **0.0002** and the 95% bootstrap interval is **−0.0026 to +0.0018**. Because that interval crosses zero, **V6 keeps Elo as the production default**. Standalone V5 Monte Carlo is worse than Elo on the untouched season and is not promoted.
 
-**Not yet included:** verified injuries, expected starters, player minutes, trades, travel distances, same-season play-by-play team event rates or betting odds. Prior-season team style may miss offseason changes. Probabilities have not been validated across multiple held-out seasons. An early-season win percentage is not proof of a predictive edge. This is not betting or financial advice.
+An ablation keeping SRS but replacing all advanced matchup tendencies with league-average fallbacks shows the full tendency model improves five-season Monte Carlo Brier by **0.0031**, log loss by **0.0068**, and score MAE by **0.04** points per team. Those inputs are useful, but not enough to make the overall Monte Carlo model superior.
+
+**Not yet included:** verified injuries, expected starters/minutes, player availability, trades, travel distance, roster continuity, same-season possession event rates or betting markets. Previous-season style is leakage-safe but slow to reflect offseason changes. This is not betting or financial advice.
 
 ## MVP index
 
@@ -96,11 +104,14 @@ python build_context.py
 python build_predictions.py
 python build_championships.py
 node scripts/model_report.cjs
+python build_historical.py
+node scripts/historical_backtest.cjs --simulations 1000 --bootstrap 1000
 python build_preseason.py
 node scripts/season_backtest.cjs
 
 python -m http.server 8000
 # http://localhost:8000/predict/
+# http://localhost:8000/history/
 ~~~
 
 ## Automated updates and hosting
@@ -111,9 +122,10 @@ python -m http.server 8000
 - Champions and Finals MVPs: .github/workflows/update-championships.yml (weekly)
 - Opening-night projected vs actual standings and preseason A/B test: .github/workflows/season-test.yml (daily)
 - Static website deployment: .github/workflows/static.yml
+- Historical five-season audit: .github/workflows/historical-audit.yml
 
 GitHub Pages is configured under **Settings → Pages → GitHub Actions**, using the **Static HTML** workflow. A failed importer leaves the last valid published dataset unchanged. The page shows its actual refresh time rather than claiming to be current.
 
 ## Roadmap
 
-Validate injury and starting-lineup feeds; add minutes and player projections; ingest same-season possession event rates; validate and calibrate the model across multiple out-of-sample seasons; add playoff-bracket simulations and championship probabilities; match historical championship rosters for player ring counts; complete 2025–26 and 2026–27 player advanced-stat coverage.
+Add timestamped injury/availability and expected-minutes snapshots; ingest leakage-safe same-season possession event rates; model travel and roster continuity; preserve a newly untouched season for every future model change; add playoff-bracket simulations and championship probabilities; match historical championship rosters for player ring counts; complete 2025–26 and 2026–27 player advanced-stat coverage.

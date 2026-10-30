@@ -1,0 +1,38 @@
+name: Historical NBA model audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - build_historical.py
+      - scripts/historical_backtest.cjs
+      - predict/engine.js
+      - history/**
+      - data/historical-games.json
+      - data/historical-model-report.json
+      - tests/test_historical.py
+      - tests/historical_report.test.cjs
+      - .github/workflows/historical-audit.yml
+permissions:
+  contents: read
+concurrency:
+  group: nba-twin-lab-historical-audit
+  cancel-in-progress: true
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: pip install -r requirements.txt pytest
+      - run: python -m pytest -q tests/test_historical.py tests/test_predictions.py
+      - run: node --test tests/historical_report.test.cjs tests/monte_carlo.test.cjs tests/prediction_engine.test.cjs
+      - run: node --check history/app.js && node --check predict/engine.js
+      - name: Reproduce a lower-depth audit in CI
+        run: node scripts/historical_backtest.cjs --simulations 100 --bootstrap 100 --output /tmp/historical-model-report.json

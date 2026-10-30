@@ -59,6 +59,7 @@ test('model comparison is strictly walk-forward and reports every requested metr
   for(const model of [report.elo,report.monteCarlo]){
     assert.ok(model.accuracy>=0&&model.accuracy<=1);
     assert.ok(model.brier>=0&&model.brier<=1);
+    assert.ok(model.logLoss>=0);
     assert.ok(model.ece>=0&&model.ece<=1);
     assert.ok(model.scoreMAE>=0);
     assert.ok(Array.isArray(model.calibration));

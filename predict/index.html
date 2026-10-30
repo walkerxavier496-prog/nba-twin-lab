@@ -16,7 +16,7 @@
  <div class="topinner">
   <a class="brand" href="../index.html"><span class="brandmark">TL<span class="spark">✦</span></span><span>NBA <b>TWIN LAB</b><small>DATA · MODELS · BASKETBALL</small></span></a>
   <nav aria-label="Main navigation">
-   <a href="./index.html" class="active">Game Predictor</a>
+   <a href="./index.html" class="active">Game Predictor</a><a href="../history/">Historical Lab</a>
    <a href="../mvp/">MVP Lab</a><a href="../season-test/">Season Test</a>
    <a href="../championship/">Championships</a>
    <a href="../index.html">Player Twins</a>
@@ -27,7 +27,7 @@
 <main id="main" class="shell">
  <div class="hero">
   <div>
-   <div class="eyebrow"><span class="pulse"></span> NBA TWIN LAB / PREDICTION ENGINE V5</div>
+   <div class="eyebrow"><span class="pulse"></span> NBA TWIN LAB / V5 ENGINE · V6 AUDIT</div>
    <h1>Know the matchup.<br><em>Understand the edge.</em></h1>
    <p>Up to 100,000 possession-by-possession simulations per matchup, built from verified results and team style — with honest held-out testing against the Elo baseline.</p>
    <div class="hero-actions"><a class="primary" href="#matchups">Explore matchups <span aria-hidden="true">↗</span></a><a class="secondary" href="#method">See the methodology</a></div>
@@ -63,7 +63,7 @@
  <section id="validation" class="section">
   <div class="sectionhead"><div><div class="eyebrow">02 / HELD-OUT VALIDATION</div><h2>Monte Carlo vs current Elo</h2><p>The exact same games, reconstructed immediately before tip-off with no future results.</p></div><div class="rightlabel" id="validation-sample">Loading scorecard…</div></div>
   <div class="tablewrap"><table class="comparison"><thead><tr><th>Model</th><th>Winner accuracy</th><th>Brier score</th><th>Calibration error</th><th>Score MAE / team</th></tr></thead><tbody><tr><td><b>Possession Monte Carlo</b></td><td id="mc-accuracy">—</td><td id="mc-brier">—</td><td id="mc-ece">—</td><td id="mc-mae">—</td></tr><tr><td>Current Elo baseline</td><td id="elo-accuracy">—</td><td id="elo-brier-table">—</td><td id="elo-ece">—</td><td id="elo-mae">—</td></tr></tbody></table></div>
-  <p class="footnote" id="validation-note">Loading the reproducible walk-forward scorecard. Brier score measures probability quality; expected calibration error measures the gap between predicted and observed win rates.</p>
+  <p class="footnote" id="validation-note">Loading the current-season walk-forward scorecard. See the <a href="../history/">five-season Historical Model Lab</a> for the deployment decision, log loss, confidence intervals and matchup-tendency ablation.</p>
  </section>
  <section id="power" class="section">
   <div class="sectionhead"><div><div class="eyebrow">03 / TEAM STRENGTH</div><h2>Power Rankings</h2><p>Elo ratings updated after every completed game, with previous-season regression.</p></div><div class="rightlabel" id="power-season">Current season</div></div>
@@ -80,6 +80,6 @@
   </div>
   <div class="provenance"><strong>Data provenance:</strong> Public, unofficial <a href="https://www.espn.com/nba/scoreboard" target="_blank" rel="noopener noreferrer">ESPN NBA scoreboard</a>. This site is independent and not affiliated with the NBA or ESPN. The feed is undocumented and may become unavailable. No fabricated scores, injuries or probabilities are substituted when coverage fails. Historical model quality is not a guarantee of future accuracy.</div>
  </section>
- <footer><div>NBA <b>TWIN LAB</b> <span>V5 · BUILT FOR THE GAME</span></div><div><a href="../index.html">Statistical Twins</a><a href="../mvp/">MVP Lab</a><a href="https://github.com/walkerxavier496-prog/nba-twin-lab" target="_blank" rel="noopener noreferrer">Source code ↗</a></div></footer>
+ <footer><div>NBA <b>TWIN LAB</b> <span>V6 · EVIDENCE FIRST</span></div><div><a href="../history/">Historical audit</a><a href="../index.html">Statistical Twins</a><a href="../mvp/">MVP Lab</a><a href="https://github.com/walkerxavier496-prog/nba-twin-lab" target="_blank" rel="noopener noreferrer">Source code ↗</a></div></footer>
 </main>
 </body></html>

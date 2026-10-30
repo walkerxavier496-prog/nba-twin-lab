@@ -15,7 +15,7 @@ const alias={GS:'GSW',NY:'NYK',SA:'SAS',NO:'NOP',UTAH:'UTA',WSH:'WAS',PHX:'PHO',
 for(const [from,to] of Object.entries(alias))if(profiles[to])profiles[from]=profiles[to];
 const comparison=E.evaluateComparison(games.games,season,profiles,{simulations:10000});
 const clean=model=>({count:model.count,accuracy:model.accuracy,brier:model.brier,
- scoreMAE:model.scoreMAE,ece:model.ece,calibration:model.calibration});
+ logLoss:model.logLoss,scoreMAE:model.scoreMAE,ece:model.ece,calibration:model.calibration});
 const report={schema:1,generated_at_utc:new Date().toISOString(),season,
  source_games_built_at_utc:games.built_at_utc,held_out_games:comparison.elo.count,
  simulations_per_game:comparison.simulationsPerGame,strict_no_future_data:true,

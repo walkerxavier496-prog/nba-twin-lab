@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1222">
+<meta name="description" content="NBA Twin Lab historical model lab: five-season leakage-safe comparison of Elo, possession Monte Carlo and a trained blend.">
+<title>NBA Twin Lab · Historical Model Lab</title>
+<link rel="stylesheet" href="./styles.css"><script defer src="./app.js"></script>
+</head>
+<body><a class="skip" href="#main">Skip to results</a>
+<header class="top"><div class="nav"><a class="brand" href="../index.html"><b>TL✦</b> NBA TWIN LAB</a><nav class="links" aria-label="Main navigation"><a href="../predict/">Game Predictor</a><a class="active" href="./">Historical Model Lab</a><a href="../season-test/">Season Test</a><a href="../mvp/">MVP Lab</a><a href="../championship/">Championships</a><a href="../index.html">Player Twins</a></nav></div></header>
+<main id="main" class="shell">
+ <section class="hero"><div><div class="eyebrow">NBA TWIN LAB / MODEL AUDIT V6</div><h1>Five seasons.<br><em>No future knowledge.</em></h1><p>Every regular-season game is replayed from the information available before tipoff. This page shows what improved, what failed, and why the current Elo model remains the production default.</p></div><aside class="decision"><span>DEPLOYMENT DECISION</span><strong id="decision-title">Loading audit…</strong><p id="decision-copy">Reading the reproducible scorecard.</p></aside></section>
+ <div id="notice" class="notice" role="status">Loading verified historical model report…</div>
+ <section class="statstrip" aria-label="Audit summary"><div><span>Evaluated games</span><strong id="games">—</strong><small>Five complete seasons</small></div><div><span>Untouched test</span><strong id="test">—</strong><small>2025–26 regular season</small></div><div><span>Future-data violations</span><strong id="leaks">—</strong><small>Automated chronology checks</small></div><div><span>Best test Brier</span><strong id="best-brier">—</strong><small>Lower is better</small></div></section>
+
+ <section class="section" id="comparison"><div class="sectionhead"><div><div class="eyebrow">01 / UNTOUCHED TEST SEASON</div><h2>Which model actually wins?</h2><p>Weights were fixed using 2021–22 through 2023–24. The 2024–25 season validates stability; 2025–26 is untouched final testing.</p></div><div class="tag">1,000 simulations / historical game</div></div>
+  <div class="tablewrap"><table><thead><tr><th>Model</th><th>Winner accuracy</th><th>Brier score</th><th>Log loss</th><th>Calibration error</th><th>Score MAE / team</th></tr></thead><tbody id="model-table"><tr><td colspan="6">Loading…</td></tr></tbody></table></div>
+  <div class="evidence" id="evidence"></div>
+ </section>
+
+ <section class="section"><div class="sectionhead"><div><div class="eyebrow">02 / SEASON-BY-SEASON</div><h2>Does the result repeat?</h2><p>Exact Brier score by season. Longer bars are better because they represent improvement over a 0.2500 coin-flip baseline.</p></div></div><div id="season-chart" class="season-chart"></div></section>
+
+ <section class="section grid2"><div><div class="sectionhead compact"><div><div class="eyebrow">03 / CALIBRATION</div><h2>Confidence vs reality</h2><p>Points near the diagonal are well calibrated.</p></div></div><div class="chartcard"><svg id="calibration-chart" viewBox="0 0 440 270" role="img" aria-label="Calibration curves for all three models"></svg><div class="legend"><span class="gold">Combined</span><span class="teal">Elo</span><span class="blue">Monte Carlo</span></div></div></div>
+  <div><div class="sectionhead compact"><div><div class="eyebrow">04 / ADVANCED STATS ABLATION</div><h2>Do matchup tendencies help?</h2><p>The same Monte Carlo model with advanced tendencies removed.</p></div></div><div class="ablation" id="ablation">Loading…</div></div></section>
+
+ <section class="section"><div class="sectionhead"><div><div class="eyebrow">05 / CONDITIONS</div><h2>Where does performance change?</h2><p>Results split by venue outcome, early season, rest and back-to-backs.</p></div><label class="select-label">Model <select id="slice-model"><option value="combined">Trained combination</option><option value="elo">Elo</option><option value="monte_carlo">V5 Monte Carlo</option></select></label></div><div class="tablewrap"><table><thead><tr><th>Condition</th><th>Games</th><th>Accuracy</th><th>Brier</th><th>Log loss</th><th>Score MAE</th></tr></thead><tbody id="slice-table"></tbody></table></div></section>
+
+ <section class="section"><div class="sectionhead"><div><div class="eyebrow">06 / METHOD & COVERAGE</div><h2>Exactly what was tested</h2><p>Transparent enough to reproduce, and explicit about what is missing.</p></div></div><div class="methodgrid">
+  <article><b>Walk-forward reconstruction</b><p>Each forecast sees only finals timestamped before that game. The 2020–21 season warms up Elo; 6,150 games from the next five seasons are evaluated.</p></article>
+  <article><b>Previous-season profiles only</b><p>Efficiency, pace, shooting, turnovers and rebounding come only from the prior completed season. Same-season full-year summaries are never used to predict earlier games.</p></article>
+  <article><b>Locked optimisation</b><p>The blend and calibration were chosen on three training seasons. One validation season checks stability; the final season stays untouched until scoring.</p></article>
+  <article><b>Uncertainty, not victory laps</b><p>Paired game bootstrap intervals measure whether differences are distinguishable from noise. A tiny point estimate is not called an improvement when its interval crosses zero.</p></article>
+ </div><div class="coverage" id="coverage"></div><div class="limits"><h3>Known limitations and V7 priorities</h3><ul id="limits"></ul></div></section>
+ <footer><div>NBA <b>TWIN LAB</b> <span>V6 · HISTORICAL MODEL AUDIT</span></div><div><a href="../predict/">Open predictor</a><a href="https://github.com/walkerxavier496-prog/nba-twin-lab" target="_blank" rel="noopener noreferrer">Source code ↗</a></div></footer>
+</main></body></html>

@@ -267,7 +267,9 @@ function calibration(picks,bins=10){
 function metrics(picks){
   const c=calibration(picks);
   return {count:picks.length,accuracy:picks.length?mean(picks.map(x=>x.correct?1:0)):null,
-    brier:mean(picks.map(x=>x.brier)),scoreMAE:mean(picks.map(x=>x.scoreError)),ece:c.ece,calibration:c.bins};
+    brier:mean(picks.map(x=>x.brier)),
+    logLoss:mean(picks.map(x=>{const p=clamp(x.p,1e-9,1-1e-9);return -(x.actual*Math.log(p)+(1-x.actual)*Math.log(1-p))})),
+    scoreMAE:mean(picks.map(x=>x.scoreError)),ece:c.ece,calibration:c.bins};
 }
 function evaluate(games,season,profiles={}){
   const finals=merge(games).filter(g=>g.status==='final'&&g.season===season);
