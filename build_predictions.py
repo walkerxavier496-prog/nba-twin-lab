@@ -53,6 +53,11 @@ def parse_events(payload: dict[str, Any]) -> list[dict[str, Any]]:
             h, a = team(home), team(away)
             if not h["id"] or not a["id"] or h["id"] == a["id"]:
                 continue
+            # ESPN mixes All-Star exhibitions into some monthly NBA scoreboards.
+            # Standard NBA franchise IDs are 1..30; exclude non-franchise teams.
+            if not (h["id"].isdigit() and a["id"].isdigit()
+                    and 1 <= int(h["id"]) <= 30 and 1 <= int(a["id"]) <= 30):
+                continue
             typ = event.get("status", {}).get("type") or comp.get("status", {}).get("type") or {}
             final = typ.get("completed") is True or typ.get("name") == "STATUS_FINAL" or typ.get("state") == "post"
             live = not final and (typ.get("state") == "in" or str(typ.get("name", "")).startswith("STATUS_IN"))
