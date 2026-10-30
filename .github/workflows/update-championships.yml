@@ -41,7 +41,12 @@ jobs:
           git add data/champions.json
           if ! git diff --cached --quiet; then
             git commit -m 'Refresh validated NBA champions and Finals MVPs'
-            git fetch origin main
-            git rebase origin/main
-            git push origin HEAD:main
+            for attempt in 1 2 3 4 5; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep 3
+            done
+            echo 'Could not publish after 5 non-destructive retries' >&2
+            exit 1
           fi
