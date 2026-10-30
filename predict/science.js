@@ -23,11 +23,13 @@ function net(s,section){
 function matchup(s,o){
  const sr=blended(s,'three_rate'),o3=blended(o,'opp_three_rate');
  const pct=blended(s,'three_pct');
+ const ownEfg=blended(s,'efg'),allowedEfg=blended(o,'opp_efg');
  const ownTov=blended(s,'tov_rate'),forced=blended(o,'opp_tov_rate');
  const orb=blended(s,'orb_rate'),drb=blended(o,'drb_rate');
  const ftr=blended(s,'ftr'),allowedFtr=blended(o,'opp_ftr');
  return {
-  shooting:sr===null||o3===null||pct===null?null:((sr+o3)/2)*(pct-.36),
+  shooting:ownEfg===null||allowedEfg===null?null:(ownEfg+allowedEfg)/2,
+  threePointStyle:sr===null||o3===null||pct===null?null:((sr+o3)/2)*(pct-.36),
   turnovers:ownTov===null||forced===null?null:-((ownTov+forced)/2),
   rebounding:orb===null||drb===null?null:(orb+1-drb)/2,
   freeThrows:ftr===null||allowedFtr===null?null:(ftr+allowedFtr)/2
@@ -55,7 +57,8 @@ function scienceFeatures(home,away,h2h=0){
  return {
   momentum:clamp((trend(home)-trend(away))/5,-2,2),
   restScience:hr===null||ar===null?0:clamp((hr-ar)/2,-1.5,1.5),
-  shooting:difference('shooting',.025),
+  shooting:difference('shooting',.04),
+  threePointStyle:difference('threePointStyle',.025),
   turnovers:difference('turnovers',.035),
   rebounding:difference('rebounding',.05),
   freeThrows:difference('freeThrows',.07),
