@@ -1,0 +1,45 @@
+name: Validate and refresh NBA game predictions
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 11 * * *'
+  push:
+    branches: [main]
+    paths:
+      - build_predictions.py
+      - predict/engine.js
+      - tests/prediction_engine.test.cjs
+      - tests/test_predictions.py
+      - .github/workflows/update-predictions.yml
+permissions:
+  contents: write
+concurrency:
+  group: nba-twin-lab-predictions
+  cancel-in-progress: false
+jobs:
+  predictions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: pip install -r requirements.txt pytest
+      - run: python -m pytest -q tests/test_predictions.py
+      - run: node --test tests/prediction_engine.test.cjs
+      - run: python build_predictions.py
+      - name: Publish verified scoreboard snapshot
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/games.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh validated NBA schedule and scores'
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          fi
