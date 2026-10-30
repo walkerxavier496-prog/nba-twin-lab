@@ -31,6 +31,7 @@ EVALUATED = tuple(range(2022, 2027))
 ALIASES = {"GS": "GSW", "NY": "NYK", "SA": "SAS", "NO": "NOP",
            "UTAH": "UTA", "WSH": "WAS", "PHO": "PHX", "BRK": "BKN",
            "CHO": "CHA"}
+PLAYER_STATS = ("points", "rebounds", "assists", "threes", "steals", "blocks", "turnovers")
 METRICS = ("ortg", "drtg", "adj_ortg", "adj_drtg", "pace", "efg", "opp_efg", "three_rate",
            "opp_three_rate", "tov_rate", "opp_tov_rate", "orb_rate",
            "drb_rate", "ftr", "opp_ftr", "two_pct", "three_pct", "ft_pct")
@@ -105,7 +106,7 @@ def fetch_rows(connection: duckdb.DuckDBPyConnection) -> tuple[list[dict], list[
     player_sql = """
     SELECT l.season, l.game_id, CAST(l.game_date AS VARCHAR) game_date,
       l.player_id, p.name, l.team_id, l.opp_team_id, l.min, l.pts,
-      l.fga, l.fta, l.ast, l.tov, l.oreb, l.dreb, l.plus_minus,
+      l.fga, l.fta, l.fg3m, l.ast, l.stl, l.blk, l.tov, l.oreb, l.dreb, l.plus_minus,
       l.off_rating, l.def_rating, l.net_rating, l.usg_pct, l.ts_pct,
       l.efg_pct, l.pie
     FROM nba.player_game_logs l JOIN nba.players p USING (player_id)
@@ -161,7 +162,20 @@ def player_game(row: dict) -> dict[str, float]:
         usage *= 100
     # Transparent, deliberately conservative proxy; this is not EPM or RAPM.
     impact = clipped(.32 * net + 18 * (ts - .56) + .08 * (usage - 20), -12, 12)
-    return {"minutes": minutes, "points": finite(row.get("pts"), 0),
+    raw = {"points": finite(row.get("pts"), 0),
+           "rebounds": finite(row.get("oreb"), 0) + finite(row.get("dreb"), 0),
+           "assists": finite(row.get("ast"), 0),
+           "threes": finite(row.get("fg3m"), 0),
+           "steals": finite(row.get("stl"), 0),
+           "blocks": finite(row.get("blk"), 0),
+           "turnovers": finite(row.get("tov"), 0)}
+    return {"minutes": minutes, **raw,
+            **{f"{stat}_per36": clipped(value * 36 / minutes, 0, cap)
+               for stat, value, cap in ((stat, raw[stat], cap)
+                   for stat, cap in (("points", 55), ("rebounds", 30),
+                       ("assists", 22), ("threes", 12), ("steals", 9),
+                       ("blocks", 9), ("turnovers", 12)))
+               if minutes >= 5},
             "usage": usage, "ts": ts, "impact": impact,
             "off_rating": finite(row.get("off_rating"), 110),
             "def_rating": finite(row.get("def_rating"), 110)}
@@ -188,10 +202,25 @@ class PlayerState:
             status = "missed 2 games · inferred unlikely"
         elif missed >= 3:
             status = f"missed {missed}+ games · inferred out of rotation"
+        conditional_minutes = clipped(minutes, 0, 40)
+        eligible = [game for game in recent if game.get("minutes", 0) >= 5]
+        sufficient = len(eligible) >= 3
+        rates = {stat: weighted_mean(eligible, f"{stat}_per36", .86)
+                 if sufficient else None for stat in PLAYER_STATS}
+        if_play = {stat: clipped(rate * conditional_minutes / 36, 0, 70)
+                   if rate is not None else None for stat, rate in rates.items()}
+        baseline = {stat: statistics.fmean(game[stat] for game in eligible)
+                    if sufficient else None for stat in PLAYER_STATS}
         return {"player_id": self.player_id, "name": self.name,
-                "expected_minutes": clipped(minutes * play_probability, 0, 40),
+                "expected_minutes": clipped(conditional_minutes * play_probability, 0, 40),
+                "minutes_if_play": conditional_minutes,
                 "play_probability": play_probability, "impact_proxy": impact,
                 "usage": usage, "ts": weighted_mean(recent, "ts", .88),
+                "stat_rates_per36": rates, "stats_if_play": if_play,
+                "stats_unconditional": {stat: value * play_probability if value is not None else None
+                                        for stat, value in if_play.items()},
+                "baseline_last10": baseline,
+                "observed_games": len(eligible),
                 "missed_team_games": missed, "status": status,
                 "availability": "inferred", "last_game": self.last_date}
 
@@ -276,6 +305,11 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
     team_players: dict[tuple[int, str], set[str]] = collections.defaultdict(set)
     league_history: dict[int, list[float]] = collections.defaultdict(list)
     output_games: list[dict] = []
+    stat_errors: dict[int, dict[str, dict]] = collections.defaultdict(
+        lambda: collections.defaultdict(lambda: {"count": 0, "sum_abs_error": 0.0,
+                                                  "baseline_abs_error": 0.0}))
+    participation: dict[int, dict[str, int]] = collections.defaultdict(
+        lambda: {"actual_appearances": 0, "matched_projections": 0})
     names = {row["player_id"]: row["name"] for row in player_rows}
 
     def seed_prior_roster(season: int, abbr: str) -> None:
@@ -334,7 +368,36 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
         h_abbr, a_abbr = home["nba_abbrev"], away["nba_abbrev"]
         seed_prior_roster(season, h_abbr)
         seed_prior_roster(season, a_abbr)
-        hs, ass = snapshot(season, h_abbr, date), snapshot(season, a_abbr, date)
+        # Emit projections before any player box score from this game is ingested.
+        # The historical audit is conditional on actual participation because
+        # the upstream feed omits official DNP and pregame injury statuses.
+        include = season in EVALUATED or season == 2027
+        hs, ass = snapshot(season, h_abbr, date, include), snapshot(season, a_abbr, date, include)
+        if include:
+            for team_row, snap in ((home, hs), (away, ass)):
+                candidates = {p["player_id"]: p for p in snap.get("rotation", [])}
+                for actual_row in players_by_game[(season, team_row["game_id"], team_row["team_id"])]:
+                    if (finite(actual_row.get("min"), 0) or 0) < 1:
+                        continue
+                    participation[season]["actual_appearances"] += 1
+                    projected = candidates.get(actual_row["player_id"])
+                    if projected is None or projected["stats_if_play"]["points"] is None:
+                        continue
+                    participation[season]["matched_projections"] += 1
+                    for stat in PLAYER_STATS:
+                        value = player_game(actual_row)[stat]
+                        estimate = projected["stats_if_play"][stat]
+                        baseline = projected["baseline_last10"][stat]
+                        if estimate is None or baseline is None:
+                            continue
+                        agg = stat_errors[season][stat]
+                        agg["count"] += 1
+                        agg["sum_abs_error"] += abs(estimate - value)
+                        agg["baseline_abs_error"] += abs(baseline - value)
+            # Keep the existing historical team-feature dataset compact.
+            if season in EVALUATED:
+                hs.pop("rotation", None)
+                ass.pop("rotation", None)
         if season in EVALUATED or season == 2027:
             output_games.append({"nba_game_id": home["game_id"],
                 "result_id": local_game["id"] if local_game else home["game_id"],
@@ -379,7 +442,24 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
     for season in EVALUATED:
         if counts[season] != 1230:
             raise ValueError(f"Season {season} has {counts[season]} games, expected 1230")
+    player_report = {"schema": 1, "strict_no_future_data": True,
+        "status": "experimental_not_promoted",
+        "method": "Prior-game decayed per-36 rates multiplied by expected minutes if playing",
+        "evaluation": "Conditional on actual participation, matched among pregame top-12 rotation; excludes unobserved DNPs",
+        "limitations": ["No verified pregame injury status; participation probabilities unvalidated",
+                        "Only appearing players are available in the game-log source",
+                        "Matched-player evaluation is subject to selection bias",
+                        "No player-stat model has been promoted to a validated betting projection"],
+        "by_season": {
+            str(season): {"participation": participation[season],
+                "stats": {stat: {"count": agg["count"],
+                     "mae": agg["sum_abs_error"] / agg["count"] if agg["count"] else None,
+                     "naive_last10_mae": agg["baseline_abs_error"] / agg["count"] if agg["count"] else None}
+                     for stat in PLAYER_STATS
+                     for agg in (stat_errors[season][stat],)}}
+            for season in (*EVALUATED, 2027)}}
     return round_tree({"schema": 1,
+        "player_report": player_report,
         "built_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "strict_no_future_data": True,
         "source": {"name": "llimllib/nba_data derived from stats.nba.com",
@@ -402,6 +482,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=pathlib.Path, default=OUTPUT)
     parser.add_argument("--current-output", type=pathlib.Path, default=CURRENT_OUTPUT)
+    parser.add_argument("--player-report-output", type=pathlib.Path, default=ROOT / "data/v9-player-report.json")
     parser.add_argument("--extension-dir", default="/tmp/nba-twin-duckdb-extensions")
     args = parser.parse_args()
     connection = duckdb.connect()
@@ -409,6 +490,12 @@ def main() -> None:
     connection.execute("INSTALL httpfs; LOAD httpfs")
     connection.execute(f"ATTACH '{CATALOG}' AS nba")
     payload = build_payload(connection)
+    report = payload.pop("player_report")
+    report["built_at_utc"] = payload["built_at_utc"]
+    args.player_report_output.parent.mkdir(parents=True, exist_ok=True)
+    report_tmp = args.player_report_output.with_suffix(".json.tmp")
+    report_tmp.write_text(json.dumps(round_tree(report), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    report_tmp.replace(args.player_report_output)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     tmp = args.output.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
