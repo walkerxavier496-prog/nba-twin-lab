@@ -31,7 +31,7 @@ function normalise(payload){
     const final=type.completed===true||type.name==='STATUS_FINAL'||type.state==='post';
     const live=!final&&(type.state==='in'||String(type.name||'').startsWith('STATUS_IN'));
     const hs=number(h.score),as=number(a.score);
-    if(final&&(!Number.isFinite(hs)||!Number.isFinite(as)))continue;
+    if(final&&(!Number.isFinite(hs)||!Number.isFinite(as)||hs===as))continue;
     const d=new Date(e.date);
     const inferred=d.getUTCMonth()>=6?d.getUTCFullYear()+1:d.getUTCFullYear();
     const season=Number(e.season?.year||payload.leagues?.[0]?.season?.year||inferred);
@@ -47,6 +47,8 @@ function merge(...lists){
   for(const list of lists)for(const g of list||[]){
     if(!g?.id||!g?.date||!g.home?.id||!g.away?.id||!Number.isFinite(dateMs(g.date)))continue;
     if(![g.home.id,g.away.id].every(id=>Number.isInteger(Number(id))&&Number(id)>=1&&Number(id)<=30))continue; // exclude All-Star exhibitions
+    if(g.id==='401809839')continue; // NBA Cup 2025 final does not count in regular season
+    if(g.status==='final'&&(!Number.isFinite(g.homeScore)||!Number.isFinite(g.awayScore)||g.homeScore===g.awayScore))continue;
     const prev=m.get(String(g.id));
     if(!prev||g.status==='final'||(prev.status!=='final'&&g.status==='live'))m.set(String(g.id),g);
   }
