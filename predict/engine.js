@@ -95,11 +95,17 @@ function blended(t,kind,league){
   const n=t.games;
   return n?(t[kind]+12*prior)/(n+12):prior;
 }
-function forecast(game,state){
+function forecast(game,state,profiles={}){
   const h=state.teams.get(game.home.id)||blank(game.home),a=state.teams.get(game.away.id)||blank(game.away);
   const hr=restDays(h,game.date),ar=restDays(a,game.date);
   const restEdge=(hr===0?-26:0)+(ar===0?26:0);
-  const eloEdge=h.elo-a.elo+HOME+restEdge;
+  // A small prior-year team-SRS anchor stabilises the early season.
+  // Profiles MUST come from the season before the predicted game, never the same season.
+  const ch=profiles[game.home.abbr]||profiles[game.home.id];
+  const ca=profiles[game.away.abbr]||profiles[game.away.id];
+  const validPrior=ch&&ca&&Number.isFinite(ch.srs)&&Number.isFinite(ca.srs);
+  const priorEdge=validPrior?(ch.srs-ca.srs)*25+HOME+restEdge:null;
+  const eloEdge=validPrior?.8*(h.elo-a.elo+HOME+restEdge)+.2*priorEdge:h.elo-a.elo+HOME+restEdge;
   const homeWin=clamp(logistic(eloEdge),.01,.99);
   const lg=state.leagueMean||113;
   const homeBase=(blended(h,'points',lg)+blended(a,'allowed',lg))/2;
@@ -109,17 +115,17 @@ function forecast(game,state){
   const gamesCurrent=h.games+a.games;
   return {homeWin,awayWin:1-homeWin,homeRating:h.elo,awayRating:a.elo,eloEdge,
     margin,homeScore:(total+margin)/2,awayScore:(total-margin)/2,total,
-    homeRest:hr,awayRest:ar,home:h,away:a,
+    homeRest:hr,awayRest:ar,home:h,away:a,priorEdge,priorUsed:!!validPrior,
     confidence:state.finals<150?'Insufficient historical data':gamesCurrent<16?'Early-season baseline':'Model estimate',
     history:state.finals};
 }
-function evaluate(games,season){
+function evaluate(games,season,profiles={}){
   const finals=merge(games).filter(g=>g.status==='final'&&g.season===season);
   const picks=[];
   for(const g of finals){
     const s=ratings(games,g.date);
     if(s.finals<120)continue;
-    const p=forecast(g,s),actual=g.homeScore>g.awayScore?1:0;
+    const p=forecast(g,s,profiles),actual=g.homeScore>g.awayScore?1:0;
     if(g.homeScore===g.awayScore)continue;
     picks.push({id:g.id,date:g.date,p:p.homeWin,actual,
       correct:(p.homeWin>=.5)===(actual===1),brier:(p.homeWin-actual)**2,
