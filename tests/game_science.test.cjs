@@ -3,9 +3,9 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const S=require('../scripts/game_science.cjs');
 const snap=(date,overrides={})=>({
   as_of:date,games:20,rest_days:1,
-  prior:{adj_ortg:112,adj_drtg:110,three_rate:.4,opp_three_rate:.4,three_pct:.36,
+  prior:{adj_ortg:112,adj_drtg:110,three_rate:.4,opp_three_rate:.4,three_pct:.36,efg:.54,opp_efg:.54,
     tov_rate:.14,opp_tov_rate:.14,orb_rate:.27,drb_rate:.73,ftr:.25,opp_ftr:.25,pace:100},
-  season:{adj_ortg:114,adj_drtg:110,three_rate:.42,opp_three_rate:.4,three_pct:.37,
+  season:{adj_ortg:114,adj_drtg:110,three_rate:.42,opp_three_rate:.4,three_pct:.37,efg:.55,opp_efg:.54,
     tov_rate:.14,opp_tov_rate:.14,orb_rate:.27,drb_rate:.73,ftr:.25,opp_ftr:.25,pace:100},
   last5:{games:5,adj_ortg:118,adj_drtg:108},...overrides});
 test('recent form is opponent-adjusted efficiency trend, not wins',()=>{
@@ -15,10 +15,10 @@ test('recent form is opponent-adjusted efficiency trend, not wins',()=>{
  assert.equal(f.restScience,0);
 });
 test('matchup factors change direction with offense and opponent tendencies',()=>{
- const h=snap('2026-10-30',{season:{...snap('2026-10-30').season,tov_rate:.08,orb_rate:.34,ftr:.36,three_pct:.42}});
- const a=snap('2026-10-30',{season:{...snap('2026-10-30').season,tov_rate:.20,orb_rate:.19,ftr:.14,three_pct:.31}});
+ const h=snap('2026-10-30',{season:{...snap('2026-10-30').season,tov_rate:.08,orb_rate:.34,ftr:.36,three_pct:.42,efg:.61}});
+ const a=snap('2026-10-30',{season:{...snap('2026-10-30').season,tov_rate:.20,orb_rate:.19,ftr:.14,three_pct:.31,efg:.48}});
  const f=S.scienceFeatures(h,a);
- assert.ok(f.shooting>0);assert.ok(f.turnovers>0);assert.ok(f.rebounding>0);assert.ok(f.freeThrows>0);
+ assert.ok(f.shooting>0);assert.ok(f.threePointStyle>0);assert.ok(f.turnovers>0);assert.ok(f.rebounding>0);assert.ok(f.freeThrows>0);
  assert.ok(Object.values(f).every(Number.isFinite));
 });
 test('head-to-head excludes same-day and future outcomes, shrinks small samples',()=>{
