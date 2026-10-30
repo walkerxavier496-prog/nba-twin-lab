@@ -9,7 +9,9 @@ const one=x=>Number.isFinite(x)?x.toFixed(1):'—';
 const round=x=>Number.isFinite(x)?Math.round(x):'—';
 const today=new Date();
 const seasonYear=today.getUTCFullYear()+(today.getUTCMonth()>=6?1:0);
-let games=[],selected=null,source='',loadedAt=null,hasHistory=false;
+let games=[],selected=null,source='',loadedAt=null,hasHistory=false,context=null,profiles={};
+const alias={GS:'GSW',NY:'NYK',SA:'SAS',NO:'NOP',UTAH:'UTA',WSH:'WAS',PHX:'PHO',BKN:'BRK',CHA:'CHO'};
+async function loadContext(){try{const r=await fetch('../data/context.json',{cache:'no-store'});if(!r.ok)return;const d=await r.json();if(d.schema!==1||!Array.isArray(d.teams))return;context=d;const prior=d.teams.filter(t=>t.season===seasonYear-1);for(const t of prior)profiles[t.abbr]=t;for(const [from,to] of Object.entries(alias))if(profiles[to])profiles[from]=profiles[to];}catch(e){console.warn('Team advanced context unavailable:',e)}}
 function note(message,type=''){const n=$('notice');n.textContent=message;n.className='notice '+type}
 function monthRanges(start,end){
  const out=[];let y=start.getUTCFullYear(),m=start.getUTCMonth();
@@ -79,7 +81,7 @@ function render(){
  $('games-played').textContent=currentFinals.toLocaleString();
  if(hasHistory)note('Using '+source+'. Historical baseline: '+prevFinals+' completed games from '+(seasonYear-2)+'–'+String(seasonYear-1).slice(2)+'. Forecasts exclude injuries and confirmed lineups.','good');
  else note('Only '+prevFinals+' previous-season finals available; require at least 800 before issuing probabilities. No forecasts will be fabricated.','bad');
- const stats=hasHistory?E.evaluate(games,seasonYear):{count:0};
+ const stats=hasHistory?E.evaluate(games,seasonYear,profiles):{count:0};
  $('accuracy').textContent=stats.count>=10?pct(stats.accuracy):'—';
  $('brier').textContent=stats.count>=10?stats.brier.toFixed(3):'—';
  $('mae').textContent=stats.count>=10?one(stats.scoreMAE):'—';
@@ -114,8 +116,10 @@ function renderDetail(){
  const g=games.find(x=>x.id===selected);
  if(!g){$('detail').innerHTML='<div class="placeholder"><div class="placeholder-icon">◎</div><h3>No game selected</h3><p>Choose an upcoming NBA matchup.</p></div>';return}
  if(!hasHistory){$('detail').innerHTML='<div class="placeholder"><h3>Insufficient verified history</h3><p>The model requires at least 800 completed games from the previous season. No probabilities will be shown until this data is available.</p></div>';return}
- const state=E.ratings(games,g.date),p=E.forecast(g,state),h=p.home,a=p.away;
+ const state=E.ratings(games,g.date),p=E.forecast(g,state,profiles),h=p.home,a=p.away;
  const h2h=E.matchupHistory(games,g);
+ const hp=profiles[g.home.abbr]||Object.values(profiles).find(t=>t.name===g.home.name),ap=profiles[g.away.abbr]||Object.values(profiles).find(t=>t.name===g.away.name);
+ const style=t=>t?metric('Net rating',one(t.n_rtg))+metric('Offensive rating',one(t.o_rtg))+metric('Defensive rating',one(t.d_rtg))+metric('Pace',one(t.pace))+metric('3-point attempt rate',Number.isFinite(t.x3p_ar)?one(100*t.x3p_ar)+'%':'—')+metric('Effective FG%',Number.isFinite(t.e_fg_percent)?one(100*t.e_fg_percent)+'%':'—')+metric('Turnover rate',Number.isFinite(t.tov_percent)?one(t.tov_percent)+'%':'—')+metric('Offensive rebounding',Number.isFinite(t.orb_percent)?one(t.orb_percent)+'%':'—'):'Prior-year team stats unavailable';
  const hWin=p.homeWin>=.5;
  const tag=g.status==='final'?'ARCHIVED PREGAME ESTIMATE':g.status==='live'?'PREGAME MODEL · LIVE GAME':'PREGAME ESTIMATE';
  $('detail').innerHTML=
@@ -133,8 +137,9 @@ function renderDetail(){
  metric('Elo',round(h.elo))+metric('Record',h.wins+'–'+h.losses)+metric('Points/game',h.games?one(h.points/h.games):'No games')+
  metric('Allowed/game',h.games?one(h.allowed/h.games):'No games')+metric('Last 5',h.recent.slice(-5).map(x=>x.win?'W':'L').join(' ')||'—')+
  metric('Rest before tip',p.homeRest===null?'Unknown':p.homeRest+' days')+'</div></div>'+
+ '<h4 class="small">PRIOR-SEASON TEAM STYLE · '+(seasonYear-2)+'–'+String(seasonYear-1).slice(2)+'</h4><div class="split"><div><h4>'+esc(g.away.abbr)+'</h4>'+style(ap)+'</div><div><h4>'+esc(g.home.abbr)+'</h4>'+style(hp)+'</div></div><p class="disclaimer">Verified team advanced statistics are previous-season context, not live current-season ratings. They do not adjust for offseason roster changes.</p>'+ 
  '<h4 class="small">MATCHUP EXPLANATION</h4><div class="context">'+
- '<p><b>'+esc(hWin?g.home.name:g.away.name)+'</b> is favoured by '+one(Math.abs(p.eloEdge))+' adjusted Elo points. Home court contributes '+65+' Elo points; back-to-back scheduling contributes '+(p.eloEdge-(h.elo-a.elo)-65)+' Elo points.</p>'+
+ '<p><b>'+esc(hWin?g.home.name:g.away.name)+'</b> is favoured by '+one(Math.abs(p.eloEdge))+' model rating points. The estimate includes home court (+65 Elo), back-to-back rest, and '+(p.priorUsed?'an 80% Elo / 20% prior-year team-SRS blend.':'Elo alone because verified prior-year team SRS is missing.')+'</p>'+
  '<p>Last '+h2h.length+' head-to-head meeting'+(h2h.length===1?'':'s')+': '+(h2h.length?h2h.map(x=>esc(x.away.abbr)+' '+x.awayScore+'–'+x.homeScore+' '+esc(x.home.abbr)).join(' · '):'No verified recent meetings')+'. Head-to-head history is context only, not a separate predictive weight.</p></div>'+
  (g.status==='final'?'<p class="context"><b>Actual final:</b> '+esc(g.away.abbr)+' '+g.awayScore+' – '+g.homeScore+' '+esc(g.home.abbr)+'. This forecast was recomputed using only games before tip-off.</p>':'')+
  '<p class="disclaimer">'+esc(p.confidence)+'. Elo baseline + scoring estimates; no verified injury/lineup adjustments, possession-based matchup metrics or betting-market input. Win probabilities are uncalibrated until sufficient backtesting. This is not betting advice.</p>';
@@ -148,5 +153,5 @@ function renderTeams(){
 }
 $('range').addEventListener('change',renderGames);
 $('team-search').addEventListener('input',renderGames);
-load();
+loadContext().then(load);
 })();
