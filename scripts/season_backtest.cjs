@@ -10,7 +10,7 @@ const ROOT=path.resolve(__dirname,'..');
 const EAST='ATL BOS BKN CHA CHI CLE DET IND MIA MIL NYK ORL PHI TOR WAS'.split(' ');
 const WEST='DAL DEN GSW HOU LAC LAL MEM MIN NOP OKC PHO POR SAC SAS UTA'.split(' ');
 const alias={GS:'GSW',NY:'NYK',SA:'SAS',NO:'NOP',UTAH:'UTA',WSH:'WAS',PHX:'PHO',BKN:'BRK',CHA:'CHO'};
-const canonical=a=>alias[a]||a;
+const canonical=a=>({GS:'GSW',NY:'NYK',SA:'SAS',NO:'NOP',UTAH:'UTA',WSH:'WAS',PHX:'PHO'}[a]||a);
 const now=()=>new Date().toISOString();
 const round=(n,d=2)=>Number(n.toFixed(d));
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
