@@ -15,6 +15,14 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 
 **Legacy experiments remain available under Model Research:** [V6 historical audit](https://walkerxavier496-prog.github.io/nba-twin-lab/history/), [V7 intelligence](https://walkerxavier496-prog.github.io/nba-twin-lab/intelligence/), [V8 research](https://walkerxavier496-prog.github.io/nba-twin-lab/research/), [V9 player stats](https://walkerxavier496-prog.github.io/nba-twin-lab/player-stats/), [Season Test](https://walkerxavier496-prog.github.io/nba-twin-lab/season-test/), [MVP Lab](https://walkerxavier496-prog.github.io/nba-twin-lab/mvp/) and [Championship Archive](https://walkerxavier496-prog.github.io/nba-twin-lab/championship/).
 
+## Early-season roster turnover correction (experimental)
+
+The original Elo baseline still carries last season's team quality into the new season. This can overstate confidence after trades and injuries. The `predict/roster.js` module compares **prior-season rotation minutes** against the players in a strictly pregame current-season inferred rotation. It provides three research features: departed-prior-quality shock, Elo uncertainty when prior rotations changed, and early current-season opponent-adjusted net-rating change. Their coefficients are **learned from earlier seasons**, not manually set to match an individual game.
+
+`build_v7_intelligence.py` now separately exports a compact `data/rotation-history.json` of historical pregame player IDs and expected minutes (no target-game results). `scripts/roster_research.cjs` runs a 2023–2026 rolling-origin comparison against both Elo and the previously tested V8 combined player-adjusted model; it publishes `data/roster-priors.json` and `data/roster-research-report.json`. The browser shows an explicitly experimental roster forecast when verified inputs are available and otherwise fails closed to the unchanged Elo baseline.
+
+**Important:** rotation membership is inferred from earlier appearances, not verified transactions, official injuries or confirmed lineups. A missing player may be injured rather than traded; an early-season roster with few games is particularly uncertain. No roster model is promoted automatically.
+
 ## Basketball-science research
 
 The new `scripts/game_science.cjs` uses exactly the same `predict/science.js` feature definitions as the Team Intelligence dashboard. It tests opponent-adjusted team strength, recent efficiency momentum (last five versus season, shrunk), rest, **Four Factors** (effective field-goal percentage, turnovers, offensive rebounding and free-throw rate), three-point shot style, pace and strictly earlier head-to-head meetings.
