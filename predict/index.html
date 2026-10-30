@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1222">
+<meta name="description" content="NBA Twin Lab Game Predictor: explainable pregame probabilities, projected scores, Elo power rankings and honest walk-forward accuracy tracking.">
+<title>NBA Twin Lab · Game Predictor</title>
+<link rel="stylesheet" href="./styles.css">
+<script defer src="./engine.js"></script>
+<script defer src="./app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+ <div class="topinner">
+  <a class="brand" href="../index.html"><span class="brandmark">TL<span class="spark">✦</span></span><span>NBA <b>TWIN LAB</b><small>DATA · MODELS · BASKETBALL</small></span></a>
+  <nav aria-label="Main navigation">
+   <a href="./index.html" class="active">Game Predictor</a>
+   <a href="../mvp/">MVP Lab</a>
+   <a href="../index.html">Player Twins</a>
+   <a href="#power">Power Rankings</a>
+  </nav>
+ </div>
+</header>
+<main id="main" class="shell">
+ <div class="hero">
+  <div>
+   <div class="eyebrow"><span class="pulse"></span> NBA TWIN LAB / PREDICTION ENGINE V4</div>
+   <h1>Know the matchup.<br><em>Understand the edge.</em></h1>
+   <p>Pregame win probabilities and projected scores built from real results, team strength, scoring, rest and home court — with every prediction explained.</p>
+   <div class="hero-actions"><a class="primary" href="#matchups">Explore matchups <span aria-hidden="true">↗</span></a><a class="secondary" href="#method">See the methodology</a></div>
+  </div>
+  <div class="hero-panel">
+   <div class="kicker">MODEL HEALTH <span class="signal" id="signal">LOADING</span></div>
+   <div class="hero-value" id="hero-count">—</div><div class="muted">NBA games in verified dataset</div>
+   <div class="hr"></div>
+   <div class="minirow"><span>Source</span><strong>ESPN scoreboard*</strong></div>
+   <div class="minirow"><span>Model</span><strong>Transparent Elo + scoring</strong></div>
+   <div class="minirow"><span>Data refreshed</span><strong id="freshness">Checking…</strong></div>
+  </div>
+ </div>
+ <div class="notice" id="notice" role="status">Loading basketball results and schedule. No predictions are shown until the source is verified.</div>
+ <div class="statstrip">
+  <div><span>Completed games this season</span><strong id="games-played">—</strong></div>
+  <div><span>Model accuracy</span><strong id="accuracy">—</strong><small id="accuracy-sub">Walk-forward, before tip-off</small></div>
+  <div><span>Brier score</span><strong id="brier">—</strong><small>Lower is better · 0 is perfect</small></div>
+  <div><span>Projected-score error</span><strong id="mae">—</strong><small>Average points per team</small></div>
+ </div>
+ <section id="matchups" class="section">
+  <div class="sectionhead">
+   <div><div class="eyebrow">01 / UPCOMING GAMES</div><h2>Game Prediction Lab</h2><p>Pick a game to inspect the pregame model and team-by-team breakdown.</p></div>
+   <div class="toolbar"><label for="range" class="sr">Game range</label><select id="range"><option value="7">Next 7 days</option><option value="21" selected>Next 21 days</option><option value="all">All scheduled</option><option value="final">Recent results</option></select><label for="team-search" class="sr">Filter team</label><input id="team-search" placeholder="Search team…" autocomplete="off"></div>
+  </div>
+  <div class="matchup-layout">
+   <div id="games" class="games" aria-live="polite"><div class="empty">Loading scheduled games…</div></div>
+   <aside class="detail" id="detail"><div class="placeholder"><div class="placeholder-icon">◎</div><h3>Select a matchup</h3><p>View win probabilities, projected score, recent form, rest and previous meetings.</p></div></aside>
+  </div>
+ </section>
+ <section id="power" class="section">
+  <div class="sectionhead"><div><div class="eyebrow">02 / TEAM STRENGTH</div><h2>Power Rankings</h2><p>Elo ratings updated after every completed game, with previous-season regression.</p></div><div class="rightlabel" id="power-season">Current season</div></div>
+  <div class="tablewrap"><table><thead><tr><th>Rank</th><th>Team</th><th>W–L</th><th>Elo</th><th>PPG</th><th>Opp PPG</th><th>Last 5</th></tr></thead><tbody id="teams"><tr><td colspan="7">Waiting for validated results…</td></tr></tbody></table></div>
+  <p class="footnote">Points per game and points allowed are not possession-adjusted offensive/defensive ratings. Early-season Elo retains information from the prior season.</p>
+ </section>
+ <section class="section" id="method">
+  <div class="sectionhead"><div><div class="eyebrow">03 / TRANSPARENCY</div><h2>How this model works</h2><p>Explainable estimates, not invented certainty.</p></div></div>
+  <div class="methodgrid">
+   <article><div class="methodnum">01</div><h3>Opponent-adjusted team strength</h3><p>Elo moves after every final score. Beating a strong opponent counts more than beating a weak one; point margin adjusts the update. Ratings regress toward average between seasons.</p></article>
+   <article><div class="methodnum">02</div><h3>Matchup & schedule context</h3><p>The prediction combines the two teams' Elo ratings, home-court advantage, back-to-back rest, and shrinkage-adjusted points scored and allowed to estimate a winner and score.</p></article>
+   <article><div class="methodnum">03</div><h3>Real-world verification</h3><p>Walk-forward evaluation recreates the forecast before each finished game using only earlier results. Accuracy, Brier score and projected-score error update when new games finish.</p></article>
+   <article><div class="methodnum">04</div><h3>Limits we won't hide</h3><p>Injuries, confirmed lineups, possession-based team ratings, shot profiles, trades and betting odds are <b>not yet included</b>. A 65% prediction means a model estimate, not a guaranteed result.</p></article>
+  </div>
+  <div class="provenance"><strong>Data provenance:</strong> Public, unofficial <a href="https://www.espn.com/nba/scoreboard" target="_blank" rel="noopener noreferrer">ESPN NBA scoreboard</a>. This site is independent and not affiliated with the NBA or ESPN. The feed is undocumented and may become unavailable. No fabricated scores, injuries or probabilities are substituted when coverage fails. Historical model quality is not a guarantee of future accuracy.</div>
+ </section>
+ <footer><div>NBA <b>TWIN LAB</b> <span>V4 · BUILT FOR THE GAME</span></div><div><a href="../index.html">Statistical Twins</a><a href="../mvp/">MVP Lab</a><a href="https://github.com/walkerxavier496-prog/nba-twin-lab" target="_blank" rel="noopener noreferrer">Source code ↗</a></div></footer>
+</main>
+</body></html>
