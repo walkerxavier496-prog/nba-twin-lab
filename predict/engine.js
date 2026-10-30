@@ -56,16 +56,16 @@ function blank(t){return {id:t.id,name:t.name||t.abbr,abbr:t.abbr||t.name,logo:t
   games:0,wins:0,losses:0,points:0,allowed:0,lastDate:null,recent:[],prev:null};}
 function ratings(games,asOf){
   const teams=new Map(),finals=merge(games).filter(g=>g.status==='final'&&dateMs(g.date)<dateMs(asOf));
-  let season=null;const league=[];
+  let season=null;const league=[];let priorLeagueMean=null;
   const get=t=>{if(!teams.has(t.id))teams.set(t.id,blank(t));const v=teams.get(t.id);
     v.name=t.name||v.name;v.abbr=t.abbr||v.abbr;v.logo=t.logo||v.logo;return v;};
   for(const g of finals){
     if(season!==g.season){
-      if(season!==null)for(const t of teams.values()){
+      if(season!==null){priorLeagueMean=mean(league);for(const t of teams.values()){
         t.prev={games:t.games,points:t.points,allowed:t.allowed,wins:t.wins,losses:t.losses};
         t.elo=BASE+(t.elo-BASE)*.68;t.games=0;t.wins=0;t.losses=0;
         t.points=0;t.allowed=0;t.recent=[];t.lastDate=null;
-      }
+      }}
       season=g.season;league.length=0;
     }
     const h=get(g.home),a=get(g.away);
@@ -83,7 +83,19 @@ function ratings(games,asOf){
     }
     league.push((g.homeScore+g.awayScore)/2);
   }
-  return {teams,season,finals:finals.length,leagueMean:mean(league),allGames:finals};
+  // Pregame forecasts on opening night must regress last season's ratings,
+  // even if no game in the new season has been completed yet.
+  const at=new Date(asOf),target=at.getUTCFullYear()+(at.getUTCMonth()>=6?1:0);
+  if(season!==null&&target>season){
+    priorLeagueMean=mean(league)||priorLeagueMean;
+    for(const t of teams.values()){
+      t.prev={games:t.games,points:t.points,allowed:t.allowed,wins:t.wins,losses:t.losses};
+      t.elo=BASE+(t.elo-BASE)*.68;t.games=0;t.wins=0;t.losses=0;
+      t.points=0;t.allowed=0;t.recent=[];t.lastDate=null;
+    }
+    season=target;league.length=0;
+  }
+  return {teams,season,finals:finals.length,leagueMean:mean(league)||priorLeagueMean,allGames:finals};
 }
 function restDays(t,date){
   if(!t?.lastDate)return null;
