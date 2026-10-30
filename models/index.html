@@ -11,7 +11,7 @@
 <div class="tiles"><div class="tile"><small>Production game predictor</small><strong>Elo</strong><span class="muted">Unchanged during research</span></div><div class="tile"><small>Rolling-origin historical games</small><strong id="games">—</strong><span class="muted">2022–23 through 2025–26</span></div><div class="tile"><small>Research status</small><strong style="font-size:20px">Experimental</strong><span class="muted">No automatic promotion</span></div></div>
 <div class="status" id="status" role="status">Loading verified research report…</div>
 <section class="panel"><div class="eyebrow">01 / SCIENCE OF THE GAME</div><h2>Which basketball signals improve predictions?</h2>
-<p>Opponent-adjusted strength, efficiency momentum, shooting style, turnover pressure, offensive rebounding, free-throw tendencies, rest, pace and prior head-to-head meetings. Head-to-head history is a testable signal—not a special rivalry bonus.</p>
+<p>Opponent-adjusted strength, efficiency momentum, shooting style, turnover pressure, offensive rebounding, free-throw tendencies, rest, pace and prior head-to-head meetings. Head-to-head history is a testable signal—not a special rivalry bonus. We also compare each experiment with calibrated Elo to distinguish real basketball insight from a simple probability adjustment.</p>
 <div class="tablewrap"><table><thead><tr><th>Model</th><th>Win accuracy</th><th>Brier ↓</th><th>Log loss ↓</th><th>ECE ↓</th><th>Seasons better than Elo</th></tr></thead><tbody id="science"><tr><td colspan="6">Waiting for the audited report…</td></tr></tbody></table></div>
 <p class="muted" id="science-note">Lower Brier and log loss mean better probability estimates. Winner accuracy is not the only success metric.</p></section>
 <section class="panel"><div class="eyebrow">02 / PREVIOUS EXPERIMENTS</div><h2>Research archive</h2><p>Older versions remain available for transparency, but they no longer clutter the main navigation.</p>
@@ -21,6 +21,8 @@
 <article><h3>V8 · Direct player-adjusted Elo</h3><p>Walk-forward testing of Elo with inferred availability, rest and adjusted efficiency.</p><a href="../research/">Open V8 archive</a></article>
 <article><h3>V9 · Experimental player stat projections</h3><p>Conditional player box-score projections; held separate while game forecasting is prioritised.</p><a href="../player-stats/">Open V9 archive</a></article>
 <article><h3>Season Test</h3><p>Opening-night forecasts, strength projections and season-long comparisons.</p><a href="../season-test/">Open season tests</a></article>
+<article><h3>MVP Lab</h3><p>Explore the statistical MVP index and historical award voting.</p><a href="../mvp/">Open MVP Lab</a></article>
+<article><h3>Championship Archive</h3><p>Review verified title winners and Finals MVP history.</p><a href="../championship/">Open championship archive</a></article>
 <article><h3>Open-source methodology</h3><p>Audit code, data provenance, workflows, leakage tests and model implementation.</p><a href="https://github.com/walkerxavier496-prog/nba-twin-lab">View repository</a></article>
 </div></section><footer>Research-only models do not change the live Game Predictor. Historical test results do not guarantee future accuracy.</footer></main>
 <script>
