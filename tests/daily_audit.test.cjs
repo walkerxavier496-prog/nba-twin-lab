@@ -18,6 +18,19 @@ test('Melbourne date discovery follows AEST and AEDT instead of a fixed UTC offs
   assert.match(display, /(AEDT|GMT\+11)/);
 });
 
+test('final-result review opens at 6pm Melbourne only four hours after last tip', () => {
+  const lock = { scope: { last_tip_utc: '2026-10-31T02:00:00Z' } };
+  assert.equal(T.reviewWindowOpen(lock, Date.parse('2026-10-31T06:59:00Z')), false); // 5:59pm AEDT
+  assert.equal(T.reviewWindowOpen(lock, Date.parse('2026-10-31T07:00:00Z')), true); // 6:00pm AEDT
+  assert.equal(T.reviewWindowOpen({ scope: { last_tip_utc: '2026-10-31T04:00:00Z' } },
+    Date.parse('2026-10-31T07:00:00Z')), false); // Last tip too recent
+  assert.equal(T.reviewWindowOpen({ scope: {} }, Date.parse('2026-10-31T07:00:00Z')), false);
+  // In winter, 6pm AEST is 08:00 UTC, not 07:00 UTC.
+  const winter = { scope: { last_tip_utc: '2026-06-01T02:00:00Z' } };
+  assert.equal(T.reviewWindowOpen(winter, Date.parse('2026-06-01T07:59:00Z')), false);
+  assert.equal(T.reviewWindowOpen(winter, Date.parse('2026-06-01T08:00:00Z')), true);
+});
+
 test('integrity detects any post-lock forecast edit and validates the legacy practice lock', () => {
   const payload = A.withIntegrity({ schema: 'test', forecasts: [{ p: 0.6 }] });
   assert.equal(A.verifyIntegrity(payload), true);
