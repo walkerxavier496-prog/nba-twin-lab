@@ -1,0 +1,60 @@
+name: V9 player stat projections and audit
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 14 * * *'
+  push:
+    branches: [main]
+    paths:
+      - build_v7_intelligence.py
+      - tests/test_v9_players.py
+      - player-stats/**
+      - .github/workflows/v9-player-stats.yml
+permissions:
+  contents: write
+concurrency:
+  group: nba-twin-lab-v9
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt pytest
+      - name: Test player stat model
+        run: python -m pytest -q tests/test_v9_players.py tests/test_v7_intelligence.py
+      - name: Compile and verify front end
+        run: |
+          node --check player-stats/app.js
+          python -m py_compile build_v7_intelligence.py
+      - name: Build verified pregame player snapshot and historical audit
+        run: python build_v7_intelligence.py --output /tmp/v7-intelligence.json --current-output data/v7-current.json --player-report-output data/v9-player-report.json
+      - name: Validate model and report without claiming accuracy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('data/v7-current.json').read_text())
+          r=json.loads(Path('data/v9-player-report.json').read_text())
+          assert d['strict_no_future_data'] and r['strict_no_future_data']
+          assert len(d['teams'])==30
+          assert all(p.get('stats_if_play') and p.get('availability')=='inferred'
+                     for t in d['teams'] for p in t['rotation'])
+          assert all(r['by_season'][str(s)]['stats']['points']['count']>1000
+                     for s in range(2022,2027))
+          print('Validated historical conditional MAE and current inferred projections')
+          PY
+      - name: Publish validated V9 data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/v7-current.json data/v9-player-report.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh verified V9 player projections and historical audit'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
