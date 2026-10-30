@@ -121,7 +121,10 @@ function forecast(game,state,profiles={}){
   const ca=profiles[game.away.abbr]||profiles[game.away.id];
   const validPrior=ch&&ca&&Number.isFinite(ch.srs)&&Number.isFinite(ca.srs);
   const priorEdge=validPrior?(ch.srs-ca.srs)*25+HOME+restEdge:null;
-  const eloEdge=validPrior ? 0.8*(h.elo-a.elo+HOME+restEdge)+0.2*priorEdge : h.elo-a.elo+HOME+restEdge;
+  // Previous-season context matters most in the first few games.
+  // As actual current-season results accumulate, the prior fades smoothly.
+  const priorWeight=validPrior ? 0.2*Math.exp(-(h.games+a.games)/16) : 0;
+  const eloEdge=(1-priorWeight)*(h.elo-a.elo+HOME+restEdge)+priorWeight*(priorEdge??0);
   const homeWin=clamp(logistic(eloEdge),.01,.99);
   const lg=state.leagueMean||113;
   const homeBase=(blended(h,'points',lg)+blended(a,'allowed',lg))/2;
@@ -131,7 +134,7 @@ function forecast(game,state,profiles={}){
   const gamesCurrent=h.games+a.games;
   return {homeWin,awayWin:1-homeWin,homeRating:h.elo,awayRating:a.elo,eloEdge,
     margin,homeScore:(total+margin)/2,awayScore:(total-margin)/2,total,
-    homeRest:hr,awayRest:ar,home:h,away:a,priorEdge,priorUsed:!!validPrior,
+    homeRest:hr,awayRest:ar,home:h,away:a,priorEdge,priorUsed:!!validPrior,priorWeight,
     confidence:state.finals<150?'Insufficient historical data':gamesCurrent<16?'Early-season baseline':'Model estimate',
     history:state.finals};
 }
