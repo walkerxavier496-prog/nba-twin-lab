@@ -373,7 +373,7 @@ async function run(options) {
     const lock = readJson(file), reviewPath = reviewFile(lock.scope.melbourne_date);
     if (fs.existsSync(reviewPath)) continue;
     const lastTip = Date.parse(lock.scope.last_tip_utc);
-    if (!Number.isFinite(lastTip) || now < lastTip + 4 * 3600000 || A.melbourneHour(now) < 20) continue;
+    if (!Number.isFinite(lastTip) || now < lastTip + 4 * 3600000 || A.melbourneHour(now) < 18) continue;
     try {
       const review = await buildReview(lock, now);
       if (options.dryRun) console.log(JSON.stringify(review, null, 2));
