@@ -7,8 +7,8 @@
 </style></head><body>
 <header><a class="brand" href="../">TL✦ NBA TWIN LAB</a><nav><a href="../predict/">Game Predictor</a><a href="../team-intelligence/">Team Intelligence</a><a href="./" class="active">Model Research</a><a href="../twins/">Player Twins</a></nav></header>
 <main><div class="eyebrow">EVIDENCE / NOT MARKETING</div><h1>One predictor.<br><em>Every experiment accountable.</em></h1>
-<p class="lead">Our production winner model stays simple until another model demonstrates a repeatable, properly calibrated improvement. Basketball-science features are tested against Elo using strictly pregame inputs.</p>
-<div class="tiles"><div class="tile"><small>Production game predictor</small><strong>Elo</strong><span class="muted">Unchanged during research</span></div><div class="tile"><small>Rolling-origin historical games</small><strong id="games">—</strong><span class="muted">2022–23 through 2025–26</span></div><div class="tile"><small>Research status</small><strong style="font-size:20px">Experimental</strong><span class="muted">No automatic promotion</span></div></div>
+<p class="lead">The roster-aware beta outperformed original Elo in historical probability accuracy, but has not clearly beaten our previous player-adjusted model. All science features are tested using strictly pregame inputs.</p>
+<div class="tiles"><div class="tile"><small>Default game forecast</small><strong>Roster beta</strong><span class="muted">Elo fallback when roster data unavailable</span></div><div class="tile"><small>Rolling-origin historical games</small><strong id="games">—</strong><span class="muted">2022–23 through 2025–26</span></div><div class="tile"><small>Research status</small><strong style="font-size:20px">Experimental</strong><span class="muted">No automatic promotion</span></div></div>
 <div class="status" id="status" role="status">Loading verified research report…</div>
 <section class="panel"><div class="eyebrow">01 / SCIENCE OF THE GAME</div><h2>Which basketball signals improve predictions?</h2>
 <p>Opponent-adjusted strength, efficiency momentum, shooting style, turnover pressure, offensive rebounding, free-throw tendencies, rest, pace and prior head-to-head meetings. Head-to-head history is a testable signal—not a special rivalry bonus. We also compare each experiment with calibrated Elo to distinguish real basketball insight from a simple probability adjustment.</p>
@@ -25,7 +25,7 @@
 <article><h3>MVP Lab</h3><p>Explore the statistical MVP index and historical award voting.</p><a href="../mvp/">Open MVP Lab</a></article>
 <article><h3>Championship Archive</h3><p>Review verified title winners and Finals MVP history.</p><a href="../championship/">Open championship archive</a></article>
 <article><h3>Open-source methodology</h3><p>Audit code, data provenance, workflows, leakage tests and model implementation.</p><a href="https://github.com/walkerxavier496-prog/nba-twin-lab">View repository</a></article>
-</div></section><footer>Research-only models do not change the live Game Predictor. Historical test results do not guarantee future accuracy.</footer></main>
+</div></section><footer>The roster-aware beta is explicitly selected by default; other research models do not change the live Game Predictor. Historical test results do not guarantee future accuracy.</footer></main>
 <script>
 (async()=>{
  const names={elo:'Elo baseline',calibrated:'Calibrated Elo',strength:'Elo + adjusted strength',form:'Elo + form and rest',four_factors:'Elo + Four Factors',styles:'Elo + style and pace',head_to_head:'Elo + head-to-head',full:'Elo + all science signals'};
@@ -37,7 +37,7 @@
   const d=await r.json();
   if(!d.strict_no_future_data||d.status!=='research_only_not_promoted'||d.sample.rolling!==4920)throw Error('Report failed provenance checks');
   document.getElementById('games').textContent=d.sample.rolling.toLocaleString();
-  document.getElementById('status').textContent='Research verified · '+new Date(d.generated_at_utc).toLocaleString()+' · Live Elo remains unchanged';
+  document.getElementById('status').textContent='Research verified · '+new Date(d.generated_at_utc).toLocaleString()+' · Baseline Elo remains available';
   document.getElementById('science').innerHTML=Object.entries(d.models).map(([key,v])=>{
     const comp=d.comparisons[key+'_minus_calibrated'];
     return '<tr><td>'+names[key]+'</td><td>'+percent(v.rolling.accuracy)+'</td><td>'+number(v.rolling.brier)+'</td><td>'+number(v.rolling.logLoss)+'</td><td>'+number(v.rolling.ece)+'</td><td>'+(comp?number(comp.delta_brier):'reference')+'</td><td>'+(comp?comp.ci95_day_clustered.map(number).join(' to '):'—')+'</td></tr>';
