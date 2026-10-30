@@ -20,6 +20,21 @@ function modelsFor(game){
  const side=data.sidecar?.games?.find(item=>String(item.game_id)===String(game.game_id));
  return side?.predictions||embedded||{};
 }
+function drawDisagreements(){
+ const entries=(data.lock.forecasts||[]).map(game=>{
+  const probabilities=ids.map(id=>modelsFor(game)[id]).filter(p=>p?.available===true&&isNumber(p.home_win_probability)).map(p=>p.home_win_probability);
+  if(probabilities.length<2)return null;
+  const home=probabilities.filter(p=>p>=0.5).length,away=probabilities.length-home;
+  return {game,spread:Math.max(...probabilities)-Math.min(...probabilities),home,away,split:home>0&&away>0,count:probabilities.length};
+ }).filter(Boolean).sort((a,b)=>Number(b.split)-Number(a.split)||b.spread-a.spread).slice(0,6);
+ $('disagreements').innerHTML=entries.length?entries.map(x=>
+  '<button class="watch" type="button" data-game="'+esc(x.game.game_id)+'"><small>'+esc(shortTime(x.game.tip_utc))+' · '+(x.split?'SPLIT PICK':'CONFIDENCE GAP')+'</small>'+
+  '<strong>'+esc(matchName(x.game))+'</strong>'+
+  '<small><b>'+(x.spread*100).toFixed(1)+' percentage points</b> between highest and lowest probabilities</small>'+
+  '<small>'+x.away+' favour '+esc(x.game.away.abbr)+' · '+x.home+' favour '+esc(x.game.home.abbr)+'</small></button>'
+ ).join(''):'<p class="muted">No overlapping, available model forecasts for comparison.</p>';
+ document.querySelectorAll('#disagreements [data-game]').forEach(button=>button.onclick=()=>selectGame(button.dataset.game));
+}
 function drawGameSelector(){
  const games=data.lock.forecasts||[];
  $('game-selector').innerHTML=games.map(game=>{
@@ -114,7 +129,7 @@ async function load(){
  $('player-game').innerHTML=(lock.forecasts||[]).map(game=>'<option value="'+esc(game.game_id)+'">'+esc(matchName(game))+'</option>').join('');
  $('player-game').onchange=drawPlayers;
  selected=String(lock.forecasts[0]?.game_id||'');
- selectGame(selected);drawResults();
+ drawDisagreements();selectGame(selected);drawResults();
 }
 load().catch(error=>{ $('error').innerHTML='<div class="panel"><p class="callout">'+esc(error.message)+'</p><p class="muted">No forecast or result has been fabricated. Check the saved GitHub ledger.</p></div>';['game-selector','game-detail'].forEach(id=>$(id).textContent='Data unavailable'); });
 })();
