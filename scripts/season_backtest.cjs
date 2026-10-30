@@ -82,18 +82,18 @@ function standing(rows,n){
    .map(t=>({...t,actualPct:round(t.actualPct,4),expectedPct:round(t.expectedPct,4),
      winDifference:round(t.actualWins-t.expectedWins),rankDifference:t.actualRank-t.projectedRank}));
 }
-function forecast82(state,teams,profiles,offsets){
+function forecast82(state,teams,profiles,offsets,asOf){
  const s={...state,teams:new Map([...state.teams].map(([id,t])=>[id,{...t}]))};
  if(offsets)applyPreseason(s,offsets);
  const all=[...teams.values()];
- const asOf=new Date(Date.parse(all[0]?.date||'2026-10-22T00:00:00Z')+7*86400000).toISOString();
+ const future=new Date(Date.parse(asOf)+14*86400000).toISOString();
  const result={};
  for(const team of all){
    let sum=0,count=0;
    for(const opponent of all){
      if(team.id===opponent.id)continue;
      for(const home of [true,false]){
-       const g={id:'projection',date:asOf,season:2027,
+       const g={id:'projection',date:future,season:2027,
          home:home?team:opponent,away:home?opponent:team};
        const p=E.forecast(g,s,profiles);
        sum+=home?p.homeWin:p.awayWin;
@@ -142,15 +142,16 @@ function run(games,context,preseason){
  const firstState=E.ratings(all,first);
  const endDate=new Date(Math.max(...finals.map(g=>Date.parse(g.date)))+86400000).toISOString();
  const latestState=E.ratings(all,endDate);
- const opening=forecast82(firstState,teams,profiles,offsets);
- const updated=forecast82(latestState,teams,profiles,offsets);
+ const opening=forecast82(firstState,teams,profiles,offsets,first);
+ const updated=forecast82(latestState,teams,profiles,offsets,endDate);
  const snapshots={};
+ const allActual=Object.fromEntries(standing(rows,'all').map(t=>[t.id,t.actualWins]));
  for(const n of [1,3,5,'all']){
    snapshots[String(n)]=standing(rows,n).map(t=>{
      const played=latestState.teams.get(t.id)?.games||0;
      return {...t,
        opening82:round(82*opening[t.id],1),
-       updated82:round(t.actualWins+(82-played)*updated[t.id],1)};
+       updated82:round(allActual[t.id]+(82-played)*updated[t.id],1)};
    });
  }
  return {schema:1,season,generated_at_utc:now(),
