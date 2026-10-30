@@ -1,0 +1,61 @@
+name: Basketball Science walk-forward audit
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 15 * * 0'
+  push:
+    branches: [main]
+    paths:
+      - scripts/game_science.cjs
+      - scripts/v8_research.cjs
+      - tests/game_science.test.cjs
+      - .github/workflows/game-science.yml
+      - data/v7-intelligence.json
+      - data/historical-games.json
+permissions:
+  contents: write
+concurrency:
+  group: basketball-science-research
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify tests and syntax
+        run: |
+          node --check scripts/game_science.cjs
+          node --test tests/game_science.test.cjs tests/v8_research.test.cjs
+      - name: Run strictly pregame rolling-origin comparison
+        run: node scripts/game_science.cjs
+      - name: Verify honest research-only report
+        run: |
+          node - <<'JS'
+          const r=require('./data/game-science-report.json');
+          if(!r.strict_no_future_data||r.status!=='research_only_not_promoted')throw Error('Invalid research status');
+          if(r.sample.games!==6221||r.sample.rolling!==4920||r.sample.fresh!==71)throw Error('Unexpected coverage');
+          if(Math.abs(r.models.elo.rolling.brier-.2152274492076365)>.00001)throw Error('Baseline changed unexpectedly');
+          for(const m of Object.values(r.models))if(!Number.isFinite(m.rolling.brier)||!Number.isFinite(m.rolling.logLoss))throw Error('Invalid model metrics');
+          console.log('Validated 4,920 rolling-origin predictions; no live model promotion');
+          JS
+      - name: Commit report with retries for concurrent data refreshes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/game-science-report.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Publish basketball science rolling-origin research report'
+            for attempt in 1 2 3 4 5 6 7 8; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then exit 0; fi
+              echo "Concurrent branch update; retry $attempt"
+              sleep 3
+            done
+            echo "Could not publish after retries" >&2
+            exit 1
+          fi
