@@ -42,7 +42,7 @@ jobs:
           node --check team-intelligence/app.js
           node --check predict/science-preview.js
           node --check predict/app.js
-          node --test tests/game_science.test.cjs tests/v8_research.test.cjs tests/site_navigation.test.cjs
+          node --test tests/game_science.test.cjs tests/v8_research.test.cjs tests/site_navigation.test.cjs tests/science_preview.test.cjs
       - name: Run strictly pregame rolling-origin comparison
         run: node scripts/game_science.cjs
       - name: Verify honest research-only report
