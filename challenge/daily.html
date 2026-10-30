@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071520">
+<meta name="description" content="NBA Twin Lab locked daily pregame predictions for six competing models, player box-score projections, and postgame accuracy.">
+<title>NBA Twin Lab · Daily Model Challenge</title>
+<style>
+:root{color-scheme:dark;background:#071520;color:#eaf3fb;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 78% 0%,#17364c 0,transparent 48%),#071520}
+a{color:#8ce3fa}header{border-bottom:1px solid #294559;padding:20px max(18px,calc((100vw - 1180px)/2));display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+.brand{font-size:17px;font-weight:850;text-decoration:none;color:#f0f9ff}.brand span{color:#8ce4ca}
+nav{display:flex;gap:20px;flex-wrap:wrap}nav a{color:#b2cbd9;font-size:13px;text-decoration:none}nav a[aria-current]{color:#80e7d0}
+main{max-width:1180px;margin:auto;padding:42px 18px 80px}
+.eyebrow{font-size:12px;letter-spacing:.17em;font-weight:800;color:#7fdcc9;text-transform:uppercase}
+h1{font-size:clamp(38px,6.7vw,69px);letter-spacing:-.045em;line-height:1.04;margin:14px 0 18px}
+h1 em{color:#92daff;font-style:normal}h2{font-size:23px;margin:0 0 13px;letter-spacing:-.02em}
+p{color:#afc7d6;line-height:1.65}.lead{font-size:17px;max-width:790px}
+.meta{display:flex;flex-wrap:wrap;gap:12px;margin:25px 0 30px}.pill{background:#153448;border:1px solid #366077;border-radius:100px;padding:10px 14px;color:#d9f5ff;font-size:12px}
+.panel{border:1px solid #2b485a;background:#0e2231;border-radius:17px;margin:22px 0;padding:22px}
+.callout{border-left:3px solid #83d6ef;padding-left:15px;font-size:13px;color:#b7cfda}
+.split{display:grid;grid-template-columns:320px minmax(0,1fr);gap:17px}
+.game-selector{display:grid;gap:9px;align-content:start}.game-button{width:100%;background:#10293b;border:1px solid #2b4a5d;border-radius:12px;padding:14px;color:#e3f4ff;cursor:pointer;text-align:left;display:grid;gap:4px;font:inherit}
+.game-button:hover,.game-button[aria-pressed=true]{background:#17445c;border-color:#72cadd}
+.game-button small{font-size:11px;color:#a4c1ce}.game-button b{font-size:14px}
+.game-detail{min-width:0}.match-title{font-size:24px;font-weight:800;letter-spacing:-.025em;margin-bottom:6px}
+.score{font-weight:800;color:#7edfc6}.tablewrap{overflow-x:auto;width:100%}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}th,td{padding:12px 10px;border-bottom:1px solid #29475a;font-size:13px;text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}th{color:#a1bccc;font-size:12px}tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#183448}.green{color:#89e5c7;font-weight:800}.muted{color:#92aeba;font-size:12px}.standout{background:#123d43}
+.counts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{padding:18px;background:#102b3c;border:1px solid #35566c;border-radius:12px}
+.stat small{font-size:11px;letter-spacing:.07em;color:#a1c0ce}.stat strong{display:block;font-size:22px;margin-top:6px}
+.control{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+select{color:#eaf3fb;background:#102f44;border:1px solid #4f7587;border-radius:9px;padding:10px 11px;font-size:13px;max-width:100%}
+footer{font-size:12px;color:#9bb7c5;padding-top:20px}
+@media(max-width:800px){.split{grid-template-columns:1fr}.game-selector{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.counts{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:490px){.game-selector{grid-template-columns:1fr}.panel{padding:16px}th,td{padding:10px 7px}}
+</style>
+<script defer src="./daily.js"></script>
+</head>
+<body>
+<header><a class="brand" href="../">TL<span>✦</span> NBA TWIN LAB</a><nav><a href="../predict/">Game Predictor</a><a href="./">Five Model Challenge</a><a href="./daily.html" aria-current="page">Daily Forecasts</a><a href="../audit/">Accuracy Ledger</a></nav></header>
+<main>
+<div class="eyebrow">Pregame lock / Six-model showdown</div>
+<h1>Today's games.<br><em>Six independent forecasts.</em></h1>
+<p class="lead">Every model's probability is recorded before tipoff. We preserve the original production forecast and review final scores and player stats separately. Models share inputs, so their forecasts are not statistically independent evidence.</p>
+<div class="meta"><span class="pill" id="slate-date">Loading slate…</span><span class="pill" id="lock-time">Verifying records…</span><span class="pill" id="slate-count">— games</span><span class="pill" id="status">Locked forecasts</span></div>
+<div id="error" role="status"></div>
+<section class="panel">
+<h2>Matchup predictions</h2><p class="muted">Select a game to compare all six win probabilities. Only genuinely locked pregame forecasts appear.</p>
+<div class="split"><div class="game-selector" id="game-selector">Loading…</div><div class="game-detail" id="game-detail"></div></div>
+</section>
+<section class="panel">
+<div class="control"><div><h2>Player-stat predictions</h2><p class="muted">V9 projections are conditional on playing, not verified injury forecasts. DNPs are not scored as zeros.</p></div><label for="player-game">Matchup <select id="player-game"></select></label></div>
+<div class="tablewrap"><table><thead><tr><th>Player / team</th><th>PTS</th><th>REB</th><th>AST</th><th>3PM</th><th>Actual PTS</th><th>Actual REB</th><th>Actual AST</th><th>Actual 3PM</th></tr></thead><tbody id="players"><tr><td colspan="9">Loading player projections…</td></tr></tbody></table></div>
+</section>
+<section class="panel">
+<h2>Postgame six-model accuracy</h2>
+<p class="muted" id="review-status">Awaiting completed games. No results or win rates are invented before the review publishes.</p>
+<div class="tablewrap"><table><thead><tr><th>Model</th><th>Games</th><th>Win accuracy</th><th>Brier ↓</th><th>Log loss ↓</th><th>Score MAE ↓</th></tr></thead><tbody id="model-results"><tr><td colspan="6">Awaiting a final-results review</td></tr></tbody></table></div>
+</section>
+<section class="panel"><h2>How to interpret the challenge</h2><p class="callout">M1 is the existing production Elo baseline. M2 uses basketball science, M3 inferred player impact and rotation, M4 a possession Monte Carlo, M5 regularised machine learning and M6 an earlier-season-fitted ensemble. A missing or late forecast is excluded rather than fabricated. Brier and log loss matter more than raw winner-pick percentage when judging whether a model's probabilities are reliable.</p><p class="muted" id="data-sources"></p></section>
+<footer>NBA Twin Lab research experiment. Not betting advice. No model receives automatic promotion based on a single day.</footer>
+</main>
+</body>
+</html>
