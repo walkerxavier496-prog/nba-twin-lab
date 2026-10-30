@@ -16,10 +16,10 @@
  <div class="topinner">
   <a class="brand" href="../index.html"><span class="brandmark">TL<span class="spark">✦</span></span><span>NBA <b>TWIN LAB</b><small>DATA · MODELS · BASKETBALL</small></span></a>
   <nav aria-label="Main navigation">
-   <a href="./index.html" class="active">Game Predictor</a><a href="../history/">V6 Audit</a><a href="../intelligence/">V7 Intelligence</a>
-   <a href="../player-stats/">Player Stats V9</a><a href="../mvp/">MVP Lab</a><a href="../season-test/">Season Test</a>
-   <a href="../championship/">Championships</a>
-   <a href="../index.html">Player Twins</a>
+   <a href="./" class="active">Game Predictor</a>
+   <a href="../team-intelligence/">Team Intelligence</a>
+   <a href="../models/">Model Research</a>
+   <a href="../twins/">Player Twins</a>
    <a href="#validation">Validation</a><a href="#power">Power Rankings</a>
   </nav>
  </div>
@@ -27,9 +27,9 @@
 <main id="main" class="shell">
  <div class="hero">
   <div>
-   <div class="eyebrow"><span class="pulse"></span> NBA TWIN LAB / V5 ENGINE · V6 AUDIT</div>
+   <div class="eyebrow"><span class="pulse"></span> NBA TWIN LAB / GAME FORECAST · VALIDATED DEFAULT</div>
    <h1>Know the matchup.<br><em>Understand the edge.</em></h1>
-   <p>The five-season winner, Elo, is the default forecast. Switch to the V5 possession model to inspect up to 100,000 simulations, team style and outcome ranges.</p>
+   <p>Elo remains the live default while we rigorously test opponent-adjusted form, Four Factors, matchup tendencies and scheduling effects. Switch to the experimental possession simulator to explore outcome ranges—not guaranteed predictions.</p>
    <div class="hero-actions"><a class="primary" href="#matchups">Explore matchups <span aria-hidden="true">↗</span></a><a class="secondary" href="#method">See the methodology</a></div>
   </div>
   <div class="hero-panel">
@@ -60,13 +60,18 @@
    <aside class="detail" id="detail"><div class="placeholder"><div class="placeholder-icon">◎</div><h3>Select a matchup</h3><p>View win probabilities, projected score, recent form, rest and previous meetings.</p></div></aside>
   </div>
  </section>
+ <section id="science" class="section">
+  <div class="sectionhead"><div><div class="eyebrow">02 / BASKETBALL SCIENCE</div><h2>Which tendencies really predict wins?</h2>
+   <p>Team strength, opponent-adjusted form, shot selection, turnovers, offensive rebounds, free-throw pressure, rest and head-to-head history are being tested on strictly pregame data. No arbitrary rivalry or winning-streak bonuses.</p></div></div>
+  <div class="notice">The basketball-science model is research-only. It will not replace the live Elo predictor until its out-of-sample accuracy, Brier score, log loss and calibration justify promotion. <a href="../team-intelligence/">Compare team tendencies</a> · <a href="../models/">Inspect historical evidence</a>.</div>
+ </section>
  <section id="validation" class="section">
-  <div class="sectionhead"><div><div class="eyebrow">02 / HELD-OUT VALIDATION</div><h2>Monte Carlo vs current Elo</h2><p>The exact same games, reconstructed immediately before tip-off with no future results.</p></div><div class="rightlabel" id="validation-sample">Loading scorecard…</div></div>
+  <div class="sectionhead"><div><div class="eyebrow">03 / HELD-OUT VALIDATION</div><h2>Monte Carlo vs current Elo</h2><p>The exact same games, reconstructed immediately before tip-off with no future results.</p></div><div class="rightlabel" id="validation-sample">Loading scorecard…</div></div>
   <div class="tablewrap"><table class="comparison"><thead><tr><th>Model</th><th>Winner accuracy</th><th>Brier score</th><th>Calibration error</th><th>Score MAE / team</th></tr></thead><tbody><tr><td><b>Possession Monte Carlo</b></td><td id="mc-accuracy">—</td><td id="mc-brier">—</td><td id="mc-ece">—</td><td id="mc-mae">—</td></tr><tr><td>Current Elo baseline</td><td id="elo-accuracy">—</td><td id="elo-brier-table">—</td><td id="elo-ece">—</td><td id="elo-mae">—</td></tr></tbody></table></div>
   <p class="footnote" id="validation-note">Loading the current-season walk-forward scorecard. See the <a href="../history/">five-season Historical Model Lab</a> for the deployment decision, log loss, confidence intervals and matchup-tendency ablation.</p>
  </section>
  <section id="power" class="section">
-  <div class="sectionhead"><div><div class="eyebrow">03 / TEAM STRENGTH</div><h2>Power Rankings</h2><p>Elo ratings updated after every completed game, with previous-season regression.</p></div><div class="rightlabel" id="power-season">Current season</div></div>
+  <div class="sectionhead"><div><div class="eyebrow">04 / TEAM STRENGTH</div><h2>Power Rankings</h2><p>Elo ratings updated after every completed game, with previous-season regression.</p></div><div class="rightlabel" id="power-season">Current season</div></div>
   <div class="tablewrap"><table><thead><tr><th>Rank</th><th>Team</th><th>W–L</th><th>Elo</th><th>PPG</th><th>Opp PPG</th><th>Last 5</th></tr></thead><tbody id="teams"><tr><td colspan="7">Waiting for validated results…</td></tr></tbody></table></div>
   <p class="footnote">Points per game and points allowed are not possession-adjusted offensive/defensive ratings. Early-season Elo retains information from the prior season.</p>
  </section>
