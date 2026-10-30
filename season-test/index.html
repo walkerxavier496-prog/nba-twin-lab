@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1222"><title>Season Test · NBA Twin Lab</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1222;--panel:#17263c;--line:#354862;--text:#f4f7ff;--muted:#a7b9d0;--gold:#ffd26c;--green:#76d4ad;--red:#ff9e9e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse 70% 25% at 50% 0,#273e5d,transparent),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:inherit}.shell,.nav{max-width:1240px;margin:auto;padding:0 24px}.top{background:#0e1829ef;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:3;backdrop-filter:blur(10px)}.nav{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:950;text-decoration:none;letter-spacing:.04em}.brand b{background:var(--gold);color:#172336;border-radius:8px;padding:9px;margin-right:8px}.links{display:flex;gap:14px;flex-wrap:wrap}.links a{text-decoration:none;font-size:12px;color:var(--muted);font-weight:800}.links a.active{color:var(--gold)}.hero{padding:58px 0 26px}.eyebrow{color:var(--gold);font-size:11px;font-weight:850;letter-spacing:.14em}.hero h1{font-size:clamp(38px,6vw,70px);line-height:1.06;letter-spacing:-.055em;margin:13px 0}.hero h1 em{font-style:normal;color:var(--gold)}.hero p{max-width:780px;font-size:17px;color:var(--muted)}.notice{padding:14px 17px;background:#263a4d;border:1px solid #516c7c;border-radius:10px;color:#d8ebf8;margin:10px 0 24px;font-size:13px}.notice.warn{background:#332a20;border-color:#846943;color:#ffe0aa}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:25px 0}.stat{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:17px}.stat strong{font-size:30px;display:block;letter-spacing:-.04em}.stat small{font-size:12px;color:var(--muted)}.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:28px 0 15px}.controls label{font-size:12px;color:var(--muted);font-weight:700}.pill{background:#1b2d46;color:var(--muted);border:1px solid #435774;border-radius:8px;padding:9px 13px;font:inherit;font-size:12px;font-weight:850;cursor:pointer}.pill.active{color:#172436;background:var(--gold);border-color:var(--gold)}.heading{font-size:28px;letter-spacing:-.04em;margin:28px 0 6px}.sub{font-size:13px;color:var(--muted);margin:0 0 15px}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}table{border-collapse:collapse;width:100%;min-width:840px;font-size:13px}th{text-align:right;color:var(--muted);font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:13px 10px;border-bottom:1px solid var(--line);white-space:nowrap}td{text-align:right;padding:12px 10px;border-bottom:1px solid #2a3c55;font-variant-numeric:tabular-nums}th:first-child,td:first-child{text-align:left;padding-left:18px}tr:last-child td{border-bottom:0}tr:hover td{background:#213652}.team{font-weight:800}.muted{color:var(--muted)}.positive{color:var(--green)}.negative{color:var(--red)}.num{font-weight:900;color:var(--gold)}.explainer{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:30px 0}.box{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:21px}.box h3{margin:0 0 8px}.box p,.box li{color:var(--muted);font-size:13px}.box ul{padding-left:18px}.tiny{font-size:12px;color:var(--muted)}.game-table{max-height:520px;overflow:auto}.game-table table{min-width:650px}.game-table td,.game-table th{padding:10px}.right{margin-left:auto}footer{border-top:1px solid var(--line);margin-top:35px;padding:24px 0 50px;color:var(--muted);font-size:12px}footer a{color:var(--gold)}button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}@media(max-width:720px){.nav{align-items:start;flex-direction:column;padding-top:15px;padding-bottom:15px}.shell,.nav{padding-left:15px;padding-right:15px}.hero{padding-top:35px}.stats{grid-template-columns:repeat(2,1fr)}.explainer{grid-template-columns:1fr}.stat strong{font-size:25px}}
+</style></head><body>
+<header class="top"><nav class="nav"><a class="brand" href="../index.html"><b>TL✦</b> NBA TWIN LAB</a><div class="links"><a href="../predict/">Game Predictor</a><a class="active" href="./">Season Test</a><a href="../mvp/">MVP Lab</a><a href="../championship/">Championships</a><a href="../index.html">Player Twins</a></div></nav></header>
+<main class="shell">
+<section class="hero"><div class="eyebrow">EXPERIMENT 01 / OPENING NIGHT TO TODAY</div><h1>We predicted it.<br><em>What actually happened?</em></h1><p>A genuine walk-forward test of our NBA model: start with last season's strength, use preseason lightly, then adapt to every completed regular-season game. Compare projected standings against the real standings, without giving the model tomorrow's results.</p></section>
+<div id="notice" class="notice" role="status">Loading season backtest…</div>
+<div class="stats"><div class="stat"><strong id="games">—</strong><small>Pregame predictions tested</small></div><div class="stat"><strong id="accuracy">—</strong><small>Correct winner picks</small></div><div class="stat"><strong id="brier">—</strong><small>Probability Brier score (lower is better)</small></div><div class="stat"><strong id="preseason">—</strong><small>Verified preseason games used</small></div></div>
+<div class="box" id="abtest"><h3>Does preseason information help?</h3><p>Comparing the same predictions with and without a weak preseason adjustment…</p></div>
+<h2 class="heading">Model standings vs reality</h2><p class="sub">Select the first 1, 3, 5 or all completed games <strong>per team</strong>. Each prediction was made before tipoff. The 82-game estimates are modelled strength projections, not guaranteed records.</p>
+<div class="controls" id="cuts"><label>Games per team:</label><button class="pill" data-cut="1">First 1</button><button class="pill" data-cut="3">First 3</button><button class="pill" data-cut="5">First 5</button><button class="pill active" data-cut="all">All so far</button><span class="right tiny" id="asof"></span></div>
+<h3 class="heading">Eastern Conference</h3><div class="table-wrap" id="east">Loading…</div>
+<h3 class="heading">Western Conference</h3><div class="table-wrap" id="west">Loading…</div>
+<div class="explainer">
+ <div class="box"><h3>How to read the table</h3><ul><li><strong>Model #</strong> ranks teams by expected winning percentage in the games tested.</li><li><strong>Expected W</strong> is the sum of win probabilities, not a count of picks.</li><li><strong>Picked W–L</strong> assumes every game goes to the model's pregame favourite.</li><li><strong>Actual W–L</strong> is what really happened.</li><li><strong>Δ W</strong> is actual wins minus expected wins; positive means the team outperformed our model.</li><li><strong>Open 82 / Now 82</strong> are projected final regular-season wins based on opening-night and updated strength, respectively. They use an equally weighted opponent pool, not the exact remaining schedule.</li></ul></div>
+ <div class="box"><h3>What the model knows</h3><ul><li>2025–26 regular-season Elo and team SRS set the opening strength.</li><li>Verified 2026 preseason wins and losses receive roughly <strong>11% of a normal game's Elo update</strong> and fade over the first few games.</li><li>Regular-season games update team strength after the final buzzer. Previous-season SRS influence fades as trends develop.</li><li>Home court, rest and previous scoring rates are considered.</li><li>It does <strong>not</strong> know injuries, lineups, trades or bookmaker odds. Early-season projections are uncertain.</li></ul></div>
+</div>
+<h2 class="heading">Game-by-game audit</h2><p class="sub">Each row records the model's pre-tipoff favourite and the actual winner. Use this to identify where the model was wrong.</p>
+<div class="table-wrap game-table" id="games-list">Loading games…</div>
+<footer>Data: validated <a href="https://www.espn.com/nba/scoreboard">ESPN scoreboard</a> and historical <a href="https://github.com/sumitrodatta/bball-reference-datasets">Basketball Reference mirror</a>. Independent research project. <a href="https://github.com/walkerxavier496-prog/nba-twin-lab/blob/main/scripts/season_backtest.cjs">View reproducible backtest code</a>. Not betting advice.</footer>
+</main>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let data=null,cut='all';
+const signed=x=>(x>0?'+':'')+x;
+function table(conf){
+ const rows=(data.snapshots[cut]||[]).filter(t=>t.conference===conf);
+ const headers=['Model #','Team','Expected W','Picked W–L','Actual W–L','Actual #','Δ W','Open 82','Now 82'];
+ let html='<table><thead><tr>'+headers.map((x,i)=>'<th'+(i===1?' style="text-align:left"':'')+'>'+x+'</th>').join('')+'</tr></thead><tbody>';
+ for(const t of rows){
+  const cls=t.winDifference>0?'positive':t.winDifference<0?'negative':'muted';
+  html+='<tr><td class="num">'+t.projectedRank+'</td><td style="text-align:left"><span class="team">'+esc(t.abbr)+'</span><br><span class="tiny">'+esc(t.team)+'</span></td><td>'+t.expectedWins.toFixed(1)+' / '+t.games+'</td><td>'+t.pickedWins+'–'+t.pickedLosses+'</td><td><strong>'+t.actualWins+'–'+t.actualLosses+'</strong></td><td>'+t.actualRank+'</td><td class="'+cls+'">'+signed(t.winDifference.toFixed(1))+'</td><td>'+t.opening82.toFixed(1)+'</td><td>'+t.updated82.toFixed(1)+'</td></tr>';
+ }
+ return html+'</tbody></table>';
+}
+function render(){
+ $('east').innerHTML=table('East');$('west').innerHTML=table('West');
+ document.querySelectorAll('[data-cut]').forEach(b=>b.classList.toggle('active',b.dataset.cut===cut));
+}
+document.querySelectorAll('[data-cut]').forEach(b=>b.addEventListener('click',()=>{cut=b.dataset.cut;render()}));
+fetch('../data/season-test.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{
+ if(d.schema!==1||!d.snapshots?.all?.length||!Array.isArray(d.games))throw Error('Invalid backtest dataset');
+ data=d;
+ $('games').textContent=d.metrics.withPreseason.games;
+ $('accuracy').textContent=d.metrics.withPreseason.accuracy+'%';
+ $('brier').textContent=d.metrics.withPreseason.brier.toFixed(4);
+ $('preseason').textContent=d.methodology.preseason_games;
+ $('asof').textContent='As of '+new Date(d.as_of_utc).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+ $('notice').textContent=d.methodology.preseason_status+' · Results are strictly walk-forward; no future scores used. Last scoreboard snapshot '+new Date(d.source_games_built_at_utc).toLocaleString('en-AU')+'.';
+ if(!d.methodology.preseason_games)$('notice').classList.add('warn');
+ const a=d.metrics.withPreseason,b=d.metrics.withoutPreseason;
+ $('abtest').innerHTML='<h3>Does preseason information help?</h3><p>Same '+a.games+' games, two model variants. This is an early-season experiment, not proof of a lasting advantage.</p>'+
+ '<div class="stats" style="grid-template-columns:repeat(2,1fr)"><div class="stat"><small>With preseason</small><strong>'+a.accuracy+'%</strong><small>Winner accuracy · Brier '+a.brier.toFixed(4)+'</small></div><div class="stat"><small>Without preseason</small><strong>'+b.accuracy+'%</strong><small>Winner accuracy · Brier '+b.brier.toFixed(4)+'</small></div></div>';
+ $('games-list').innerHTML='<table><thead><tr><th>Date (UTC)</th><th style="text-align:left">Matchup</th><th>Model favourite</th><th>Confidence</th><th>Actual winner</th><th>Final score</th><th>Result</th></tr></thead><tbody>'+
+ d.games.slice().reverse().map(g=>{
+  const pick=g.homePick?g.home:g.away,actual=g.homeActual?g.home:g.away,p=g.homePick?g.homeWin:1-g.homeWin;
+  return '<tr><td>'+g.date.slice(0,10)+'</td><td style="text-align:left">'+esc(g.away.abbr)+' @ '+esc(g.home.abbr)+'</td><td>'+esc(pick.abbr)+'</td><td>'+Math.round(p*100)+'%</td><td>'+esc(actual.abbr)+'</td><td>'+g.awayScore+'–'+g.homeScore+'</td><td class="'+(g.correct?'positive':'negative')+'">'+(g.correct?'Correct':'Miss')+'</td></tr>';
+ }).join('')+'</tbody></table>';
+ render();
+}).catch(e=>{$('notice').classList.add('warn');$('notice').textContent='Backtest data is not yet available: '+e.message;$('east').textContent='Awaiting verified model report';$('west').textContent='Awaiting verified model report'});
+})();
+</script></body></html>
