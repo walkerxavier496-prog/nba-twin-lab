@@ -11,6 +11,7 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 | **Game Predictor** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/predict/) | Live Elo baseline, alternative simulation, score projections and historical validation |
 | **Team Intelligence** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/team-intelligence/) | Real opponent-adjusted team strength, recent efficiency momentum, eFG, shooting styles, turnovers, offensive rebounds, free-throw rate and pace |
 | **Five Model Challenge** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/challenge/) | Common-game leaderboard for five pregame methods plus a nested earlier-season weighted ensemble |
+| **Daily Predictions** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/challenge/daily.html) | Locked six-model forecasts for each game, V9 player projections and postgame accuracy |
 | **Model Research** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/models/) | All historical backtests and experiments, including the basketball-science walk-forward audit |
 | **Accuracy Ledger** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/audit/) | Immutable daily pregame locks, separate final-result reviews, calibration and longitudinal model/player metrics |
 | **Player Twins** | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/twins/) | Original season-adjusted statistical twin finder, moved from the home page without deleting its features |
