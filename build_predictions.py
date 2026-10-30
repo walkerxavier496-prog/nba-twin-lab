@@ -67,16 +67,9 @@ def parse_events(payload: dict[str, Any]) -> list[dict[str, Any]]:
             # fixtures as completed; those are not actual results.
             if final and (hs is None or as_ is None or hs < 0 or as_ < 0 or hs == as_):
                 continue
-            # The NBA Cup championship is an exhibition for regular-season
-            # standings. Exclude it, but retain Cup quarter/semi-final games.
-            notes = " ".join(str(n.get("headline", "")) if isinstance(n, dict) else str(n)
-                             for n in (comp.get("notes") or []))
-            detail = " ".join((str(event.get("name", "")), notes,
-                               str(comp.get("type", {}).get("text", ""))))
-            cup_final = ("nba cup" in detail.lower() and
-                         ("championship" in detail.lower() or
-                          ("final" in detail.lower() and "semifinal" not in detail.lower())))
-            if cup_final or game_id == "401809839":  # 2025 Cup Final: NYK 124, SAS 113
+            # 2025 NBA Cup Final (NYK–SAS) did not count in the standings.
+            # Do not broadly exclude other NBA Cup rounds: most ARE regular-season games.
+            if game_id == "401809839":
                 continue
             season_data = event.get("season") or {}
             league_season = ((payload.get("leagues") or [{}])[0].get("season") or {})
