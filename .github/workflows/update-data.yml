@@ -8,6 +8,9 @@ on:
     paths: ['build_data.py', 'requirements.txt', 'tests/**', '.github/workflows/update-data.yml']
 permissions:
   contents: write
+concurrency:
+  group: nba-twin-lab-data
+  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,5 +30,7 @@ jobs:
           git add data/seasons.json
           if ! git diff --cached --quiet; then
             git commit -m 'Refresh validated NBA data'
-            git push
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
           fi
