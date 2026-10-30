@@ -86,3 +86,17 @@ def test_cr_only_csv_height_supplement():
     assert len(rows) == 60
     assert rows[0]['Name'] == 'Player 0'
     assert rows[59][' Height (Inches)'] == '75'
+
+
+def test_unchanged_data_does_not_rewrite_timestamp(tmp_path, monkeypatch):
+    path = tmp_path / 'seasons.json'
+    base = {'schema':3,'latest_complete_season':2025,'latest_available_season':2026,
+            'metrics':['ts'],'seasons':[{'season':2025}],'sources':{'test':True},
+            'rows':[{'name':'Player A','season':2025}], 'built_at_utc':'2026-10-30T00:00:00Z'}
+    original = json.dumps(base)
+    path.write_text(original, encoding='utf-8')
+    updated = {**base, 'built_at_utc':'2026-10-31T00:00:00Z'}
+    monkeypatch.setattr(etl, 'build', lambda **kwargs: updated)
+    monkeypatch.setattr(sys, 'argv', ['build_data.py','--no-current','--output',str(path)])
+    etl.main()
+    assert path.read_text(encoding='utf-8') == original
