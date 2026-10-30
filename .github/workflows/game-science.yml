@@ -10,6 +10,10 @@ on:
       - predict/science.js
       - scripts/v8_research.cjs
       - tests/game_science.test.cjs
+      - tests/site_navigation.test.cjs
+      - team-intelligence/app.js
+      - models/index.html
+      - twins/index.html
       - .github/workflows/game-science.yml
       - data/v7-intelligence.json
       - data/historical-games.json
@@ -31,7 +35,8 @@ jobs:
         run: |
           node --check predict/science.js
           node --check scripts/game_science.cjs
-          node --test tests/game_science.test.cjs tests/v8_research.test.cjs
+          node --check team-intelligence/app.js
+          node --test tests/game_science.test.cjs tests/v8_research.test.cjs tests/site_navigation.test.cjs
       - name: Run strictly pregame rolling-origin comparison
         run: node scripts/game_science.cjs
       - name: Verify honest research-only report
