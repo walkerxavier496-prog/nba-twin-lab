@@ -7,6 +7,9 @@ on:
     paths:
       - '.github/workflows/challenge-supplement-2026-10-31.yml'
       - 'scripts/challenge_supplement.cjs'
+      - 'challenge/daily.js'
+      - 'challenge/daily.html'
+      - 'tests/challenge_daily.test.cjs'
 
 permissions:
   contents: write
@@ -29,7 +32,8 @@ jobs:
       - name: Syntax and immutable-original tests
         run: |
           node --check scripts/challenge_supplement.cjs
-          node --test tests/five_model_challenge.test.cjs tests/daily_audit.test.cjs
+          node --check challenge/daily.js
+          node --test tests/challenge_daily.test.cjs tests/five_model_challenge.test.cjs tests/daily_audit.test.cjs
       - name: Create once, only when genuinely before the first tip
         run: node scripts/challenge_supplement.cjs lock
       - name: Validate SHA256-integrity and game alignment
