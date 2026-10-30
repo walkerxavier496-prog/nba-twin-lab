@@ -28,14 +28,7 @@ function buildRows(intel,baseRows){
   const pH=index.get((f.season-1)+'|'+R.canonical(f.home.abbr));
   const pA=index.get((f.season-1)+'|'+R.canonical(f.away.abbr));
   if((pH&&pH.date>=f.date)||(pA&&pA.date>=f.date))throw Error('Previous-season snapshot leaked future');
-  const p=row.p,eloMargin=30*(Math.log(p/(1-p))/Math.log(10)*400/400); // not used; historical Elo margin reconstructed below
-  // V8's team feature is defined relative to Elo.margin, which is already
-  // recoverable from the blended adjusted net in the pregame snapshots.
-  const net=s=>Number(s.season.adj_ortg)-Number(s.season.adj_drtg);
-  const priorNet=s=>Number(s.prior.adj_ortg)-Number(s.prior.adj_drtg);
-  const blend=s=>(Number(s.games)*net(s)+18*priorNet(s))/(Number(s.games)+18);
-  const baselineMargin=blend(home)-blend(away)-row.features.team*12;
-  const x=R.features(home,away,pH,pA,{homeWin:p,margin:baselineMargin});
+  const x=R.features(home,away,pH,pA,{homeWin:row.p,margin:0});
   if(x){complete++;if(Math.min(home.games,away.games)<10)earlyComplete++;}
   else missing++;
   return {...row,early:Math.min(home.games,away.games)<10,
