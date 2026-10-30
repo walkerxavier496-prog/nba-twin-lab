@@ -88,3 +88,9 @@ test('opening-night forecast regresses previous season before first new-season f
  assert.equal(opening.teams.get('1').prev.games,130);
  assert.ok(Math.abs(opening.teams.get('1').elo-1500)<Math.abs(last.teams.get('1').elo-1500));
 });
+
+test('postponed tied games and NBA Cup final cannot contaminate training',()=>{
+ const postponed=game('postponed',iso(2026,1,25),0,0,2026);
+ const cup=game('401809839',iso(2025,12,17),124,113,2026);
+ assert.equal(E.merge([postponed,cup]).length,0);
+});
