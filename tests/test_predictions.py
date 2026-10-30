@@ -66,3 +66,9 @@ def test_mvp_awards_need_exactly_one_winner():
     rows[1]["winner"] = "TRUE"
     with pytest.raises(ValueError, match="recent MVP"):
         ctx.parse_mvp(rows)
+
+
+def test_all_star_teams_are_excluded_from_regular_season():
+    exhibition = event("allstar")
+    exhibition["competitions"][0]["competitors"][0]["team"]["id"] = "132375"
+    assert pred.parse_events({"events": [exhibition]}) == []
