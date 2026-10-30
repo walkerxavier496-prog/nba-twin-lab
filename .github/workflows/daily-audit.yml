@@ -37,6 +37,10 @@ jobs:
         run: node --test tests/daily_audit.test.cjs tests/prediction_engine.test.cjs tests/monte_carlo.test.cjs tests/site_navigation.test.cjs
       - name: Lock eligible slate or ingest complete finals
         run: node scripts/daily_tracker.cjs run
+      - name: Review separately locked 31 Oct six-model sidecar if final results exist
+        run: |
+          node scripts/challenge_supplement.cjs review
+          node scripts/challenge_supplement.cjs verify
       - name: Verify immutable artifacts and derived ledger
         run: node scripts/daily_tracker.cjs verify
       - name: Publish new append-only artifacts
