@@ -9,6 +9,7 @@ on:
       - build_predictions.py
       - predict/engine.js
       - predict/app.js
+      - scripts/model_report.cjs
       - mvp/index.html
       - tests/prediction_engine.test.cjs
       - tests/test_predictions.py
@@ -39,6 +40,8 @@ jobs:
           python -c "from pathlib import Path; s=Path('mvp/index.html').read_text(); Path('/tmp/nba_mvp_ui.js').write_text(s.split('<script>')[1].split('</script>')[0])"
           node --check /tmp/nba_mvp_ui.js
       - run: python build_predictions.py
+      - name: Audit walk-forward forecast accuracy
+        run: node scripts/model_report.cjs
       - name: Publish verified scoreboard snapshot
         run: |
           git config user.name 'github-actions[bot]'
