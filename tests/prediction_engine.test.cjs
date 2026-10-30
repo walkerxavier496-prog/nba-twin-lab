@@ -60,3 +60,14 @@ test('walk-forward accuracy uses only earlier completed games',()=>{
  assert.ok(score.accuracy>=0&&score.accuracy<=1);
  assert.ok(score.brier>=0&&score.brier<=1);
 });
+
+test('verified previous-season SRS contributes to matchup forecast without changing game history',()=>{
+ const g=game('upcoming',iso(2026,10,29),null,null,2027,'scheduled');
+ const state=E.ratings([],g.date);
+ const baseline=E.forecast(g,state);
+ const anchored=E.forecast(g,state,{ALP:{srs:8},BET:{srs:-8}});
+ assert.equal(baseline.priorUsed,false);
+ assert.equal(anchored.priorUsed,true);
+ assert.ok(anchored.homeWin>baseline.homeWin);
+ assert.equal(state.finals,0);
+});
