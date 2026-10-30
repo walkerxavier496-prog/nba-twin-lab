@@ -8,6 +8,10 @@ on:
     paths:
       - scripts/game_science.cjs
       - predict/science.js
+      - predict/science-preview.js
+      - predict/app.js
+      - predict/index.html
+      - tests/science_preview.test.cjs
       - scripts/v8_research.cjs
       - tests/game_science.test.cjs
       - tests/site_navigation.test.cjs
@@ -36,6 +40,8 @@ jobs:
           node --check predict/science.js
           node --check scripts/game_science.cjs
           node --check team-intelligence/app.js
+          node --check predict/science-preview.js
+          node --check predict/app.js
           node --test tests/game_science.test.cjs tests/v8_research.test.cjs tests/site_navigation.test.cjs
       - name: Run strictly pregame rolling-origin comparison
         run: node scripts/game_science.cjs
