@@ -9,11 +9,32 @@ const one=x=>Number.isFinite(x)?x.toFixed(1):'—';
 const round=x=>Number.isFinite(x)?Math.round(x):'—';
 const today=new Date();
 const seasonYear=today.getUTCFullYear()+(today.getUTCMonth()>=6?1:0);
-let games=[],selected=null,source='',loadedAt=null,hasHistory=false,context=null,profiles={},modelReport=null;
+let games=[],selected=null,source='',loadedAt=null,hasHistory=false,context=null,profiles={},modelReport=null,scienceSnapshot=null,scienceReport=null;
 const simulationCache=new Map();
 const alias={GS:'GSW',NY:'NYK',SA:'SAS',NO:'NOP',UTAH:'UTA',WSH:'WAS',PHX:'PHO',BKN:'BRK',CHA:'CHO'};
 async function loadContext(){try{const r=await fetch('../data/context.json',{cache:'no-store'});if(!r.ok)return;const d=await r.json();if(d.schema!==1||!Array.isArray(d.teams))return;context=d;const prior=d.teams.filter(t=>t.season===seasonYear-1);for(const t of prior)profiles[t.abbr]=t;for(const [from,to] of Object.entries(alias))if(profiles[to])profiles[from]=profiles[to];}catch(e){console.warn('Team advanced context unavailable:',e)}}
 async function loadReport(){try{const r=await fetch('../data/model-report.json',{cache:'no-store'});if(!r.ok)return;const d=await r.json();if(d.schema===1&&d.strict_no_future_data)modelReport=d;}catch(e){console.warn('Model scorecard unavailable:',e)}}
+async function loadSciencePreview(){
+ try{
+  const [s,r]=await Promise.all([
+   fetch('../data/v7-current.json',{cache:'no-store'}),
+   fetch('../data/game-science-report.json',{cache:'no-store'})]);
+  if(!s.ok||!r.ok)return;
+  const snapshot=await s.json(),report=await r.json();
+  if(snapshot.strict_no_future_data&&report.strict_no_future_data&&report.status==='research_only_not_promoted'){
+   scienceSnapshot=snapshot;scienceReport=report;
+  }
+ }catch(e){console.warn('Experimental science preview unavailable:',e)}
+}
+function sciencePanel(game,baseline){
+ if(game.status!=='scheduled')return '';
+ if(!scienceSnapshot||!scienceReport||!window.TwinSciencePreview)return '<div class="context"><p><b>Basketball-science preview:</b> Awaiting verified research data. Live Elo remains unchanged.</p></div>';
+ const x=window.TwinSciencePreview.preview({game,baseline,snapshot:scienceSnapshot,report:scienceReport});
+ if(!x.available)return '<div class="context"><p><b>Basketball-science preview unavailable:</b> '+esc(x.reason)+'. The Elo forecast above is unaffected.</p></div>';
+ return '<h4 class="small">EXPERIMENTAL SCIENCE FORECAST · NOT THE LIVE DEFAULT</h4>'+
+  '<div class="context"><p><b>'+esc(game.home.abbr)+' win chance:</b> '+pct(x.homeWin)+' using adjusted strength, recent efficiency momentum and rest. Elo baseline: '+pct(baseline.homeWin)+'.</p>'+
+  '<p>Pregame form indicator: '+one(x.features.momentum)+' · Rest indicator: '+one(x.features.restScience)+' · Adjusted-strength residual: '+one(x.features.team)+'. Model fitted on earlier seasons only. This is an experimental comparison, not a verified edge or guaranteed result.</p></div>';
+}
 function note(message,type=''){const n=$('notice');n.textContent=message;n.className='notice '+type}
 function monthRanges(start,end){
  const out=[];let y=start.getUTCFullYear(),m=start.getUTCMonth();
@@ -157,6 +178,7 @@ function renderDetail(){
  '<h4 class="small">MATCHUP EXPLANATION</h4><div class="context">'+
  '<p><b>'+esc(hWin?g.home.name:g.away.name)+'</b> has a '+pct(hWin?p.homeWin:p.awayWin)+' '+(mode==='elo'?'Elo win estimate. Elo is the default because it beat standalone V5 Monte Carlo on the untouched five-season audit.':'win rate across '+simulations.toLocaleString()+' seeded possession simulations.')+' The matchup expectation is '+one(Math.abs(base.eloEdge))+' rating points; Monte Carlo separately plays turnovers, free throws, 2s, 3s, misses and offensive rebounds using validated historical team rates.</p>'+
  '<p>Last '+h2h.length+' head-to-head meeting'+(h2h.length===1?'':'s')+': '+(h2h.length?h2h.map(x=>esc(x.away.abbr)+' '+x.awayScore+'–'+x.homeScore+' '+esc(x.home.abbr)).join(' · '):'No verified recent meetings')+'. Head-to-head history is context only, not a separate predictive weight.</p></div>'+
+ sciencePanel(g,base)+
  (g.status==='final'?'<p class="context"><b>Actual final:</b> '+esc(g.away.abbr)+' '+g.awayScore+' – '+g.homeScore+' '+esc(g.home.abbr)+'. This forecast was recomputed using only games before tip-off.</p>':'')+
  '<p class="disclaimer">'+esc(base.confidence)+'. Selected model: '+modelName+'. Seeded Monte Carlo diagnostics reproduce with identical inputs. No injury, confirmed-lineup, player-minutes, trade, travel or betting-market input. Prior-season style can miss offseason changes; a probability is never a guarantee. This is not betting advice.</p>';
 }
@@ -171,5 +193,5 @@ $('range').addEventListener('change',renderGames);
 $('team-search').addEventListener('input',renderGames);
 $('simulations').addEventListener('change',()=>{simulationCache.clear();renderDetail()});
 $('model-choice').addEventListener('change',renderDetail);
-Promise.all([loadContext(),loadReport()]).then(load);
+Promise.all([loadContext(),loadReport(),loadSciencePreview()]).then(load);
 })();
