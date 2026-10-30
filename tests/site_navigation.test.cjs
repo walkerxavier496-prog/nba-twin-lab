@@ -9,12 +9,14 @@ test('primary site routes and data-backed twin finder exist',()=>{
  const home=fs.readFileSync(path.join(root,'index.html'),'utf8');
  assert.ok(home.includes('./predict/')&&home.includes('./team-intelligence/')&&home.includes('./models/')&&home.includes('./twins/'));
 });
-test('live forecast remains Elo default; research never silently changes it',()=>{
+test('roster-aware beta is explicit, and historical Elo remains available as safe fallback',()=>{
  const predictor=fs.readFileSync(path.join(root,'predict/index.html'),'utf8');
- assert.match(predictor,/<option value="elo" selected>/);
+ assert.match(predictor,/<option value="roster" selected>/);
+ assert.match(predictor,/<option value="elo">/);
+ assert.match(predictor,/falls back to Elo/i);
  assert.match(predictor,/research-only/i);
  const engine=fs.readFileSync(path.join(root,'predict/engine.js'),'utf8');
- assert.ok(!engine.includes('game-science-report.json'),'Research report must not auto-feed live forecasts');
+ assert.ok(!engine.includes('game-science-report.json'),'Research report must not silently alter baseline Elo engine');
 });
 test('research and team intelligence share one source of science features',()=>{
  const research=fs.readFileSync(path.join(root,'scripts/game_science.cjs'),'utf8');
