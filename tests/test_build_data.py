@@ -78,3 +78,11 @@ def test_complete_pipeline_crossreferences_and_marks_provisional():
     assert out['rows'][0]['stats']['height'] is not None
     assert out['sources']['historical_crosscheck']['crosschecked_values']>0
     assert out['sources']['historical_crosscheck']['large_disagreements']==0
+
+def test_cr_only_csv_height_supplement():
+    body = 'Name, Height (Inches), Height(Feet-Inches), Weight\r' + ''.join(
+        f'Player {i},75,6-3,200\r' for i in range(60))
+    rows = etl.load_csv('https://example.test/height.csv', FakeSession({'https://example.test/height.csv':body}))
+    assert len(rows) == 60
+    assert rows[0]['Name'] == 'Player 0'
+    assert rows[59][' Height (Inches)'] == '75'
