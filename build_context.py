@@ -106,12 +106,19 @@ def build(session):
         source[k] = csv_rows(r.text)
     teams = parse_teams(source["teams"])
     mvp = parse_mvp(source["awards"])
+    # The mirror currently stops at 2025. The 2026 MVP is independently
+    # confirmed by the NBA's official May 17, 2026 release (939 / 1000 points).
+    if not any(v["season"] == 2026 for v in mvp):
+        mvp.append({"season": 2026, "player": "Shai Gilgeous-Alexander",
+                    "player_id": "gilgesh01", "share": 0.939, "winner": True,
+                    "source": "NBA Communications official 2026 MVP release"})
     return {
         "schema": 1,
         "built_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "source": {"name": "Basketball Reference dataset mirror",
                    "url": "https://github.com/sumitrodatta/bball-reference-datasets",
-                   "files": ["Team Summaries.csv", "Player Award Shares.csv"]},
+                   "files": ["Team Summaries.csv", "Player Award Shares.csv"],
+                   "official_2026_mvp": "https://pr.nba.com/shai-gilgeous-alexander-2025-26-kia-nba-most-valuable-player/"},
         "latest_team_season": max(x["season"] for x in teams),
         "latest_mvp_season": max(x["season"] for x in mvp),
         "teams": teams,
