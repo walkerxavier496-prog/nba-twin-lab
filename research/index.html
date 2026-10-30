@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NBA Twin Lab · V8 Research</title><meta name="description" content="Rolling-origin tests of Elo, inferred player availability and team efficiency without using future results.">
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#08131e;color:#e7f2fa}
+*{box-sizing:border-box}body{margin:0}a{color:#79c8fa}header{border-bottom:1px solid #254052;padding:18px max(20px,calc((100vw - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}nav{display:flex;gap:18px;flex-wrap:wrap}nav a{text-decoration:none;color:#a8c2d3}nav a:hover{color:#fff}
+main{max-width:1100px;margin:auto;padding:32px 20px 80px}.eyebrow{color:#74d9bc;letter-spacing:.14em;font-size:12px;font-weight:750}h1{font-size:clamp(35px,6vw,62px);line-height:1.07;letter-spacing:-.045em;margin:16px 0}h2{font-size:25px;margin:0 0 12px}p{color:#b7cbd9;line-height:1.6;max-width:850px}.lead{font-size:18px}.pill{display:inline-block;border:1px solid #42606f;border-radius:40px;padding:8px 14px;font-size:13px;color:#c7e0e9;margin:8px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:28px 0}.tile,.panel{background:#101f2d;border:1px solid #294153;border-radius:15px;padding:20px}.tile small{color:#98b3c5}.tile strong{display:block;font-size:28px;margin:10px 0}.panel{margin:20px 0}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:660px;font-variant-numeric:tabular-nums}th,td{padding:13px 12px;border-bottom:1px solid #294153;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}th{font-size:12px;color:#a3bdcc}tr.best{background:#173343}tr:hover{background:#1a3443}td:first-child{font-weight:650}small.note{color:#91aebf;display:block;margin:14px 0;line-height:1.6}.error{color:#ffbdad}.muted{color:#b1c7d7}footer{color:#8eabba;margin-top:38px;font-size:13px}
+</style></head><body>
+<header><a href="../" style="font-weight:800;text-decoration:none;color:#e7f2fa">TL✦ NBA TWIN LAB</a><nav><a href="../predict/">Predictor</a><a href="../intelligence/">V7 Intelligence</a><a href="../history/">Historical Audit</a><a href="../season-test/">Season Test</a></nav></header>
+<main><div class="eyebrow">V8 / RESEARCH AUDIT</div><h1>Does player intelligence<br>actually improve Elo?</h1><p class="lead">A direct test of pregame player availability estimates, team efficiency, rest and rotation continuity. We fit only on earlier seasons, then evaluate each later season without looking ahead.</p>
+<div class="pill">Experimental · Not used for live predictions</div>
+<div id="status" role="status" class="muted">Loading audited results…</div>
+<div class="grid"><div class="tile"><small>Rolling evaluation games</small><strong id="games">—</strong></div><div class="tile"><small>Baseline Elo accuracy</small><strong id="elo">—</strong></div><div class="tile"><small>Best historical Brier</small><strong id="best">—</strong></div><div class="tile"><small>Fresh season games</small><strong id="fresh">—</strong></div></div>
+<section class="panel"><h2>Rolling-origin comparison</h2><p>Seasons 2022–23 through 2025–26. Lower Brier and log loss are better; winner accuracy alone can hide worse probabilities.</p><div class="tablewrap"><table><thead><tr><th>Model</th><th>Winner accuracy</th><th>Brier ↓</th><th>Log loss ↓</th><th>Brier vs Elo</th></tr></thead><tbody id="rolling"><tr><td colspan="5">Loading…</td></tr></tbody></table></div></section>
+<section class="panel"><h2>2026–27 early-season check</h2><p>This sample is small and was not a preregistered untouched test. It is shown separately and is never used to fit its own predictions.</p><div class="tablewrap"><table><thead><tr><th>Model</th><th>Winner accuracy</th><th>Brier ↓</th><th>Log loss ↓</th></tr></thead><tbody id="current"><tr><td colspan="4">Loading…</td></tr></tbody></table></div></section>
+<section class="panel"><h2>What we are testing</h2><p><strong>Calibrated Elo:</strong> Adjusts Elo's probability scale using only earlier seasons. <strong>Player:</strong> Adds estimated minutes and player impact from previous appearances. <strong>Team:</strong> Adds opponent-adjusted efficiency and back-to-back rest. <strong>Combined:</strong> Adds rotation continuity as well.</p><p>Player statuses are inferred, <strong>not verified injury reports</strong>. An added feature earns a place in live predictions only after robust, repeatable out-of-sample improvement.</p><small class="note" id="source"></small></section>
+<footer>NBA Twin Lab · Research transparency · <a href="https://github.com/walkerxavier496-prog/nba-twin-lab/blob/main/scripts/v8_research.cjs">Read the audit code</a></footer>
+</main>
+<script>
+(async()=>{
+ const fmt=(v,d=1)=>v==null?'—':(v*100).toFixed(d)+'%';
+ const dec=v=>v==null?'—':v.toFixed(4);
+ const names={elo:'Elo baseline',calibrated:'Calibrated Elo',player:'Elo + inferred players',team:'Elo + team and rest',combined:'Elo + all features'};
+ try{
+  const res=await fetch('../data/v8-research-report.json?ts='+Date.now(),{cache:'no-store'});
+  if(!res.ok)throw Error('Research report has not been published yet');
+  const d=await res.json();if(d.schema!==1||!d.leakage_safe)throw Error('Report failed validation');
+  const entries=Object.entries(d.models),best=entries.reduce((a,b)=>a[1].rolling.brier<b[1].rolling.brier?a:b);
+  document.getElementById('games').textContent=d.models.elo.rolling.games.toLocaleString();
+  document.getElementById('elo').textContent=fmt(d.models.elo.rolling.accuracy);
+  document.getElementById('best').textContent=dec(best[1].rolling.brier);
+  document.getElementById('fresh').textContent=d.models.elo.fresh.games;
+  document.getElementById('status').textContent='Validated audit · '+new Date(d.generated_at_utc).toLocaleDateString()+' · No live-model promotion';
+  document.getElementById('rolling').innerHTML=entries.map(([key,v])=>'<tr class="'+(key===best[0]?'best':'')+'"><td>'+names[key]+'</td><td>'+fmt(v.rolling.accuracy)+'</td><td>'+dec(v.rolling.brier)+'</td><td>'+dec(v.rolling.logLoss)+'</td><td>'+(key==='elo'?'baseline':(d.comparisons[key+'_minus_elo'].delta_brier>=0?'+':'')+dec(d.comparisons[key+'_minus_elo'].delta_brier))+'</td></tr>').join('');
+  document.getElementById('current').innerHTML=entries.map(([key,v])=>'<tr><td>'+names[key]+'</td><td>'+fmt(v.fresh.accuracy)+'</td><td>'+dec(v.fresh.brier)+'</td><td>'+dec(v.fresh.logLoss)+'</td></tr>').join('');
+  document.getElementById('source').textContent='Strictly pregame feature snapshots · fixed L2 regularization · '+d.training.method+' · '+d.decision_rule;
+ }catch(e){document.getElementById('status').innerHTML='<span class="error">'+e.message+'. The experiment is still being validated; existing live predictions remain unchanged.</span>';}
+})();
+</script></body></html>
