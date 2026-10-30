@@ -305,6 +305,7 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
     team_players: dict[tuple[int, str], set[str]] = collections.defaultdict(set)
     league_history: dict[int, list[float]] = collections.defaultdict(list)
     output_games: list[dict] = []
+    rotation_history: list[dict] = []
     stat_errors: dict[int, dict[str, dict]] = collections.defaultdict(
         lambda: collections.defaultdict(lambda: {"count": 0, "sum_abs_error": 0.0,
                                                   "baseline_abs_error": 0.0}))
@@ -374,6 +375,18 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
         include = season in EVALUATED or season == 2027
         hs, ass = snapshot(season, h_abbr, date, include), snapshot(season, a_abbr, date, include)
         if include:
+            # Save only compact, inferred PRE-game rotation IDs/minutes for
+            # point-in-time roster continuity research. Do not include target
+            # game participation or box-score values.
+            rotation_history.append({
+                "season": season, "date": date,
+                "result_id": local_game["id"] if local_game else home["game_id"],
+                "home": {"abbr": h_abbr, "rotation": [
+                    {"player_id": p["player_id"], "expected_minutes": p["expected_minutes"]}
+                    for p in hs.get("rotation", [])]},
+                "away": {"abbr": a_abbr, "rotation": [
+                    {"player_id": p["player_id"], "expected_minutes": p["expected_minutes"]}
+                    for p in ass.get("rotation", [])]}})
             for team_row, snap in ((home, hs), (away, ass)):
                 candidates = {p["player_id"]: p for p in snap.get("rotation", [])}
                 for actual_row in players_by_game[(season, team_row["game_id"], team_row["team_id"])]:
@@ -460,6 +473,9 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
             for season in (*EVALUATED, 2027)}}
     return round_tree({"schema": 1,
         "player_report": player_report,
+        "rotation_history": {"schema": 1, "strict_no_future_data": True,
+            "source": "Compact inferred pregame player IDs and expected minutes; no target-game results",
+            "games": rotation_history},
         "built_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "strict_no_future_data": True,
         "source": {"name": "llimllib/nba_data derived from stats.nba.com",
@@ -483,6 +499,7 @@ def main() -> None:
     parser.add_argument("--output", type=pathlib.Path, default=OUTPUT)
     parser.add_argument("--current-output", type=pathlib.Path, default=CURRENT_OUTPUT)
     parser.add_argument("--player-report-output", type=pathlib.Path, default=ROOT / "data/v9-player-report.json")
+    parser.add_argument("--rotation-history-output", type=pathlib.Path, default=ROOT / "data/rotation-history.json")
     parser.add_argument("--extension-dir", default="/tmp/nba-twin-duckdb-extensions")
     args = parser.parse_args()
     connection = duckdb.connect()
@@ -491,6 +508,11 @@ def main() -> None:
     connection.execute(f"ATTACH '{CATALOG}' AS nba")
     payload = build_payload(connection)
     report = payload.pop("player_report")
+    rotation_history = payload.pop("rotation_history")
+    args.rotation_history_output.parent.mkdir(parents=True, exist_ok=True)
+    rotation_tmp = args.rotation_history_output.with_suffix(".json.tmp")
+    rotation_tmp.write_text(json.dumps(round_tree(rotation_history), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    rotation_tmp.replace(args.rotation_history_output)
     report["built_at_utc"] = payload["built_at_utc"]
     args.player_report_output.parent.mkdir(parents=True, exist_ok=True)
     report_tmp = args.player_report_output.with_suffix(".json.tmp")
