@@ -9,6 +9,7 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 | Lab | URL | Features |
 |---|---|---|
 | Game Predictor | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/predict/) | Upcoming matchups, win probabilities, projected scores, team strength, advanced team context, recent form, rest, historical matchups and accuracy tracking |
+| Season Test | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/season-test/) | Strict opening-night walk-forward backtest, first 1/3/5 games, predicted versus actual conference standings, 82-game strength projections and preseason A/B test |
 | MVP Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/mvp/) | Historical statistical MVP index, season breakdowns and actual award voting |
 | Championship Lab | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/championship/) | NBA champions and Finals MVPs, playoff paths, championship team SRS and advanced statistics |
 | Player Twins | [Open](https://walkerxavier496-prog.github.io/nba-twin-lab/) | 13-stat classic and 18-stat advanced player comparisons, careers, peaks and best seasons |
@@ -31,7 +32,7 @@ This is a **transparent heuristic baseline**, not a trained neural network or be
 1. Process regular-season games chronologically. Update each team's Elo rating using the opponent's strength and a margin-of-victory multiplier.
 2. Regress team Elo 32% toward league average between seasons, including *before* the new season's first final.
 3. Calculate pregame win probability using a fixed +65 Elo home-court adjustment and a ±26 Elo back-to-back rest adjustment.
-4. If verified prior-season team SRS is available, blend **80% Elo edge + 20% SRS-derived edge** to stabilise early-season estimates. The previous-season context is never taken from a future game.
+4. If verified prior-season team SRS is available, start with **20% prior-year SRS / 80% Elo** and exponentially reduce the prior weight as regular-season games accumulate. A separately verified preseason sample gets only ~11% of a normal game's Elo update and decays rapidly. The previous-season context is never taken from a future game.
 5. Project team scores using shrinkage-adjusted points scored and allowed, plus the projected Elo margin. These are **not possession-adjusted offensive or defensive ratings**.
 6. Display team style context from the prior season: offensive/defensive/net rating, pace, three-point attempt rate, eFG%, turnover rate and offensive rebounding. Previous head-to-head games are shown for context, not used as an extra model weight.
 7. Backtest every completed current-season game **walk-forward**, using only games before tip-off. Track winner accuracy, Brier score and projected-score error. Run the reproducible scorecard script.
@@ -82,6 +83,8 @@ python build_context.py
 python build_predictions.py
 python build_championships.py
 node scripts/model_report.cjs
+python build_preseason.py
+node scripts/season_backtest.cjs
 
 python -m http.server 8000
 # http://localhost:8000/predict/
@@ -93,6 +96,7 @@ python -m http.server 8000
 - Team stats and MVP votes: .github/workflows/update-context.yml (weekly)
 - NBA schedule, results and model audit: .github/workflows/update-predictions.yml (daily)
 - Champions and Finals MVPs: .github/workflows/update-championships.yml (weekly)
+- Opening-night projected vs actual standings and preseason A/B test: .github/workflows/season-test.yml (daily)
 - Static website deployment: .github/workflows/static.yml
 
 GitHub Pages is configured under **Settings → Pages → GitHub Actions**, using the **Static HTML** workflow. A failed importer leaves the last valid published dataset unchanged. The page shows its actual refresh time rather than claiming to be current.
