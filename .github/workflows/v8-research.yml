@@ -6,6 +6,7 @@ on:
     paths:
       - scripts/v8_research.cjs
       - tests/v8_research.test.cjs
+      - research/**
       - .github/workflows/v8-research.yml
       - predict/engine.js
       - data/v7-intelligence.json
@@ -27,6 +28,7 @@ jobs:
       - name: Validate experimental audit
         run: |
           node --check scripts/v8_research.cjs
+          node --check research/live.js
           node --test tests/v8_research.test.cjs
       - name: Run 6,221 strict pregame predictions
         run: node scripts/v8_research.cjs
