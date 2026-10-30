@@ -37,9 +37,7 @@ function normalise(payload){
     const season=Number(e.season?.year||payload.leagues?.[0]?.season?.year||inferred);
     const seasonType=Number(e.season?.type||payload.leagues?.[0]?.season?.type||2);
     if(seasonType!==2)continue;
-    const rawNotes=Array.isArray(c.notes)?c.notes:[c.notes].filter(Boolean);
-    const noteText=[e.name,...rawNotes.map(n=>typeof n==='object'?n.headline||'':String(n))].join(' ').toLowerCase();
-    if(e.id==='401809839'||(noteText.includes('nba cup')&&(noteText.includes('championship')||(noteText.includes('final')&&!noteText.includes('semifinal')))))continue;
+    if(e.id==='401809839')continue; // 2025 NBA Cup title game excluded from standings
     out.push({id:key(e.id),date:e.date,season,home,away,status:final?'final':live?'live':'scheduled',
       homeScore:safe(hs),awayScore:safe(as),source:'ESPN scoreboard'});
   }
