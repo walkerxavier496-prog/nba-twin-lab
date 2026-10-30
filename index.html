@@ -39,6 +39,9 @@ footer{display:flex;align-items:center;justify-content:space-between;gap:15px;fl
 @media(max-width:420px){.hero-copy h1{font-size:41px}.buttons .button{width:100%}.terminal-top{font-size:9px}}
 </style><link rel="stylesheet" href="./assets/site-shell.css"><script defer src="./assets/site-shell.js"></script><script defer src="./assets/home.js"></script><link rel="stylesheet" href="./assets/courtside.css"></head><body class="sports-theme sports-home">
 <header><a class="brand" href="./">TL<span>✦</span> NBA TWIN LAB</a><nav aria-label="Main navigation"><a href="./predict/">Game Predictor</a><a href="./team-intelligence/">Team Intelligence</a><a href="./challenge/">Five Model Challenge</a><a href="./challenge/daily.html">Daily Predictions</a><a href="./audit/">Accuracy Ledger</a><a href="./twins/">Player Twins</a></nav></header>
+<div class="court-ticker" aria-label="Latest locked NBA pregame forecasts">
+<span class="court-ticker__label">🏀 GAME DAY</span><div class="court-ticker__content" id="home-ticker" aria-label="Locked game predictions"><span class="court-ticker__item">Loading the latest verified slate…</span></div><a class="court-ticker__link" href="./challenge/daily.html">ALL GAMES ↗</a>
+</div>
 <main id="site-main">
 <section class="home-hero" aria-label="NBA Twin Lab introduction">
  <div class="hero-copy">
@@ -60,6 +63,11 @@ footer{display:flex;align-items:center;justify-content:space-between;gap:15px;fl
   <div class="terminal-data"><span>Latest Melbourne-date slate</span><b id="home-date">—</b></div>
   <a href="./challenge/" class="terminal-link">See the six-model leaderboard <span aria-hidden="true">↗</span></a>
  </aside>
+</section>
+<section class="sports-feature" aria-label="Featured NBA pregame forecast">
+  <div class="sports-feature__top"><b>◉ COURTSIDE / FEATURED LOCKED PREDICTION</b><small id="feature-tip">Verified snapshot</small></div>
+  <div id="featured-game" class="sports-feature__match"><p>Loading the latest saved pregame matchup…</p></div>
+  <div class="sports-feature__bottom"><span id="feature-detail">Production Elo forecast · no live results implied</span><strong>ALL PICKS RECORDED BEFORE TIPOFF</strong></div>
 </section>
 
 <section class="home-quick" aria-label="Frequently used tools">
