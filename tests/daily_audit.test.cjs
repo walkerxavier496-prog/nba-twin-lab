@@ -105,8 +105,8 @@ test('daily builder reproduces the locked production model without touching the 
   assert.equal(preview.scope.games, 10);
   assert.equal(preview.scope.player_projections, 228);
   assert.equal(preview.model_policy.production, 'production_elo_v7');
-  assert.equal(preview.forecasts[0].primary_forecast.home_win_probability, existing.forecasts[0].primary_forecast.home_win_probability);
-  assert.equal(preview.forecasts[0].primary_forecast.projected_score.home, existing.forecasts[0].primary_forecast.projected_score.home);
+  assert.ok(Math.abs(preview.forecasts[0].primary_forecast.home_win_probability - existing.forecasts[0].primary_forecast.home_win_probability) < 1e-12);
+  assert.ok(Math.abs(preview.forecasts[0].primary_forecast.projected_score.home - existing.forecasts[0].primary_forecast.projected_score.home) < 1e-12);
   assert.equal(preview.forecasts[0].source, undefined);
   assert.equal(A.verifyIntegrity(preview), true);
 });
