@@ -341,6 +341,12 @@ function verifyAll() {
   console.log(`Verified ${lockFiles().length} immutable lock(s), ${filesUnder(path.join(AUDIT, 'reviews'), 'review.json').length} review(s), and the derived ledger`);
 }
 
+function reviewWindowOpen(lock, now) {
+  const lastTip = Date.parse(lock?.scope?.last_tip_utc);
+  return Number.isFinite(lastTip) && Number.isFinite(now) &&
+    now >= lastTip + 4 * 3600000 && A.melbourneHour(now) >= 18;
+}
+
 async function run(options) {
   const now = Date.parse(options.now || new Date().toISOString());
   if (!Number.isFinite(now)) throw new Error('Invalid --now timestamp');
@@ -372,8 +378,7 @@ async function run(options) {
   for (const file of lockFiles()) {
     const lock = readJson(file), reviewPath = reviewFile(lock.scope.melbourne_date);
     if (fs.existsSync(reviewPath)) continue;
-    const lastTip = Date.parse(lock.scope.last_tip_utc);
-    if (!Number.isFinite(lastTip) || now < lastTip + 4 * 3600000 || A.melbourneHour(now) < 18) continue;
+    if (!reviewWindowOpen(lock, now)) continue;
     try {
       const review = await buildReview(lock, now);
       if (options.dryRun) console.log(JSON.stringify(review, null, 2));
@@ -403,6 +408,6 @@ async function main() {
 if (require.main === module) main().catch(error => { console.error(error.stack || error.message); process.exit(1); });
 
 module.exports = {
-  buildLock, buildReview, buildLedger, verifyAll, v9Projections, contextProfiles,
+  buildLock, buildReview, buildLedger, verifyAll, reviewWindowOpen, v9Projections, contextProfiles,
   LOCK_MINUTES_BEFORE_TIP, LOCK_MAX_MINUTES_BEFORE_TIP,
 };
