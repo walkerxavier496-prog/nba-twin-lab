@@ -231,3 +231,29 @@ body.sports-audit .button{background:#ff912f!important;color:#1d160e!important}
  body.sports-daily .sports-club__name{font-size:20px}
  body.sports-theme .card{border-radius:8px}
 }
+
+/* Score graphic deliberately distinguishes pregame projections from actual scores. */
+.sports-pick {
+  display:grid;justify-items:center;gap:1px;margin-top:11px;
+  background:#37251d;border:1px solid rgba(255,167,93,.45);
+  padding:9px 13px;border-radius:6px;min-width:93px;text-align:center;
+}
+.sports-pick small {
+  font:900 9px/1.2 system-ui,sans-serif;letter-spacing:.14em;color:#fec18b;white-space:nowrap;
+}
+.sports-pick strong {font:900 29px/1 Impact,'Arial Narrow',sans-serif;color:#fff;letter-spacing:.025em}
+.sports-pick em {font:900 16px/1.2 system-ui,sans-serif;color:#ffb562;font-style:normal}
+.sports-scorebug__vs{display:grid;justify-items:center;gap:0;align-self:center}
+.sports-feature .sports-pick{margin-top:5px}
+.sports-feature .sports-scorebug__vs{font-size:11px}
+body.sports-home .sports-feature__match{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+body.sports-home .sports-club__name{font-size:35px}
+body.sports-theme .court-ticker a:focus-visible{outline-offset:-3px!important}
+@media(max-width:480px){
+ .sports-pick{padding:8px 9px;min-width:74px;margin-top:7px}
+ .sports-pick small{font-size:8px}.sports-pick strong{font-size:24px}.sports-pick em{font-size:14px}
+ .sports-feature__match{grid-template-columns:minmax(0,1fr) minmax(80px,.55fr) minmax(0,1fr);padding:18px 9px!important;gap:5px!important}
+ body.sports-home .sports-club__name{font-size:24px}
+ .court-ticker__item{padding:8px 12px}
+ .court-ticker__item b{font-size:14px}
+}
