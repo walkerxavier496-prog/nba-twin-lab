@@ -32,7 +32,7 @@
   <div>
    <div class="eyebrow"><span class="pulse"></span> NBA TWIN LAB / GAME FORECAST · VALIDATED DEFAULT</div>
    <h1>Know the matchup.<br><em>Understand the edge.</em></h1>
-   <p>Elo remains the live default while we rigorously test opponent-adjusted form, Four Factors, matchup tendencies and scheduling effects. Switch to the experimental possession simulator to explore outcome ranges—not guaranteed predictions.</p>
+   <p>The roster-aware beta uses opponent-adjusted team form, inferred rotation turnover and learned probability calibration. Compare it with historical Elo or experimental possession simulations. No model guarantees a result.</p>
    <div class="hero-actions"><a class="primary" href="#matchups">Explore matchups <span aria-hidden="true">↗</span></a><a class="secondary" href="#method">See the methodology</a></div>
   </div>
   <div class="hero-panel">
@@ -56,7 +56,7 @@
  <section id="matchups" class="section">
   <div class="sectionhead">
    <div><div class="eyebrow">01 / UPCOMING GAMES</div><h2>Game Prediction Lab</h2><p>Pick a game to inspect the pregame model and team-by-team breakdown.</p></div>
-   <div class="toolbar"><label for="model-choice" class="sr">Forecast model</label><select id="model-choice" title="Forecast model"><option value="elo" selected>Elo · validated default</option><option value="mc">V5 Monte Carlo</option><option value="roster">Roster-aware · experimental</option></select><label for="simulations" class="sr">Simulation count</label><select id="simulations" title="Possession simulations per matchup"><option value="1000">1,000 simulations</option><option value="10000" selected>10,000 simulations</option><option value="100000">100,000 simulations</option></select><label for="range" class="sr">Game range</label><select id="range"><option value="7">Next 7 days</option><option value="21" selected>Next 21 days</option><option value="all">All scheduled</option><option value="final">Recent results</option></select><label for="team-search" class="sr">Filter team</label><input id="team-search" placeholder="Search team…" autocomplete="off"></div>
+   <div class="toolbar"><label for="model-choice" class="sr">Forecast model</label><select id="model-choice" title="Forecast model"><option value="roster" selected>Roster-aware · beta</option><option value="elo">Elo · historical baseline</option><option value="mc">V5 Monte Carlo</option></select><label for="simulations" class="sr">Simulation count</label><select id="simulations" title="Possession simulations per matchup"><option value="1000">1,000 simulations</option><option value="10000" selected>10,000 simulations</option><option value="100000">100,000 simulations</option></select><label for="range" class="sr">Game range</label><select id="range"><option value="7">Next 7 days</option><option value="21" selected>Next 21 days</option><option value="all">All scheduled</option><option value="final">Recent results</option></select><label for="team-search" class="sr">Filter team</label><input id="team-search" placeholder="Search team…" autocomplete="off"></div>
   </div>
   <div class="matchup-layout">
    <div id="games" class="games" aria-live="polite"><div class="empty">Loading scheduled games…</div></div>
@@ -66,7 +66,7 @@
  <section id="science" class="section">
   <div class="sectionhead"><div><div class="eyebrow">02 / BASKETBALL SCIENCE</div><h2>Which tendencies really predict wins?</h2>
    <p>Team strength, opponent-adjusted form, shot selection, turnovers, offensive rebounds, free-throw pressure, rest and head-to-head history are being tested on strictly pregame data. No arbitrary rivalry or winning-streak bonuses.</p></div></div>
-  <div class="notice">The basketball-science model is research-only. It will not replace the live Elo predictor until its out-of-sample accuracy, Brier score, log loss and calibration justify promotion. <a href="../team-intelligence/">Compare team tendencies</a> · <a href="../models/">Inspect historical evidence</a>.</div>
+  <div class="notice">The roster-aware beta improved historical Brier score versus Elo, but has not demonstrated a statistically clear improvement over the prior player-adjusted model. It falls back to Elo when verified roster inputs are missing. Other science models remain research-only. <a href="../team-intelligence/">Compare team tendencies</a> · <a href="../models/">Inspect historical evidence</a>.</div>
  </section>
  <section id="validation" class="section">
   <div class="sectionhead"><div><div class="eyebrow">03 / HELD-OUT VALIDATION</div><h2>Monte Carlo vs current Elo</h2><p>The exact same games, reconstructed immediately before tip-off with no future results.</p></div><div class="rightlabel" id="validation-sample">Loading scorecard…</div></div>
@@ -84,7 +84,7 @@
    <article><div class="methodnum">01</div><h3>Opponent-adjusted team strength</h3><p>Elo moves after every final score. Beating a strong opponent counts more than beating a weak one; point margin adjusts the update. Ratings regress toward average between seasons.</p></article>
    <article><div class="methodnum">02</div><h3>Every possession is played</h3><p>Each simulated possession can end in a turnover, free throws, a 2 or 3, a miss, or an offensive rebound. Validated prior-season pace and team rates shape those events; current results, rest, home court and Elo set the matchup expectation.</p></article>
    <article><div class="methodnum">03</div><h3>Real-world verification</h3><p>Walk-forward evaluation recreates the forecast before each finished game using only earlier results. Accuracy, Brier score, calibration and projected-score error are compared with the current Elo model.</p></article>
-   <article><div class="methodnum">04</div><h3>Limits we won't hide</h3><p>Injuries, confirmed lineups, player minutes, trades, travel and betting odds are <b>not included</b>. Prior-season style can miss offseason changes, and the current held-out sample is still small.</p></article>
+   <article><div class="methodnum">04</div><h3>Limits we won't hide</h3><p>The beta uses inferred rotation changes and player-impact proxies, but <b>not verified injuries, confirmed lineups or trade valuations</b>. It can still overrate heavily changed teams, and the current-season sample is small.</p></article>
   </div>
   <div class="provenance"><strong>Data provenance:</strong> Public, unofficial <a href="https://www.espn.com/nba/scoreboard" target="_blank" rel="noopener noreferrer">ESPN NBA scoreboard</a>. This site is independent and not affiliated with the NBA or ESPN. The feed is undocumented and may become unavailable. No fabricated scores, injuries or probabilities are substituted when coverage fails. Historical model quality is not a guarantee of future accuracy.</div>
  </section>
