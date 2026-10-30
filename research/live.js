@@ -14,6 +14,7 @@ try{
   const [gameData,context,rotations,report]=await Promise.all([
     get('../data/games.json'),get('../data/context.json'),get('../data/v7-current.json'),get('../data/v8-research-report.json')]);
   if(report.status!=='experimental_not_promoted'||!rotations.strict_no_future_data||rotations.coverage.season!==2027)throw Error('Research data failed validation');
+  if(rotations.coverage.completed_games!==gameData.coverage.current_final_games)throw Error('Team intelligence and scoreboard have different game counts; waiting for synchronized refresh');
   const age=(Date.now()-Date.parse(rotations.built_at_utc))/3600000;
   if(!Number.isFinite(age)||age< -1||age>72)throw Error('Inferred rotation snapshot is older than 72 hours; live comparison paused');
   const games=E.merge(gameData.games);
