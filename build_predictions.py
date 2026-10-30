@@ -63,7 +63,20 @@ def parse_events(payload: dict[str, Any]) -> list[dict[str, Any]]:
             live = not final and (typ.get("state") == "in" or str(typ.get("name", "")).startswith("STATUS_IN"))
             hs = float(home["score"]) if home.get("score") not in (None, "") else None
             as_ = float(away["score"]) if away.get("score") not in (None, "") else None
-            if final and (hs is None or as_ is None or hs < 0 or as_ < 0):
+            # NBA games cannot finish tied. ESPN sometimes labels postponed 0–0
+            # fixtures as completed; those are not actual results.
+            if final and (hs is None or as_ is None or hs < 0 or as_ < 0 or hs == as_):
+                continue
+            # The NBA Cup championship is an exhibition for regular-season
+            # standings. Exclude it, but retain Cup quarter/semi-final games.
+            notes = " ".join(str(n.get("headline", "")) if isinstance(n, dict) else str(n)
+                             for n in (comp.get("notes") or []))
+            detail = " ".join((str(event.get("name", "")), notes,
+                               str(comp.get("type", {}).get("text", ""))))
+            cup_final = ("nba cup" in detail.lower() and
+                         ("championship" in detail.lower() or
+                          ("final" in detail.lower() and "semifinal" not in detail.lower())))
+            if cup_final or game_id == "401809839":  # 2025 Cup Final: NYK 124, SAS 113
                 continue
             season_data = event.get("season") or {}
             league_season = ((payload.get("leagues") or [{}])[0].get("season") or {})
@@ -131,6 +144,10 @@ def build(session: requests.Session, today: dt.date) -> dict:
     prev_final = [g for g in ordered if g["season"] == previous_end and g["status"] == "final"]
     if len(prev_final) < 800:
         raise ValueError(f"Historical coverage insufficient: {len(prev_final)} final games for {previous_end}; require >=800")
+    # Standard 30-team, 82-game NBA seasons have exactly 1,230 results.
+    # Reject stray All-Star, postponed or NBA Cup Final events.
+    if previous_end >= 2026 and len(prev_final) != 1230:
+        raise ValueError(f"Previous season {previous_end} has {len(prev_final)} finals, expected 1230; refusing a contaminated Elo baseline")
     # Current-season data can legitimately be empty before opening night.
     if len(ordered) != len({g["id"] for g in ordered}):
         raise ValueError("Duplicate ESPN game IDs")
