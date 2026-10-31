@@ -74,6 +74,7 @@ async function fetchSummary(id,{fetchImpl=fetch}={}){
 }
 const mounted=!!$('live-game-list');
 let feed=null,selected=null,gameFilter='all',sortStat='pts',summaryCache=new Map(),lastLoaded=null,request=0,batchRequest=0,alerts=false,permission='default',sortDescending=true;
+let performanceGame='all',performanceTeam='all',performanceType='all',history=null;
 const seen=new Map(),messages=[];
 function setMessage(str){const n=$('live-desk-status');if(n)n.textContent=str}
 function selectedGame(){return feed?.games?.find(g=>String(g.id)===String(selected))||null}
@@ -125,18 +126,50 @@ function sortable(rows){
  });
 }
 function fmt(v,suffix=''){return typeof v==='number'&&Number.isFinite(v)?String(v)+suffix:'—'}
+const profileHref=p=>(String(window.location?.pathname||'').includes('/challenge/')?'../':'./')+'player/?id='+
+ encodeURIComponent(String(p.id||''))+'&name='+encodeURIComponent(p.name)+'&team='+encodeURIComponent(p.team);
+const performanceValue=(p,key)=>key==='stocks'?(numeric(p.stl)||0)+(numeric(p.blk)||0):numeric(p[key]);
+function performanceList(rows,key,count=5){return rows.filter(p=>performanceValue(p,key)!==null).slice().sort((a,b)=>(performanceValue(b,key)??-1)-(performanceValue(a,key)??-1)).slice(0,count)}
+function performanceCard(p,key,rank){
+ const image=p.id&&/^\d+$/.test(p.id)?'<img src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(p.id)+'.png" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'';
+ const labels={pts:'PTS',reb:'REB',ast:'AST',three:'3PM',stocks:'STOCKS',fpts:'FPTS'};
+ return '<a class="performance-rank-card" href="'+esc(profileHref(p))+'">'+image+'<span class="performance-rank">#'+rank+'</span><span><strong>'+esc(p.name)+'</strong><small>'+esc(p.team)+' · '+esc(p.matchup)+'</small></span><em>'+fmt(performanceValue(p,key))+' '+labels[key]+'</em></a>';
+}
+function historyPanel(rows){
+ const available=(history?.players||[]).filter(player=>player.games?.length>=2&&rows.some(row=>String(row.id)&&String(row.id)===String(player.id))).slice().sort((a,b)=>(b.last5?.averages?.pts??-1)-(a.last5?.averages?.pts??-1)).slice(0,3);
+ if(!available.length)return '<div class="performance-history-empty"><b>HOT STREAKS · VERIFIED FORM</b><span>Last-5 and last-10 charts appear after at least two append-only final-game records. No one-game sample is called a streak.</span></div>';
+ return '<div class="performance-history"><div class="performance-board-title"><b>HOT STREAKS · VERIFIED FORM</b><small>Append-only final boxes · sample shown</small></div>'+available.map(player=>{
+  const games=player.games.slice(0,5).reverse(),max=Math.max(1,...games.map(g=>numeric(g.pts)||0));
+  return '<a href="'+esc(profileHref(player))+'"><strong>'+esc(player.name)+'</strong><span>LAST '+player.last5.games+' · '+fmt(player.last5.averages.pts)+' PPG</span><i class="performance-spark" aria-label="Recent points: '+esc(games.map(g=>g.pts).join(', '))+'">'+games.map(g=>'<b style="height:'+Math.max(8,(numeric(g.pts)||0)/max*100).toFixed(0)+'%"></b>').join('')+'</i></a>';
+ }).join('')+'</div>';
+}
+function renderPerformanceCentre(rows){
+ const target=$('desk-top-performers');if(!target)return;
+ if(!rows.length){target.innerHTML='<p>No verified player performances are available for these filters yet. Live and incomplete boxes remain pending; no statistics are invented.</p>';return}
+ const featured=performanceList(rows,'fpts',1)[0]||performanceList(rows,'pts',1)[0];
+ const featuredTag=window.TwinBoxscorePlus?.performanceTag?.(featured)||'GAME STANDOUT';
+ const categories={pts:'TOP SCORERS',fpts:'FANTASY KINGS',reb:'GLASS CLEANERS',ast:'PLAYMAKERS',three:'SNIPERS',stocks:'DEFENSIVE MONSTERS'};
+ const selected=performanceType==='all'?Object.keys(categories):[performanceType];
+ const milestones=rows.filter(p=>p.tripleDouble||p.doubleDouble||p.pts>=40||p.reb>=20||p.ast>=15||p.three>=7||(performanceValue(p,'stocks')||0)>=5).slice().sort((a,b)=>(b.fpts??b.pts??0)-(a.fpts??a.pts??0));
+ const portrait=featured.id&&/^\d+$/.test(featured.id)?'<img src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(featured.id)+'.png" alt="" onerror="this.style.display=\'none\'">':'';
+ target.innerHTML='<div class="performance-board-title"><span><b>PLAYER PERFORMANCE CENTRE</b><small>Actual ESPN box scores · refreshes as each game updates</small></span><span>FPTS: ESPN DEFAULT</span></div>'+
+ '<a class="performance-night" href="'+esc(profileHref(featured))+'"><span class="performance-night-copy"><small>PERFORMANCE OF THE NIGHT</small><strong>'+esc(featured.name)+'</strong><span>'+esc(featured.team)+' · '+esc(featured.matchup)+'</span><em>'+esc(featuredTag)+'</em></span>'+portrait+
+ '<span class="performance-night-stats">'+[['PTS',featured.pts],['REB',featured.reb],['AST',featured.ast],['3PM',featured.three],['FPTS',featured.fpts]].map(([label,value])=>'<b><small>'+label+'</small>'+fmt(value)+'</b>').join('')+'</span></a>'+
+ '<div class="performance-category-grid">'+selected.map(key=>'<section><div class="performance-board-title"><b>'+categories[key]+'</b><small>Top '+Math.min(5,performanceList(rows,key).length)+'</small></div>'+performanceList(rows,key).map((p,i)=>performanceCard(p,key,i+1)).join('')+'</section>').join('')+'</div>'+
+ '<div class="performance-milestones"><div class="performance-board-title"><b>MILESTONES & ACHIEVEMENTS</b><small>Thresholds from this game only</small></div>'+(milestones.length?milestones.slice(0,8).map(p=>'<a href="'+esc(profileHref(p))+'"><strong>'+esc(p.name)+'</strong><span>'+esc(window.TwinBoxscorePlus?.performanceTag?.(p)||((performanceValue(p,'stocks')||0)+' STOCKS'))+'</span></a>').join(''):'<p>No verified threshold achievement in the loaded boxes.</p>')+'</div>'+historyPanel(rows);
+}
 function renderSummary(){
  const active=filteredGames().filter(g=>g.phase!=='scheduled');
- const rows=sortable(active.flatMap(g=>(summaryCache.get(String(g.id))?.players||[]).map(p=>({...p,gameId:g.id,matchup:g.away.abbr+' @ '+g.home.abbr}))));
+ const allRows=active.flatMap(g=>(summaryCache.get(String(g.id))?.players||[]).map(p=>({...p,stocks:(numeric(p.stl)||0)+(numeric(p.blk)||0),gameId:g.id,matchup:g.away.abbr+' @ '+g.home.abbr})));
+ const rows=sortable(allRows.filter(p=>(performanceGame==='all'||String(p.gameId)===performanceGame)&&(performanceTeam==='all'||p.team===performanceTeam)));
  const title=$('desk-matchup'),content=$('live-stats-rows');
  if(title)title.textContent=gameFilter==='all'?'GAME DAY · STANDOUTS':gameFilter==='live'?'LIVE GAMES · PLAYER LEADERS':gameFilter==='final'?'FINAL GAMES · PLAYER LEADERS':gameFilter==='mine'?'FOLLOWED TEAMS · GAME LEADERS':'PLAYER STATS';
  if($('desk-game-source'))$('desk-game-source').textContent='ESPN public game summaries · '+summaryCache.size+' available box scores · FPTS ESPN default format';
  if($('desk-sort-help'))$('desk-sort-help').textContent='Sort: '+sortStat.toUpperCase()+(sortDescending?' ↓':' ↑')+' · '+active.length+' matchups · scroll horizontally on mobile';
  if(content)content.innerHTML=rows.length?rows.map(p=>{
   const img=p.id&&/^\d+$/.test(p.id)?'<img src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(p.id)+'.png" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'';
-  const profileHref=(String(window.location?.pathname||'').includes('/challenge/')?'../':'./')+'player/?id='+
-    encodeURIComponent(String(p.id||''))+'&name='+encodeURIComponent(p.name)+'&team='+encodeURIComponent(p.team);
-  const cols=['<a class="desk-player" href="'+esc(profileHref)+'" aria-label="Open '+esc(p.name)+' player profile">'+img+
+  const href=profileHref(p);
+  const cols=['<a class="desk-player" href="'+esc(href)+'" aria-label="Open '+esc(p.name)+' player profile">'+img+
     '<span><b>'+esc(p.name)+'</b><small>'+esc(p.team)+' · '+esc(p.matchup)+'</small></span></a>'+
     (p.id&&/^\d+$/.test(p.id)?'<button type="button" class="watch-player-btn" data-watch-player="'+esc(p.id)+
     '" data-watch-name="'+esc(p.name)+'" data-watch-player-team="'+esc(p.team)+'">+ Follow</button>':''),
@@ -145,14 +178,7 @@ function renderSummary(){
   return '<tr>'+cols.map((v,i)=>'<td'+(i===12?' class="desk-fpts"':'')+'>'+v+'</td>').join('')+'</tr>';
  }).join(''):'<tr><td colspan="13">Loading verified player box scores across this filter; no projected statistics are shown.</td></tr>';
  window.TwinWatchlist?.sync?.();
- const target=$('desk-top-performers');
- if(target){
-  const scorers=rows.slice().sort((a,b)=>(b.pts??-1)-(a.pts??-1)).slice(0,5);
-  target.innerHTML=scorers.length?'<div class="desk-top-title"><b>SELECTED DAY’S TOP SCORERS</b><small>Single-game standouts, not multi-game streaks</small></div><div class="desk-performance-list">'+scorers.map((p,i)=>
-   '<a href="'+esc(gameHref(p.gameId))+'" class="desk-performance"><b>#'+(i+1)+'</b><span><strong>'+esc(p.name)+'</strong><small>'+esc(p.team)+' · '+esc(p.matchup)+'</small></span><em>'+fmt(p.pts)+' PTS</em>'+
-   '<small class="desk-hot-tag">'+esc(window.TwinBoxscorePlus?.performanceTag?.(p)||'GAME LEADER')+'</small></a>').join('')+'</div>':
-   '<p>No verified performances are available for these games yet.</p>';
- }
+ renderPerformanceCentre(rows);
  const g=selectedGame();
  if($('live-plays'))$('live-plays').innerHTML=lastLoaded?.id===String(g?.id)&&lastLoaded.plays.length?
   lastLoaded.plays.slice(-8).reverse().map(p=>'<li><small>'+esc(String(p.period||'?'))+'Q '+esc(p.clock)+'</small><span>'+esc(p.desc)+'</span></li>').join(''):'<li>Verified play-by-play appears as published by ESPN.</li>';
@@ -241,6 +267,9 @@ function setFeed(value){
   const order=g=>g.phase==='live'?0:g.phase==='scheduled'?1:2;
   return order(a)-order(b)||Date.parse(a.date)-Date.parse(b.date);
  })};
+ const gameSelect=$('performance-game'),teamSelect=$('performance-team');
+ if(gameSelect){gameSelect.innerHTML='<option value="all">All games</option>'+feed.games.map(g=>'<option value="'+esc(g.id)+'">'+esc(g.away.abbr+' @ '+g.home.abbr)+'</option>').join('');gameSelect.value=feed.games.some(g=>String(g.id)===performanceGame)?performanceGame:'all';performanceGame=gameSelect.value}
+ if(teamSelect){const teams=[...new Set(feed.games.flatMap(g=>[g.away.abbr,g.home.abbr]))].sort();teamSelect.innerHTML='<option value="all">All teams</option>'+teams.map(team=>'<option value="'+esc(team)+'">'+esc(team)+'</option>').join('');teamSelect.value=teams.includes(performanceTeam)?performanceTeam:'all';performanceTeam=teamSelect.value}
  const current=selectedGame();
  if(!current){
   const fav=feed.games.filter(g=>favourite(g));
@@ -272,6 +301,9 @@ function init(){
  });
  if($('live-date'))$('live-date').addEventListener('change',event=>requestDate(String(event.target.value||'').replaceAll('-','')));
  if($('live-sort'))$('live-sort').addEventListener('change',e=>{sortStat=e.target.value;sortDescending=true;renderSummary()});
+ if($('performance-game'))$('performance-game').addEventListener('change',e=>{performanceGame=e.target.value;renderSummary()});
+ if($('performance-team'))$('performance-team').addEventListener('change',e=>{performanceTeam=e.target.value;renderSummary()});
+ if($('performance-type'))$('performance-type').addEventListener('change',e=>{performanceType=e.target.value;renderSummary()});
  for(const b of document.querySelectorAll('[data-stat-sort]'))b.addEventListener('click',()=>{const key=b.dataset.statSort;sortDescending=sortStat===key?!sortDescending:true;sortStat=key;if($('live-sort'))$('live-sort').value=key;renderSummary()});
  const alertsButton=$('live-alerts-toggle');
  if(alertsButton)alertsButton.addEventListener('click',async()=>{
@@ -284,6 +316,7 @@ function init(){
  });
  document.addEventListener('twinlab:teamchange',()=>{keepVisibleSelection();showGames();loadSelected();loadBatch()});
  document.addEventListener('twinlab:watchlistchange',()=>{keepVisibleSelection();showGames();loadSelected();loadBatch()});
+ fetch('./data/performance-centre.json',{cache:'no-store'}).then(response=>response.ok?response.json():null).then(value=>{history=value;renderSummary()}).catch(()=>{});
 }
 init();
 window.NbaLiveDesk=Object.freeze({setFeed,unavailable,selectGame,parseBoxscore,extractPlays,highlight,fetchSummary});

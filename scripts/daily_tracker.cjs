@@ -74,6 +74,24 @@ function reviewFile(date) {
   return path.join(AUDIT, 'reviews', date, 'review.json');
 }
 
+function gameReviewFile(date, gameId) {
+  return path.join(AUDIT, 'reviews', date, 'games', `${gameId}.review.json`);
+}
+
+function gameReviewFiles(date) {
+  const directory = path.join(AUDIT, 'reviews', date, 'games');
+  if (!fs.existsSync(directory)) return [];
+  return fs.readdirSync(directory).filter(name => /^\d+\.review\.json$/.test(name)).sort().map(name => path.join(directory, name));
+}
+
+function challengeLockForDate(date) {
+  const file = path.join(AUDIT, 'supplements', date, 'challenge.lock.json');
+  if (!fs.existsSync(file)) return null;
+  const value = readJson(file);
+  if (!A.verifyIntegrity(value) || value.melbourne_date !== date) throw new Error(`Challenge lock integrity failed for ${date}`);
+  return { file, value };
+}
+
 function contextProfiles(context, season) {
   const aliases = { GS: 'GSW', NY: 'NYK', SA: 'SAS', NO: 'NOP', UTAH: 'UTA', WSH: 'WAS', PHX: 'PHO', BKN: 'BRK', CHA: 'CHO' };
   const profiles = {};
@@ -294,20 +312,160 @@ async function buildReview(lock, now) {
   return A.withIntegrity(Object.fromEntries(Object.entries(review).filter(([key]) => key !== 'integrity')));
 }
 
+function mergeChallengeForecast(forecast, challenge) {
+  const sidecar = challenge?.games?.find(game => String(game.game_id) === String(forecast.game_id));
+  return sidecar ? { ...forecast, challenge_predictions: sidecar.predictions || {} } : forecast;
+}
+
+function derivedReviewForDate(lock, date, now) {
+  const gameFiles = gameReviewFiles(date);
+  if (!gameFiles.length) return null;
+  const gameArtifacts = gameFiles.map(file => readJson(file));
+  for (const [index, artifact] of gameArtifacts.entries()) if (!A.verifyIntegrity(artifact) || artifact.schema !== 'nba-twin-lab-game-review-v1') {
+    throw new Error(`Per-game review integrity failed for ${path.relative(ROOT, gameFiles[index])}`);
+  }
+  const games = gameArtifacts.flatMap(artifact => artifact.games || []).sort((a, b) => Date.parse(a.tip_utc) - Date.parse(b.tip_utc));
+  return A.withIntegrity({
+    schema: 'nba-twin-lab-daily-review-v3',
+    generated_at_utc: new Date(now).toISOString(), melbourne_date: date,
+    status: games.length === Number(lock.scope?.games) ? 'complete' : 'partial',
+    completed_games: games.length, expected_games: Number(lock.scope?.games || lock.forecasts?.length || 0),
+    source_lock_integrity_sha256: lock.integrity?.canonical_payload_without_integrity || null,
+    rule: 'Derived only from append-only per-game reviews. A final is published independently; incomplete or missing boxes remain pending and are never zero-filled.',
+    game_review_paths: gameFiles.map(file => path.relative(ROOT, file).replaceAll(path.sep, '/')),
+    games, summary: A.summarizeGames(games),
+  });
+}
+
+function writeDerivedReview(lock, date, now) {
+  const review = derivedReviewForDate(lock, date, now);
+  if (!review) return null;
+  const file = reviewFile(date);
+  if (fs.existsSync(file)) {
+    const previous = readJson(file);
+    const comparable = value => Object.fromEntries(Object.entries(value).filter(([key]) => !['generated_at_utc', 'integrity'].includes(key)));
+    if (A.stableStringify(comparable(previous)) === A.stableStringify(comparable(review))) return previous;
+  }
+  writeAtomic(file, review);
+  return review;
+}
+
+async function processFinalGames(lockFile, now, { fetcher = fetchJson, dryRun = false, ignoreExisting = false } = {}) {
+  const lock = readJson(lockFile);
+  if (!A.verifyIntegrity(lock)) throw new Error(`Forecast lock integrity failed: ${path.relative(ROOT, lockFile)}`);
+  const date = lock.scope.melbourne_date;
+  const challenge = challengeLockForDate(date);
+  const outcomes = { reviewed: [], pending: [], existing: [] };
+  for (const forecast of lock.forecasts || []) {
+    const gameId = String(forecast.game_id), destination = gameReviewFile(date, gameId);
+    if (fs.existsSync(destination) && !ignoreExisting) {
+      if (!A.verifyIntegrity(readJson(destination))) throw new Error(`Existing game review integrity failed: ${path.relative(ROOT, destination)}`);
+      outcomes.existing.push(gameId); continue;
+    }
+    if (!(Date.parse(forecast.tip_utc) < now)) { outcomes.pending.push({ game_id: gameId, reason: 'tipoff_not_reached' }); continue; }
+    const url = `${SUMMARY_ENDPOINT}?event=${encodeURIComponent(gameId)}`;
+    try {
+      const raw = await fetcher(url);
+      const actual = A.parseEspnSummary(raw, gameId);
+      const merged = mergeChallengeForecast(forecast, challenge?.value);
+      const oneGameLock = A.withIntegrity({ ...lock, forecasts: [merged] });
+      const scored = A.scoreReview(oneGameLock, { [gameId]: actual }, now);
+      const artifact = A.withIntegrity({
+        schema: 'nba-twin-lab-game-review-v1', reviewed_at_utc: new Date(now).toISOString(),
+        melbourne_date: date, game_id: gameId,
+        source_lock_path: path.relative(ROOT, lockFile).replaceAll(path.sep, '/'),
+        source_lock_sha256: A.sha256(fs.readFileSync(lockFile)),
+        source_lock_integrity_sha256: lock.integrity?.canonical_payload_without_integrity || null,
+        challenge_lock_path: challenge ? path.relative(ROOT, challenge.file).replaceAll(path.sep, '/') : null,
+        challenge_lock_sha256: challenge ? A.sha256(fs.readFileSync(challenge.file)) : null,
+        provider: { name: 'ESPN public NBA summary (unofficial)', url, retrieved_at_utc: new Date(now).toISOString(), response_sha256: A.sha256(raw) },
+        completion_rule: 'Written only after a verified final score and complete player tables for both teams. Missing, postponed, live, or incomplete boxes remain pending.',
+        games: scored.games, summary: scored.summary,
+      });
+      if (dryRun) outcomes.reviewed.push({ game_id: gameId, artifact });
+      else { writeExclusive(destination, artifact); outcomes.reviewed.push({ game_id: gameId }); }
+    } catch (error) {
+      outcomes.pending.push({ game_id: gameId, reason: error.message });
+    }
+  }
+  if (!dryRun) writeDerivedReview(lock, date, now);
+  return outcomes;
+}
+
+function buildPerformanceCentre(now) {
+  const days = [];
+  for (const file of lockFiles()) {
+    const lock = readJson(file), date = lock?.scope?.melbourne_date;
+    if (!date) continue;
+    const reviewPath = reviewFile(date);
+    if (!fs.existsSync(reviewPath)) continue;
+    const review = readJson(reviewPath);
+    const games = (review.games || []).map(game => {
+      const gradeByProvider = new Map((game.player_results || []).filter(row => row.actual?.provider_player_id).map(row => [String(row.actual.provider_player_id), row]));
+      return {
+        game_id: game.game_id, tip_utc: game.tip_utc, home: game.home, away: game.away,
+        players: (game.actual_players || []).map(player => ({
+        id: player.provider_player_id, name: player.name, team: player.team,
+        minutes: player.minutes, pts: player.pts, reb: player.reb, ast: player.ast, three: player.three_pm,
+        stl: player.stl, blk: player.blk, stocks: player.stocks, tov: player.tov, fpts: player.fpts,
+        double_double: player.double_double, triple_double: player.triple_double,
+        projection_grade: gradeByProvider.has(String(player.provider_player_id)) ? {
+          disposition: gradeByProvider.get(String(player.provider_player_id)).disposition,
+          projection_if_play: gradeByProvider.get(String(player.provider_player_id)).projection_if_play,
+          absolute_errors: gradeByProvider.get(String(player.provider_player_id)).absolute_errors,
+        } : null,
+        })),
+      };
+    });
+    days.push({ melbourne_date: date, status: review.status || 'complete', completed_games: games.length,
+      expected_games: review.expected_games || lock.scope.games, games });
+  }
+  const logs = new Map();
+  for (const day of days) for (const game of day.games) for (const player of game.players) {
+    const key = player.id || `${player.team}:${A.normalizeName(player.name)}`;
+    if (!logs.has(key)) logs.set(key, { id: player.id, name: player.name, team: player.team, games: [] });
+    logs.get(key).games.push({ melbourne_date: day.melbourne_date, game_id: game.game_id, ...player });
+  }
+  const meanStat = (games, stat) => {
+    const values = games.map(game => finite(game[stat])).filter(Number.isFinite);
+    return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
+  };
+  const players = [...logs.values()].map(player => {
+    player.games.sort((a, b) => b.melbourne_date.localeCompare(a.melbourne_date));
+    const form = count => Object.fromEntries(['pts', 'reb', 'ast', 'three', 'fpts'].map(stat => [stat, meanStat(player.games.slice(0, count), stat)]));
+    return { ...player, last5: { games: Math.min(5, player.games.length), averages: form(5) }, last10: { games: Math.min(10, player.games.length), averages: form(10) } };
+  });
+  const payload = { schema: 'nba-twin-lab-performance-centre-v1', generated_at_utc: new Date(now).toISOString(),
+    source: 'Append-only verified ESPN final-game reviews; live games are layered in the browser and labelled live.',
+    fantasy_formula: 'ESPN default: PTS + 3PM + 2 FGM - FGA + FTM - FTA + REB + 2 AST + 4 STL + 4 BLK - 2 TOV',
+    days: days.sort((a, b) => a.melbourne_date.localeCompare(b.melbourne_date)), players };
+  const destination = path.join(DATA, 'performance-centre.json');
+  if (fs.existsSync(destination)) {
+    const previous = readJson(destination);
+    const comparable = value => Object.fromEntries(Object.entries(value).filter(([key]) => key !== 'generated_at_utc'));
+    if (A.stableStringify(comparable(previous)) === A.stableStringify(comparable(payload))) return previous;
+  }
+  writeAtomic(destination, payload);
+  return payload;
+}
+
 function recordsForLedger() {
   const records = [];
   for (const file of lockFiles()) {
     const lock = readJson(file), date = lock?.scope?.melbourne_date;
     if (!date) continue;
     const reviewPath = reviewFile(date), review = fs.existsSync(reviewPath) ? readJson(reviewPath) : null;
+    const completedGames = review?.games?.length || 0, expectedGames = Number(lock.scope.games || lock.forecasts?.length || 0);
     const lockRelative = path.relative(ROOT, file).replaceAll(path.sep, '/');
     const reviewRelative = review ? path.relative(ROOT, reviewPath).replaceAll(path.sep, '/') : null;
     records.push({
       review,
       entry: {
         melbourne_date: date,
-        status: review ? 'reviewed' : 'locked_awaiting_results',
+        status: completedGames === expectedGames && expectedGames > 0 ? 'reviewed' : completedGames ? 'partially_reviewed' : 'locked_awaiting_results',
         game_count: lock.scope.games,
+        reviewed_game_count: completedGames,
+        pending_game_count: Math.max(0, expectedGames - completedGames),
         player_projection_count: lock.scope.player_projections ?? (lock.forecasts || []).reduce((n, game) => n + (game.v9_player_projections || []).length, 0),
         locked_at_utc: lock.locked_at_utc, locked_at_melbourne: lock.locked_at_melbourne,
         lock_path: lockRelative, lock_sha256: A.sha256(fs.readFileSync(file)),
@@ -345,9 +503,12 @@ function verifyAll() {
   for (const file of filesUnder(path.join(AUDIT, 'reviews'), 'review.json')) {
     if (!A.verifyIntegrity(readJson(file))) throw new Error(`Review integrity failed: ${path.relative(ROOT, file)}`);
   }
+  const gameReviews = fs.existsSync(path.join(AUDIT, 'reviews')) ? fs.readdirSync(path.join(AUDIT, 'reviews'), { withFileTypes: true }).flatMap(entry =>
+    entry.isDirectory() ? gameReviewFiles(entry.name) : []) : [];
+  for (const file of gameReviews) if (!A.verifyIntegrity(readJson(file))) throw new Error(`Game review integrity failed: ${path.relative(ROOT, file)}`);
   const ledger = readJson(path.join(DATA, 'audit-ledger.json'));
   if (ledger.schema !== 'nba-twin-lab-audit-ledger-v2' || !Array.isArray(ledger.entries)) throw new Error('Ledger schema invalid');
-  console.log(`Verified ${lockFiles().length} immutable lock(s), ${filesUnder(path.join(AUDIT, 'reviews'), 'review.json').length} review(s), and the derived ledger`);
+  console.log(`Verified ${lockFiles().length} immutable lock(s), ${gameReviews.length} append-only game review(s), ${filesUnder(path.join(AUDIT, 'reviews'), 'review.json').length} daily roll-up(s), and the derived ledger`);
 }
 
 function reviewWindowOpen(lock, now) {
@@ -385,21 +546,13 @@ async function run(options) {
     }
   }
   for (const file of lockFiles()) {
-    const lock = readJson(file), reviewPath = reviewFile(lock.scope.melbourne_date);
-    if (fs.existsSync(reviewPath)) continue;
-    if (!reviewWindowOpen(lock, now)) continue;
     try {
-      const review = await buildReview(lock, now);
-      if (options.dryRun) console.log(JSON.stringify(review, null, 2));
-      else {
-        writeExclusive(reviewPath, review);
-        console.log(`Reviewed ${review.games.length} games for ${lock.scope.melbourne_date}`);
-      }
-    } catch (error) {
-      console.log(`Review deferred safely for ${lock.scope.melbourne_date}: ${error.message}`);
-    }
+      const result = await processFinalGames(file, now, { dryRun: options.dryRun });
+      if (result.reviewed.length) console.log(`Reviewed ${result.reviewed.length} newly completed game(s) for ${readJson(file).scope.melbourne_date}`);
+      if (result.pending.length) console.log(`${result.pending.length} game(s) remain pending final/complete box data for ${readJson(file).scope.melbourne_date}`);
+    } catch (error) { console.log(`Per-game review deferred safely: ${error.message}`); }
   }
-  if (!options.dryRun) buildLedger(now);
+  if (!options.dryRun) { buildLedger(now); buildPerformanceCentre(now); }
 }
 
 async function main() {
@@ -417,6 +570,7 @@ async function main() {
 if (require.main === module) main().catch(error => { console.error(error.stack || error.message); process.exit(1); });
 
 module.exports = {
-  buildLock, buildReview, buildLedger, verifyAll, reviewWindowOpen, v9Projections, contextProfiles,
+  buildLock, buildReview, buildLedger, buildPerformanceCentre, processFinalGames, derivedReviewForDate,
+  verifyAll, reviewWindowOpen, v9Projections, contextProfiles, gameReviewFile,
   LOCK_MINUTES_BEFORE_TIP, LOCK_MAX_MINUTES_BEFORE_TIP,
 };

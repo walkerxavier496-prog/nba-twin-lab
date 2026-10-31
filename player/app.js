@@ -22,6 +22,7 @@ function renderHero(){
  $('player-team-link').textContent='EXPLORE '+teamName.toUpperCase()+' ↗';
  $('player-espn-link').href=good?'https://www.espn.com/nba/player/_/id/'+encodeURIComponent(id):'https://www.espn.com/nba/';
  if(good)$('player-portrait').innerHTML='<img src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(id)+'.png" alt="" onerror="this.style.display=\'none\'">';
+ const follow=$('player-follow');if(follow&&follow.dataset&&good){follow.dataset.watchPlayer=id;follow.dataset.watchName=shown;follow.dataset.watchPlayerTeam=team;window.TwinWatchlist?.sync?.()}
 }
 function parseStats(data){
  const stats=data?.statistics;
@@ -85,6 +86,28 @@ async function load(){
   if(!good&&/^\d{4,10}$/.test(String(found.player_id)))$('player-portrait').innerHTML='<img src="https://cdn.nba.com/headshots/nba/latest/260x190/'+encodeURIComponent(found.player_id)+'.png" alt="" onerror="this.style.display=\'none\'">';
  }catch(e){$('player-research').innerHTML='<p class="team-empty">'+esc(e.message)+'. No substitute performance data has been invented.</p>'}
 }
+async function loadPerformance(){
+ try{
+  const response=await fetch('../data/performance-centre.json',{cache:'no-store'});
+  if(!response.ok)throw Error('Verified performance archive is not published yet');
+  const data=await response.json();
+  const player=(data.players||[]).find(p=>good&&String(p.id)===id)||(data.players||[]).find(p=>key(p.name)===key(verifiedName||name)&&(!team||window.TwinTeamPrefs?.canonical?.(p.team)===team));
+  if(!player||!player.games?.length)throw Error('No complete final-game record is available for this player');
+  const form=(label,row)=>metric(label,row.games?fmt(row.averages?.pts)+' PPG':'—',row.games+' verified game'+(row.games===1?'':'s'));
+  $('player-form').innerHTML=form('LAST 5',player.last5)+form('LAST 10',player.last10)+
+   metric('LAST 5 REB',fmt(player.last5?.averages?.reb),'Verified average')+metric('LAST 5 AST',fmt(player.last5?.averages?.ast),'Verified average')+
+   metric('LAST 5 3PM',fmt(player.last5?.averages?.three),'Verified average')+metric('LAST 5 FPTS',fmt(player.last5?.averages?.fpts),'ESPN default scoring');
+  $('player-log').innerHTML=player.games.map(game=>{
+   const grade=game.projection_grade,errors=grade?.absolute_errors||{},projection=grade?.projection_if_play||{};
+   const gradeText=grade?.disposition==='played_scored'?'PTS '+fmt(projection.pts)+' → '+fmt(game.pts)+' (|e| '+fmt(errors.pts)+')':'No eligible frozen projection';
+   return '<tr><td><a href="../game/?id='+encodeURIComponent(game.game_id)+'">'+esc(game.melbourne_date)+'</a></td><td>'+fmt(game.pts,0)+'</td><td>'+fmt(game.reb,0)+'</td><td>'+fmt(game.ast,0)+'</td><td>'+fmt(game.three,0)+'</td><td>'+fmt(game.minutes,1)+'</td><td>'+fmt(game.fpts,1)+'</td><td>'+esc(gradeText)+'</td></tr>';
+  }).join('');
+  $('player-form-note').textContent=data.source+' Last-5/10 sample sizes are shown explicitly; no missing game is treated as zero.';
+ }catch(error){
+  $('player-form').innerHTML='<p class="team-empty">'+esc(error.message)+'. Nothing has been backfilled or estimated.</p>';
+  $('player-log').innerHTML='<tr><td colspan="8">No verified append-only game log is available.</td></tr>';
+ }
+}
 renderHero();
-load();
+load().finally(loadPerformance);
 })();

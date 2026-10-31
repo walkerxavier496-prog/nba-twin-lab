@@ -142,12 +142,43 @@ function showTeam(){
  $('game-team-stats').innerHTML='<div class="game-team-metric-head"><span>'+logo(a)+' '+esc(a.abbr)+'</span><span>'+logo(b)+' '+esc(b.abbr)+'</span></div>'+
  (rows.length?rows.join(''):fallback);
 }
+const machineLabels={m1_elo:'Elo',m2_science:'Basketball Science',m3_player_roster:'Player / Roster',m4_monte_carlo:'Monte Carlo',m5_regularized_ml:'Regularized ML',m6_ensemble:'Ensemble'};
+const machineNum=(value,digits=3)=>Number.isFinite(Number(value))?Number(value).toFixed(digits):'—';
+const metricValue=(stats,keys)=>keys.map(key=>stats?.[key]).find(value=>value!==undefined&&value!==null&&value!=='');
+function machineRows(models,final){
+ const rows=Object.entries(models||{}).filter(([key])=>/^m[1-6]_/.test(key));
+ return rows.length?'<div class="machine-table-scroll"><table class="machine-table"><thead><tr><th>ENGINE</th><th>PICK</th><th>PROB.</th>'+(final?'<th>RESULT</th><th>BRIER ↓</th><th>LOG LOSS ↓</th><th>SCORE P→A</th><th>SCORE MAE ↓</th><th>MARGIN |E| ↓</th>':'<th>STATUS</th>')+'</tr></thead><tbody>'+rows.map(([key,row])=>{
+  const p=safeNum(row.p??row.home_win_probability),pick=p===null?'—':p>=.5?game.home.abbr:game.away.abbr,prob=p===null?'—':(Math.max(p,1-p)*100).toFixed(1)+'%';
+  const scores=Number.isFinite(row.away_score)&&Number.isFinite(row.home_score)?machineNum(row.away_score,0)+'–'+machineNum(row.home_score,0)+' → '+game.away.score+'–'+game.home.score:'—';
+  return '<tr><td>'+esc(machineLabels[key]||row.label||key)+'</td><td><b>'+esc(pick)+'</b></td><td>'+prob+'</td>'+(final?'<td class="'+(row.correct?'machine-correct':'machine-wrong')+'">'+(row.correct?'✓ CORRECT':'✕ MISSED')+'</td><td>'+machineNum(row.brier)+'</td><td>'+machineNum(row.log_loss)+'</td><td>'+scores+'</td><td>'+machineNum(row.score_mae_per_team,1)+'</td><td>'+machineNum(row.margin_abs_error,1)+'</td>':'<td>FROZEN PRETIP</td>')+'</tr>';
+ }).join('')+'</tbody></table></div>':'<p class="game-empty">The six-engine sidecar is unavailable for this matchup. No model result has been reconstructed after tipoff.</p>';
+}
+function playerGrades(reviewGame){
+ const rows=(reviewGame?.player_results||[]).filter(row=>row.disposition==='played_scored');
+ if(!rows.length)return '<p class="game-empty">No eligible participating-player projection grades are available.</p>';
+ return '<div class="machine-table-scroll"><table class="machine-table machine-player-grades"><thead><tr><th>PLAYER</th><th>PTS P→A · |E|</th><th>REB P→A · |E|</th><th>AST P→A · |E|</th><th>3PM P→A · |E|</th><th>MIN |E|</th></tr></thead><tbody>'+rows.map(row=>{
+  const cell=(key,d=1)=>machineNum(row.projection_if_play?.[key],d)+' → '+machineNum(row.actual?.[key],d)+' · '+machineNum(row.absolute_errors?.[key],d);
+  return '<tr><td><a href="../player/?id='+encodeURIComponent(row.actual?.provider_player_id||'')+'&name='+encodeURIComponent(row.name)+'&team='+encodeURIComponent(row.team)+'">'+esc(row.name)+'</a></td><td>'+cell('pts')+'</td><td>'+cell('reb')+'</td><td>'+cell('ast')+'</td><td>'+cell('three_pm')+'</td><td>'+machineNum(row.absolute_errors?.minutes,1)+'</td></tr>';
+ }).join('')+'</tbody></table></div><p class="game-disclaimer">Actual FPTS is shown in the box score. A projected FPTS grade is unavailable because the frozen player model did not project every required ESPN category (including steals, blocks and turnovers); it is not backfilled after the game.</p>';
+}
+function postgameEvidence(reviewGame){
+ const a=reviewGame?.away?.abbr,h=reviewGame?.home?.abbr,stats=reviewGame?.team_stats||{},away=stats[a]||{},home=stats[h]||{};
+ const display=abbr=>abbr==='WAS'?'WSH':abbr;
+ const evidence=[['FIELD GOAL %',['fieldgoalpct','fieldgoalpercentage']],['3 POINT %',['threepointfieldgoalpct','threepointpercentage']],['REBOUNDS',['totalrebounds','rebounds']],['TURNOVERS',['turnovers']],['ASSISTS',['assists']]];
+ const available=evidence.map(([label,keys])=>({label,away:metricValue(away,keys),home:metricValue(home,keys)})).filter(row=>row.away!=null||row.home!=null);
+ if(!available.length)return '<p class="game-empty">The provider final is verified, but comparable team-factor fields were not included. No postgame explanation is invented.</p>';
+ return '<div class="postgame-evidence"><div class="postgame-evidence-head"><b>'+esc(display(a))+'</b><span>VERIFIED FACTOR</span><b>'+esc(display(h))+'</b></div>'+available.map(row=>'<div><b>'+esc(row.away??'—')+'</b><span>'+esc(row.label)+'</span><b>'+esc(row.home??'—')+'</b></div>').join('')+'</div><p class="machine-hypothesis"><b>Evidence vs explanation:</b> these are observed box-score differences. They do not, by themselves, prove why the forecast missed or succeeded; lineup, availability and matchup explanations remain hypotheses unless separately sourced.</p>';
+}
+function melbourneIsoDate(value){
+ const parts=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(value));
+ const get=type=>parts.find(part=>part.type===type)?.value;return get('year')+'-'+get('month')+'-'+get('day');
+}
 async function showMachine(){
  const root=$('game-forecast');if(!root||!game)return;
  root.innerHTML='<p>Checking immutable pregame forecasts…</p>';
  try{
   const ledger=await (await fetch('../data/audit-ledger.json',{cache:'no-store'})).json();
-  const date=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(game.date));
+  const date=melbourneIsoDate(game.date);
   const entries=(ledger.entries||[]).filter(e=>e.lock_path).sort((a,b)=>String(b.melbourne_date).localeCompare(String(a.melbourne_date)));
   const candidates=entries.filter(e=>e.melbourne_date===date);
   for(const entry of candidates){
@@ -155,11 +186,17 @@ async function showMachine(){
    const lock=await response.json();
    const snapshot=lock.forecasts?.find(g=>String(g.game_id)===String(id));
    if(!snapshot||!lock.locked_at_utc||!(Date.parse(lock.locked_at_utc)<Date.parse(snapshot.tip_utc)))continue;
-   const p=snapshot.primary_forecast;
-   root.innerHTML='<div class="game-lock"><div class="eyebrow">IMMUTABLE FORECAST BEFORE TIPOFF</div>'+
+   let reviewGame=null;
+   if(entry.review_path){try{const reviewResponse=await fetch('../'+entry.review_path,{cache:'no-store'});if(reviewResponse.ok){const review=await reviewResponse.json();reviewGame=(review.games||[]).find(item=>String(item.game_id)===String(id))||null}}catch(e){}}
+   let frozen={};
+   try{const side=await fetch('../audit/supplements/'+encodeURIComponent(date)+'/challenge.lock.json',{cache:'no-store'});if(side.ok){const value=await side.json();frozen=(value.games||[]).find(item=>String(item.game_id)===String(id))?.predictions||{}}}catch(e){}
+   const p=snapshot.primary_forecast,final=!!reviewGame;
+   root.innerHTML='<div class="game-lock"><div class="eyebrow">IMMUTABLE FORECAST · '+(final?'MACHINES VS REALITY':'BEFORE TIPOFF')+'</div>'+
     '<div class="game-lock-score">'+esc(p?.winner||'—')+' <strong>'+((p?.winner_probability??0)*100).toFixed(1)+'%</strong></div>'+
-    '<p>Elo win prediction, locked '+esc(fmt(lock.locked_at_utc))+'. Model scores are projections, never game results.</p>'+
-    '<a class="btn primary" href="../challenge/daily.html?game='+encodeURIComponent(id)+'#matchups">ALL SIX MODEL PREDICTIONS ↗</a></div>';return;
+    '<p>Original production forecast locked '+esc(fmt(lock.locked_at_utc))+'. '+(final?'The rows below grade the separately frozen six-engine experiment against this verified final.':'No live score is used to recalculate these predictions.')+'</p></div>'+
+    '<section class="machine-section"><h3>'+ (final?'SIX ENGINES VS REALITY':'SIX FROZEN ENGINES') +'</h3>'+machineRows(final?reviewGame.models:frozen,final)+'</section>'+
+    (final?'<section class="machine-section"><h3>PLAYER FORECASTS VS ACTUALS</h3>'+playerGrades(reviewGame)+'</section><section class="machine-section"><h3>POSTGAME INTELLIGENCE · OBSERVED EVIDENCE</h3>'+postgameEvidence(reviewGame)+'</section>':'<p class="game-disclaimer">Automatic grading appears after this individual game is final and both player tables are complete. It does not wait for the full slate.</p>')+
+    '<a class="btn primary" href="../audit/">FULL MODEL LEADERBOARD ↗</a>';return;
   }
   root.innerHTML='<p class="game-empty">No verified immutable pregame forecast exists for this game. We won’t generate a hindsight pick.</p>';
  }catch(e){root.innerHTML='<p class="game-empty">The locked-prediction ledger is currently unavailable. No forecast has been invented.</p>'}
@@ -206,7 +243,7 @@ async function refresh(){
  }finally{pending=false}
 }
 function start(){
- installTabs();activate('box');
+ installTabs();const requested=new URLSearchParams(location.search).get('tab');activate(['box','plays','team','machine'].includes(requested)?requested:'box');
  if(!valid(id)){ $('game-state').textContent='INVALID GAME ID';$('game-clock').textContent='Open a game from Live Games to see its details.';return }
  refresh();if(typeof setInterval==='function')setInterval(()=>{if(document.visibilityState!=='hidden')refresh()},60000);
 }

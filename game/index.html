@@ -3,8 +3,8 @@
 <meta name="description" content="NBA Twin Lab Game Centre — live NBA scores, quarter scores, player box scores, play-by-play, team stats and locked model predictions.">
 <title>Game Centre · NBA Twin Lab</title>
 <link rel="stylesheet" href="../assets/site-shell.css"><link rel="stylesheet" href="../assets/v12.css"><link rel="stylesheet" href="../assets/dark-v13.css"><link rel="stylesheet" href="../assets/nav-v15.css">
-<link rel="stylesheet" href="../assets/game-page.css">
-<script defer src="../assets/site-shell.js?v19_2"></script><script defer src="../assets/team-media.js"></script><script defer src="../assets/live-scoreboard.js"></script><script defer src="../assets/boxscore-plus.js"></script><script defer src="../assets/live-desk.js?v19_4"></script><script defer src="../assets/team-prefs.js?v19_3"></script><script defer src="../assets/site-nav.js?v20_2"></script><script defer src="../assets/game-page.js?v19_4"></script>
+<link rel="stylesheet" href="../assets/game-page.css?v21_2">
+<script defer src="../assets/site-shell.js?v19_2"></script><script defer src="../assets/team-media.js"></script><script defer src="../assets/live-scoreboard.js"></script><script defer src="../assets/boxscore-plus.js"></script><script defer src="../assets/live-desk.js?v21_2"></script><script defer src="../assets/team-prefs.js?v19_3"></script><script defer src="../assets/site-nav.js?v20_2"></script><script defer src="../assets/game-page.js?v21_3"></script>
 <link rel="stylesheet" href="../assets/sortable-v17.css"><script defer src="../assets/sortable-tables.js"></script><link rel="stylesheet" href="../assets/watchlist-v17.css"><script defer src="../assets/watchlist.js"></script><link rel="stylesheet" href="../assets/v19-concept3.css?v19_4"></head><body class="v12 game-page">
 <a class="site-skip" href="#site-main">Skip to game centre</a>
 <header class="app-header"><div class="header-inner">
@@ -30,7 +30,7 @@
  <button id="tab-box" role="tab" aria-selected="true" aria-controls="pane-box" tabindex="0" data-tab="box">BOX SCORE</button>
  <button id="tab-plays" role="tab" aria-selected="false" aria-controls="pane-plays" tabindex="-1" data-tab="plays">PLAY-BY-PLAY</button>
  <button id="tab-team" role="tab" aria-selected="false" aria-controls="pane-team" tabindex="-1" data-tab="team">TEAM STATS</button>
- <button id="tab-machine" role="tab" aria-selected="false" aria-controls="pane-machine" tabindex="-1" data-tab="machine">THE MACHINE</button>
+ <button id="tab-machine" role="tab" aria-selected="false" aria-controls="pane-machine" tabindex="-1" data-tab="machine">THE MACHINE · VS REALITY</button>
 </div>
 <section id="pane-box" class="game-tab-panel" role="tabpanel" aria-labelledby="tab-box">
  <div class="game-panel-top"><div><div class="eyebrow">ACTUAL PERFORMANCE</div><h2>PLAYER BOX SCORE.</h2></div><span class="game-source">ESPN game summary</span></div>
@@ -46,7 +46,7 @@
  <div id="game-team-stats" class="game-team-stats"><p>Loading team statistics…</p></div>
 </section>
 <section id="pane-machine" class="game-tab-panel" role="tabpanel" aria-labelledby="tab-machine" hidden>
- <div class="game-panel-top"><div><div class="eyebrow">THE MACHINE / FROZEN PREGAME</div><h2>BEFORE THE TIP.</h2></div><span class="game-source">Pre-game, not a live prediction</span></div>
+ <div class="game-panel-top"><div><div class="eyebrow">FROZEN PREGAME / VERIFIED FINAL</div><h2>MACHINES VS REALITY.</h2></div><span class="game-source">Six engines · automatic postgame grading</span></div>
  <div id="game-forecast"><p>Looking for an immutable pretip prediction…</p></div>
  <p class="game-disclaimer">No forecast is recalculated using live scores. Historical predictions and research are kept separate from the actual game.</p>
 </section>

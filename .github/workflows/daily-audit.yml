@@ -8,9 +8,9 @@ on:
         required: false
         type: string
   schedule:
-    # GitHub cron is UTC and cannot follow Australian DST. Run hourly; the script
-    # discovers Australia/Melbourne time and acts only in its safe pre/post windows.
-    - cron: '37 * * * *'
+    # GitHub cron is UTC and cannot follow Australian DST. Poll every 15 minutes;
+    # each final game is append-only and idempotent, while incomplete boxes stay pending.
+    - cron: '*/15 * * * *'
 
 permissions:
   contents: write
@@ -46,19 +46,17 @@ jobs:
         run: python scripts/build_official_availability.py
       - name: Test lock, timezone and scoring rules
         run: node --test tests/challenge_daily.test.cjs tests/daily_audit.test.cjs tests/prediction_engine.test.cjs tests/monte_carlo.test.cjs tests/site_navigation.test.cjs tests/roster_integrity_v18.test.cjs
-      - name: Lock eligible slate or ingest complete finals
+      - name: Lock eligible slate or ingest each complete final independently
         run: node scripts/daily_tracker.cjs run
-      - name: Review separately locked 31 Oct six-model sidecar if final results exist
-        run: |
-          node scripts/challenge_supplement.cjs review
-          node scripts/challenge_supplement.cjs verify
+      - name: Verify separately locked 31 Oct six-model sidecar
+        run: node scripts/challenge_supplement.cjs verify
       - name: Verify immutable artifacts and derived ledger
         run: node scripts/daily_tracker.cjs verify
       - name: Publish new append-only artifacts
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add audit data/audit-ledger.json data/availability-current.json
+          git add audit data/audit-ledger.json data/performance-centre.json data/availability-current.json
           if git diff --cached --quiet; then
             echo 'No eligible ledger change this run' >> "$GITHUB_STEP_SUMMARY"
             exit 0

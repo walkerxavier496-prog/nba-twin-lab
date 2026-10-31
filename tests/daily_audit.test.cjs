@@ -106,10 +106,66 @@ test('review metrics score played players only and never turn DNP or absent play
   assert.deepEqual(review.summary.player_stats, {
     pts: { count: 1, mae: 4 }, reb: { count: 1, mae: 2 },
     ast: { count: 1, mae: 1 }, three_pm: { count: 1, mae: 1 },
+    minutes: { count: 0, mae: null },
   });
   assert.equal(review.games[0].player_counts.played_scored, 1);
   assert.equal(review.games[0].player_counts.dnp_excluded, 1);
   assert.equal(review.games[0].player_counts.not_listed_excluded, 1);
+});
+
+test('complete ESPN categories produce the documented ESPN fantasy score and defensive totals', () => {
+  const labels = ['MIN', 'PTS', 'FG', '3PT', 'FT', 'REB', 'AST', 'STL', 'BLK', 'TO', 'OREB', 'DREB', '+/-'];
+  const row = (name, pts = 20) => ({ athlete: { id: name, displayName: name }, stats: ['30:00', String(pts), '7-15', '3-7', '3-4', '8', '6', '2', '1', '4', '2', '6', '+5'] });
+  const payload = {
+    header: { id: 'g2', competitions: [{ id: 'g2', status: { type: { completed: true } }, competitors: [
+      { homeAway: 'home', score: '111', team: { abbreviation: 'BOS' } },
+      { homeAway: 'away', score: '109', team: { abbreviation: 'NYK' } },
+    ] }] },
+    boxscore: { players: [
+      { team: { abbreviation: 'NYK' }, statistics: [{ labels, athletes: Array.from({ length: 5 }, (_, i) => row(`Away ${i}`)) }] },
+      { team: { abbreviation: 'BOS' }, statistics: [{ labels, athletes: Array.from({ length: 5 }, (_, i) => row(`Home ${i}`, 22)) }] },
+    ] },
+  };
+  const parsed = A.parseEspnSummary(payload, 'g2');
+  assert.equal(parsed.teams.NYK[0].stocks, 3);
+  assert.equal(parsed.teams.NYK[0].fpts, 45);
+  assert.equal(parsed.teams.NYK[0].double_double, false);
+});
+
+test('one verified final is graded independently while every other game stays pending', async () => {
+  const lockPath = path.join(ROOT, 'practice/2026-10-31-melbourne/forecast.lock.json');
+  const lock = JSON.parse(fs.readFileSync(lockPath));
+  const first = lock.forecasts[0];
+  const labels = ['MIN', 'PTS', 'FG', '3PT', 'FT', 'REB', 'AST', 'STL', 'BLK', 'TO'];
+  const athletes = prefix => Array.from({ length: 5 }, (_, i) => ({
+    athlete: { id: `${prefix}-${i}`, displayName: `${prefix} Player ${i}` },
+    stats: ['30:00', String(10 + i), '4-9', '1-3', '1-2', '5', '3', '1', '0', '2'],
+  }));
+  const finalPayload = {
+    header: { id: first.game_id, competitions: [{ id: first.game_id, status: { type: { completed: true } }, competitors: [
+      { homeAway: 'home', score: '112', team: { abbreviation: first.home.abbr } },
+      { homeAway: 'away', score: '105', team: { abbreviation: first.away.abbr } },
+    ] }] },
+    boxscore: { players: [
+      { team: { abbreviation: first.away.abbr }, statistics: [{ labels, athletes: athletes('Away') }] },
+      { team: { abbreviation: first.home.abbr }, statistics: [{ labels, athletes: athletes('Home') }] },
+    ] },
+  };
+  const result = await T.processFinalGames(lockPath, Date.parse('2026-11-01T00:00:00Z'), {
+    dryRun: true,
+    ignoreExisting: true,
+    fetcher: async url => url.includes(first.game_id) ? finalPayload : (() => { throw Error('ESPN game is not final'); })(),
+  });
+  assert.equal(result.reviewed.length, 1);
+  assert.equal(result.pending.length, 9);
+  const artifact = result.reviewed[0].artifact;
+  assert.equal(artifact.schema, 'nba-twin-lab-game-review-v1');
+  assert.equal(artifact.games.length, 1);
+  assert.deepEqual(Object.keys(artifact.games[0].models).filter(id => /^m[1-6]_/.test(id)).sort(), [
+    'm1_elo', 'm2_science', 'm3_player_roster', 'm4_monte_carlo', 'm5_regularized_ml', 'm6_ensemble',
+  ]);
+  assert.equal(artifact.games[0].actual_players.length, 10);
+  assert.equal(A.verifyIntegrity(artifact), true);
 });
 
 test('historical pretip forecast remains immutable and a post-tip rebuilding attempt fails closed', () => {

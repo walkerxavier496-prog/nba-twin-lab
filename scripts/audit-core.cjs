@@ -2,7 +2,7 @@
 
 const crypto = require('node:crypto');
 
-const STAT_KEYS = ['pts', 'reb', 'ast', 'three_pm'];
+const STAT_KEYS = ['pts', 'reb', 'ast', 'three_pm', 'minutes'];
 const MODEL_LABELS = {
   production_elo_v7: 'Production Elo v7',
   possession_monte_carlo_v5: 'Possession Monte Carlo v5',
@@ -118,6 +118,19 @@ function madeThrees(value) {
   return finite(value);
 }
 
+function madeAttempted(value) {
+  if (typeof value !== 'string' || !value.includes('-')) return { made: null, attempted: null };
+  const [made, attempted] = value.split('-').map(finite);
+  return { made, attempted };
+}
+
+function fantasyPoints(player) {
+  const keys = ['pts', 'three_pm', 'fgm', 'fga', 'ftm', 'fta', 'reb', 'ast', 'stl', 'blk', 'tov'];
+  if (keys.some(key => !Number.isFinite(player?.[key]))) return null;
+  return Math.round((player.pts + player.three_pm + 2 * player.fgm - player.fga + player.ftm - player.fta +
+    player.reb + 2 * player.ast + 4 * player.stl + 4 * player.blk - 2 * player.tov) * 10) / 10;
+}
+
 function parseEspnSummary(payload, expectedGameId = null) {
   const competition = payload?.header?.competitions?.[0];
   const competitors = competition?.competitors;
@@ -143,7 +156,10 @@ function parseEspnSummary(payload, expectedGameId = null) {
       const stats = row.stats || [];
       const minutes = parseMinutes(stats[index.MIN]);
       const didNotPlay = row.didNotPlay === true;
-      return {
+      const fg = madeAttempted(stats[index.FG]);
+      const three = madeAttempted(stats[index['3PT']]);
+      const ft = madeAttempted(stats[index.FT]);
+      const player = {
         provider_player_id: String(row?.athlete?.id || ''),
         name: String(row?.athlete?.displayName || ''),
         normalized_name: normalizeName(row?.athlete?.displayName),
@@ -155,7 +171,19 @@ function parseEspnSummary(payload, expectedGameId = null) {
         reb: finite(stats[index.REB]),
         ast: finite(stats[index.AST]),
         three_pm: madeThrees(stats[index['3PT']]),
+        fgm: fg.made, fga: fg.attempted, ftm: ft.made, fta: ft.attempted,
+        stl: Number.isInteger(index.STL) ? finite(stats[index.STL]) : null,
+        blk: Number.isInteger(index.BLK) ? finite(stats[index.BLK]) : null,
+        tov: Number.isInteger(index.TO) ? finite(stats[index.TO]) : Number.isInteger(index.TOV) ? finite(stats[index.TOV]) : null,
+        oreb: Number.isInteger(index.OREB) ? finite(stats[index.OREB]) : null,
+        dreb: Number.isInteger(index.DREB) ? finite(stats[index.DREB]) : null,
+        plus_minus: Number.isInteger(index['+/-']) ? finite(stats[index['+/-']]) : null,
       };
+      player.fpts = fantasyPoints(player);
+      player.stocks = Number.isFinite(player.stl) && Number.isFinite(player.blk) ? player.stl + player.blk : null;
+      player.double_double = ['pts', 'reb', 'ast', 'stl', 'blk'].filter(key => Number.isFinite(player[key]) && player[key] >= 10).length >= 2;
+      player.triple_double = ['pts', 'reb', 'ast', 'stl', 'blk'].filter(key => Number.isFinite(player[key]) && player[key] >= 10).length >= 3;
+      return player;
     });
   }
   const homeAbbr = canonicalTeam(home?.team?.abbreviation), awayAbbr = canonicalTeam(away?.team?.abbreviation);
@@ -163,25 +191,41 @@ function parseEspnSummary(payload, expectedGameId = null) {
   for (const abbr of [homeAbbr, awayAbbr]) {
     if (teams[abbr].filter(player => player.played).length < 5) throw new Error(`ESPN box score has too few participants for ${abbr}`);
   }
+  const teamStats = {};
+  for (const group of payload?.boxscore?.teams || []) {
+    const team = canonicalTeam(group?.team?.abbreviation);
+    if (!team) continue;
+    teamStats[team] = Object.fromEntries((group.statistics || []).map(stat => [
+      String(stat.name || stat.label || stat.abbreviation || '').toLowerCase(),
+      stat.displayValue ?? stat.value ?? null,
+    ]).filter(([key]) => key));
+  }
   return {
     game_id: String(expectedGameId || gameId),
     home: { abbr: homeAbbr, score: homeScore },
     away: { abbr: awayAbbr, score: awayScore },
-    teams,
+    teams, team_stats: teamStats,
   };
 }
 
 function probabilityMetrics(rows) {
   const valid = rows.filter(row => Number.isFinite(row.p) && (row.actual === 0 || row.actual === 1));
+  const accuracy = mean(valid.map(row => (row.p >= 0.5) === (row.actual === 1) ? 1 : 0));
+  const meanConfidence = mean(valid.map(row => Math.max(row.p, 1 - row.p)));
+  const confidenceGap = meanConfidence === null || accuracy === null ? null : meanConfidence - accuracy;
   return {
     count: valid.length,
-    accuracy: mean(valid.map(row => (row.p >= 0.5) === (row.actual === 1) ? 1 : 0)),
+    accuracy,
     brier: mean(valid.map(row => (row.p - row.actual) ** 2)),
     log_loss: mean(valid.map(row => {
       const p = clamp(row.p, 1e-12, 1 - 1e-12);
       return -(row.actual * Math.log(p) + (1 - row.actual) * Math.log(1 - p));
     })),
     score_mae_per_team: mean(valid.filter(row => Number.isFinite(row.score_mae_per_team)).map(row => row.score_mae_per_team)),
+    margin_mae: mean(valid.filter(row => Number.isFinite(row.margin_abs_error)).map(row => row.margin_abs_error)),
+    mean_confidence: meanConfidence,
+    confidence_gap: confidenceGap,
+    confidence_assessment: valid.length < 10 ? 'insufficient_sample' : confidenceGap > 0.05 ? 'overconfident' : confidenceGap < -0.05 ? 'underconfident' : 'approximately_calibrated',
   };
 }
 
@@ -241,6 +285,9 @@ function modelRowsForGame(forecast, actual) {
     log_loss: -(actualHome * Math.log(clamp(entry.p, 1e-12, 1 - 1e-12)) + (1 - actualHome) * Math.log(clamp(1 - entry.p, 1e-12, 1 - 1e-12))),
     score_mae_per_team: entry.home_score === null || entry.away_score === null ? null :
       (Math.abs(entry.home_score - actual.home.score) + Math.abs(entry.away_score - actual.away.score)) / 2,
+    projected_margin: entry.home_score === null || entry.away_score === null ? null : entry.home_score - entry.away_score,
+    actual_margin: actual.home.score - actual.away.score,
+    margin_abs_error: entry.home_score === null || entry.away_score === null ? null : Math.abs((entry.home_score - entry.away_score) - (actual.home.score - actual.away.score)),
   }));
 }
 
@@ -255,7 +302,7 @@ function scorePlayers(forecast, actual) {
     else if (observed?.did_not_play) disposition = 'dnp_excluded';
     const errors = {};
     for (const stat of STAT_KEYS) {
-      const predicted = finite(projection?.projection_if_play?.[stat]);
+      const predicted = stat === 'minutes' ? finite(projection?.expected_minutes_if_play) : finite(projection?.projection_if_play?.[stat]);
       const value = finite(observed?.[stat]);
       errors[stat] = disposition === 'played_scored' && predicted !== null && value !== null ? Math.abs(predicted - value) : null;
     }
@@ -266,12 +313,29 @@ function scorePlayers(forecast, actual) {
         provider_player_id: observed.provider_player_id, played: observed.played,
         did_not_play: observed.did_not_play, dnp_reason: observed.dnp_reason,
         minutes: observed.minutes, pts: observed.pts, reb: observed.reb, ast: observed.ast, three_pm: observed.three_pm,
+        fgm: observed.fgm, fga: observed.fga, ftm: observed.ftm, fta: observed.fta,
+        stl: observed.stl, blk: observed.blk, tov: observed.tov, fpts: observed.fpts,
       } : { played: false, did_not_play: null, reason: 'Player absent from provider box score; excluded, never treated as zero' },
       projection_if_play: projection.projection_if_play,
       absolute_errors: errors,
     });
   }
   return rows;
+}
+
+function summarizeGames(games) {
+  const modelIds = [...new Set(games.flatMap(game => Object.keys(game.models || {})))];
+  const models = Object.fromEntries(modelIds.map(modelId => {
+    const rows = games.map(game => game.models?.[modelId]).filter(Boolean);
+    return [modelId, { label: rows[0]?.label || modelId, ...probabilityMetrics(rows), calibration: calibration(rows) }];
+  }));
+  const playerRows = games.flatMap(game => game.player_results || []);
+  const playerStats = Object.fromEntries(STAT_KEYS.map(stat => {
+    const values = playerRows.map(row => row.absolute_errors?.[stat]).filter(Number.isFinite);
+    return [stat, { count: values.length, mae: mean(values) }];
+  }));
+  return { models, player_stats: playerStats,
+    v18_roster_strength: rosterSignalSummary(games.map(game => game.v18_roster_strength).filter(Boolean)) };
 }
 
 function gradeRosterStrengthSignal(forecast,actual){
@@ -311,6 +375,8 @@ function scoreReview(lock, actuals, retrievedAt) {
       home: actual.home, away: actual.away,
       models: Object.fromEntries(modelRows.map(row => [row.model_id, row])),
       player_results: playerRows,
+      actual_players: Object.entries(actual.teams).flatMap(([team, players]) => players.filter(player => player.played).map(player => ({ team, ...player }))),
+      team_stats: actual.team_stats || {},
       v18_roster_strength: gradeRosterStrengthSignal(forecast,actual),
       player_counts: {
         projected: playerRows.length,
@@ -320,16 +386,6 @@ function scoreReview(lock, actuals, retrievedAt) {
       },
     });
   }
-  const modelIds = [...new Set(games.flatMap(game => Object.keys(game.models)))];
-  const models = Object.fromEntries(modelIds.map(modelId => {
-    const rows = games.map(game => game.models[modelId]).filter(Boolean);
-    return [modelId, { label: rows[0]?.label || modelId, ...probabilityMetrics(rows), calibration: calibration(rows) }];
-  }));
-  const playerRows = games.flatMap(game => game.player_results);
-  const playerStats = Object.fromEntries(STAT_KEYS.map(stat => {
-    const values = playerRows.map(row => row.absolute_errors[stat]).filter(Number.isFinite);
-    return [stat, { count: values.length, mae: mean(values) }];
-  }));
   return withIntegrity({
     schema: 'nba-twin-lab-daily-review-v2',
     reviewed_at_utc: new Date(retrievedAt).toISOString(),
@@ -347,8 +403,7 @@ function scoreReview(lock, actuals, retrievedAt) {
         retrieved_at_utc: new Date(retrievedAt).toISOString(),
       },
     },
-    games, summary: { models, player_stats: playerStats,
-      v18_roster_strength: rosterSignalSummary(games.map(game=>game.v18_roster_strength)) },
+    games, summary: summarizeGames(games),
   });
 }
 
@@ -382,6 +437,6 @@ function aggregateReviews(records, generatedAt) {
 module.exports = {
   STAT_KEYS, MODEL_LABELS, stableStringify, sha256, withIntegrity, verifyIntegrity,
   zoneParts, melbourneDate, melbourneHour, melbourneDisplay, normalizeName, canonicalTeam,
-  parseMinutes, parseEspnSummary, probabilityMetrics, calibration, modelRowsForGame,
-  scorePlayers, scoreReview, aggregateReviews, gradeRosterStrengthSignal, rosterSignalSummary,
+  parseMinutes, fantasyPoints, parseEspnSummary, probabilityMetrics, calibration, modelRowsForGame,
+  scorePlayers, scoreReview, summarizeGames, aggregateReviews, gradeRosterStrengthSignal, rosterSignalSummary,
 };

@@ -32,8 +32,8 @@ function trend(d){
 }
 function models(d){
  const rows=Object.entries(d.longitudinal?.models||{});
- return rows.length?'<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>MODEL</th><th>GAMES</th><th>ACCURACY</th><th>BRIER</th><th>LOG LOSS</th></tr></thead><tbody>'+
- rows.map(([key,row])=>'<tr><td>'+esc(row.label||key)+'</td><td>'+Number(row.count||0)+'</td><td>'+pct(row.accuracy)+'</td><td>'+num(row.brier,4)+'</td><td>'+num(row.log_loss,4)+'</td></tr>').join('')+'</tbody></table></div>':
+ return rows.length?'<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>MODEL</th><th>GAMES</th><th>ACCURACY</th><th>BRIER</th><th>LOG LOSS</th><th>CONFIDENCE</th><th>CALIBRATION EVIDENCE</th></tr></thead><tbody>'+
+ rows.map(([key,row])=>'<tr><td>'+esc(row.label||key)+'</td><td>'+Number(row.count||0)+'</td><td>'+pct(row.accuracy)+'</td><td>'+num(row.brier,4)+'</td><td>'+num(row.log_loss,4)+'</td><td>'+pct(row.mean_confidence)+'</td><td>'+esc(String(row.confidence_assessment||'insufficient_sample').replaceAll('_',' '))+'</td></tr>').join('')+'</tbody></table></div>':
  '<p>No reviewed daily models yet. Historical walk-forward research is available separately; it is not the same as the pretip prospective audit.</p>';
 }
 function historical(d){
@@ -54,7 +54,7 @@ function render(){
  const body=state.tab==='overview'?kpis(d)+trend(d):state.tab==='models'?models(d):state.tab==='props'?props(d):
  state.tab==='winners'?historical(d):historical(d);
  el.innerHTML='<div class="c3-header"><div><h1>Prediction Accuracy Audit</h1><p>Measuring real performance. No adjustments. Full transparency.</p></div>'+
- '<span class="c3-status-tag">'+reviewed.length+' reviewed slates</span></div>'+
+ '<span class="c3-status-tag">'+(d.entries||[]).reduce((sum,e)=>sum+Number(e.reviewed_game_count||0),0)+' games reviewed</span></div>'+
  '<div class="c3-tabs" role="tablist" aria-label="Accuracy audit sections">'+tabs.map(([key,title])=>
  '<button class="c3-tab" role="tab" type="button" aria-selected="'+(key===state.tab)+'" data-c3-audit-tab="'+key+'">'+title+'</button>').join('')+
  '</div>'+body+'<p class="c3-source-note">Scores and metrics derive exclusively from audited immutable pretip locks. No mockup KPIs or trend lines are published as actual results.</p>';
