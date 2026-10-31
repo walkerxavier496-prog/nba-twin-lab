@@ -1,6 +1,6 @@
 {
   "schema": "nba-twin-lab-audit-ledger-v2",
-  "generated_at_utc": "2026-10-31T16:24:48.279Z",
+  "generated_at_utc": "2026-11-01T00:58:50.086Z",
   "timezone": "Australia/Melbourne",
   "production_policy": "production_elo_v7 remains production; research models are comparisons only and are never promoted automatically",
   "entries": [
@@ -693,7 +693,14 @@
             "mean_probability": 0.9075669484883306,
             "observed_rate": 1
           }
-        ]
+        ],
+        "accuracy_ci95": {
+          "low": 0.31267376973365824,
+          "high": 0.8318196702937638,
+          "method": "wilson"
+        },
+        "brier_se": 0.0714597410672673,
+        "paired_vs_production_elo_v7": null
       },
       "possession_monte_carlo_v5": {
         "label": "Possession Monte Carlo v5",
@@ -742,7 +749,20 @@
             "mean_probability": 0.72397,
             "observed_rate": 1
           }
-        ]
+        ],
+        "accuracy_ci95": {
+          "low": 0.31267376973365824,
+          "high": 0.8318196702937638,
+          "method": "wilson"
+        },
+        "brier_se": 0.03888031710609254,
+        "paired_vs_production_elo_v7": {
+          "games": 10,
+          "mean_brier_difference": -0.01058091759005671,
+          "standard_error": 0.036435661344383655,
+          "z": -0.290400042146832,
+          "verdict": "insufficient_sample"
+        }
       },
       "roster_beta_v1": {
         "label": "Roster-aware beta v1",
@@ -805,7 +825,20 @@
             "mean_probability": 0.9012724838045699,
             "observed_rate": 1
           }
-        ]
+        ],
+        "accuracy_ci95": {
+          "low": 0.39677814746114537,
+          "high": 0.8922087325936989,
+          "method": "wilson"
+        },
+        "brier_se": 0.06691592832418067,
+        "paired_vs_production_elo_v7": {
+          "games": 10,
+          "mean_brier_difference": -0.01412018174193499,
+          "standard_error": 0.01602084911012049,
+          "z": -0.8813628818846541,
+          "verdict": "insufficient_sample"
+        }
       },
       "m1_elo": {
         "label": "M1 · Elo baseline",
@@ -875,7 +908,20 @@
             "mean_probability": 0.9075669484883306,
             "observed_rate": 1
           }
-        ]
+        ],
+        "accuracy_ci95": {
+          "low": 0.31267376973365824,
+          "high": 0.8318196702937638,
+          "method": "wilson"
+        },
+        "brier_se": 0.07145974106726728,
+        "paired_vs_production_elo_v7": {
+          "games": 10,
+          "mean_brier_difference": -3.3306690738754695e-17,
+          "standard_error": 3.3306690738754695e-17,
+          "z": -1,
+          "verdict": "insufficient_sample"
+        }
       },
       "m2_science": {
         "label": "M2 · Basketball Science",
@@ -938,7 +984,20 @@
             "mean_probability": 0.8815912273493768,
             "observed_rate": 1
           }
-        ]
+        ],
+        "accuracy_ci95": {
+          "low": 0.236593090512564,
+          "high": 0.7634069094874361,
+          "method": "wilson"
+        },
+        "brier_se": 0.06423434652133983,
+        "paired_vs_production_elo_v7": {
+          "games": 10,
+          "mean_brier_difference": 0.006823813730927647,
+          "standard_error": 0.011896021203503318,
+          "z": 0.5736215171605502,
+          "verdict": "insufficient_sample"
+        }
       },
       "m3_player_roster": {
         "label": "M3 · Player / Roster",
@@ -1001,7 +1060,20 @@
             "mean_probability": 0.8997302396911719,
             "observed_rate": 1
           }
-        ]
+        ],
+        "accuracy_ci95": {
+          "low": 0.39677814746114537,
+          "high": 0.8922087325936989,
+          "method": "wilson"
+        },
+        "brier_se": 0.06581411563947465,
+        "paired_vs_production_elo_v7": {
+          "games": 10,
+          "mean_brier_difference": -0.015228520320388017,
+          "standard_error": 0.017160240516504353,
+          "z": -0.8874304707874899,
+          "verdict": "insufficient_sample"
+        }
       },
       "m4_monte_carlo": {
         "label": "M4 · Possession Monte Carlo",
@@ -1050,7 +1122,20 @@
             "mean_probability": 0.7613,
             "observed_rate": 1
           }
-        ]
+        ],
+        "accuracy_ci95": {
+          "low": 0.31267376973365824,
+          "high": 0.8318196702937638,
+          "method": "wilson"
+        },
+        "brier_se": 0.03710482046653845,
+        "paired_vs_production_elo_v7": {
+          "games": 10,
+          "mean_brier_difference": -0.03238280456005669,
+          "standard_error": 0.050684830418972246,
+          "z": -0.6389052561165366,
+          "verdict": "insufficient_sample"
+        }
       },
       "m5_regularized_ml": {
         "label": "M5 · Regularized ML",
@@ -1113,7 +1198,20 @@
             "mean_probability": 0.8791390435166736,
             "observed_rate": 1
           }
-        ]
+        ],
+        "accuracy_ci95": {
+          "low": 0.31267376973365824,
+          "high": 0.8318196702937638,
+          "method": "wilson"
+        },
+        "brier_se": 0.06544767475564828,
+        "paired_vs_production_elo_v7": {
+          "games": 10,
+          "mean_brier_difference": 0.0012446855126574743,
+          "standard_error": 0.01111754254620983,
+          "z": 0.11195689222541451,
+          "verdict": "insufficient_sample"
+        }
       },
       "m6_ensemble": {
         "label": "M6 · Nested weighted ensemble",
@@ -1176,7 +1274,20 @@
             "mean_probability": 0.8881591928661887,
             "observed_rate": 1
           }
-        ]
+        ],
+        "accuracy_ci95": {
+          "low": 0.31267376973365824,
+          "high": 0.8318196702937638,
+          "method": "wilson"
+        },
+        "brier_se": 0.06582263179292903,
+        "paired_vs_production_elo_v7": {
+          "games": 10,
+          "mean_brier_difference": -0.004297691627550934,
+          "standard_error": 0.010828678603583346,
+          "z": -0.3968805229964784,
+          "verdict": "insufficient_sample"
+        }
       }
     },
     "player_stats": {
@@ -1208,6 +1319,21 @@
       "directional_accuracy": null,
       "decisive_coverage": null,
       "label": "Uncalibrated impact-signal direction only; no win probability or Brier"
+    },
+    "sample_policy": {
+      "min_games_to_rank": 300,
+      "models_below_minimum": [
+        "production_elo_v7",
+        "possession_monte_carlo_v5",
+        "roster_beta_v1",
+        "m1_elo",
+        "m2_science",
+        "m3_player_roster",
+        "m4_monte_carlo",
+        "m5_regularized_ml",
+        "m6_ensemble"
+      ],
+      "ranking_enabled": false
     }
   }
 }

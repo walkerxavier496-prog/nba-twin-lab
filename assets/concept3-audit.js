@@ -6,14 +6,23 @@ const $=x=>document.getElementById(x);
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=(x,n=3)=>typeof x==='number'&&Number.isFinite(x)?x.toFixed(n):'—';
 const pct=x=>typeof x==='number'&&Number.isFinite(x)?(100*x).toFixed(1)+'%':'—';
+const whole=x=>Math.round(100*x)+'%';
+const accuracyText=m=>typeof m.accuracy==='number'&&Number.isFinite(m.accuracy)?m.accuracy_ci95&&Number.isFinite(m.accuracy_ci95.low)?whole(m.accuracy)+' (95% CI '+Math.round(100*m.accuracy_ci95.low)+'–'+whole(m.accuracy_ci95.high)+')':whole(m.accuracy)+' (CI unavailable)':'—';
+const brierText=m=>typeof m.brier==='number'&&Number.isFinite(m.brier)?num(m.brier,3)+' ± '+num(m.brier_se,2):'—';
+const signed=x=>{const r=Number(x.toFixed(3));return (r>0?'+':r<0?'−':'')+Math.abs(r).toFixed(3)};
+const verdicts={insufficient_sample:'insufficient sample',not_distinguishable:'not distinguishable',better_than_elo:'beats Elo (>2 SE)',worse_than_elo:'worse than Elo (>2 SE)'};
+const pairedText=(id,m)=>{const p=m.paired_vs_production_elo_v7;if(id==='production_elo_v7')return 'baseline';if(!p||!p.games)return '—';return signed(p.mean_brier_difference)+' ± '+num(p.standard_error,2)+' (n='+p.games+') · '+(verdicts[p.verdict]||'insufficient sample')};
+function banner(d){const policy=d.longitudinal?.sample_policy;
+ const show=!policy||!Array.isArray(policy.models_below_minimum)||policy.models_below_minimum.length>0||!Object.keys(d.longitudinal?.models||{}).length;
+ return show?'<p class="sample-banner" role="note">Too early to rank models. Differences at this sample size are noise.</p>':'';}
 const state={ledger:null,tab:'overview'};
 const tabs=[['overview','Overview'],['winners','Game Winners'],['props','Player Props'],['models','Model Comparison'],['historical','Historical']];
 function kpis(d){
  const models=d.longitudinal?.models||{},prod=models.production_elo_v7||{};
  const stats=d.longitudinal?.player_stats||{};
  return '<div class="c3-audit-kpis">'+[
-  ['Game Winner Accuracy',pct(prod.accuracy),'Verified completed games'],
-  ['Brier Score',num(prod.brier),'Lower is better'],
+  ['Game Winner Accuracy',accuracyText(prod),'Verified completed games · small sample'],
+  ['Brier Score',brierText(prod),'Lower is better · ± is one standard error'],
   ['Log Loss',num(prod.log_loss),'Lower is better'],
   ['Player PTS MAE',num(stats.pts?.mae,2),'Players graded; excludes DNPs']
  ].map(([label,value,note])=>'<div><small>'+esc(label)+'</small><strong>'+esc(value)+'</strong><small>'+esc(note)+'</small></div>').join('')+'</div>';
@@ -32,8 +41,8 @@ function trend(d){
 }
 function models(d){
  const rows=Object.entries(d.longitudinal?.models||{});
- return rows.length?'<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>MODEL</th><th>GAMES</th><th>ACCURACY</th><th>BRIER</th><th>LOG LOSS</th><th>CONFIDENCE</th><th>CALIBRATION EVIDENCE</th></tr></thead><tbody>'+
- rows.map(([key,row])=>'<tr><td>'+esc(row.label||key)+'</td><td>'+Number(row.count||0)+'</td><td>'+pct(row.accuracy)+'</td><td>'+num(row.brier,4)+'</td><td>'+num(row.log_loss,4)+'</td><td>'+pct(row.mean_confidence)+'</td><td>'+esc(String(row.confidence_assessment||'insufficient_sample').replaceAll('_',' '))+'</td></tr>').join('')+'</tbody></table></div>':
+ return rows.length?'<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>MODEL</th><th>GAMES</th><th>ACCURACY</th><th>BRIER</th><th>LOG LOSS</th><th>CONFIDENCE</th><th>CALIBRATION EVIDENCE</th><th>Δ BRIER VS ELO ± SE</th></tr></thead><tbody>'+
+ rows.map(([key,row])=>'<tr><td>'+esc(row.label||key)+'</td><td>'+Number(row.count||0)+'</td><td>'+esc(accuracyText(row))+'</td><td>'+esc(brierText(row))+'</td><td>'+num(row.log_loss,4)+'</td><td>'+pct(row.mean_confidence)+'</td><td>'+esc(String(row.confidence_assessment||'insufficient_sample').replaceAll('_',' '))+'</td><td>'+esc(pairedText(key,row))+'</td></tr>').join('')+'</tbody></table></div>':
  '<p>No reviewed daily models yet. Historical walk-forward research is available separately; it is not the same as the pretip prospective audit.</p>';
 }
 function historical(d){
@@ -57,7 +66,7 @@ function render(){
  '<span class="c3-status-tag">'+(d.entries||[]).reduce((sum,e)=>sum+Number(e.reviewed_game_count||0),0)+' games reviewed</span></div>'+
  '<div class="c3-tabs" role="tablist" aria-label="Accuracy audit sections">'+tabs.map(([key,title])=>
  '<button class="c3-tab" role="tab" type="button" aria-selected="'+(key===state.tab)+'" data-c3-audit-tab="'+key+'">'+title+'</button>').join('')+
- '</div>'+body+'<p class="c3-source-note">Scores and metrics derive exclusively from audited immutable pretip locks. No mockup KPIs or trend lines are published as actual results.</p>';
+ '</div>'+banner(d)+body+'<p class="c3-source-note">Scores and metrics derive exclusively from audited immutable pretip locks. No mockup KPIs or trend lines are published as actual results.</p>';
  document.querySelectorAll('[data-c3-audit-tab]').forEach(btn=>btn.onclick=()=>{state.tab=btn.dataset.c3AuditTab;render()});
 }
 async function load(){

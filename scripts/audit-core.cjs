@@ -209,6 +209,45 @@ function parseEspnSummary(payload, expectedGameId = null) {
   };
 }
 
+const scoredRows = rows => rows.filter(row => Number.isFinite(row.p) && (row.actual === 0 || row.actual === 1));
+const isCorrect = row => (row.p >= 0.5) === (row.actual === 1);
+const brierOf = row => (row.p - row.actual) ** 2;
+const brierRows = rows => rows.map(row => ({ game_key: row.game_key, brier: brierOf(row) }));
+
+const WILSON_Z_95 = 1.959963984540054;
+const MIN_GAMES_TO_RANK = 300;
+const BASELINE_MODEL_ID = 'production_elo_v7';
+
+// Wilson score interval for a binomial proportion; stays inside [0, 1] and is usable at tiny n.
+function wilsonInterval(successes, n, z = WILSON_Z_95) {
+  if (!(n > 0)) return null;
+  const p = successes / n, z2 = z * z, denominator = 1 + z2 / n;
+  const centre = (p + z2 / (2 * n)) / denominator;
+  const half = z * Math.sqrt(p * (1 - p) / n + z2 / (4 * n * n)) / denominator;
+  return { low: successes === 0 ? 0 : Math.max(0, centre - half), high: successes === n ? 1 : Math.min(1, centre + half) };
+}
+
+// Sample standard deviation (n - 1) divided by sqrt(n); undefined for fewer than two observations.
+function sampleStandardError(values) {
+  if (values.length < 2) return null;
+  const centre = mean(values);
+  return Math.sqrt(values.reduce((sum, value) => sum + (value - centre) ** 2, 0) / (values.length - 1) / values.length);
+}
+
+// Rows are { game_key, brier }. Difference is model minus baseline, so negative means a lower (better) Brier.
+// A claim needs the minimum sample AND a mean difference beyond two standard errors.
+function pairedBrierComparison(modelRows, baselineRows, minGames = MIN_GAMES_TO_RANK) {
+  const baseline = new Map(baselineRows.map(row => [row.game_key, row.brier]));
+  const differences = modelRows.filter(row => baseline.has(row.game_key)).map(row => row.brier - baseline.get(row.game_key));
+  const standardError = sampleStandardError(differences), difference = mean(differences);
+  const verdict = differences.length < minGames || standardError === null ? 'insufficient_sample' :
+    difference !== 0 && Math.abs(difference) > 2 * standardError ? (difference < 0 ? 'better_than_elo' : 'worse_than_elo') : 'not_distinguishable';
+  return {
+    games: differences.length, mean_brier_difference: difference, standard_error: standardError,
+    z: standardError > 0 ? difference / standardError : null, verdict,
+  };
+}
+
 function probabilityMetrics(rows) {
   const valid = rows.filter(row => Number.isFinite(row.p) && (row.actual === 0 || row.actual === 1));
   const accuracy = mean(valid.map(row => (row.p >= 0.5) === (row.actual === 1) ? 1 : 0));
@@ -419,12 +458,21 @@ function aggregateReviews(records, generatedAt) {
   for (const record of records) {
     for (const game of record.review?.games || []) {
       if(game.v18_roster_strength)strengthRows.push(game.v18_roster_strength);
-      for (const [modelId, row] of Object.entries(game.models || {})) (modelRows[modelId] ||= []).push(row);
+      for (const [modelId, row] of Object.entries(game.models || {})) (modelRows[modelId] ||= []).push({ ...row, game_key: `${record.entry?.melbourne_date}/${game.game_id}` });
       for (const player of game.player_results || []) for (const stat of STAT_KEYS) {
         if (Number.isFinite(player.absolute_errors?.[stat])) playerErrors[stat].push(player.absolute_errors[stat]);
       }
     }
   }
+  const baselineBrier = brierRows(scoredRows(modelRows[BASELINE_MODEL_ID] || []));
+  const models = Object.entries(modelRows).map(([id, rows]) => [id, scoredRows(rows).length]);
+  const below = models.filter(([, count]) => count < MIN_GAMES_TO_RANK).map(([id]) => id);
+  const sample_policy = {
+    min_games_to_rank: MIN_GAMES_TO_RANK, models_below_minimum: below,
+    ranking_enabled: models.length > 0 && below.length === 0 &&
+      Object.keys(modelRows).some(id => id !== BASELINE_MODEL_ID &&
+        pairedBrierComparison(brierRows(scoredRows(modelRows[id])), baselineBrier).verdict === 'better_than_elo'),
+  };
   return {
     schema: 'nba-twin-lab-audit-ledger-v2',
     generated_at_utc: new Date(generatedAt).toISOString(),
@@ -432,11 +480,18 @@ function aggregateReviews(records, generatedAt) {
     production_policy: 'production_elo_v7 remains production; research models are comparisons only and are never promoted automatically',
     entries: records.map(record => record.entry),
     longitudinal: {
-      models: Object.fromEntries(Object.entries(modelRows).map(([id, rows]) => [id, {
-        label: rows[0]?.label || id, ...probabilityMetrics(rows), calibration: calibration(rows),
-      }])),
+      models: Object.fromEntries(Object.entries(modelRows).map(([id, rows]) => {
+        const valid = scoredRows(rows), interval = wilsonInterval(valid.filter(isCorrect).length, valid.length);
+        return [id, {
+          label: rows[0]?.label || id, ...probabilityMetrics(rows), calibration: calibration(rows),
+          accuracy_ci95: interval && { ...interval, method: 'wilson' },
+          brier_se: sampleStandardError(valid.map(brierOf)),
+          paired_vs_production_elo_v7: id === BASELINE_MODEL_ID ? null : pairedBrierComparison(brierRows(valid), baselineBrier),
+        }];
+      })),
       player_stats: Object.fromEntries(STAT_KEYS.map(stat => [stat, { count: playerErrors[stat].length, mae: mean(playerErrors[stat]) }])),
       v18_roster_strength: rosterSignalSummary(strengthRows),
+      sample_policy,
     },
   };
 }
@@ -445,5 +500,5 @@ module.exports = {
   STAT_KEYS, MODEL_LABELS, stableStringify, sha256, withIntegrity, verifyIntegrity,
   zoneParts, melbourneDate, melbourneHour, melbourneDisplay, normalizeName, canonicalTeam,
   parseMinutes, fantasyPoints, parseEspnSummary, probabilityMetrics, calibration, modelRowsForGame,
-  scorePlayers, scoreReview, summarizeGames, aggregateReviews, gradeRosterStrengthSignal, rosterSignalSummary,
+  scorePlayers, scoreReview, summarizeGames, aggregateReviews, wilsonInterval, sampleStandardError, pairedBrierComparison, gradeRosterStrengthSignal, rosterSignalSummary,
 };
