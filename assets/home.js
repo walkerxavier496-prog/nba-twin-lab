@@ -5,9 +5,14 @@ const show=(id,value)=>{if($(id))$(id).textContent=value};
 const pct=value=>typeof value==='number'&&Number.isFinite(value)?(100*value).toFixed(1)+'%':'—';
 const formatTime=value=>{const d=new Date(value);return Number.isNaN(d.getTime())?'Date unavailable':new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}).format(d)};
 async function read(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return r.json()}
+const media=typeof window!=='undefined'?window.NbaMedia:null;
+function teamImage(team,size='large'){
+ return media?.image?.(team.abbr,{size,label:team.abbr})||
+ '<span class="club-mark'+(size==='large'?' club-mark--large':'')+'" data-team="'+esc(team.abbr)+'">'+esc(team.abbr)+'</span>';
+}
 function club(team,isHome=false){
  return '<div class="sports-club'+(isHome?' sports-club--home':'')+'">'+
-  '<span class="club-mark club-mark--large" data-team="'+esc(team.abbr)+'">'+esc(team.abbr)+'</span>'+
+  teamImage(team)+
   '<span><b class="sports-club__name">'+esc(team.abbr)+'</b><small class="sports-club__city">'+esc(team.name)+'</small></span></div>';
 }
 function featured(entry,lock){
@@ -38,7 +43,7 @@ function featured(entry,lock){
   if(!p||!Number.isFinite(p.winner_probability))return '';
   return '<a class="home-game" href="./challenge/daily.html?game='+encodeURIComponent(game.game_id)+'#matchups">'+
    '<div class="home-game__top"><span>'+esc(formatTime(game.tip_utc))+'</span><span>PRETIP</span></div>'+
-   '<div class="home-game__teams"><span class="club-mark" data-team="'+esc(game.away.abbr)+'">'+esc(game.away.abbr)+'</span><span class="home-game__vs">AT</span><span class="club-mark" data-team="'+esc(game.home.abbr)+'">'+esc(game.home.abbr)+'</span></div>'+
+   '<div class="home-game__teams">'+teamImage(game.away,"small")+'<span class="home-game__vs">AT</span>'+teamImage(game.home,"small")+'</div>'+
    '<div class="home-game__foot"><span>ELO PICK <strong>'+esc(p.winner)+'</strong></span><strong>'+pct(p.winner_probability)+'</strong></div></a>';
  }).join('');
 }
