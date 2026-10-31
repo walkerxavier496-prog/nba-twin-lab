@@ -1,0 +1,173 @@
+/* NBA Twin Lab — dark arena theme (V13).
+   Cohesive on all routes; fan-selected team only changes accent, never data.
+ */
+:root{color-scheme:dark;--fan-accent:#c6dbff;--paper:#080e17;--white:#121e2d;--ink:#f2f7fc;--ink2:#dae6f0;--sub:#9fb1c2;--line:#2b3a4c;--blue:var(--fan-accent);--lime:#dcf66e;--dark:#101b27;--green:#79d9a9}
+html{background:#080e17;color-scheme:dark}
+body.v12,body.v12.secondary-page{background:radial-gradient(ellipse 62% 28% at 95% -12%,color-mix(in srgb,var(--fan-accent),transparent 91%),transparent 85%),#080e17!important;color:#eef5fb!important}
+body.v12{--paper:#080e17;--white:#121e2d;--ink:#f2f7fc;--sub:#9fb1c2;--line:#2b3a4c;--blue:var(--fan-accent)}
+body.v12 p,body.v12 .lead,body.v12.secondary-page :is(p,.lead){color:#abbed0}
+body.v12 :is(h1,h2,h3,h4),body.v12.secondary-page :is(h1,h2,h3){color:#f3f8ff}
+body.v12 .eyebrow,body.v12 .kicker,body.v12 .overline,body.v12 .section-hint,
+body.v12 .section-top .eyebrow,body.v12.secondary-page .eyebrow,
+body.v12 .page-hero h1 em,body.v12.secondary-page h1 em{color:var(--fan-accent)!important}
+body.v12 .app-header{background:#0c1521!important;border-bottom:1px solid #28394c!important;box-shadow:0 6px 22px #0002}
+body.v12 .app-header .header-inner{max-width:1500px;gap:13px;min-height:74px}
+body.v12 .app-header .brand{color:#f5f8fe!important;flex:none}
+body.v12 .brand-icon{background:var(--fan-accent);color:#10151d;transform:none}
+body.v12 .brand span.wordmark span{color:var(--fan-accent)}
+body.v12 .brand small{color:#94a9bd}
+body.v12 .app-header nav{display:flex;flex:1;min-width:0;max-width:none;gap:1px;margin-left:0;overflow-x:auto;scrollbar-width:none}
+body.v12 .app-header nav a{color:#aebed0;font-size:11px;padding:10px 9px}
+body.v12 .app-header nav a:hover{background:#1c3044;color:#fff}
+body.v12 .app-header nav a.active,body.v12 .app-header nav a[aria-current=page]{background:#202c3b!important;color:var(--fan-accent)!important}
+body.v12 .app-header .header-action{background:var(--fan-accent);color:#10151d;font-weight:900}
+.fan-picker{display:flex;align-items:center;gap:7px;flex:none;border:1px solid #405267;background:#122334;padding:5px 8px;border-radius:8px;max-width:220px}
+.fan-picker label{font-size:9px;white-space:nowrap;color:var(--fan-accent);font-weight:950;letter-spacing:.06em;margin:0!important}
+body.v12 .fan-picker select{min-width:0;max-width:145px;background:#0a1522!important;border:1px solid #3b4f62!important;border-radius:6px!important;color:#f0f7fc!important;padding:7px 7px!important;min-height:34px!important;font-size:11px!important}
+body.v12 :is(.btn.primary,.button.primary,.primary,.cta,.rank-card.on),body.v12.secondary-page :is(.button,.cta,button.primary){
+ background:var(--fan-accent)!important;border-color:var(--fan-accent)!important;color:#10151e!important
+}
+body.v12 .btn.lime{background:#d9f86f;color:#101823}
+body.v12 .btn.dark{background:#182738;border-color:#3e5269;color:#f0f7fc}
+body.v12 .btn:not(.primary):not(.lime):not(.dark),body.v12 .button:not(.primary){background:#162637;border-color:#3c5168;color:#f0f7fc}
+body.v12 :is(.surface,.panel,.card,.daily-panel,.game-detail,.featured-box,.featured-box .feature-bottom,.feature-players,.action-tile,.rank-card,.match,.review-card,.player-card,.home-game,.model-card,.daily-stat,.metric-strip>div,.audit-grid article,.predictor-metrics>div,.stat,.benchmark,.tiles article,.stats article),
+body.v12.secondary-page :is(.panel,.tile,.card,.section,.decision,.summary>div){
+ background:#111d2b!important;color:#f0f6fa!important;border:1px solid #2c4054!important;box-shadow:none!important
+}
+body.v12 :is(.daily-stat span,.daily-stat small,.home-game__top,.home-game__foot,.section-muted,.filter-count,.muted,.small-note,.fine,.model-card__name,.player-tools label,.player-card__head small,.source-detail,.status,.foot){color:#a3b7c9!important}
+body.v12 .daily-stat strong,body.v12 .home-game__result b,body.v12 .model-card__meta strong,
+body.v12 .rank-card__stats b{color:#f3f7fb!important}
+body.v12 .ribbon{background:#08111c;border-bottom:2px solid var(--fan-accent)}
+body.v12 .ribbon-label{background:var(--fan-accent);color:#111923}
+body.v12 .ribbon-link{color:var(--fan-accent)}
+body.v12 .data-chip,body.v12 .pill,body.v12 .tag,body.v12 .chip{background:#1c3043;color:#b9d0e0;border-color:#34475e}
+body.v12 .chip.active,body.v12 .filters button.selected{background:var(--fan-accent);color:#10151c;border-color:var(--fan-accent)}
+body.v12 :is(input,select,textarea),body.v12.secondary-page :is(input,select,textarea),
+body.v12 .field,body.v12 .match-tools .search-field,body.v12 .search-field,
+body.v12 .player-tools :is(input,select),body.v12 .predictor-toolbar :is(input,select){
+ background:#0a1725!important;color:#eff7fb!important;border-color:#34495e!important
+}
+body.v12 :is(input,textarea)::placeholder{color:#8299ad}
+body.v12 :is(input,select,button):focus-visible{outline:2px solid var(--fan-accent);outline-offset:2px}
+body.v12 :is(th,table th),body.v12.secondary-page th{background:#1d3043!important;color:#c0d2df!important;border-color:#34485b}
+body.v12 :is(td,table td),body.v12.secondary-page td{color:#e2eaf2!important;border-color:#273a50!important}
+body.v12 .tablewrap{border-color:#35495e}
+body.v12 .tablewrap tr:nth-child(even){background:#142538}
+body.v12 .source-row,body.v12 .gap,body.v12 .metricrow{border-color:#2d4055}
+body.v12 .section-heading,body.v12 .section-top{color:#e9f4fe}
+body.v12 .game-button{background:#142538!important;color:#edf5fa!important;border-color:#344b5f!important}
+body.v12 .game-button[aria-pressed=true],body.v12 .games .game.active{background:#1b3144!important;border-color:var(--fan-accent)!important;box-shadow:inset 3px 0 var(--fan-accent)}
+body.v12 .game-button__meta small{color:#aec1ce}
+body.v12 .game-button__meta b{color:#f8fbfd}
+body.v12 .sports-scorebug{background:#101c2a;border-color:#355067}
+body.v12 .sports-scorebug__top,body.v12 .sports-scorebug__bottom{background:#1a2c3e;border-color:#32495e}
+body.v12 .sports-scorebug__top b,body.v12 .sports-scorebug__bottom strong{color:var(--fan-accent)}
+body.v12 .sports-club__name{color:#fff}
+body.v12 .sports-pick{background:#0b1521;border:1px solid #465e72}
+body.v12 .sports-pick strong{color:#e2fb99}
+body.v12 .team-logo__fallback{background:#1a2838;border-color:#44586c}
+body.v12 .model-card__bar{background:#36495b}
+body.v12 .model-card__fill,body.v12 .bar .actual{background:var(--fan-accent)}
+body.v12 .model-card__meta small,body.v12 .model-card__footer{color:#9db3c6}
+body.v12 .model-card__grade{color:#8de0ac}
+body.v12 .rank-card:hover,body.v12 .rank-card[aria-pressed=true]{background:#192f43!important;border-color:var(--fan-accent)!important}
+body.v12 .rank-card__stats div{background:#0b1929;color:#d8e4ec}
+body.v12 .rank-card__head span,body.v12 .rank-card__foot b{color:var(--fan-accent)}
+body.v12 .watch,body.v12 .entry,body.v12 .player-card__stat{background:#0d1a28!important;border-color:#30475a!important}
+body.v12 .watch b,body.v12 .home-game__foot strong{color:var(--fan-accent)}
+body.v12 .feature-head,body.v12 .feature-bottom{background:#192b3e!important;border-color:#30475b;color:#cfdeea}
+body.v12 .feature-score{background:#111d2b}
+body.v12 .feature-score .sports-pick{background:#0b1521}
+body.v12 .feature-score .sports-pick strong{color:#def986}
+body.v12 .feature-score .sports-club__city{color:#acc0d0}
+body.v12 .feature-player{background:#0b1a29!important;color:#eff7fb}
+body.v12 .feature-player small{color:#9eb4c6}
+body.v12 .player-photo,body.v12 .feature-player .player-photo{background:#263b4c;border-color:#334b5d}
+body.v12 .scoreboard-source,body.v12 .model-notice,body.v12.secondary-page :is(.notice,.status,.provenance){
+ background:#14293b!important;color:#b5cee0!important;border:1px solid #36536a!important
+}
+body.v12 .uncertainty-banner{background:#3b2b26;border-color:#795b42;color:#f5d7b1}
+body.v12 .uncertainty-banner p{color:#e6c4a2}
+body.v12 .uncertainty-banner--quiet{background:#162737;color:#bbcede;border-color:#32475b}
+body.v12 .real-score-banner{background:#091723;border:1px solid #415368}
+body.v12 .bar,body.v12 .weight-stack{background:#2d3e50}
+body.v12 .cal-row,body.v12 .gap{color:#c2d3e0}
+body.v12 .lead-story{background:#0b1624;border:1px solid #2c4459}
+body.v12 .action-tile:hover,body.v12 .home-game:hover{border-color:var(--fan-accent)!important}
+body.v12 .lead-story .eyebrow{color:#defb8b!important}
+body.v12 .site-footer,body.v12.secondary-page footer{color:#91a8b9;border-color:#334557}
+body.v12 .site-footer a,body.v12.secondary-page a:not(.brand):not(.btn):not(.button):not(.site-bottom-nav a):not(.app-header a){color:var(--fan-accent)}
+/* Team Intelligence app controls and matchup identity. */
+.fan-compare-head{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin:10px 0 18px;padding:16px;border:1px solid #374f64;border-radius:10px;background:#0b1b29}
+.fan-versus{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.fan-versus .team-logo{width:68px;height:68px}
+.fan-versus strong{font:900 29px 'Barlow Condensed',Impact,sans-serif;color:#f0f7ff}
+.fan-versus span.vs{font-size:12px;font-weight:900;color:#91aab9}
+.fan-context{max-width:480px;font-size:12px;color:#a9c1d2}
+.fan-context b{color:var(--fan-accent)}
+.controls-fan{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0 20px}
+.controls-fan label{display:grid;gap:7px;font-size:11px;font-weight:800;color:#aabfd1}
+.controls-fan select{width:100%;min-height:45px;background:#091726;color:#f0f7ff;border:1px solid #40576c;border-radius:7px;padding:10px}
+.fan-venue{display:flex;gap:8px;align-items:center;margin:12px 0;color:#a9becc;font-size:11px}
+.fan-venue button{background:#1c2f42;border:1px solid #405268;color:#eaf3fa;border-radius:5px;padding:7px 12px;min-height:36px;font-size:11px;font-weight:850}
+.fan-venue button[aria-pressed=true]{background:var(--fan-accent);color:#081522;border-color:var(--fan-accent)}
+body.v12.secondary-page .controls-fan :is(select,input){background:#0a1826!important;color:#f1f7fd!important}
+body.v12.secondary-page .fan-venue button{background:#1b3041!important;color:#e6eef4!important;border-color:#365064!important}
+body.v12.secondary-page .fan-venue button[aria-pressed=true]{background:var(--fan-accent)!important;color:#101923!important}
+/* Player twins: dark cards and identity photos in comparison itself. */
+body.v12.secondary-page .twin-faceoff{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;background:linear-gradient(120deg,#112338,#1e263a);border:1px solid #3c4f66;border-radius:12px;padding:22px;margin:0 0 20px}
+.twin-person{display:flex;align-items:center;gap:14px;min-width:0}
+.twin-person--away{flex-direction:row-reverse;text-align:right}
+.twin-person b{display:block;font:900 29px 'Barlow Condensed',Impact,sans-serif;line-height:1;color:#f4f8fa}
+.twin-person small{display:block;margin-top:5px;font-size:10px;color:#a1bacc}
+.twin-versus{font:900 20px 'Barlow Condensed',Impact,sans-serif;color:var(--fan-accent)}
+.twin-headshot{position:relative;flex:none;width:106px;height:104px;overflow:hidden;border:1px solid #4c6075;border-radius:10px;background:linear-gradient(145deg,#223649,#0c1a28)}
+.twin-headshot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%;z-index:2}
+.twin-headshot .fallback{display:grid;place-items:center;height:100%;color:#8eaac0;font-size:34px}
+.twin-rank-photo{position:relative;width:60px;height:56px;overflow:hidden;background:#213446;border-radius:7px;border:1px solid #4c6176;margin-bottom:8px}
+.twin-rank-photo img{width:100%;height:100%;object-fit:cover;object-position:center 20%;position:absolute;inset:0;z-index:2}
+.twin-rank-photo span{height:100%;display:grid;place-items:center;font-size:20px;color:#829aab}
+body.v12.secondary-page .match{background:#101e30!important;border-color:#2e4258!important;color:#f1f6fc!important}
+body.v12.secondary-page .match.on,body.v12.secondary-page .match:hover{border-color:var(--fan-accent)!important;background:#1c2b3d!important}
+body.v12.secondary-page .rank,body.v12.secondary-page .cat{color:var(--fan-accent)}
+body.v12.secondary-page .tabs{background:#0a1826}
+body.v12.secondary-page .tabs button{background:#101e2d!important;color:#b9cddd!important;border:0!important}
+body.v12.secondary-page .tabs button.on{background:var(--fan-accent)!important;color:#081522!important}
+body.v12.secondary-page .bar i{background:var(--fan-accent)}
+body.v12.secondary-page .bar.other i{background:#51d8bf}
+body.v12.secondary-page .explainer{background:#0a1929;color:#adc3d4}
+body.v12.secondary-page .gap b{color:#6fe1c7}
+/* Responsive controls, including the existing five-tab bottom navigator. */
+@media(max-width:1300px){
+ body.v12 .app-header .header-action{display:none}
+ .fan-picker{max-width:195px}
+}
+@media(max-width:950px){
+ body.v12 .app-header .header-inner{flex-wrap:wrap;padding-block:9px;gap:8px}
+ body.v12 .app-header nav{order:3;flex-basis:100%;max-width:100%}
+ .fan-picker{margin-left:auto}
+}
+@media(max-width:820px){
+ body.v12 .app-header .header-inner{flex-wrap:nowrap}
+ body.v12 .app-header nav{display:none}
+ body.v12 .site-bottom-nav{display:grid;background:#101d2c;border-top:1px solid #33465c}
+ body.v12 .site-bottom-nav a{color:#acbdce}
+ body.v12 .site-bottom-nav a[aria-current=page]{background:#1c3045;color:var(--fan-accent)}
+ .fan-picker{margin-left:auto;max-width:205px}
+ .controls-fan{grid-template-columns:1fr}
+ .twin-person{flex-direction:column;text-align:center}
+ .twin-person--away{flex-direction:column}
+}
+@media(max-width:560px){
+ .fan-picker{max-width:154px;padding:4px 5px;gap:4px}
+ .fan-picker label{font-size:8px}
+ body.v12 .fan-picker select{max-width:105px;padding:6px 4px!important;font-size:10px!important}
+ .fan-versus{gap:7px}
+ .fan-versus .team-logo{width:50px;height:50px}
+ .fan-versus strong{font-size:23px}
+ body.v12.secondary-page .twin-faceoff{gap:8px;padding:12px}
+ .twin-headshot{width:75px;height:75px}
+ .twin-person b{font-size:20px}
+ .twin-versus{font-size:14px}
+ .twin-rank-photo{width:46px;height:46px}
+}
