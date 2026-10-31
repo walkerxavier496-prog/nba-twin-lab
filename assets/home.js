@@ -13,8 +13,9 @@ const show=(id,value)=>{if($(id))$(id).textContent=value};
 const usableTime=(...options)=>options.find(v=>v&&Number.isFinite(Date.parse(v)))||null;
 const teamImage=(team,size='large')=>media?.image?.(team.abbr,{size,label:team.abbr})||
  '<span class="club-mark'+(size==='large'?' club-mark--large':'')+'" data-team="'+esc(team.abbr)+'">'+esc(team.abbr)+'</span>';
-const club=(team,isHome=false)=>'<div class="sports-club'+(isHome?' sports-club--home':'')+'">'+teamImage(team)+
- '<span><b class="sports-club__name">'+esc(team.abbr)+'</b><small class="sports-club__city">'+esc(team.name)+'</small></span></div>';
+const club=(team,isHome=false)=>'<a class="sports-club'+(isHome?' sports-club--home':'')+
+ '" href="./team/?team='+encodeURIComponent(String(team.abbr))+'" aria-label="View '+esc(team.name)+' team statistics and roster">'+teamImage(team)+
+ '<span><b class="sports-club__name">'+esc(team.abbr)+'</b><small class="sports-club__city">'+esc(team.name)+'</small></span></a>';
 async function json(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return await r.json()}
 let archive=null,liveFeed=null;
 function matchingForecast(game){
