@@ -2,7 +2,7 @@
 
 **Design decision:** APPROVED / VISUAL DIRECTION LOCKED  
 **Approved by:** Project owner, 31 October 2026 (Australia/Melbourne)  
-**Status:** Design reference only. Do not change the live website simply because this document exists.
+**Status:** V19 implementation committed and applied across primary routes; final visual QA still pending. This document remains the controlling design reference, not permission for unrelated future redesigns.
 
 ## Original reference
 
@@ -67,6 +67,8 @@ The reference uses a minimal horizontal header with Home / Predict / Daily / Pla
 4. Maintain all predictive, audit and live-feed logic. UI redesign must never rewrite immutable forecasts, retroactively alter probabilities or imply unverified injury data.
 5. Prefer small PRs or preview deployments with before/after screenshots; run accessibility, responsive, regression and model audit tests.
 6. Do not claim the live website matches this design until the full visual implementation is complete and visually reviewed.
+
+**Implementation record:** [V19 Concept 3 implementation and remaining visual QA](v19-concept3-implementation.md). Original visual concept remains the benchmark for screenshot review.
 
 ## Review acceptance checklist
 
