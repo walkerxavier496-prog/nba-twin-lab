@@ -1,166 +1,60 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#071520">
-<meta name="description" content="NBA Twin Lab locked daily pregame predictions for six competing models, player box-score projections, and postgame accuracy.">
-<title>NBA Twin Lab · Daily Model Challenge</title>
-<link rel="stylesheet" href="../assets/site-shell.css">
-<style>
-:root{color-scheme:dark;background:#071520;color:#eaf3fb;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 78% 0%,#17364c 0,transparent 48%),#071520}
-a{color:#8ce3fa}header{border-bottom:1px solid #294559;padding:20px max(18px,calc((100vw - 1180px)/2));display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
-.brand{font-size:17px;font-weight:850;text-decoration:none;color:#f0f9ff}.brand span{color:#8ce4ca}
-nav{display:flex;gap:20px;flex-wrap:wrap}nav a{color:#b2cbd9;font-size:13px;text-decoration:none}nav a[aria-current]{color:#80e7d0}
-main{max-width:1180px;margin:auto;padding:42px 18px 80px}
-.eyebrow{font-size:12px;letter-spacing:.17em;font-weight:800;color:#7fdcc9;text-transform:uppercase}
-h1{font-size:clamp(38px,6.7vw,69px);letter-spacing:-.045em;line-height:1.04;margin:14px 0 18px}
-h1 em{color:#92daff;font-style:normal}h2{font-size:23px;margin:0 0 13px;letter-spacing:-.02em}
-p{color:#afc7d6;line-height:1.65}.lead{font-size:17px;max-width:790px}
-.meta{display:flex;flex-wrap:wrap;gap:12px;margin:25px 0 30px}.pill{background:#153448;border:1px solid #366077;border-radius:100px;padding:10px 14px;color:#d9f5ff;font-size:12px}
-.panel{border:1px solid #2b485a;background:#0e2231;border-radius:17px;margin:22px 0;padding:22px}
-.callout{border-left:3px solid #83d6ef;padding-left:15px;font-size:13px;color:#b7cfda}
-.split{display:grid;grid-template-columns:320px minmax(0,1fr);gap:17px}
-.game-selector{display:grid;gap:9px;align-content:start}.game-button{width:100%;background:#10293b;border:1px solid #2b4a5d;border-radius:12px;padding:14px;color:#e3f4ff;cursor:pointer;text-align:left;display:grid;gap:4px;font:inherit}
-.game-button:hover,.game-button[aria-pressed=true]{background:#17445c;border-color:#72cadd}
-.game-button small{font-size:11px;color:#a4c1ce}.game-button b{font-size:14px}
-.game-detail{min-width:0}.match-title{font-size:24px;font-weight:800;letter-spacing:-.025em;margin-bottom:6px}
-.score{font-weight:800;color:#7edfc6}.tablewrap{overflow-x:auto;width:100%}
-table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}th,td{padding:12px 10px;border-bottom:1px solid #29475a;font-size:13px;text-align:right;white-space:nowrap}
-th:first-child,td:first-child{text-align:left}th{color:#a1bccc;font-size:12px}tr:last-child td{border-bottom:0}
-tbody tr:hover{background:#183448}.green{color:#89e5c7;font-weight:800}.muted{color:#92aeba;font-size:12px}.standout{background:#123d43}
-.counts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{padding:18px;background:#102b3c;border:1px solid #35566c;border-radius:12px}
-.stat small{font-size:11px;letter-spacing:.07em;color:#a1c0ce}.stat strong{display:block;font-size:22px;margin-top:6px}
-.watch-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.watch{background:#102e40;border:1px solid #325b6d;border-radius:12px;color:#eef9ff;text-align:left;padding:16px;cursor:pointer;font:inherit}.watch:hover,.watch:focus-visible{border-color:#88d8f1;background:#174459}.watch strong,.watch small{display:block}.watch strong{font-size:15px;margin:5px 0 7px}.watch small{font-size:12px;color:#9fc3d1}.watch b{color:#91e4d1}@media(max-width:700px){.watch-grid{grid-template-columns:1fr}}.control{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center}
-select{color:#eaf3fb;background:#102f44;border:1px solid #4f7587;border-radius:9px;padding:10px 11px;font-size:13px;max-width:100%}
-footer{font-size:12px;color:#9bb7c5;padding-top:20px}
-@media(max-width:800px){.split{grid-template-columns:1fr}.game-selector{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.counts{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:490px){.game-selector{grid-template-columns:1fr}.panel{padding:16px}th,td{padding:10px 7px}}
-
-/* V11 visual system: deliberate hierarchy, strong touch targets and readable mobile cards */
-:root{--canvas:#06111d;--surface:#0e2131;--surface-raised:#132c3e;--line-soft:#2b485a;--ink:#edfaff;--subtle:#a8c4d2;--mint:#89e9c9;--sky:#8bd7fc}
-html{scroll-padding-top:105px}
-body{background:radial-gradient(ellipse 80% 35% at 75% -4%,rgba(47,110,142,.28),transparent 70%),radial-gradient(ellipse 60% 45% at -10% 20%,rgba(27,79,89,.13),transparent 70%),var(--canvas);color:var(--ink)}
-header{position:sticky;top:0;z-index:30;background:rgba(6,19,30,.91);backdrop-filter:blur(17px);-webkit-backdrop-filter:blur(17px);border-bottom:1px solid var(--line-soft);padding-top:15px;padding-bottom:15px}
-nav a:hover,nav a[aria-current=page]{color:var(--mint)}
-main{max-width:1280px;padding-top:52px}
-.hero-dot{color:var(--mint);letter-spacing:.06em;font-size:10px;margin-left:8px}.eyebrow-sep{color:#7095aa;padding:0 6px}
-h1{font-size:clamp(42px,6.5vw,80px);letter-spacing:-.06em;max-width:900px;margin-top:17px}
-h1 em{background:linear-gradient(110deg,#89efd0,#91ceff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{max-width:880px;color:#bdd4e0}
-.meta{margin:22px 0 24px;gap:8px}.pill{background:rgba(20,48,68,.7);border-color:var(--line-soft);padding:8px 12px}.pill[id=status]{background:#123b34;color:#96f0d2;border-color:#327967;font-weight:800}
-.glance{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:10px 0 23px}
-.glance-card{padding:19px 20px;border:1px solid #345267;border-radius:18px;background:linear-gradient(145deg,#142e40,#0e2030);box-shadow:0 12px 32px rgba(0,0,0,.13);min-width:0}
-.glance-card span,.glance-card small{display:block;color:#a4c3d2;font-size:12px}.glance-card strong{display:block;font-size:clamp(26px,3vw,39px);letter-spacing:-.04em;color:#f1faff;margin:5px 0}
-.glance-card strong.review-pending{font-size:clamp(20px,2.3vw,27px);color:#ecc47b}.glance-card strong.review-complete{color:var(--mint)}
-.section-jumps{display:flex;gap:7px;flex-wrap:wrap;border-bottom:1px solid rgba(140,195,215,.18);padding:3px 0 22px;margin-bottom:24px}
-.section-jumps a{color:#bed8e5;text-decoration:none;font-weight:750;font-size:13px;border:1px solid var(--line-soft);padding:10px 14px;border-radius:99px;background:#122a3a}
-.section-jumps a:hover{background:#204c5c;border-color:#79cbb5;color:#fff}
-.panel{background:linear-gradient(150deg,rgba(17,42,57,.97),rgba(9,26,39,.97));border-color:#2c4b5d;border-radius:19px;padding:25px;margin-top:21px;box-shadow:0 12px 38px rgba(0,0,0,.11);scroll-margin-top:106px}
-.section-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:15px}
-.section-heading .eyebrow{font-size:10px;color:#82e5cb}
-.section-heading h2{font-size:clamp(23px,3vw,30px);margin:7px 0 0}.section-hint{color:#88adbc;font-size:10px;font-weight:800;letter-spacing:.12em}
-.watch-grid{gap:12px}.watch{min-height:143px;background:linear-gradient(145deg,#133447,#102537);padding:17px;border-radius:15px;transition:transform .17s,border-color .17s}
-.watch:hover{transform:translateY(-2px)}.watch small{line-height:1.5}.watch strong{font-size:18px}.watch b{font-size:16px}
-.match-tools{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin:18px 0 16px}
-.search-field{display:flex;align-items:center;gap:8px;padding:0 12px;background:#102a3b;border:1px solid #416179;border-radius:12px;min-height:45px;flex:1;max-width:360px}
-.search-field span{font-size:20px;color:var(--mint)}input[type=search]{font:inherit;color:#f3fbff;background:transparent;border:0;width:100%;min-width:0;padding:10px 2px;outline:none}
-.search-field:focus-within{border-color:var(--mint);box-shadow:0 0 0 2px rgba(134,236,207,.15)}
-input::placeholder{color:#8caebf}.chipset{display:flex;gap:6px;flex-wrap:wrap}
-.chip{font:inherit;font-size:12px;font-weight:800;background:#123044;border:1px solid #325368;color:#c6dfeb;border-radius:10px;padding:11px 15px;min-height:44px;cursor:pointer}
-.chip:hover{border-color:#5d9f9b}.chip.active{background:#265b53;border-color:#65c9ad;color:#e4fff4}
-.filter-count{color:#9fbdcc;font-size:12px;margin:0 0 9px}
-.split{grid-template-columns:minmax(230px,295px) minmax(0,1fr);gap:16px}
-.game-button{min-height:78px;border-radius:13px;background:#112c3e;border:1px solid #36586c;padding:14px 16px;transition:background .12s,border-color .12s}
-.game-button[aria-pressed=true]{border-color:#80dfc1;background:#1a4b48;box-shadow:inset 3px 0 0 #83e7c5}
-.game-button small{font-size:11px}.game-button b{font-size:16px}
-.game-detail{background:rgba(6,22,33,.57);border:1px solid rgba(122,174,197,.2);border-radius:15px;padding:20px;align-self:start}
-.match-title{font-size:clamp(21px,2.6vw,30px)}.game-detail p{font-size:13px}.game-detail .muted{line-height:1.6}
-.model-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}
-.model-card{padding:15px;border-radius:14px;border:1px solid #315668;background:#112d3d;min-width:0}
-.model-card__name{font-weight:800;color:#d9f1fa;font-size:13px;display:flex;align-items:center;gap:8px}.model-card__meta{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:9px 0}.model-card__meta strong{font-size:25px;color:#f0fcff;letter-spacing:-.045em}.model-card__meta small{font-size:11px;color:#9dbac8}
-.model-card__bar{height:8px;border-radius:999px;background:#29465b;overflow:hidden}.model-card__fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#6aaedf,#80ead0)}
-.model-card__footer{margin-top:9px;display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#a9cbd7}
-.model-card__badge{color:#8fecce;font-weight:900}.model-card--unavailable{opacity:.7}.model-card--unavailable strong{font-size:15px}
-.model-card__grade{font-size:11px;font-weight:850;color:#86e8c8}.model-card__grade.wrong{color:#ffc4b5}
-.wrong{color:#ffa99f;font-weight:800}
-.player-tools{display:grid;grid-template-columns:1.1fr 1fr .7fr .8fr;gap:10px;margin:20px 0 13px}
-.player-tools label{display:flex;flex-direction:column;gap:6px;min-width:0;color:#a8c9d7;font-size:11px;font-weight:850}
-.player-tools select,.player-tools input{width:100%;min-width:0;min-height:45px;border-radius:11px;border:1px solid #40647a;background:#102f42;color:#f0faff;padding:10px 12px;font-size:13px}
-.player-tools input{background:#102f42;outline:none}.player-tools select:focus,.player-tools input:focus{border-color:#87e3c9}
-.player-cards,.review-cards{display:none}
-.tablewrap{border:1px solid rgba(123,180,207,.17);border-radius:12px}.tablewrap table{min-width:690px}
-th{background:#132f40;letter-spacing:.02em}td{font-variant-numeric:tabular-nums}tbody tr:nth-child(even){background:rgba(122,170,197,.035)}
-footer{border-top:1px solid var(--line-soft);margin-top:35px;padding-bottom:10px}
-@media(max-width:1010px){.glance{grid-template-columns:repeat(2,minmax(0,1fr))}.player-tools{grid-template-columns:repeat(2,minmax(0,1fr))}.section-hint{display:none}}
-@media(max-width:820px){main{padding-top:27px;padding-left:14px;padding-right:14px}.split{grid-template-columns:1fr}.game-selector{display:flex;gap:9px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:8px}.game-button{flex:0 0 168px;min-height:76px;scroll-snap-align:start}.game-detail{padding:16px}.section-jumps{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.section-jumps a{flex:none}.panel{padding:19px}.watch-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){
-h1{font-size:clamp(36px,11vw,51px);line-height:1.04}.eyebrow{font-size:10px}.hero-dot{display:inline-block;margin-top:7px}.lead{font-size:14px;line-height:1.6}
-.meta{gap:6px}.meta .pill{font-size:10px;padding:7px 10px}.glance{gap:8px}.glance-card{border-radius:13px;padding:14px}.glance-card strong{font-size:30px}.glance-card small,.glance-card span{font-size:10px}
-.panel{border-radius:15px;padding:16px;margin-top:16px}.section-heading h2{font-size:23px}.section-hint{display:none}
-.watch-grid{grid-template-columns:1fr}.watch{min-height:110px;padding:15px}
-.match-tools{flex-direction:column;align-items:stretch}.search-field{max-width:none}.chipset{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.chip{padding:9px 5px;font-size:11px}
-.game-selector{margin:0 -1px}.game-button{flex-basis:152px}
-.game-detail .tablewrap{display:none}.model-cards{display:grid;grid-template-columns:1fr;gap:8px}.model-card{padding:13px 14px}.model-card__meta strong{font-size:27px}
-.player-tools{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.player-tools label{font-size:10px}
-.player-table{display:none}.player-cards{display:grid;grid-template-columns:1fr;gap:10px}
-.player-card{padding:15px;background:#102d3f;border:1px solid #35586d;border-radius:13px}
-.player-card__head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.player-card__head b{font-size:15px}.player-card__head small{font-size:11px;color:#b2cddd}
-.player-card__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
-.player-card__stat{padding:9px 3px;background:#092131;border-radius:10px;text-align:center}
-.player-card__stat small{display:block;font-size:10px;color:#a3bfcd}.player-card__stat strong{display:block;font-size:18px;color:#f4fbff;margin:3px 0}.player-card__stat em{font-size:10px;color:#90e1c9;font-style:normal}
-.review-cards{display:grid;grid-template-columns:1fr;gap:9px}
-.review-card{border:1px solid #31586b;background:#102a3a;padding:13px;border-radius:12px}.review-card__top{display:flex;justify-content:space-between;gap:15px;margin-bottom:9px}.review-card__top strong{color:#e5f8ff}.review-card__top b{color:var(--mint)}
-.review-card__stats{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#bad3dd}
-#scorecard .tablewrap{display:none}
-}
-
-</style>
-<script defer src="../assets/site-shell.js"></script>
-<script defer src="./daily.js"></script>
-<link rel="stylesheet" href="../assets/courtside.css"></head>
-<body class="sports-theme sports-daily">
-<header><a class="brand" href="../">TL<span>✦</span> NBA TWIN LAB</a><nav><a href="../predict/">Game Predictor</a><a href="./">Five Model Challenge</a><a href="./daily.html" aria-current="page">Daily Forecasts</a><a href="../audit/">Accuracy Ledger</a></nav></header>
-<div class="court-ticker" aria-label="Locked pregame NBA forecast ticker"><span class="court-ticker__label">🏀 THE SLATE</span><div class="court-ticker__content" id="daily-ticker" aria-label="Select game">Reading forecast locks…</div><a class="court-ticker__link" href="#matchups">MATCHUPS ↘</a></div>
-<main>
-<div class="eyebrow">NBA TWIN LAB <span class="eyebrow-sep">/</span> PREGAME INTELLIGENCE <span class="hero-dot">● LOCKED DATA</span></div>
-<h1>THE LOCKED SLATE.<br><em>GAME NIGHT FORECASTS.</em></h1>
-<p class="lead">Every model's probability is recorded before tipoff. We preserve the original production forecast and review final scores and player stats separately. Models share inputs, so their forecasts are not statistically independent evidence.</p>
-<div class="meta"><span class="pill" id="slate-date">Loading slate…</span><span class="pill" id="lock-time">Verifying records…</span><span class="pill" id="slate-count">— games</span><span class="pill" id="status">Locked forecasts</span></div>
-<div class="glance" aria-label="Current slate summary">
-  <div class="glance-card"><span>Games locked</span><strong id="stat-games">—</strong><small>Complete local-date slate</small></div>
-  <div class="glance-card"><span>Models per game</span><strong id="stat-models">—</strong><small>Five contenders + ensemble</small></div>
-  <div class="glance-card"><span>Player projections</span><strong id="stat-players">—</strong><small>PTS · REB · AST · 3PM</small></div>
-  <div class="glance-card"><span>Review status</span><strong id="stat-review" class="review-pending">PENDING</strong><small id="stat-review-note">Final box scores not yet checked</small></div>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f3f5f3">
+<meta name="description" content="NBA Twin Lab — six competing locked pregame predictions, player projections and postgame accuracy, matchup by matchup.">
+<title>Game Day · NBA Twin Lab</title>
+<link rel="stylesheet" href="../assets/site-shell.css"><link rel="stylesheet" href="../assets/v12.css">
+<script defer src="../assets/site-shell.js"></script><script defer src="./daily.js"></script></head>
+<body class="v12 daily">
+<a class="site-skip" href="#site-main">Skip to games</a>
+<header class="app-header"><div class="header-inner">
+<a href="../" class="brand"><span class="brand-icon">TL</span><span class="wordmark">TWIN <span>LAB</span><small>BASKETBALL INTELLIGENCE</small></span></a>
+<nav aria-label="Main navigation"><a href="../">Home</a><a href="../predict/">Predictor</a><a href="../team-intelligence/">Team Intelligence</a><a class="active" aria-current="page" href="./daily.html">Daily Predictions</a><a href="./">Model Rankings</a><a href="../audit/">Accuracy Ledger</a><a href="../twins/">Player Twins</a></nav>
+<a class="header-action" href="../audit/">ACCURACY TRACKER ↗</a>
+</div></header>
+<div class="ribbon"><div class="ribbon-inner"><span class="ribbon-label">NBA / SLATE</span><div class="ribbon-track" id="daily-ticker" aria-label="Select a locked matchup">Loading the latest predictions…</div><a class="ribbon-link" href="#matchups">ALL GAMES ↘</a></div></div>
+<main id="site-main" class="main-body">
+<div class="page-hero"><div><div class="eyebrow">GAME DAY / PREDICTION DESK</div><h1>THE <em>SLATE.</em></h1><p>Every available matchup. Six rival prediction methods. Locked probabilities, player projections and the results that prove them right—or wrong.</p></div>
+<div class="page-aside"><strong id="slate-date">Loading slate…</strong><div>All times Australia/Melbourne</div></div></div>
+<div class="status-strip"><span class="pill" id="lock-time">Verifying original lock…</span><span class="pill" id="slate-count">— games</span><span class="pill" id="status">Checking forecasts</span></div>
+<div id="error" role="status" aria-live="assertive"></div>
+<div class="daily-stats" aria-label="Pregame model summary">
+<div class="daily-stat"><span>GAME PREDICTIONS</span><strong id="stat-games">—</strong><small>Recorded before tipoff</small></div>
+<div class="daily-stat"><span>MODEL CONTENDERS</span><strong id="stat-models">—</strong><small>Five techniques + ensemble</small></div>
+<div class="daily-stat"><span>PLAYER FORECASTS</span><strong id="stat-players">—</strong><small>Conditional on playing</small></div>
+<div class="daily-stat"><span>FINAL-RESULT AUDIT</span><strong id="stat-review">PENDING</strong><small id="stat-review-note">Waiting for completed games</small></div>
 </div>
-<nav class="section-jumps" aria-label="Dashboard sections"><a href="#watch">Watchlist</a><a href="#matchups">Matchups</a><a href="#player-lab">Player lab</a><a href="#scorecard">Accuracy</a></nav>
-<div id="error" role="status"></div>
-<section class="panel" id="watch">
-<div class="section-heading"><div><div class="eyebrow">01 / SIGNALS</div><h2>Model disagreement watchlist</h2></div><span class="section-hint">WHERE MODELS DIVERGE</span></div>
-<p class="muted">Ranked by split winner picks, then by the spread between the highest and lowest pregame home-win estimates. These models share data; disagreements measure uncertainty, not six independent votes.</p>
-<div class="watch-grid" id="disagreements">Loading model disagreements…</div>
-</section>
-<section class="panel" id="matchups">
-<div class="section-heading"><div><div class="eyebrow">02 / PRETIP FORECASTS</div><h2>Matchup intelligence</h2></div><span class="section-hint">SIX-MODEL COMPARISON</span></div>
-<p class="muted">Choose a game to compare locked win probabilities and model confidence. Both the original and six-model forecast timestamps remain visible.</p>
-<div class="match-tools"><label class="search-field" for="match-search"><span aria-hidden="true">⌕</span><input id="match-search" type="search" placeholder="Find a team…" autocomplete="off"></label><div class="chipset" role="group" aria-label="Filter matchups"><button class="chip active" type="button" data-filter="all" aria-pressed="true">All games</button><button class="chip" type="button" data-filter="split" aria-pressed="false">Split picks</button><button class="chip" type="button" data-filter="gap" aria-pressed="false">Wide gaps</button></div></div>
-<div class="split"><div><p class="filter-count" id="game-count">Loading games…</p><div class="game-selector" id="game-selector">Loading…</div></div><div class="game-detail" id="game-detail" aria-live="polite"></div></div>
-</section>
-<section class="panel" id="player-lab">
-<div class="section-heading"><div><div class="eyebrow">03 / PLAYER OUTLOOK</div><h2>Player-stat laboratory</h2></div><span class="section-hint">V9 · RESEARCH ONLY</span></div>
-<p class="muted">Predictions are conditional on a player appearing. Official injuries are not assumed. DNPs are excluded from accuracy scoring, never recorded as zero points.</p>
-<div class="player-tools"><label for="player-game"><span>Game</span><select id="player-game"></select></label><label for="player-search"><span>Search player</span><input id="player-search" type="search" placeholder="Search player…" autocomplete="off"></label><label for="player-team"><span>Team</span><select id="player-team"><option value="all">Both teams</option></select></label><label for="player-sort"><span>Sort by</span><select id="player-sort"><option value="pts">Most points</option><option value="reb">Most rebounds</option><option value="ast">Most assists</option><option value="three_pm">Most threes</option><option value="name">Player name</option></select></label></div>
-<p id="player-count" class="filter-count" aria-live="polite"></p>
-<div class="tablewrap player-table"><table><thead><tr><th>Player / team</th><th>PTS</th><th>REB</th><th>AST</th><th>3PM</th><th>Actual PTS</th><th>Actual REB</th><th>Actual AST</th><th>Actual 3PM</th></tr></thead><tbody id="players"><tr><td colspan="9">Loading player projections…</td></tr></tbody></table></div>
+
+<section id="matchups" aria-labelledby="matchups-title">
+<div class="section-top"><div><div class="eyebrow">01 / HEAD-TO-HEAD</div><h2 id="matchups-title">MATCHUP CENTRE.</h2></div><p>Select any game to see all six model predictions and the locked production forecast.</p></div>
+<div class="dashboard-grid">
+<aside class="daily-panel">
+<h3>FIND A GAME</h3>
+<div class="match-tools">
+<label class="search-field" for="match-search"><span aria-hidden="true">⌕</span><input id="match-search" type="search" placeholder="Search team or city" autocomplete="off"></label>
+<div class="chipset" role="group" aria-label="Game filters"><button class="chip active" data-filter="all" type="button" aria-pressed="true">All</button><button class="chip" data-filter="split" type="button" aria-pressed="false">Split picks</button><button class="chip" data-filter="gap" type="button" aria-pressed="false">Big gaps</button></div>
+</div>
+<p id="game-count" class="filter-count">Loading matchups…</p>
+<div id="game-selector" class="game-selector" aria-label="Game selection">Loading games…</div>
+</aside>
+<div class="game-detail" id="game-detail" aria-live="polite">Loading selected game…</div>
+</div></section>
+
+<div class="daily-lower">
+<section class="daily-panel" id="watch"><div class="section-heading"><div><div class="eyebrow">02 / THE DEBATE</div><h2>MODEL SPLIT WATCH.</h2></div><small class="section-hint">WHERE MODELS DISAGREE</small></div>
+<p>See where forecasts genuinely diverge. Six opinions do not mean six independent sources of evidence.</p><div id="disagreements" class="watch-grid">Loading model disagreements…</div></section>
+<section class="daily-panel" id="scorecard"><div class="section-heading"><div><div class="eyebrow">03 / THE RECEIPTS</div><h2>FINAL BUZZER.</h2></div><small class="section-hint">TRUE ACCURACY / NO BACKFILL</small></div>
+<p class="muted" id="review-status">Awaiting completed games. No outcomes are invented before final box scores.</p>
+<div class="tablewrap"><table><thead><tr><th>Model</th><th>Games</th><th>Win %</th><th>Brier ↓</th><th>Log loss ↓</th><th>Score MAE ↓</th></tr></thead><tbody id="model-results"><tr><td colspan="6">Awaiting verified final results</td></tr></tbody></table></div><div id="review-cards" class="review-cards"></div>
+<a class="btn" style="margin-top:15px" href="../audit/">OPEN ACCURACY LEDGER ↗</a></section>
+</div>
+<section class="daily-panel" id="player-lab"><div class="section-heading"><div><div class="eyebrow">04 / PLAYER LAB</div><h2>THE BOX-SCORE FORECAST.</h2></div><small class="section-hint">V9 · RESEARCH MODEL</small></div>
+<p>Points, rebounds, assists and made threes. These predictions assume the player participates; uncertain availability is not disguised as an official injury report.</p>
+<div class="player-tools"><label for="player-game">MATCHUP<select id="player-game"></select></label><label for="player-search">PLAYER<input id="player-search" type="search" autocomplete="off" placeholder="Search any player"></label><label for="player-team">TEAM<select id="player-team"><option value="all">Both teams</option></select></label><label for="player-sort">SORT<select id="player-sort"><option value="pts">Most points</option><option value="reb">Most rebounds</option><option value="ast">Most assists</option><option value="three_pm">Most threes</option><option value="name">A – Z</option></select></label></div>
+<p class="filter-count" id="player-count" aria-live="polite">Loading players…</p>
+<div class="tablewrap player-table"><table><thead><tr><th>Player</th><th>PTS</th><th>REB</th><th>AST</th><th>3PM</th><th>Actual PTS</th><th>Actual REB</th><th>Actual AST</th><th>Actual 3PM</th></tr></thead><tbody id="players"><tr><td colspan="9">Loading projections…</td></tr></tbody></table></div>
 <div id="player-cards" class="player-cards" aria-label="Player projections"></div>
 </section>
-<section class="panel" id="scorecard">
-<div class="section-heading"><div><div class="eyebrow">04 / REAL-WORLD VALIDATION</div><h2>Accuracy scorecard</h2></div><span class="section-hint">RESULTS ONLY AFTER FINALS</span></div>
-<p class="muted" id="review-status">Awaiting completed games. No results or win rates are invented before the review publishes.</p>
-<div class="tablewrap"><table><thead><tr><th>Model</th><th>Games</th><th>Win accuracy</th><th>Brier ↓</th><th>Log loss ↓</th><th>Score MAE ↓</th></tr></thead><tbody id="model-results"><tr><td colspan="6">Awaiting a final-results review</td></tr></tbody></table></div><div id="review-cards" class="review-cards"></div>
-</section>
-<section class="panel"><h2>How to interpret the challenge</h2><p class="callout">M1 is the existing production Elo baseline. M2 uses basketball science, M3 inferred player impact and rotation, M4 a possession Monte Carlo, M5 regularised machine learning and M6 an earlier-season-fitted ensemble. A missing or late forecast is excluded rather than fabricated. Brier and log loss matter more than raw winner-pick percentage when judging whether a model's probabilities are reliable.</p><p class="muted" id="data-sources"></p></section>
-<footer>NBA Twin Lab research experiment. Not betting advice. No model receives automatic promotion based on a single day.</footer>
-</main>
-</body>
-</html>
+<section class="daily-panel"><div class="eyebrow">TRANSPARENCY / HOW THE LAB WORKS</div><h2>DATA, NOT DRAMA.</h2>
+<p>M1: production Elo. M2: basketball science. M3: inferred player impact. M4: seeded Monte Carlo. M5: regularised machine learning. M6: earlier-season-fitted ensemble. A new model earns promotion through prospective evidence; nothing is retroactively rewritten.</p><p class="small-note" id="data-sources"></p></section>
+<footer class="site-footer"><span>NBA TWIN LAB · LOCKED PREGAME RESEARCH</span><span>Independent NBA analysis. Not betting advice. <a href="../">BACK TO HOME ↗</a></span></footer>
+</main></body></html>
