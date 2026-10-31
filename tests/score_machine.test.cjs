@@ -21,3 +21,11 @@ test('training learns score and margin without passing target into feature vecto
  const fitted=S.train(rows);assert.equal(fitted.training_games,1230);assert.equal(fitted.schema,'nba-twin-score-machine-research-v1');
  const p=S.predict(fitted,t,t);assert.ok(p.available);assert.ok(Number.isFinite(p.projected_home_margin));
 });
+
+test('why-machine drivers sum to model margin and disclose non-causal attribution',()=>{
+ const p=S.predict(model(226,4),t,t);
+ const contributions=Object.values(p.explanation.impact_by_feature).reduce((sum,x)=>sum+x.margin_points,0);
+ assert.ok(Math.abs(contributions+p.explanation.intercept_margin_points-p.projected_home_margin)<1e-8);
+ assert.equal(p.explanation.drivers.length,5);
+ assert.match(p.explanation.attribution_note,/not causal/);
+});

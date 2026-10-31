@@ -69,6 +69,8 @@ function predict(model,home,away){
  const total=dot(model.total_coefficients,x),margin=dot(model.margin_coefficients,x);
  if(!finite(total)||!finite(margin)||!finite(model.probability_scale)||model.probability_scale<=0)return {available:false,reason:'Model coefficients invalid'};
  const homePts=clamp((total+margin)/2,0,200),awayPts=clamp((total-margin)/2,0,200),p=sigmoid(margin/model.probability_scale);
+ const driverNames={net_gap:'Current/prior adjusted net efficiency',offense_gap:'Offensive rating difference',defense_gap:'Defensive rating difference',pace:'Expected possessions',home_attack:'Home offence vs opposing defence',away_attack:'Away offence vs opposing defence',recent_net_gap:'Recent efficiency trend',player_gap:'Pregame inferred player-impact difference',continuity_gap:'Rotation continuity',rest_gap:'Rest and back-to-back disadvantage',three_rate_gap:'Three-point shot profile',efg_gap:'Effective field-goal percentage',turnover_gap:'Turnover pressure',rebound_gap:'Offensive rebounding',free_throw_gap:'Free-throw frequency'};
+ const drivers=names.slice(1).map((feature,i)=>({feature,label:driverNames[feature]||feature,margin_points:model.margin_coefficients[i+1]*x[i+1],direction:model.margin_coefficients[i+1]*x[i+1]>=0?'home':'away'})).sort((a,b)=>Math.abs(b.margin_points)-Math.abs(a.margin_points));
  // Rounded NBA final scores cannot tie: break only display rounding ties,
  // not the underlying continuous model, in the projected winner direction.
  let displayHome=Math.round(homePts),displayAway=Math.round(awayPts);
@@ -78,7 +80,9 @@ function predict(model,home,away){
   projected_home_margin:homePts-awayPts,margin_range_80:[margin+model.margin_residual_p10,margin+model.margin_residual_p90],
   model_id:model.schema, explanation:{baseline_offense_home:blend(home,'adj_ortg'),baseline_offense_away:blend(away,'adj_ortg'),
   baseline_defense_home:blend(home,'adj_drtg'),baseline_defense_away:blend(away,'adj_drtg'),pace:(blend(home,'pace')+blend(away,'pace'))/2,
-  home_current_games:home.games,away_current_games:away.games,impact_by_feature:Object.fromEntries(names.slice(1).map((name,i)=>[name,{margin_points:model.margin_coefficients[i+1]*x[i+1],total_points:model.total_coefficients[i+1]*x[i+1]}]))},
+  home_current_games:home.games,away_current_games:away.games,drivers:drivers.slice(0,5),
+  attribution_note:'Linear model contributions explain the fitted margin numerically. Correlated inputs mean they are not causal impact estimates. Historical player availability was inferred, not officially verified.',
+  intercept_margin_points:model.margin_coefficients[0],impact_by_feature:Object.fromEntries(names.slice(1).map((name,i)=>[name,{margin_points:model.margin_coefficients[i+1]*x[i+1],total_points:model.total_coefficients[i+1]*x[i+1]}]))},
   warning:'Research estimate. Historical roster availability is inferred, official current injury/roster coverage must be verified before publication.'};
 }
 return Object.freeze({names,vector,train,predict,blend});
