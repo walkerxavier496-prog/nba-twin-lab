@@ -207,7 +207,7 @@ function setFeed(value){
  }
  const freshness=Number.isFinite(Date.parse(feed.fetched_at_utc))?fmtTime(feed.fetched_at_utc):'checked just now';
  if($('live-feed-freshness'))$('live-feed-freshness').textContent='ESPN scoreboard · checked '+freshness+' · automatic refresh';
- keepVisibleSelection();showGames();loadSelected();loadBatch();loadBatch();
+ keepVisibleSelection();showGames();loadSelected();loadBatch();
 }
 function unavailable(){
  feed=null;lastLoaded=null;request++;batchRequest++;summaryCache.clear();
