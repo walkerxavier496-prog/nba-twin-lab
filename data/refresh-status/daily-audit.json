@@ -1,9 +1,12 @@
 {
   "workflow": "daily-audit",
-  "generation_observed_at_utc": "2026-10-31T10:45:18.838688+00:00",
+  "generation_observed_at_utc": "2026-10-31T15:53:44.556093+00:00",
   "artifact_generation_timestamps": {},
-  "source_revision": "c32bc1c16e28d08c5493aaf3098759006b60c3c4",
-  "run_id": "41194005345",
+  "source_revision": "a57696462bfdccad6d7e8de7da89a70a2587e3aa",
+  "run_id": "41216982720",
   "run_attempt": "1",
-  "changed_artifacts": []
+  "changed_artifacts": [
+    "audit/anchors/2026-10-31.json",
+    "data/availability-current.json"
+  ]
 }
