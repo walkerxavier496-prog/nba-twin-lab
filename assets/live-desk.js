@@ -149,7 +149,10 @@ function selectGame(id){
 }
 function setFeed(value){
  if(!value||!Array.isArray(value.games))return;
- feed=value;
+ feed={...value,games:value.games.slice().sort((a,b)=>{
+  const order=g=>g.phase==='live'?0:g.phase==='scheduled'?1:2;
+  return order(a)-order(b)||Date.parse(a.date)-Date.parse(b.date);
+ })};
  const current=selectedGame();
  if(!current){
   const fav=feed.games.filter(g=>favourite(g));
