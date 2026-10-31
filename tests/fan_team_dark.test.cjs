@@ -44,7 +44,7 @@ test('team intelligence has independent favourite, opponent and venue controls',
  assert.match(app,/prefs\?\.set\?\./);
  assert.match(app,/twinlab:teamchange/);
  assert.match(app,/fixtureChoices/);
- assert.match(app,/\$\('venue-home'\)/);
+ assert.match(app,/venue-'\+side/);
  assert.doesNotMatch(app,/BOS'\)\?'BOS'/);
  assert.doesNotThrow(()=>new vm.Script(app));
 });
