@@ -86,7 +86,7 @@ function renderSummary(){
  const g=selectedGame(),content=$('live-stats-rows'),title=$('desk-matchup'),label=$('desk-game-source');
  if(!g){if(content)content.innerHTML='<tr><td colspan="6">Select a game to see its real player statistics.</td></tr>';return}
  if(title)title.textContent=g.away.abbr+' @ '+g.home.abbr+' · '+status(g);
- if(label)label.textContent='ESPN official game box score feed (unofficial API), separate from model projections';
+ if(label)label.textContent='ESPN public game-summary feed (unofficial API), separate from model projections';
  const rows=(lastLoaded?.id===String(g.id)?lastLoaded.players:[]).slice().sort((a,b)=>(b[sortStat]??-1)-(a[sortStat]??-1));
  if(content)content.innerHTML=rows.length?rows.slice(0,30).map(p=>
  '<tr><td><span class="desk-player">'+(p.id?'<img loading="lazy" decoding="async" src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(p.id)+'.png" alt="" onerror="this.style.display=\'none\'">':'')+'<span><b>'+esc(p.name)+'</b><small>'+esc(p.team)+'</small></span></span></td>'+
@@ -110,7 +110,7 @@ function sendAlerts(game,plays){
  }
  seen.set(String(game.id),ids);
  if($('live-alert-feed'))$('live-alert-feed').innerHTML=messages.length?
-  messages.map(m=>'<li>'+esc(m)+'</li>').join(''):'<li>Watching for verified dunks, threes, blocks and buzzer plays while this page is open.</li>';
+  messages.map(m=>'<li>'+esc(m)+'</li>').join(''):'<li>'+(alerts?'Watching the selected game for verified dunks, threes, blocks and buzzer plays.':'Highlight alerts are off. Enable them to monitor the selected game while this page is open.')+'</li>';
 }
 async function loadSelected(){
  const g=selectedGame();if(!g)return;
@@ -168,7 +168,7 @@ function init(){
   if(typeof Notification!=='undefined'&&Notification.permission==='default'){
    try{permission=await Notification.requestPermission()}catch(e){permission='denied'}
   }else permission=typeof Notification!=='undefined'?Notification.permission:'unsupported';
-  if($('live-alert-note'))$('live-alert-note').textContent=permission==='granted'?'Desktop notifications enabled while this page is open.':'In-page highlight alerts enabled; system notifications unavailable or not permitted.';
+  if($('live-alert-note'))$('live-alert-note').textContent=permission==='granted'?'Desktop notifications enabled for new highlighted plays in the selected game while this page is open.':'In-page alerts for the selected game are enabled; system notifications unavailable or not permitted.';
  });
  document.addEventListener('twinlab:teamchange',()=>showGames());
 }
