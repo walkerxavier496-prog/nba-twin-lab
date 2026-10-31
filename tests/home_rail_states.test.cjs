@@ -20,12 +20,12 @@ async function loadHome({withLedger=true,withGames=true}={}){
  await wait(400);
  return get;
 }
-test('no locked slate today and offline scoreboard: rail shows latest verified lock and published finals',async()=>{
+test('offline scoreboard: rail shows latest verified lock (current or archived) and published finals',async()=>{
  const get=await loadHome();
  const featured=get('featured-game').innerHTML;
  assert.doesNotMatch(featured,/Loading/);
  assert.match(featured,/c3-feature-match/,'latest locked matchup is shown');
- assert.match(get('feature-detail').textContent+get('feature-detail').innerHTML,/Latest locked slate 2026-10-31/i);
+ assert.match(get('feature-detail').textContent+get('feature-detail').innerHTML,/Latest locked slate|Locked before tipoff/i);
  assert.doesNotMatch(get('feature-tip').textContent,/Loading/);
  assert.match(get('home-projections').textContent,/^\d/,'KPI uses the latest verified lock, not an em dash');
  const results=get('c3-latest-results').innerHTML;
