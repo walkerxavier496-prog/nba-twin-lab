@@ -245,27 +245,56 @@ function modelBreakdownPanel(g){
  '<p class="c3-source-note">Model values saved before tipoff · '+esc(dateStatus())+'. Sidecar injuries were captured but not fed back into those probabilities. Original Elo win chance: '+pct(g.primary_forecast?.winner_probability)+'.</p></div>';
 }
 function matchupPanel(g){
- const context=otherInfo(g);
+ const context=otherInfo(g),review=reviewFor(g),final=scoreFor(g);
  const infoRows=[
  ['OFFENSIVE RATING','ortg'],['DEFENSIVE RATING','drtg'],['PACE','pace'],
- ['eFG %','efg'],['3PT %','three_pct'],['TURNOVER RATE','tov_rate'],['OFF. REBOUND RATE','orb_rate']
+ ['eFG %','efg'],['3PT ATTEMPT RATE %','three_rate'],
+ ['3PT FG%','three_pct'],['OPP 3PT ATTEMPT RATE %','opp_three_rate'],
+ ['TURNOVER RATE %','tov_rate'],['OPP TURNOVER RATE %','opp_tov_rate'],
+ ['OFF. REBOUND RATE %','orb_rate'],['DEF. REBOUND RATE %','drb_rate']
  ];
- const label=key=>key==='efg'||key==='three_pct'||key==='tov_rate'||key==='orb_rate';
- const prop=side=>context[side]?.season||null;
- const away=prop('away'),home=prop('home');
- const rows=infoRows.map(([text,key])=>{
- const a=away?.[key],h=home?.[key];const percentage=label(key);
- return '<div class="c3-stat-row"><b>'+num(numbers(a)?percentage?100*a:a:null)+'</b><span>'+esc(text)+'</span><b>'+num(numbers(h)?percentage?100*h:h:null)+'</b></div>';
+ const per=key=>['efg','three_rate','three_pct','opp_three_rate','tov_rate','opp_tov_rate','orb_rate','drb_rate'].includes(key);
+ const away=context.away?.season,home=context.home?.season;
+ const rows=infoRows.map(([label,key])=>{
+  const a=away?.[key],h=home?.[key],percentage=per(key);
+  return '<div class="c3-stat-row"><b>'+num(numbers(a)&&percentage?100*a:a)+'</b><span>'+esc(label)+'</span>'+
+  '<b>'+num(numbers(h)&&percentage?100*h:h)+'</b></div>';
  }).join('');
- const ps=teamData(g,'away').available.slice(0,3);
- const summary=ps.map(p=>'<a class="c3-player-match" href="../team/?team='+encodeURIComponent(p.team)+'&player='+encodeURIComponent(p.player_id)+'#team-player-profile">'+
+ const players=[...teamData(g,'away').available.slice(0,2),...teamData(g,'home').available.slice(0,2)];
+ const summary=players.map(p=>'<a class="c3-player-match" href="../team/?team='+encodeURIComponent(p.team)+'&player='+encodeURIComponent(p.player_id)+'#team-player-profile">'+
  (portrait(p)?'<img src="'+portrait(p)+'" alt="" loading="lazy">':'')+
- '<span><strong>'+esc(p.name)+'</strong><small>'+esc(p.team)+' · projected '+num(p.projection_if_play?.pts)+' PTS if playing</small></span></a>').join('');
- return '<div class="c3-compare-grid"><section class="c3-panel"><h3>Team Comparison · source cutoff verified</h3><div class="c3-stat-row"><b>'+esc(g.away.abbr)+'</b><span>METRIC</span><b>'+esc(g.home.abbr)+'</b></div>'+rows+'</section>'+
- '<section class="c3-panel"><h3>Player Matchup Watch</h3>'+summary+'<p class="c3-source-note">Player examples are not verified 1-to-1 defensive assignments.</p></section>'+
- '<section class="c3-panel"><h3>Game Script & Uncertainty</h3><p>Original Elo projected '+esc(g.away.name)+' '+num0(g.primary_forecast?.projected_score?.away)+' to '+esc(g.home.name)+' '+num0(g.primary_forecast?.projected_score?.home)+'.</p>'+
- '<p>Historical Elo and inferred rotations may misrepresent team quality following trades or injuries. These numbers are NOT verified starter-adjusted probabilities.</p></section></div>'+
- (!context.available?'<p class="c3-source-note">Pregame advanced team snapshot was not available at the forecast cutoff; missing values are shown as —.</p>':'');
+ '<span><strong>'+esc(p.name)+' · '+esc(p.team)+'</strong><small>Conditional projection: '+num(p.projection_if_play?.pts)+' PTS / '+num(p.projection_if_play?.ast)+' AST</small></span></a>').join('');
+ const factors=basketballFactors(g).slice(0,3);
+ const insight='<div class="c3-evidence-notes">'+factors.map(x=>'<div class="c3-factor"><span class="c3-factor-icon">↗</span>'+
+ '<div><b>'+esc(x.text)+'</b><small>'+esc(x.detail)+'</small><small class="c3-factor-why">'+esc(x.why)+'</small></div></div>').join('')+'</div>';
+ const teamStat=(code,key)=>{
+  const all=review?.team_stats||{},found=Object.keys(all).find(k=>canonicalTeam(k)===canonicalTeam(code));
+  return found?all[found]?.[key]:'—';
+ };
+ const observed=final&&review?'<section class="c3-panel c3-postgame-evidence">'+
+  '<h3>After the Buzzer · What Actually Happened</h3>'+
+  '<p class="c3-source-note">Final: '+esc(g.away.abbr)+' '+final.away+' – '+final.home+' '+esc(g.home.abbr)+
+  '. These numbers describe the completed game; they were NOT known to the pregame models.</p>'+
+  '<div class="c3-stats-real">'+[
+   ['3PT MADE–ATTEMPTED','threepointfieldgoalsmade-threepointfieldgoalsattempted'],
+   ['FG%','fieldgoalpct'],['TURNOVERS','totalturnovers'],
+   ['OFFENSIVE REBOUNDS','offensiverebounds'],['ASSISTS','assists']
+  ].map(([label,key])=>'<div class="c3-stat-row"><b>'+esc(teamStat(g.away.abbr,key))+
+   '</b><span>'+esc(label)+'</span><b>'+esc(teamStat(g.home.abbr,key))+'</b></div>').join('')+'</div>'+
+  '<p class="c3-source-note">Use these results to test the pregame matchup hypotheses. One game cannot establish that any factor caused the model error.</p></section>':'';
+ return '<div class="c3-compare-grid"><section class="c3-panel"><h3>Team Comparison · Verified Pregame Cutoff</h3>'+
+ '<p class="c3-source-note">2026–27 season · '+esc(g.away.abbr)+' '+esc(away?.games||'—')+
+ ' games · '+esc(g.home.abbr)+' '+esc(home?.games||'—')+' games</p>'+
+ '<div class="c3-stat-row"><b>'+esc(g.away.abbr)+'</b><span>METRIC</span><b>'+esc(g.home.abbr)+'</b></div>'+rows+'</section>'+
+ '<section class="c3-panel"><h3>Players to Watch · Both Teams</h3>'+summary+
+ '<p class="c3-source-note">These are rotation projections, not verified defensive assignments or confirmed starters.</p></section>'+
+ '<section class="c3-panel"><h3>Matchup Game Script</h3>'+
+ (insight||'<p>Insufficient source-backed pregame statistics.</p>')+
+ '<p class="c3-source-note">Original Elo projected '+esc(g.away.abbr)+' '+num0(g.primary_forecast?.projected_score?.away)+
+ ' to '+esc(g.home.abbr)+' '+num0(g.primary_forecast?.projected_score?.home)+
+ '. No narrative is retroactively attributed to the immutable machine.</p></section></div>'+
+ observed+
+ (!context.available?'<p class="c3-source-note">Both pregame team snapshots were not available at lock time. Missing statistics are intentionally blank.</p>':'');
 }
 function playersPanel(g){
  const all=(g.v9_player_projections||[]).filter(p=>state.playerTeam==='all'||p.team===state.playerTeam)
