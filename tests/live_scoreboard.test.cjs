@@ -76,7 +76,7 @@ test('daily mismatch warning exposes different techniques rather than implying c
  assert.match(s,/spanPoints>=20/);
  assert.match(s,/No pregame sidecar|high confidence when other techniques disagree this much|Do not treat the biggest percentage as the consensus/);
  assert.match(s,/scoreAdapter\.fetchDate/);
- assert.match(s,/ESPN score feed unavailable/);
+ assert.match(s,/Current ESPN scoreboard unavailable/);
 });
 
 test('predictor receives live game clock/score from separate adapter and keeps model caution visible',()=>{
