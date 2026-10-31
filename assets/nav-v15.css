@@ -25,3 +25,7 @@ body.v12 .app-header nav .nav-group:focus-within{z-index:155}
 body.v12 .app-header nav .nav-main-link,body.v12 .app-header nav .nav-group>summary{padding:11px 9px;font-size:11px}}
 @media(max-width:900px){body.v12 .app-header nav[aria-label="Main navigation"]{display:none}
 body.v12 .app-header .header-inner{flex-wrap:nowrap}}
+
+/* Four predictable mobile destinations, no overflow-prone header. */
+body.v12 .site-bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:900px){body.v12 .app-header nav[aria-label="Main navigation"]{display:none!important}}
