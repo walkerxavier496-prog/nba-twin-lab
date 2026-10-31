@@ -1,6 +1,12 @@
 name: Daily immutable prediction and results ledger
 
 on:
+  # Run this exact audited publication pipeline after its own definition changes.
+  # Restrict push to this workflow file so data publication commits cannot loop.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/daily-audit.yml'
   workflow_dispatch:
     inputs:
       melbourne_date:
