@@ -79,3 +79,8 @@ body.v12.team-centre{background:#060e1b}
 @media(max-width:1000px){.team-centre-hero{grid-template-columns:1fr}.team-roster-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:700px){.team-centre-main{padding-inline:15px!important}.team-centre-hero{padding:22px 15px;gap:24px}.team-identity{gap:12px}.team-identity .team-logo{width:77px!important;height:77px!important;border-radius:15px}.team-identity h1{font-size:clamp(26px,7vw,44px)}.team-hero-metrics{gap:7px}.team-hero-metrics>div{padding:14px}.team-hero-metrics strong{font-size:26px}.team-centre-tabs{top:0;justify-content:space-between;gap:5px}.team-centre-tabs a{font-size:9px;padding:9px 7px}.team-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.team-two-col{grid-template-columns:1fr}.team-roster-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.team-player-photo{height:143px}.team-fixtures{grid-template-columns:1fr}.team-section-header{align-items:start;flex-wrap:wrap}.team-section-header a{margin-top:7px}.team-panel{padding:12px}}
 @media(prefers-reduced-motion:reduce){.team-player-card{transition:none}}
+
+/* Player headshot sits above the letter fallback rather than below it. */
+.team-player-photo{position:relative;display:block}
+.team-player-photo img{position:absolute;inset:0;z-index:2;width:100%;height:100%;object-fit:contain;object-position:center bottom}
+.team-player-photo b{position:absolute;inset:0;display:grid;place-items:center;padding:0!important;z-index:0;color:#86a7c8}
