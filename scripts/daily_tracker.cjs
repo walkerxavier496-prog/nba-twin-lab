@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const E = require('../predict/engine.js');
 const R = require('../predict/roster.js');
+const RI = require('../predict/roster-integrity.js');
 const A = require('./audit-core.cjs');
 const C = require('./five_model_challenge.cjs');
 
@@ -159,6 +160,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
   const rosterPriors = readJson(path.join(DATA, 'roster-priors.json'));
   const rosterReport = readJson(path.join(DATA, 'roster-research-report.json'));
   const challengeReport = readJson(path.join(DATA, 'five-model-report.json'));
+  const officialAvailability = readJson(path.join(DATA, 'availability-current.json'));
   const games = (gameData.games || []).filter(game => A.melbourneDate(game.date) === date).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
   if (!games.length) throw new Error(`No validated NBA games discovered for Melbourne date ${date}`);
   if (games.some(game => game.status !== 'scheduled')) throw new Error('At least one target game is no longer pregame; lock refused');
@@ -186,6 +188,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
     const roster = R.modelForecast({ game, baseline: primary, snapshot, priorRotations: rosterPriors, report: rosterReport, now });
     const challenge = C.predictLiveModels({ game, baseline: primary, snapshot, rosterForecast: roster,
       report: challengeReport, gameData, simulations });
+    const rosterIntegrity = RI.auditGame({game,snapshot,availability:officialAvailability,now});
     forecasts.push({
       game_id: String(game.id), tip_utc: new Date(game.date).toISOString(), tip_melbourne: A.melbourneDisplay(game.date),
       away: { id: String(game.away.id), name: game.away.name, abbr: game.away.abbr },
@@ -218,6 +221,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
         weights_training_seasons: prediction.weights_training_seasons,
         availability: prediction.availability, roster_uncertainty: prediction.roster_uncertainty,
       } : { model_id: modelId, model_version: challengeReport.version, version_status: 'unavailable', available: false, reason: prediction.reason }])),
+      v18_roster_integrity: rosterIntegrity,
       v9_player_projections: v9Projections(game, teams),
     });
   }
@@ -242,7 +246,9 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
       roster_research: { generated_at_utc: rosterReport.generated_at_utc, status: rosterReport.status },
       five_model_challenge: { generated_at_utc: challengeReport.generated_at_utc, version: challengeReport.version,
         schema: challengeReport.schema, status: challengeReport.status, strict_no_future_data: challengeReport.strict_no_future_data },
-      injuries: { name: 'No verified automated official injury feed', status: 'unavailable_not_inferred', effect: 'V9 outputs remain explicitly conditional on playing; no availability is invented' },
+      injuries: { name: 'Availability source for V18 audit', status: officialAvailability.status,
+        source_url: officialAvailability.source?.url || null, published_at_utc: officialAvailability.published_at_utc || null,
+        effect: 'V18 checks current-roster and injury provenance; Elo/V9 model outputs are not recomputed from this audit' },
     },
     review_protocol: {
       game_metrics: ['winner_accuracy', 'brier', 'log_loss', 'score_mae_per_team'],
