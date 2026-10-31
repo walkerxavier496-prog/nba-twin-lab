@@ -101,3 +101,10 @@
  .game-leader-card>img{width:55px;height:57px}
  .game-leader-card b{font-size:22px}
 }
+
+/* V16 — deeper game box with horizontal-scroll sorting and fantasy scoring. */
+.game-stat-guidance{color:#a9c2d2!important;font-size:11px;line-height:1.5;margin:0 0 13px}
+.game-table-scroll table{min-width:1120px}
+.game-box-team table th button{border:0;background:transparent;font:inherit;font-weight:900;color:inherit;cursor:pointer;padding:9px 3px}
+.game-box-team table th button:hover,.game-box-team table th button:focus-visible{color:var(--fan-accent,#c6dbff);outline:1px solid var(--fan-accent,#c6dbff)}
+.game-box-team table .game-fpts{font-weight:950;color:var(--fan-accent,#c6dbff)}
