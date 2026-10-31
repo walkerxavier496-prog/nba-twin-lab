@@ -41,7 +41,8 @@ function init(){
   '<a href="'+href('challenge/')+'">THE MACHINE · Model Rankings</a>'+
   '<a href="'+href('audit/')+'">Accuracy & Audit</a>'+
   '<a href="'+href('#live-player-stats')+'">Live Box Scores (not projections)</a>'+
-  '<a href="'+href('team/')+'">Team Centre</a>'+\n  '<a href="'+href('team-intelligence/')+'">Team Intelligence</a>'+
+  '<a href="'+href('team/')+'">Team Centre</a>'+
+  '<a href="'+href('team-intelligence/')+'">Team Intelligence</a>'+
   '<a href="'+href('league/#cup')+'">NBA Cup</a>'+
   '<a href="'+href('watchlist/')+'">★ My Watchlist</a>'+
   '<a href="'+href('twins/')+'">Player Twins</a>'+
