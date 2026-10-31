@@ -172,7 +172,7 @@ function postgameBar(g){
  '<div><span class="c3-postgame-label">FINAL · '+esc(final.kind)+'</span><strong>'+esc(g.away.abbr)+' '+final.away+' – '+final.home+' '+esc(g.home.abbr)+'</strong></div>'+
  '<div><span class="c3-postgame-label">LOCKED '+esc(machine?.label||'MODEL')+'</span>'+
  '<strong class="'+(pick===winning?'c3-correct':'c3-incorrect')+'">'+esc(pick||'—')+' · '+verdict+'</strong></div>'+
- '<a href="#c3-postgame-audit" class="c3-btn">MACHINES VS REALITY ↓</a></section>';
+ '<button type="button" class="c3-btn" data-c3-show-audit="true">MACHINES VS REALITY ↓</button></section>';
 }
 function fullPostgame(g){
  const final=scoreFor(g),review=reviewFor(g);
@@ -212,7 +212,7 @@ function predictionPanel(g){
  '<div class="c3-prob-score"><div>'+logo(g.away,true)+'<strong>'+pct(away)+'</strong></div><div><strong>'+pct(p)+'</strong>'+logo(g.home,true)+'</div></div>'+
  track(away,p)+modelCards(g)+
  '<p class="c3-source-note">Projected score (Elo): '+esc(g.away.abbr)+' '+num0(scored?.away)+' – '+num0(scored?.home)+' '+esc(g.home.abbr)+'. Six engines are independent research forecasts, not a voting poll.</p>'+
- '</section>'+fullPostgame(g)+'<section class="c3-panel"><div class="c3-panel-title"><h3>Key Factors</h3><span class="c3-muted">PREGAME EVIDENCE</span></div>'+injuryFactors(g)+'</section></div>';
+ '</section><section class="c3-panel"><div class="c3-panel-title"><h3>Key Factors</h3><span class="c3-muted">PREGAME EVIDENCE</span></div>'+injuryFactors(g)+'</section></div>'+fullPostgame(g);
 }
 function lineupPanel(g){
  const team=side=>{
@@ -297,7 +297,7 @@ function renderLab(){
  '<span class="c3-status-tag">● '+esc(dateStatus())+'</span></div>'+
  '<div class="c3-controls"><label class="c3-muted" for="c3-game-select">LOCKED GAME</label><select id="c3-game-select">'+
  state.lock.forecasts.map(x=>'<option value="'+esc(gameId(x))+'" '+(gameId(x)===state.gid?'selected':'')+'>'+esc(fmt(x.tip_utc)+' · '+x.away.abbr+' @ '+x.home.abbr)+'</option>').join('')+'</select></div>'+
- pregameSummary(g)+tabBar(tabs,state.tab)+
+ pregameSummary(g)+postgameBar(g)+tabBar(tabs,state.tab)+
  '<div role="tabpanel" id="c3-tab-content">'+rendered+'</div>';
  bindLab();
 }
@@ -305,6 +305,8 @@ function bindLab(){
  $('c3-game-select').onchange=e=>{state.gid=e.target.value;state.playerTeam='all';state.tab='prediction';renderLab();
  if(typeof window.history?.replaceState==='function')window.history.replaceState(null,'','?game='+encodeURIComponent(state.gid))};
  document.querySelectorAll('[data-c3-game-tab]').forEach(el=>el.onclick=()=>{state.tab=el.dataset.c3GameTab;renderLab()});
+ const post=$('c3-lab')?.querySelector?.('[data-c3-show-audit]');
+ if(post)post.onclick=()=>{state.tab='prediction';renderLab();$('c3-postgame-audit')?.scrollIntoView?.({behavior:'smooth',block:'start'})};
  const sort=$('c3-player-sort'),team=$('c3-player-team'),search=$('c3-player-search');
  if(sort)sort.onchange=e=>{state.playerSort=e.target.value;renderLab()};
  if(team)team.onchange=e=>{state.playerTeam=e.target.value;renderLab()};
