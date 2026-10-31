@@ -4,7 +4,7 @@
 
 NBA Twin Lab is an independent, open-source basketball research platform hosted on GitHub Pages. It combines a statistical player twin finder, an explainable next-game prediction baseline, retrospective MVP analysis, and a verified NBA championship archive.
 
-**Approved future design:** [Concept 3 — locked visual design reference](docs/approved-design-concept-3.md). The project owner selected the third 9-panel dark NBA/F1 analytics concept on 31 October 2026. This is a **design direction only**, not a deployed redesign; future visual work must use that reference and preserve existing prediction and audit functions.
+**Approved V19 design:** [Concept 3 — locked visual reference](docs/approved-design-concept-3.md) · [V19 implementation and visual QA checklist](docs/v19-concept3-implementation.md). Concept 3's dark NBA/F1 design system is now applied to Home, Game Predictor, Daily Predictions, player/team statistics, Game Centre and the site's other main routes. Original prediction, live-feed and immutable audit logic is retained. **Rendered desktop/mobile visual acceptance and CI/deployment verification remain pending**; refinements must follow Concept 3 rather than starting a new theme.
 
 ## Primary website
 
