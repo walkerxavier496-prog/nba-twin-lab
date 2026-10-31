@@ -66,7 +66,7 @@ function render(){
    '../player/?id='+encodeURIComponent(id||'')+'&name='+encodeURIComponent(p.name)+'&team='+encodeURIComponent(team);
   return '<article class="watch-player-card"><a class="watch-player-main" href="'+href+'" aria-label="Open '+esc(p.name)+' player profile">'+
    '<div class="watch-player-art"><span class="watch-player-initial">'+esc(p.name.slice(0,1))+'</span>'+
-   (pic?'<img src="'+esc(pic)+'" alt="Portrait of '+esc(p.name)+'" loading="lazy" onerror="this.style.display=\\'none\\'">':'')+'</div>'+
+   (pic?'<img src="'+esc(pic)+'" alt="Portrait of '+esc(p.name)+'" loading="lazy" onerror="this.style.display=\'none\'">':'')+'</div>'+
    '<div class="watch-player-data"><small>PLAYER SPOTLIGHT · '+esc(team)+'</small><strong>'+esc(p.name)+'</strong>'+
    '<span>'+(matched?esc((matched.stats_if_play?.points||0).toFixed(1))+' projected PTS · '+esc((matched.stats_if_play?.rebounds||0).toFixed(1))+' REB (if playing)':'OPEN PLAYER PROFILE')+'</span>'+
    '<b>EXPLORE PLAYER ↗</b></div></a>'+
