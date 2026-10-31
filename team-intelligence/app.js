@@ -9,17 +9,66 @@ const fmt=(x,d=1)=>x===null||!Number.isFinite(x)?'—':x.toFixed(d);
 const pct=x=>x===null||!Number.isFinite(x)?'—':(x*100).toFixed(1)+'%';
 const sign=x=>x>0?'+':'';
 let teams=new Map(),games=[],snapshot=null;
+const prefs=window.TwinTeamPrefs||null,media=window.NbaMedia||null;
+let venue='home';
+const logo=abbr=>media?.image?.(abbr,{size:'large',label:abbr})||'<span class="club-mark">'+esc(abbr)+'</span>';
+const fullName=abbr=>prefs?.names?.[abbr]||abbr;
+const future=()=>games.filter(g=>g.status==='scheduled'&&Date.parse(g.date)>Date.now()-15*60000&&Date.parse(g.date)<Date.now()+45*86400000&&teams.has(canonical(g.home.abbr))&&teams.has(canonical(g.away.abbr))).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
+
 async function get(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error('Source unavailable: '+url);return r.json();}
+function opponentChoices(prefer=''){
+ const mine=$('my-team').value,current=prefer||$('opponent').value,list=[...teams.keys()].sort();
+ $('opponent').innerHTML='<option value="">Select opponent</option>'+list.filter(t=>t!==mine).map(t=>'<option value="'+esc(t)+'">'+esc(fullName(t))+'</option>').join('');
+ $('opponent').value=current&&current!==mine&&teams.has(current)?current:list.find(t=>t!==mine)||'';
+}
+function fixtureChoices(preserve=false){
+ const team=$('my-team').value,previous=preserve?$('fixture').value:'';
+ const relevant=future().filter(g=>!team||[canonical(g.home.abbr),canonical(g.away.abbr)].includes(team));
+ $('fixture').innerHTML='<option value="">Manual team comparison</option>'+relevant.map(g=>'<option value="'+esc(g.id)+'">'+esc(new Date(g.date).toLocaleString('en-AU',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}))+' · '+esc(g.away.abbr)+' @ '+esc(g.home.abbr)+'</option>').join('');
+ if(relevant.some(g=>String(g.id)===previous))$('fixture').value=previous;
+ return relevant;
+}
+function sync(){
+ const fixture=games.find(g=>String(g.id)===$('fixture').value);
+ if(fixture){
+  const h=canonical(fixture.home.abbr),a=canonical(fixture.away.abbr);
+  if(![h,a].includes($('my-team').value))$('my-team').value=h;
+  venue=$('my-team').value===h?'home':'away';
+  opponentChoices($('my-team').value===h?a:h);
+ }
+ const fav=$('my-team').value,opp=$('opponent').value;
+ $('home').value=fav&&opp?(venue==='home'?fav:opp):'';
+ $('away').value=fav&&opp?(venue==='home'?opp:fav):'';
+ for(const k of ['home','away']){$('venue-'+k).setAttribute('aria-pressed',String(k===venue));$('venue-'+k).disabled=!!fixture;}
+ $('venue-note').textContent=fixture?'Scheduled matchup: using actual NBA home/away venue.':'Manual comparison: choose whether your team is at home or away.';
+ if(fav&&opp&&fav!==opp){
+  $('matchup-identity').innerHTML=logo(fav)+'<strong>'+esc(fav)+'</strong><span class="vs">VS</span><strong>'+esc(opp)+'</strong>'+logo(opp);
+  $('matchup-context').innerHTML='<b>'+esc(fullName(fav))+'</b> vs '+esc(fullName(opp))+
+   '<div>'+(fixture?'Actual scheduled matchup: '+esc(new Date(fixture.date).toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'})):'Manual statistical comparison · hypothetical venue')+'</div>'+
+   '<div>Your team '+(venue==='home'?'at home':'away')+' · pregame snapshot metrics</div>';
+ }else{
+  $('matchup-identity').textContent='Select your team and an opponent';
+  $('matchup-context').textContent='Choose the club you support. It will also personalise the rest of NBA Twin Lab.';
+ }
+ draw();
+}
 function options(){
- const list=[...teams.keys()].sort();
- const html=list.map(abbr=>'<option value="'+esc(abbr)+'">'+esc(abbr)+'</option>').join('');
- $('home').innerHTML=html;$('away').innerHTML=html;
- $('home').value=list.includes('BOS')?'BOS':list[0];
- $('away').value=list.includes('NYK')?'NYK':list[1];
- const now=Date.now();
- const scheduled=games.filter(g=>g.status==='scheduled'&&Date.parse(g.date)>=now-15*60000&&Date.parse(g.date)<now+14*86400000&&teams.has(canonical(g.home.abbr))&&teams.has(canonical(g.away.abbr))).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
- $('fixture').innerHTML='<option value="">Manual team comparison</option>'+scheduled.map(g=>'<option value="'+esc(g.id)+'">'+esc(new Date(g.date).toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric'}))+' · '+esc(g.away.abbr)+' @ '+esc(g.home.abbr)+'</option>').join('');
- if(scheduled.length){$('fixture').value=String(scheduled[0].id);$('home').value=canonical(scheduled[0].home.abbr);$('away').value=canonical(scheduled[0].away.abbr);}
+ const list=[...teams.keys()].sort(),html=list.map(t=>'<option value="'+esc(t)+'">'+esc(fullName(t))+'</option>').join('');
+ $('my-team').innerHTML='<option value="">Choose your team</option>'+html;
+ $('home').innerHTML='<option value=""></option>'+html;
+ $('away').innerHTML='<option value=""></option>'+html;
+ const saved=canonical(prefs?.get?.()||'');
+ $('my-team').value=teams.has(saved)?saved:'';
+ opponentChoices();
+ const upcoming=fixtureChoices();
+ const first=upcoming[0];
+ if(first&&saved&&[canonical(first.home.abbr),canonical(first.away.abbr)].includes(saved)){
+  $('fixture').value=String(first.id);
+ }else if(saved){
+  const next=upcoming.find(g=>[canonical(g.home.abbr),canonical(g.away.abbr)].includes(saved));
+  if(next)$('fixture').value=String(next.id);
+ }
+ sync();
 }
 function metric(label,detail,h,a,format=fmt){
  return '<tr><td>'+esc(label)+(detail?'<small>'+esc(detail)+'</small>':'')+'</td><td>'+format(h)+'</td><td>'+format(a)+'</td></tr>';
@@ -33,7 +82,7 @@ function headToHead(home,away,asOf){
 }
 function draw(){
  const home=teams.get($('home').value),away=teams.get($('away').value);
- if(!home||!away||home.abbr===away.abbr){$('metrics').innerHTML='<tr><td colspan="3">Select two different teams.</td></tr>';$('factors').innerHTML='';return;}
+ if(!home||!away||home.abbr===away.abbr){$('home-name').textContent='Team A';$('away-name').textContent='Team B';$('metrics').innerHTML='<tr><td colspan="3">Select your team and another NBA opponent.</td></tr>';$('factors').innerHTML='<article>Select two different teams to compare their styles.</article>';$('h2h').textContent='Historical matchups appear after selecting two teams.';return;}
  $('home-name').textContent=home.abbr;$('away-name').textContent=away.abbr;
  const bl=(s,k)=>S.blended(s,k);
  const net=s=>{const o=bl(s,'adj_ortg'),d=bl(s,'adj_drtg');return o===null||d===null?null:o-d;};
@@ -68,12 +117,24 @@ function draw(){
  $('h2h').textContent=headToHead(home.abbr,away.abbr,asOf);
  $('source').textContent='Team snapshots as of '+snapshot.teams[0].as_of+' · '+home.games+' / '+away.games+' current-season games · no confirmed lineups';
 }
-$('fixture').addEventListener('change',()=>{
- const g=games.find(g=>String(g.id)===$('fixture').value);
- if(g){$('home').value=canonical(g.home.abbr);$('away').value=canonical(g.away.abbr);}
- draw();
+$('my-team').addEventListener('change',()=>{
+ const mine=$('my-team').value;
+ prefs?.set?.(mine);
+ opponentChoices();const upcoming=fixtureChoices();
+ const next=upcoming.find(g=>[canonical(g.home.abbr),canonical(g.away.abbr)].includes(mine));
+ if(next)$('fixture').value=String(next.id);
+ sync();
 });
-for(const id of ['home','away'])$(id).addEventListener('change',()=>{$('fixture').value='';draw();});
+$('opponent').addEventListener('change',()=>{$('fixture').value='';sync();});
+$('fixture').addEventListener('change',()=>sync());
+for(const side of ['home','away'])$('venue-'+side).addEventListener('click',()=>{venue=side;$('fixture').value='';sync();});
+document.addEventListener('twinlab:teamchange',e=>{
+ if(!teams.size)return;
+ const team=canonical(e.detail?.team||'');
+ if($('my-team').value===team)return;
+ $('my-team').value=teams.has(team)?team:'';
+ opponentChoices();fixtureChoices();sync();
+});
 Promise.all([get('../data/v7-current.json'),get('../data/games.json')]).then(([snap,results])=>{
  if(!S||!snap.strict_no_future_data||snap.coverage?.season!==2027||snap.teams.length!==30)throw Error('Verified team snapshot is missing or incomplete');
  snapshot=snap;games=results.games||[];
