@@ -49,7 +49,8 @@ test('homepage shows genuine sourced score separately from frozen pregame predic
   return elements.get(id);
  };
  const document={getElementById:get};
- const window={NbaScores:{...scores,fetchDate:async()=>({date:'20261030',games:scores.parse(sample('live')),fetched_at_utc:'2026-10-31T00:02:00Z'})}};
+ let latestFeed=null;
+ const window={NbaLiveDesk:{setFeed:v=>{latestFeed=v},unavailable:()=>{}},NbaScores:{...scores,fetchDate:async()=>({date:'20261030',games:scores.parse(sample('live')),fetched_at_utc:'2026-10-31T00:02:00Z'})}};
  const payloads={'./data/audit-ledger.json':ledger,
   './data/five-model-report.json':{common_evaluation:{games:3643}},
   ['./'+entry.lock_path]:original,
@@ -58,10 +59,10 @@ test('homepage shows genuine sourced score separately from frozen pregame predic
  vm.runInNewContext(read('assets/home.js'),{window,document,fetch,Date,Intl,Promise,console,encodeURIComponent});
  await new Promise(resolve=>setImmediate(resolve));
  const card=get('home-games').innerHTML;
- assert.match(card,/Q2/);
- assert.match(card,/47/);assert.match(card,/42/);
+ assert.doesNotMatch(card,/47–42|47<\/b>|42<\/b>/,'Archived prediction cards must not pretend to be a live scoreboard');
  assert.match(card,/ELO PICK/);
- assert.match(get('scoreboard-source').textContent,/ESPN game scores/);
+ assert.match(get('scoreboard-source').textContent,/ARCHIVED PREGAME FORECASTS/);
+ assert.ok(latestFeed&&latestFeed.games[0].away.score===47,'Real scores must reach the independent live desk');
  assert.match(get('feature-detail').textContent,/NOT A PREDICTION/);
  assert.match(get('feature-confidence').innerHTML,/MODELS DISAGREE/);
  assert.match(get('feature-confidence').innerHTML,/25\.1 PERCENTAGE POINTS/);
