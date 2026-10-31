@@ -187,9 +187,11 @@ async function refreshScores(){
   const fresh=await scoreAdapter.fetchDate(key);
   if(!fresh.games?.length)throw Error('No games in provider response');
   scoreFeed=fresh;
+  window.NbaLiveDesk?.setFeed?.(fresh);
   if($('daily-live-source'))$('daily-live-source').textContent='ESPN scoreboard · checked '+fullTime(fresh.fetched_at_utc)+' · refreshes every 60 seconds · separate from frozen forecasts';
  }catch(e){
   scoreFeed=null;
+  window.NbaLiveDesk?.unavailable?.();
   if($('daily-live-source'))$('daily-live-source').textContent='ESPN score feed unavailable · showing locked pregame forecasts only; no live scores inferred';
  }
  drawGameSelector();drawGameDetail();
