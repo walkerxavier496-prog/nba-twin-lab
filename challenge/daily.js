@@ -68,6 +68,36 @@ function drawGameSelector(){
  }).join(''):'<p class="muted">No matchups fit these filters. Try another team or select All games.</p>';
  document.querySelectorAll('#game-selector [data-game]').forEach(button=>button.onclick=()=>selectGame(button.dataset.game));
 }
+function drawRosterEvidence(game){
+ const audited=game.v18_roster_integrity;
+ if(audited){
+  const makeTeam=team=>{
+   const players=(team?.players||[]).slice(0,10).map(p=>{
+    const minutes=p.excluded?'0m · EXCLUDED':p.expected_minutes===null?
+     '0–'+dec(p.max_minutes,0)+'m · UNRESOLVED':dec(p.expected_minutes,0)+'m · ESTIMATED';
+    return '<div class="metricrow"><span>'+esc(p.name)+(p.status&&p.status!=='NOT_LISTED'?' · '+esc(p.status):'')+'</span><b>'+esc(minutes)+'</b></div>';
+   }).join('');
+   return '<div><h4>'+esc(team?.team||'TEAM')+'</h4>'+(players||'<p>Rotation unavailable</p>')+'</div>';
+  };
+  return '<div class="context" role="note"><h4>V18 · FROZEN PREGAME ROSTER CHECK</h4>'+
+   '<p><b>'+(audited.source_checks_passed?'Source checks passed':'Unverified inputs')+
+   '</b> · This is saved pregame reasoning, not a modified game prediction. '+
+   'No new roster-first win probability was generated.</p>'+
+   '<p>'+esc((audited.issues||[]).join(' · ')||'All stated point-in-time checks passed')+'</p>'+
+   '<div class="split">'+makeTeam(audited.away)+makeTeam(audited.home)+'</div></div>';
+ }
+ const injuries=game.official_injury_sidecar;
+ if(injuries){
+  const team=(abbr,rows)=>'<div><h4>'+esc(abbr)+' · OFFICIAL PREGAME INJURY REPORT</h4>'+
+   (rows||[]).map(entry=>'<div class="metricrow"><span>'+esc(entry[0])+'</span><b>'+
+    esc(entry[1])+'</b></div>').join('')+'</div>';
+  return '<div class="context" role="note"><h4>OFFICIAL INJURIES SAVED BEFORE TIPOFF</h4>'+
+   '<p><b>Important:</b> These official statuses were recorded in the immutable lock but did NOT change the Elo, science, roster or Monte Carlo probabilities. Do not credit any model with using them.</p>'+
+   '<div class="split">'+team(game.away.abbr,injuries.away)+team(game.home.abbr,injuries.home)+'</div>'+
+   '<p class="muted">Official injury status does not confirm the starting five or actual minutes played.</p></div>';
+ }
+ return '<p class="muted">No immutable pregame injury/roster evidence was captured for this historical prediction. It cannot be reconstructed as a pretip input after the game.</p>';
+}
 function drawGameDetail(){
  const game=(data.lock.forecasts||[]).find(game=>String(game.game_id)===String(selected));
  if(!game){$('game-detail').textContent='No game selected';return}
@@ -115,6 +145,7 @@ function drawGameDetail(){
  $('game-detail').innerHTML=scorebug+reliability+'<div class="match-title">'+esc(game.away.name)+' @ '+esc(game.home.name)+'</div>'+
   '<div class="muted">'+esc(fullTime(game.tip_utc))+'</div>'+score+
   '<p>Original production Elo: <b>'+esc(baseline.winner)+' '+pct(baseline.winner_probability)+'</b> · projected '+dec(baseline.projected_score?.away,0)+'–'+dec(baseline.projected_score?.home,0)+'</p>'+consensus+
+  drawRosterEvidence(game)+
   (noChallenge?'<p class="callout">No pregame six-model lock exists for this matchup. It will not be backfilled.</p>':'')+
   '<div class="model-cards">'+cards.join('')+'</div>'+
   '<div class="tablewrap"><table><thead><tr><th>Model</th><th>Pick</th><th>Pick chance</th><th>Home win %</th><th>Score (away–home)</th><th>Result</th><th>Brier ↓</th></tr></thead><tbody>'+cells.join('')+'</tbody></table></div>'+
