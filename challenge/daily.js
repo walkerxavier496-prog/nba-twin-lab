@@ -182,18 +182,26 @@ function selectGame(gameId){
 }
 async function refreshScores(){
  if(!data?.lock||!scoreAdapter?.fetchDate||!scoreAdapter?.usDate)return;
+ const today=scoreAdapter.usDate(new Date());
+ const locked=scoreAdapter.usDate(data.lock.forecasts[0].tip_utc);
+ let fresh=null;
+ // The LIVE desk always uses the current US game date, never the most recent
+ // pretip forecast lock date (which could be yesterday or last month).
  try{
-  const key=scoreAdapter.usDate(data.lock.forecasts[0].tip_utc);
-  const fresh=await scoreAdapter.fetchDate(key);
-  if(!fresh.games?.length)throw Error('No games in provider response');
-  scoreFeed=fresh;
+  fresh=await scoreAdapter.fetchDate(today);
+  if(!fresh.games?.length)throw Error('No games on current scoreboard');
   window.NbaLiveDesk?.setFeed?.(fresh);
-  if($('daily-live-source'))$('daily-live-source').textContent='ESPN scoreboard · checked '+fullTime(fresh.fetched_at_utc)+' · refreshes every 60 seconds · separate from frozen forecasts';
- }catch(e){
-  scoreFeed=null;
-  window.NbaLiveDesk?.unavailable?.();
-  if($('daily-live-source'))$('daily-live-source').textContent='ESPN score feed unavailable · showing locked pregame forecasts only; no live scores inferred';
- }
+ }catch(e){window.NbaLiveDesk?.unavailable?.();}
+ // The archived prediction comparison is always scoped to the locked slate.
+ // Its scores must never be silently mapped to a newer game's results.
+ try{
+  scoreFeed=locked===today?fresh:await scoreAdapter.fetchDate(locked);
+  if(!scoreFeed?.games?.length)scoreFeed=null;
+ }catch(e){scoreFeed=null;}
+ if($('daily-live-source'))$('daily-live-source').textContent=fresh?
+  'LIVE GAME CENTRE: ESPN checked '+fullTime(fresh.fetched_at_utc)+
+  ' · current date scores · every 60 seconds · locked model forecasts are separate':
+  'Current ESPN scoreboard unavailable · no live scores invented. Archived lock comparisons remain historical.';
  drawGameSelector();drawGameDetail();
 }
 async function load(){
