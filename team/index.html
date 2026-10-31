@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#060e1b">
+<meta name="description" content="NBA Twin Lab Team Centre: current team results, offensive and defensive performance, game form, rotation, player projections, and fixture schedule.">
+<title>Team Centre · NBA Twin Lab</title>
+<link rel="stylesheet" href="../assets/site-shell.css"><link rel="stylesheet" href="../assets/v12.css"><link rel="stylesheet" href="../assets/dark-v13.css"><link rel="stylesheet" href="../assets/nav-v15.css"><link rel="stylesheet" href="../assets/v19-concept3.css?v19_4"><link rel="stylesheet" href="./team.css?v1">
+<script defer src="../assets/site-shell.js?v19_2"></script>
+<script defer src="../assets/team-media.js"></script><script defer src="../assets/team-prefs.js?v19_3"></script>
+<script defer src="../assets/watchlist.js"></script><script defer src="../assets/site-nav.js?v19_4"></script>
+<script defer src="./app.js?v1"></script></head>
+<body class="v12 team-centre">
+<header class="app-header"><div class="header-inner"><a href="../" class="brand"><span class="brand-icon">TL</span><span class="wordmark">TWIN <span>LAB</span><small>BASKETBALL INTELLIGENCE</small></span></a><nav aria-label="Main navigation"></nav><a class="header-action" href="../watchlist/">MY WATCHLIST ★</a></div></header>
+<main class="main-body team-centre-main" id="site-main">
+<div class="team-centre-back"><a href="../league/">‹ LEAGUE STANDINGS</a><span> / </span><span>TEAM CENTRE</span></div>
+<section class="team-centre-hero" id="team-hero">
+ <div id="team-identity" class="team-identity"><div class="team-skeleton">Loading verified team data…</div></div>
+ <div class="team-hero-metrics" id="team-hero-metrics"></div>
+</section>
+<div id="team-data-status" class="team-data-status" role="status">Loading recent verified NBA games and research snapshots…</div>
+<nav class="team-centre-tabs" aria-label="Team centre sections">
+ <a href="#overview">OVERVIEW</a><a href="#statistics">TEAM STATS</a><a href="#schedule">FIXTURES & RESULTS</a><a href="#roster">SQUAD / PLAYERS</a>
+</nav>
+<section id="overview" class="team-section"><div class="team-section-header"><div><span class="team-kicker">01 / SEASON INTELLIGENCE</span><h2>THE BIG PICTURE.</h2></div><a href="../team-intelligence/" id="team-compare-link">COMPLETE MATCHUP ANALYSIS ↗</a></div>
+ <div class="team-stats-grid" id="team-stats-grid"><p>Loading…</p></div>
+ <div class="team-two-col"><article class="team-panel"><div class="team-panel-head"><h3>RECENT FORM</h3><span>VERIFIED FINAL SCORES</span></div><div id="team-recent-form"></div></article><article class="team-panel"><div class="team-panel-head"><h3>UPCOMING MATCHUPS</h3><span>SCHEDULED · NOT RESULTS</span></div><div id="team-next-games"></div></article></div>
+</section>
+<section id="statistics" class="team-section"><div class="team-section-header"><div><span class="team-kicker">02 / BASKETBALL SCIENCE</span><h2>UNDER THE HOOD.</h2></div><small>2026–27 · latest research snapshot</small></div>
+ <div class="team-stats-grid" id="team-four-factors"></div><div class="team-panel"><div class="team-panel-head"><h3>ATTACK VS DEFENCE</h3><span>POINTS PER 100 POSSESSIONS · NOT A WIN PROBABILITY</span></div><div id="team-efficiency-bars"></div></div>
+</section>
+<section id="schedule" class="team-section"><div class="team-section-header"><div><span class="team-kicker">03 / THE SEASON</span><h2>EVERY MATCHUP.</h2></div><small>Open any game for box scores and predictions</small></div><div class="team-panel"><div class="team-controls"><button type="button" data-game-filter="all" class="active">ALL</button><button type="button" data-game-filter="completed">FINAL</button><button type="button" data-game-filter="upcoming">UPCOMING</button></div><div id="team-fixtures" class="team-fixtures"></div></div></section>
+<section id="roster" class="team-section"><div class="team-section-header"><div><span class="team-kicker">04 / PLAYER INTELLIGENCE</span><h2>THE ROTATION.</h2></div><a href="../player-stats/">PLAYER PROJECTIONS ↗</a></div>
+ <p class="team-source-caveat">These players and minutes are inferred from the published pregame snapshot, not an independently verified active roster or confirmed starting lineup. Player performance values are model estimates conditional on participation.</p>
+ <div class="team-roster-grid" id="team-roster-grid"></div><div class="team-panel team-player-profile" id="team-player-profile" hidden></div>
+</section>
+<footer class="site-footer"><span>NBA TWIN LAB · INDEPENDENT TEAM INTELLIGENCE</span><span>NBA team logos and player portraits are provided by their respective sources. Unofficial ESPN results and pregame research inputs may be incomplete.</span></footer>
+</main></body></html>
