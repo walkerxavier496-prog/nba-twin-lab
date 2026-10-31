@@ -3,7 +3,7 @@
   if(typeof document==='undefined'||!document.body)return;
   const root=new URL('../',document.currentScript?.src||location.href);
   const path=location.pathname;
-  const entries=[["Live","#live-games","<circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"M4 12h16M12 4v16\"/>"],["Players","#live-player-stats","<circle cx=\"12\" cy=\"7\" r=\"4\"/><path d=\"M4 21c0-5 3-8 8-8s8 3 8 8\"/>"],["Predict","predict/","<path d=\"M3 20h18M5 17l4-6 4 3 6-9\"/>"],["Models","challenge/","<path d=\"M4 20V10M10 20V4M16 20v-7M22 20v-10\"/>"],["My Team","team-intelligence/","<path d=\"M12 22s8-4 8-11a8 8 0 0 0-16 0c0 7 8 11 8 11z\"/><circle cx=\"12\" cy=\"11\" r=\"2\"/>"]];
+  const entries=[["Live","#live-games","<circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"M4 12h16M12 4v16\"/>"],["Machine","challenge/","<path d=\"M3 20h18M5 17l4-6 4 3 6-9\"/>"],["Stats","#live-player-stats","<path d=\"M4 21v-3a8 8 0 0 1 16 0v3\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/>"],["League","league/","<path d=\"M4 19V7l8-4 8 4v12z\"/><path d=\"M4 19h16M12 3v16\"/>"]];
   const nav=document.createElement('nav');
   nav.className='site-bottom-nav';nav.setAttribute('aria-label','Mobile navigation');
   for(const [label,destination,svg] of entries){
@@ -14,7 +14,7 @@
     const current=canonical(path),target=canonical(href.pathname);
     const isRoot=current===canonical(root.pathname);
     const active=destination.startsWith('#')?
-      isRoot && (location.hash==='#live-player-stats'?label==='Players':label==='Live'):
+      (isRoot||current.includes('/game/')) && (location.hash==='#live-player-stats'?label==='Stats':label==='Live'):
       current===target || (target.endsWith('/') && current===target.slice(0,-1));
     if(active)a.setAttribute('aria-current','page');
     a.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+svg+'</svg><span>'+label+'</span>';
