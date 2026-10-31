@@ -9,6 +9,7 @@ on:
       - 'assets/courtside.css'
       - 'assets/court-lines.svg'
       - 'assets/home.js'
+      - 'assets/team-media.js'
       - 'assets/v12.css'
       - 'challenge/**'
       - 'audit/index.html'
@@ -24,6 +25,7 @@ on:
       - 'tests/mobile_design.test.cjs'
       - 'tests/courtside.test.cjs'
       - 'tests/v12_remodel.test.cjs'
+      - 'tests/media_assets.test.cjs'
       - 'tests/site_navigation.test.cjs'
       - 'tests/challenge_daily.test.cjs'
       - '.github/workflows/site-mobile.yml'
@@ -43,8 +45,9 @@ jobs:
         run: |
           node --check assets/site-shell.js
           node --check assets/home.js
+          node --check assets/team-media.js
           node --check challenge/daily.js
           node --check challenge/app.js
           node --check predict/app.js
       - name: Test responsive routes and original pregame data safeguards
-        run: node --test tests/mobile_design.test.cjs tests/site_navigation.test.cjs tests/challenge_daily.test.cjs tests/courtside.test.cjs tests/v12_remodel.test.cjs
+        run: node --test tests/mobile_design.test.cjs tests/site_navigation.test.cjs tests/challenge_daily.test.cjs tests/courtside.test.cjs tests/v12_remodel.test.cjs tests/media_assets.test.cjs
