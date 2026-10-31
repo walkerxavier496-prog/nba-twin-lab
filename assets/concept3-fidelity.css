@@ -225,3 +225,20 @@ body.v12 .c3-trend-frame{background:#081a2b;border:1px solid #244560;padding:16p
  body.v12 .c3-prob-score strong{font-size:28px}
 }
 @media(prefers-reduced-motion:reduce){body.v12 .c3-btn,body.v12 .c3-tab{transition:none}}
+
+
+/* The original concept has no secondary ticker strip above its primary canvas.
+ * All live scores and in-depth research remain accessible via nav or disclosure. */
+body.v12.c3-lab-page .ribbon,
+body.v12.c3-slate-page .ribbon,
+body.v12.c3-audit-page .ribbon{display:none!important}
+body.v12.c3-lab-page .main-body,body.v12.c3-slate-page .main-body,
+body.v12.c3-audit-page .main-body{padding-top:11px!important}
+body.v12.c3-lab-page .c3-workspace,
+body.v12.c3-slate-page .c3-workspace,
+body.v12.c3-audit-page .c3-workspace{border:1px solid #2b4b68!important;min-height:340px}
+body.v12 .c3-research-content>.page-hero{margin-top:10px}
+body.v12.c3-slate-page .c3-data-table{min-width:760px}
+body.v12.c3-slate-page .c3-data-table td:nth-child(3){min-width:190px}
+body.v12.c3-audit-page .c3-status-tag{background:#102d47;color:#a4d7f6;border-color:#265c84}
+body.v12 .c3-tab:focus-visible{outline:2px solid #38c3fc;outline-offset:3px}
