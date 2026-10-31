@@ -11,7 +11,7 @@ const valid=id=>/^\d{7,10}$/.test(String(id||''));
 const fmtTime=x=>{const d=new Date(x);return Number.isFinite(d.getTime())?new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}).format(d):'Time unavailable'};
 const logo=team=>window.NbaMedia?.image?.(team.abbr,{size:'small',label:team.abbr})||'<b>'+esc(team.abbr)+'</b>';
 const status=g=>g.phase==='live'?(window.NbaScores?.label?.(g)||'LIVE'):g.phase==='final'?'FINAL':'UPCOMING';
-const gameHref=id=>{const segment=location.pathname.includes('/challenge/')?'../game/':'./game/';return segment+'?id='+encodeURIComponent(String(id))};
+const gameHref=id=>{const segment=String(window.location?.pathname||'').includes('/challenge/')?'../game/':'./game/';return segment+'?id='+encodeURIComponent(String(id))};
 const favourite=g=>{const t=window.TwinTeamPrefs?.get?.();return !!t&&(window.TwinTeamPrefs?.canonical?.(g.home.abbr)===t||window.TwinTeamPrefs?.canonical?.(g.away.abbr)===t)};
 function parseBoxscore(raw){
  const groups=raw?.boxscore?.players;
