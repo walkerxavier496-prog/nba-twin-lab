@@ -77,3 +77,14 @@ test('daily mismatch warning exposes different techniques rather than implying c
  assert.match(s,/scoreAdapter\.fetchDate/);
  assert.match(s,/ESPN score feed unavailable/);
 });
+
+test('predictor receives live game clock/score from separate adapter and keeps model caution visible',()=>{
+ const html=read('predict/index.html'),app=read('predict/app.js');
+ assert.match(html,/assets\/live-scoreboard\.js/);
+ assert.match(app,/refreshLiveScores/);
+ assert.match(app,/scoreState\(seen\)/);
+ assert.match(app,/real-score-banner/);
+ assert.match(app,/MODEL UNCERTAINTY/);
+ assert.match(app,/No pregame|frozen six-model challenge/);
+ assert.match(app,/setInterval\(refreshLiveScores,60000\)/);
+});
