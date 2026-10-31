@@ -3,7 +3,7 @@
  * Real final scores are separately sourced and never overwrite locked models.
  */
 (()=>{'use strict';
-const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','<':'&lt;'," ' ":'&#39;'}[c]));
+
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&quot;',"'":'&#39;'}[c]));
 const $=id=>document.getElementById(id);
 const numbers=x=>typeof x==='number'&&Number.isFinite(x);
@@ -203,7 +203,7 @@ function renderLab(){
 }
 function bindLab(){
  $('c3-game-select').onchange=e=>{state.gid=e.target.value;state.playerTeam='all';state.tab='prediction';renderLab();
- if(typeof history?.replaceState==='function')history.replaceState(null,'','?game='+encodeURIComponent(state.gid))};
+ if(typeof window.history?.replaceState==='function')window.history.replaceState(null,'','?game='+encodeURIComponent(state.gid))};
  document.querySelectorAll('[data-c3-game-tab]').forEach(el=>el.onclick=()=>{state.tab=el.dataset.c3GameTab;renderLab()});
  const sort=$('c3-player-sort'),team=$('c3-player-team'),search=$('c3-player-search');
  if(sort)sort.onchange=e=>{state.playerSort=e.target.value;renderLab()};
@@ -252,7 +252,7 @@ function renderSlate(){
  const el=$('c3-slate');if(!el||!state.lock)return;
  const tabs=[['full','Full Slate'],['results','Game Results'],['models','Model Comparison'],['players','Player Projections']];
  const body=state.slateTab==='models'?slateComparison():state.slateTab==='players'?slateLeaders():slateFull();
- el.innerHTML='<div class="c3-header"><div><h1>Today’s NBA Predictions</h1><p>'+esc(state.entry.melbourne_date)+' · '+state.lock.forecasts.length+' genuinely locked games</p></div><div class="c3-status-tag">● Locked at '+esc(dateStatus())+'</div></div>'+
+ el.innerHTML='<div class="c3-header"><div><h1>'+ (new Intl.DateTimeFormat('sv-SE',{timeZone:'Australia/Melbourne'}).format(new Date())===state.entry.melbourne_date?'Today’s NBA Predictions':'Latest Locked NBA Predictions')+'</h1><p>'+esc(state.entry.melbourne_date)+' · '+state.lock.forecasts.length+' genuinely locked games</p></div><div class="c3-status-tag">● Locked at '+esc(dateStatus())+'</div></div>'+
  tabBar(tabs,state.slateTab,'c3-slate-tab')+body;
  document.querySelectorAll('[data-c3-slate-tab]').forEach(btn=>btn.onclick=()=>{state.slateTab=btn.dataset.c3SlateTab;renderSlate()});
  if($('c3-slate-search'))$('c3-slate-search').oninput=e=>{const text=e.target.value;state.slateSearch=text;renderSlate();$('c3-slate-search')?.focus();$('c3-slate-search')?.setSelectionRange(text.length,text.length)};
