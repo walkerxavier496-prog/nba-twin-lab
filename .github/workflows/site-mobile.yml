@@ -5,6 +5,9 @@ on:
     paths:
       - 'index.html'
       - 'assets/site-shell.css'
+      - 'assets/v19-concept3.css'
+      - 'docs/approved-design-concept-3.md'
+      - 'tests/v19_concept3.test.cjs'
       - 'assets/site-shell.js'
       - 'assets/courtside.css'
       - 'assets/court-lines.svg'
@@ -97,4 +100,4 @@ jobs:
           node --check predict/roster-integrity.js
           node --check predict/roster-strength.js
       - name: Test responsive routes and original pregame data safeguards
-        run: node --test tests/mobile_design.test.cjs tests/site_navigation.test.cjs tests/challenge_daily.test.cjs tests/courtside.test.cjs tests/v12_remodel.test.cjs tests/media_assets.test.cjs tests/live_scoreboard.test.cjs tests/live_desk.test.cjs tests/boxscore_advanced.test.cjs tests/fan_team_dark.test.cjs tests/game_centre.test.cjs tests/league_v17.test.cjs tests/watchlist_v17.test.cjs tests/roster_integrity_v18.test.cjs tests/roster_strength_v18.test.cjs
+        run: node --test tests/mobile_design.test.cjs tests/site_navigation.test.cjs tests/challenge_daily.test.cjs tests/courtside.test.cjs tests/v12_remodel.test.cjs tests/media_assets.test.cjs tests/live_scoreboard.test.cjs tests/live_desk.test.cjs tests/boxscore_advanced.test.cjs tests/fan_team_dark.test.cjs tests/game_centre.test.cjs tests/league_v17.test.cjs tests/watchlist_v17.test.cjs tests/roster_integrity_v18.test.cjs tests/roster_strength_v18.test.cjs tests/v19_concept3.test.cjs
