@@ -33,7 +33,7 @@ test('player twins only resolves IDs verified from the existing current-season N
  assert.match(html,/assets\/team-media\.js/);
  assert.match(html,/twin-faceoff/);
  assert.match(html,/headshot\(x.player,"small"\)/);
- assert.match(html,/No verified current player photo/);
+ assert.match(html,/No verified NBA player photo/);
 });
 test('team intelligence has independent favourite, opponent and venue controls',()=>{
  const html=read('team-intelligence/index.html');
