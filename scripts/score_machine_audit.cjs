@@ -17,18 +17,19 @@ const average=a=>a.reduce((s,v)=>s+v,0)/a.length;
 const report={schema:'nba-twin-score-machine-research-audit-v1',strict_no_future_data:true,seasons:{}};
 for(const year of [2023,2024,2025,2026]){
  const train=rows.filter(r=>r.season<year),test=rows.filter(r=>r.season===year);
- const fitted=S.train(train);let brier=[],mae=[],marginMae=[],accuracy=[];
+ const fitted=S.train(train);let brier=[],mae=[],marginMae=[],accuracy=[],bandCoverage=[];
  for(const r of test){const p=S.predict(fitted,r.home,r.away);if(!p.available)throw Error('Missing output '+r.id);
   const y=r.margin>0?1:0;brier.push((p.home_win_probability-y)**2);
   accuracy.push((p.home_win_probability>=.5)===(y===1)?1:0);
   mae.push((Math.abs(p.projected_home_score-r.actualHome)+Math.abs(p.projected_away_score-r.actualAway))/2);
   marginMae.push(Math.abs(p.projected_home_margin-r.margin));
+  bandCoverage.push(r.margin>=p.margin_range_80[0]&&r.margin<=p.margin_range_80[1]?1:0);
  }
- report.seasons[year]={games:test.length,training_games:train.length,accuracy:average(accuracy),brier:average(brier),score_mae:average(mae),margin_mae:average(marginMae),probability_scale:fitted.probability_scale};
+ report.seasons[year]={games:test.length,training_games:train.length,accuracy:average(accuracy),brier:average(brier),score_mae:average(mae),margin_mae:average(marginMae),margin_band_80_coverage:average(bandCoverage),probability_scale:fitted.probability_scale};
 }
 const primary=Object.entries(report.seasons).filter(([y])=>Number(y)>=2024).map(([,r])=>r);
 const weighted=k=>primary.reduce((s,r)=>s+r[k]*r.games,0)/primary.reduce((s,r)=>s+r.games,0);
-report.primary={games:primary.reduce((s,r)=>s+r.games,0),accuracy:weighted('accuracy'),brier:weighted('brier'),score_mae:weighted('score_mae'),margin_mae:weighted('margin_mae')};
+report.primary={games:primary.reduce((s,r)=>s+r.games,0),accuracy:weighted('accuracy'),brier:weighted('brier'),score_mae:weighted('score_mae'),margin_mae:weighted('margin_mae'),margin_band_80_coverage:weighted('margin_band_80_coverage')};
 const fresh=S.train(rows.filter(r=>r.season<=2026));report.fresh_training_games=fresh.training_games;
 if(process.argv.includes('--model'))report.model_2027=fresh;
 if(process.argv.includes('--preview')){

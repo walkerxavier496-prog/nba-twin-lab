@@ -13,6 +13,7 @@ const MODEL_LABELS = {
   m4_monte_carlo: 'M4 · Possession Monte Carlo',
   m5_regularized_ml: 'M5 · Regularized ML',
   m6_ensemble: 'M6 · Nested weighted ensemble',
+  joint_score_margin_v1: 'One Machine · Joint score and margin research v1',
 };
 
 const mean = values => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
@@ -260,6 +261,12 @@ function modelRowsForGame(forecast, actual) {
     label: MODEL_LABELS.possession_monte_carlo_v5,
     p: finite(mc.home_win_probability),
     home_score: finite(mc.projected_score?.home), away_score: finite(mc.projected_score?.away),
+  });
+  const one=forecast?.research_score_machine;
+  if(one?.available===true && finite(one.home_win_probability)!==null)entries.push({
+    model_id:'joint_score_margin_v1',label:MODEL_LABELS.joint_score_margin_v1,
+    p:finite(one.home_win_probability),home_score:finite(one.projected_score?.home),
+    away_score:finite(one.projected_score?.away),
   });
   const roster = forecast?.diagnostics?.roster_aware_beta;
   if (roster && finite(roster.home_win_probability) !== null) entries.push({

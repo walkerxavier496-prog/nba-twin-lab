@@ -29,6 +29,9 @@ function models(g){
  return q?.predictions||g?.challenge_predictions||{};
 }
 function selectedModel(g){
+ const one=g?.research_score_machine;
+ if(one?.available===true && numbers(one.home_win_probability))
+  return {home:one.home_win_probability,label:'ONE MACHINE · JOINT RESEARCH V1'};
  // Research display policy: lowest common-sample Brier in the frozen five-model
  // historical report (3,643 games), not a retroactive change to production locks.
  // Do not substitute Elo or an unverified engine when M5 is unavailable.
@@ -226,13 +229,13 @@ function fullPostgame(g){
 function predictionPanel(g){
  const selection=selectedModel(g),p=selection?.home,away=numbers(p)?1-p:null;
  const mc=models(g).m4_monte_carlo;
- const scored=mc?.available?mc.projected_score:null;
+ const scored=g.research_score_machine?.available?g.research_score_machine.projected_score:mc?.available?mc.projected_score:null;
  const one=window.TwinOneMachine?.readout?.(g,models(g));
- const readout=one?.available?'<div class="c3-source-note"><strong>RESEARCH MACHINE · '+esc(one.winner)+' '+pct(one.win_probability)+'</strong> · '+(one.score?'Score '+esc(g.away.abbr)+' '+one.score.away+'–'+one.score.home+' '+esc(g.home.abbr)+' · projected margin '+one.margin:'Score / margin unavailable')+(one.score_conflicts_with_pick?' · WARNING: score simulation favours the opposite team.':'')+' · Not yet a validated joint score-and-probability engine.</div>':'<p class="c3-source-note">Research readout unavailable — verified model inputs missing.</p>';
+ const readout=one?.available?'<div class="c3-source-note"><strong>'+(one.coherent_joint_forecast?'ONE MACHINE':'SEPARATE RESEARCH ENGINES')+' · '+esc(one.winner)+' '+pct(one.win_probability)+'</strong> · '+(one.score?'Projected score '+esc(g.away.abbr)+' '+one.score.away+'–'+one.score.home+' '+esc(g.home.abbr)+' · projected margin '+one.margin:'Score / margin unavailable')+(one.score_conflicts_with_pick?' · WARNING: score estimate disagrees with the pick.':'')+' · '+esc(one.reason)+(one.drivers?.length?'<div><strong>WHY (model margin contributions, not causal):</strong> '+one.drivers.slice(0,3).map(d=>esc(d.label)+' '+(d.margin_points>=0?'+':'')+num(d.margin_points)+' pts').join(' · ')+'</div>':'')+'</div>':'<p class="c3-source-note">Research readout unavailable — verified model inputs missing.</p>';
  return '<div class="c3-main-grid"><section class="c3-panel"><div class="c3-panel-title"><h3>Win Probability</h3><span class="c3-muted">'+esc(selection?.label||'UNAVAILABLE')+'</span></div>'+
  '<div class="c3-prob-score"><div>'+logo(g.away,true)+'<strong>'+pct(away)+'</strong></div><div><strong>'+pct(p)+'</strong>'+logo(g.home,true)+'</div></div>'+
- track(away,p)+readout+modelCards(g)+
- '<p class="c3-source-note">'+(scored&&numbers(scored.away)&&numbers(scored.home)?'Separate Monte Carlo score estimate: '+esc(g.away.abbr)+' '+num0(scored.away)+' – '+num0(scored.home)+' '+esc(g.home.abbr)+'. ':'Monte Carlo score estimate unavailable. ')+'Research engines share inputs and are not independent votes. Headline M5 is a historical challenger, not the production model.</p>'+
+ track(away,p)+readout+
+ '<p class="c3-source-note">'+(scored&&numbers(scored.away)&&numbers(scored.home)?(g.research_score_machine?.available?'One Machine research score estimate: ':'Separate Monte Carlo score estimate: ')+esc(g.away.abbr)+' '+num0(scored.away)+' – '+num0(scored.home)+' '+esc(g.home.abbr)+'. ':'Monte Carlo score estimate unavailable. ')+'Research engines share inputs and are not independent votes. Headline M5 is a historical challenger, not the production model.</p>'+
  '</section><section class="c3-panel"><div class="c3-panel-title"><h3>Key Factors</h3><span class="c3-muted">PREGAME EVIDENCE</span></div>'+injuryFactors(g)+'</section></div>'+fullPostgame(g);
 }
 function lineupPanel(g){

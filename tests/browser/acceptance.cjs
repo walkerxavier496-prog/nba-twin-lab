@@ -19,6 +19,7 @@ const VIEWPORTS = [[1440, 900], [1280, 800], [390, 844], [375, 812]];
 const GAME = '401909277';
 const json = file => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8'));
 const LOCK = json('practice/2026-10-31-melbourne/forecast.lock.json');
+const SIDECAR = json('audit/supplements/2026-10-31/challenge.lock.json');
 const REVIEW = json('audit/reviews/2026-10-31/games/' + GAME + '.review.json').games[0];
 const LEDGER = json('data/audit-ledger.json');
 const outNames = f => (f.v9_player_projections || []).filter(p => String(p.official_injury_report?.status).toLowerCase() === 'out').map(p => p.name);
@@ -119,12 +120,17 @@ async function check(vp, name, fn) {
       }
       await page.close();
     });
-    await check(width, 'predictor: six engines, locked Elo probability and honest key factors', async () => {
+    await check(width, 'predictor: one headline, six engines in audit and honest key factors', async () => {
       const page = await open('/predict/?game=' + GAME, '#c3-lab .c3-main-grid');
       const body = await text(page, '#c3-lab');
-      for (const engine of ['Elo', 'Basketball Science', 'Player / Roster', 'Monte Carlo', 'Machine Learning', 'Ensemble']) assert.ok(body.includes(engine), engine);
-      const eloAway = Math.round(100 * (1 - forecast(GAME).primary_forecast.home_win_probability)) + '%';
-      assert.ok(body.includes(eloAway), 'locked Elo away probability ' + eloAway);
+      assert.equal(await page.locator('.c3-six-models').count(), 0, 'one headline prediction; no competing engine cards');
+      const ml = SIDECAR.games.find(g => String(g.game_id) === GAME).predictions.m5_regularized_ml.home_win_probability;
+      const chosenAway = Math.round(100 * (1 - ml)) + '%';
+      assert.ok(body.includes(chosenAway), 'locked research challenger away probability ' + chosenAway);
+      await page.locator('[data-c3-game-tab="models"]').click();
+      const modelBody = await text(page, '#c3-lab');
+      for (const engine of ['Elo', 'Basketball Science', 'Player / Roster', 'Monte Carlo', 'Machine Learning', 'Ensemble']) assert.ok(modelBody.includes(engine), engine);
+      await page.locator('[data-c3-game-tab="prediction"]').click();
       const [a, h] = (await page.locator('.c3-prob-score strong').allInnerTexts()).map(s => parseInt(s, 10));
       assert.equal(a + h, 100);
       assert.equal(await page.locator('.c3-large-track i').count(), 2);

@@ -28,7 +28,7 @@ test('lineup grid can shrink inside its container and the game page states provi
  assert.match(read('assets/game-page.js'),/Forecast and grading are unavailable until the game feed responds/);
 });
 test('edited assets carry a fresh cache-busting version on every page that loads them',()=>{
- for(const [asset,pages,version] of [['concept3-hub.js',['predict/index.html','challenge/daily.html'],'v29_0'],['game-page.js',['game/index.html'],'v27_1'],['home.js',['index.html'],'v27_1'],['concept3-fidelity.css',['predict/index.html','index.html'],'v27_2']])
+ for(const [asset,pages,version] of [['concept3-hub.js',['predict/index.html','challenge/daily.html'],'v30_0'],['game-page.js',['game/index.html'],'v27_1'],['home.js',['index.html'],'v27_1'],['concept3-fidelity.css',['predict/index.html','index.html'],'v27_2']])
   for(const page of pages)assert.match(read(page),new RegExp(asset.replace('.','\\.')+'\\?'+version),page+' '+asset);
 });
 test('lineup table overrides the global 690px table minimum so STATUS is never clipped',()=>{
@@ -50,6 +50,12 @@ test('headline score is labelled as a different Monte Carlo engine, never Elo',(
 });
 
 test('single research readout is mounted on both predictors',()=>{
- for(const page of ['predict/index.html','challenge/daily.html'])assert.match(read(page),/predict\/one-machine\.js\?v1/);
+ for(const page of ['predict/index.html','challenge/daily.html'])assert.match(read(page),/predict\/one-machine\.js\?v2/);
  assert.match(read('assets/concept3-hub.js'),/TwinOneMachine\?\.readout/);
+});
+
+test('primary prediction removes six competing engine cards while retaining audit breakdown',()=>{
+ const hub=read('assets/concept3-hub.js');
+ assert.doesNotMatch(hub,/track\(away,p\)\+readout\+modelCards\(g\)/);
+ assert.match(hub,/function modelBreakdownPanel\(g\)/);
 });

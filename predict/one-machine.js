@@ -6,6 +6,22 @@
 'use strict';
 const valid=x=>typeof x==='number'&&Number.isFinite(x);
 function readout(forecast,predictions){
+ const one=forecast?.research_score_machine;
+ if(one?.available===true && valid(one.home_win_probability)&&one.home_win_probability>=0&&one.home_win_probability<=1){
+  const p=one.home_win_probability;
+  const sc=one.display_score;
+  const scoreValid=valid(sc?.home)&&valid(sc?.away)&&Number.isInteger(sc.home)&&Number.isInteger(sc.away);
+  const hasMargin=scoreValid&&sc.home!==sc.away&&
+   (sc.home>sc.away)===(p>=.5);
+  return {available:true,model:'joint_score_margin_v1',winner:p>=.5?forecast.home?.abbr:forecast.away?.abbr,
+   win_probability:Math.max(p,1-p),home_win_probability:p,
+   score:hasMargin?{home:sc.home,away:sc.away}:null,
+   margin:hasMargin?Math.abs(sc.home-sc.away):null,
+   score_model:'joint_score_margin_v1',coherent_joint_forecast:hasMargin,
+   score_conflicts_with_pick:scoreValid&&!hasMargin,
+   model_spread:null,drivers:one.explanation?.drivers||[],margin_range_80:one.margin_range_80,
+   reason:'Single historical walk-forward research model for winner, scores and margin. This is not yet prospectively validated and verified game-day injuries were not used.'};
+ }
  const ml=predictions?.m5_regularized_ml;
  if(!ml?.available||!valid(ml.home_win_probability)||ml.home_win_probability<0||ml.home_win_probability>1)
   return {available:false,reason:'Verified pre-tip machine-learning probability unavailable'};
