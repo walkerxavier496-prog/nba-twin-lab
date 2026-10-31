@@ -488,3 +488,43 @@ body.v12:has(#league-title) :is(.conference-card,.standings-panel,.cup-panel,art
  body.v12.daily .live-desk{padding:13px}
  body.v12.game-page .game-scoreboard{padding:12px}
 }
+
+
+/* V19 navigation integrity: dedicated Players page and clear Live vs Projections.
+ * On small screens the five mobile destinations are independent routes. */
+body.v12 .site-bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+body.v12 .app-header nav[aria-label="Main navigation"] .nav-main-link{
+ font-size:11px;white-space:nowrap;letter-spacing:.012em
+}
+body.v12 .app-header .header-action{white-space:nowrap}
+@media(max-width:1300px){
+ body.v12 .app-header .header-action{display:none}
+ body.v12 .app-header .header-inner{gap:12px}
+}
+@media(max-width:1100px){
+ body.v12 .app-header nav[aria-label="Main navigation"] .nav-main-link,
+ body.v12 .app-header nav[aria-label="Main navigation"] .nav-group>summary{padding:9px 7px;font-size:10px}
+}
+body.v12.secondary-page .v19-page-modes{
+ display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:16px 0;
+ padding:5px;background:#0b1c32;border:1px solid #284765;border-radius:12px;
+ width:max-content;max-width:100%
+}
+body.v12.secondary-page .v19-page-modes a{
+ display:inline-flex;align-items:center;justify-content:center;
+ text-decoration:none;font-size:12px;font-weight:800;
+ padding:10px 15px;border-radius:8px;color:#afc8e3!important;min-height:42px
+}
+body.v12.secondary-page .v19-page-modes a.active{
+ background:linear-gradient(120deg,#116feb,#2c63e6);
+ box-shadow:0 3px 12px #176ef829;color:#fff!important
+}
+body.v12.secondary-page .v19-page-modes a:not(.active):hover{background:#193a61}
+body.v12.secondary-page:has(#players) h1{font-size:clamp(40px,5vw,68px)}
+body.v12.home .hero-stamp{color:#bed5eb!important}
+@media(max-width:620px){
+ body.v12.secondary-page .v19-page-modes{width:100%;display:grid;grid-template-columns:1fr 1fr}
+ body.v12.secondary-page .v19-page-modes a:last-child{grid-column:1/-1}
+ body.v12.secondary-page .v19-page-modes a{text-align:center;font-size:11px;padding:9px 8px}
+ body.v12 .site-bottom-nav a{font-size:10px}
+}
