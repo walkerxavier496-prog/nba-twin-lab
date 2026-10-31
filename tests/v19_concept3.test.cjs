@@ -81,9 +81,9 @@ test('Player Stats is a distinct route from live NBA box scores',()=>{
  const mobile=read('assets/site-shell.js');
  const player=read('player-stats/index.html');
  const home=read('index.html');
- assert.ok(desktop.includes("link('PLAYER STATS','player-stats/',isStats)"));
- assert.ok(desktop.includes("link('LIVE','#live-games',"));
- assert.ok(!desktop.includes("link('PLAYER STATS','#live-player-stats'"));
+ assert.ok(desktop.includes("link('PLAYERS','player-stats/',isStats)"));
+ assert.ok(desktop.includes("link('STATS','#live-player-stats',"));
+ assert.ok(!desktop.includes("link('PLAYERS','#live-player-stats'"));
  assert.ok(mobile.includes('"Players","player-stats/"'));
  assert.ok(player.includes('Pregame Projections'));
  assert.ok(player.includes('Live Box Scores'));
