@@ -1,94 +1,51 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1222">
-<meta name="description" content="NBA Twin Lab Game Predictor: possession-by-possession Monte Carlo simulations, explainable pregame probabilities and strict walk-forward validation.">
-<title>NBA Twin Lab · Game Predictor</title>
-<link rel="stylesheet" href="./styles.css">
-<script defer src="./engine.js"></script>
-<script defer src="./science.js"></script>
-<script defer src="./science-preview.js"></script>
-<script defer src="./roster.js"></script>
-<script defer src="./app.js"></script>
-<link rel="stylesheet" href="../assets/site-shell.css"><script defer src="../assets/site-shell.js"></script><link rel="stylesheet" href="../assets/courtside.css"></head>
-<body class="sports-theme sports-predict">
-<a class="skip" href="#main">Skip to content</a>
-<header class="top">
- <div class="topinner">
-  <a class="brand" href="../index.html"><span class="brandmark">TL<span class="spark">✦</span></span><span>NBA <b>TWIN LAB</b><small>DATA · MODELS · BASKETBALL</small></span></a>
-  <nav aria-label="Main navigation">
-   <a href="./" class="active">Game Predictor</a>
-   <a href="../team-intelligence/">Team Intelligence</a>
-   <a href="../challenge/">Five Model Challenge</a><a href="../challenge/daily.html">Daily Predictions</a>
-   <a href="../audit/">Accuracy Ledger</a>
-   <a href="../twins/">Player Twins</a>
-   <a href="#validation">Validation</a><a href="#power">Power Rankings</a>
-  </nav>
- </div>
-</header>
-<main id="main" class="shell">
- <div class="hero">
-  <div>
-   <div class="eyebrow"><span class="pulse"></span> NBA TWIN LAB / GAME FORECAST · VALIDATED DEFAULT</div>
-   <h1>THE MATCHUP.<br><em>THE NUMBERS.</em></h1>
-   <p>The validated Elo baseline is the production forecast. Compare it with roster-aware beta and experimental possession simulations; research models stay separate until prospective evidence supports a reviewed promotion.</p>
-   <div class="hero-actions"><a class="primary" href="#matchups">Explore matchups <span aria-hidden="true">↗</span></a><a class="secondary" href="#method">See the methodology</a></div>
-  </div>
-  <div class="hero-panel">
-   <div class="kicker">MODEL HEALTH <span class="signal" id="signal">LOADING</span></div>
-   <div class="hero-value" id="hero-count">—</div><div class="muted">NBA games in verified dataset</div>
-   <div class="hr"></div>
-   <div class="minirow"><span>Source</span><strong>ESPN scoreboard*</strong></div>
-   <div class="minirow"><span>Production model</span><strong>Elo baseline</strong></div>
-   <div class="minirow"><span>Data refreshed</span><strong id="freshness">Checking…</strong></div>
-  </div>
- </div>
- <div class="notice" id="notice" role="status">Loading basketball results and schedule. No predictions are shown until the source is verified.</div>
- <div class="statstrip">
-  <div><span>Completed games this season</span><strong id="games-played">—</strong></div>
-  <div><span>Monte Carlo accuracy</span><strong id="accuracy">—</strong><small id="accuracy-sub">Strict walk-forward holdout</small></div>
-  <div><span>Monte Carlo Brier</span><strong id="brier">—</strong><small>Lower is better · 0 is perfect</small></div>
-  <div><span>Elo Brier</span><strong id="elo-brier">—</strong><small>Same held-out games</small></div>
-  <div><span>Calibration error</span><strong id="ece">—</strong><small>ECE · lower is better</small></div>
-  <div><span>Projected-score error</span><strong id="mae">—</strong><small>Average points per team</small></div>
- </div>
- <section id="matchups" class="section">
-  <div class="sectionhead">
-   <div><div class="eyebrow">01 / UPCOMING GAMES</div><h2>Game Prediction Lab</h2><p>Pick a game to inspect the pregame model and team-by-team breakdown.</p></div>
-   <div class="toolbar"><label for="model-choice" class="sr">Forecast model</label><select id="model-choice" title="Forecast model"><option value="elo" selected>Elo · production baseline</option><option value="roster">Roster-aware · research beta</option><option value="mc">V5 Monte Carlo · diagnostic</option></select><label for="simulations" class="sr">Simulation count</label><select id="simulations" title="Possession simulations per matchup"><option value="1000">1,000 simulations</option><option value="10000" selected>10,000 simulations</option><option value="100000">100,000 simulations</option></select><label for="range" class="sr">Game range</label><select id="range"><option value="7">Next 7 days</option><option value="21" selected>Next 21 days</option><option value="all">All scheduled</option><option value="final">Recent results</option></select><label for="team-search" class="sr">Filter team</label><input id="team-search" placeholder="Search team…" autocomplete="off"></div>
-  </div>
-  <div class="matchup-layout">
-   <div id="games" class="games" aria-live="polite"><div class="empty">Loading scheduled games…</div></div>
-   <aside class="detail" id="detail"><div class="placeholder"><div class="placeholder-icon">◎</div><h3>Select a matchup</h3><p>View win probabilities, projected score, recent form, rest and previous meetings.</p></div></aside>
-  </div>
- </section>
- <section id="science" class="section">
-  <div class="sectionhead"><div><div class="eyebrow">02 / BASKETBALL SCIENCE</div><h2>Which tendencies really predict wins?</h2>
-   <p>Team strength, opponent-adjusted form, shot selection, turnovers, offensive rebounds, free-throw pressure, rest and head-to-head history are being tested on strictly pregame data. No arbitrary rivalry or winning-streak bonuses.</p></div></div>
-  <div class="notice">Elo remains production. The roster-aware beta improved historical Brier score versus Elo, but has not demonstrated a statistically clear improvement over the prior player-adjusted model. Research models are tracked in the <a href="../audit/">immutable accuracy ledger</a> and never auto-promoted. <a href="../team-intelligence/">Compare team tendencies</a> · <a href="../models/">Inspect historical evidence</a>.</div>
- </section>
- <section id="validation" class="section">
-  <div class="sectionhead"><div><div class="eyebrow">03 / HELD-OUT VALIDATION</div><h2>Monte Carlo vs current Elo</h2><p>The exact same games, reconstructed immediately before tip-off with no future results.</p></div><div class="rightlabel" id="validation-sample">Loading scorecard…</div></div>
-  <div class="tablewrap"><table class="comparison"><thead><tr><th>Model</th><th>Winner accuracy</th><th>Brier score</th><th>Calibration error</th><th>Score MAE / team</th></tr></thead><tbody><tr><td><b>Possession Monte Carlo</b></td><td id="mc-accuracy">—</td><td id="mc-brier">—</td><td id="mc-ece">—</td><td id="mc-mae">—</td></tr><tr><td>Current Elo baseline</td><td id="elo-accuracy">—</td><td id="elo-brier-table">—</td><td id="elo-ece">—</td><td id="elo-mae">—</td></tr></tbody></table></div>
-  <p class="footnote" id="validation-note">Loading the current-season walk-forward scorecard. See the <a href="../history/">five-season Historical Model Lab</a> for the deployment decision, log loss, confidence intervals and matchup-tendency ablation.</p>
- </section>
- <section id="power" class="section">
-  <div class="sectionhead"><div><div class="eyebrow">04 / TEAM STRENGTH</div><h2>Power Rankings</h2><p>Elo ratings updated after every completed game, with previous-season regression.</p></div><div class="rightlabel" id="power-season">Current season</div></div>
-  <div class="tablewrap"><table><thead><tr><th>Rank</th><th>Team</th><th>W–L</th><th>Elo</th><th>PPG</th><th>Opp PPG</th><th>Last 5</th></tr></thead><tbody id="teams"><tr><td colspan="7">Waiting for validated results…</td></tr></tbody></table></div>
-  <p class="footnote">Points per game and points allowed are not possession-adjusted offensive/defensive ratings. Early-season Elo retains information from the prior season.</p>
- </section>
- <section class="section" id="method">
-  <div class="sectionhead"><div><div class="eyebrow">04 / TRANSPARENCY</div><h2>How this model works</h2><p>Explainable estimates, not invented certainty.</p></div></div>
-  <div class="methodgrid">
-   <article><div class="methodnum">01</div><h3>Opponent-adjusted team strength</h3><p>Elo moves after every final score. Beating a strong opponent counts more than beating a weak one; point margin adjusts the update. Ratings regress toward average between seasons.</p></article>
-   <article><div class="methodnum">02</div><h3>Every possession is played</h3><p>Each simulated possession can end in a turnover, free throws, a 2 or 3, a miss, or an offensive rebound. Validated prior-season pace and team rates shape those events; current results, rest, home court and Elo set the matchup expectation.</p></article>
-   <article><div class="methodnum">03</div><h3>Real-world verification</h3><p>Walk-forward evaluation recreates the forecast before each finished game using only earlier results. Accuracy, Brier score, calibration and projected-score error are compared with the current Elo model.</p></article>
-   <article><div class="methodnum">04</div><h3>Limits we won't hide</h3><p>The beta uses inferred rotation changes and player-impact proxies, but <b>not verified injuries, confirmed lineups or trade valuations</b>. It can still overrate heavily changed teams, and the current-season sample is small.</p></article>
-  </div>
-  <div class="provenance"><strong>Data provenance:</strong> Public, unofficial <a href="https://www.espn.com/nba/scoreboard" target="_blank" rel="noopener noreferrer">ESPN NBA scoreboard</a>. This site is independent and not affiliated with the NBA or ESPN. The feed is undocumented and may become unavailable. No fabricated scores, injuries or probabilities are substituted when coverage fails. Historical model quality is not a guarantee of future accuracy.</div>
- </section>
- <footer><div>NBA <b>TWIN LAB</b> <span>V6 · EVIDENCE FIRST</span></div><div><a href="../history/">Historical audit</a><a href="../index.html">Statistical Twins</a><a href="../mvp/">MVP Lab</a><a href="https://github.com/walkerxavier496-prog/nba-twin-lab" target="_blank" rel="noopener noreferrer">Source code ↗</a></div></footer>
-</main>
-</body></html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f3f5f3"><meta name="description" content="NBA Twin Lab Game Predictor: team win chances, verified schedules, score projections and explainable research models.">
+<title>Game Predictor · NBA Twin Lab</title>
+<link rel="stylesheet" href="../assets/site-shell.css"><link rel="stylesheet" href="../assets/v12.css">
+<script defer src="./engine.js"></script><script defer src="./science.js"></script><script defer src="./science-preview.js"></script><script defer src="./roster.js"></script><script defer src="./app.js"></script>
+<script defer src="../assets/site-shell.js"></script></head>
+<body class="v12 predictor">
+<a class="site-skip" href="#main">Skip to matchups</a>
+<header class="app-header"><div class="header-inner"><a href="../" class="brand"><span class="brand-icon">TL</span><span class="wordmark">TWIN <span>LAB</span><small>BASKETBALL INTELLIGENCE</small></span></a>
+<nav aria-label="Main navigation"><a href="../">Home</a><a class="active" aria-current="page" href="./">Game Predictor</a><a href="../team-intelligence/">Team Intelligence</a><a href="../challenge/daily.html">Daily Predictions</a><a href="../challenge/">Model Rankings</a><a href="../audit/">Accuracy Ledger</a><a href="../twins/">Player Twins</a></nav>
+<a class="header-action" href="../challenge/daily.html">LOCKED PICKS ↗</a></div></header>
+<div class="ribbon"><div class="ribbon-inner"><span class="ribbon-label">MATCHUP LAB</span><div class="ribbon-track"><span class="ticker-item"><b>01</b><small>Pick a game</small></span><span class="ticker-item"><b>02</b><small>Choose a model</small></span><span class="ticker-item"><b>03</b><small>Compare probabilities</small></span><span class="ticker-item"><b>04</b><small>Check the evidence</small></span></div><a class="ribbon-link" href="../challenge/">MODEL RANKINGS ↗</a></div></div>
+<main class="main-body" id="main">
+<div class="page-hero"><div><div class="eyebrow">NBA / GAME PREDICTION ENGINE</div><h1>PICK THE <em>MATCHUP.</em></h1><p>Opponent strength, projected scores and matchup context. Start with production Elo, then explore experimental rotation-aware and possession-based alternatives.</p></div><div class="page-aside"><span class="data-chip blue">ELO / PRODUCTION MODEL</span><br>Research models are not auto-promoted.</div></div>
+<div id="notice" class="model-notice" role="status">Verifying current game data…</div>
+<section class="predictor-top">
+<div class="daily-panel"><div class="eyebrow">DATA CONTROL / SOURCE INTEGRITY</div><h2>MODEL HEALTH.</h2>
+<div class="kicker">GAME FEED <span id="signal">LOADING</span></div><div class="hero-value" id="hero-count">—</div><p>NBA games included in the validated dataset</p>
+<div class="minirow"><span>Source</span><strong>ESPN scoreboard (unofficial)</strong></div><div class="minirow"><span>Production forecast</span><strong>Elo baseline</strong></div><div class="minirow"><span>Updated</span><strong id="freshness">Checking…</strong></div></div>
+<div class="predictor-metrics">
+<div><small>COMPLETED GAMES</small><strong id="games-played">—</strong><span>Current season</span></div>
+<div><small>MONTE CARLO WIN %</small><strong id="accuracy">—</strong><span id="accuracy-sub">Walk-forward holdout</span></div>
+<div><small>MONTE CARLO BRIER</small><strong id="brier">—</strong><span>Lower is better</span></div>
+<div><small>ELO BRIER</small><strong id="elo-brier">—</strong><span>Same held-out games</span></div>
+<div><small>CALIBRATION ERROR</small><strong id="ece">—</strong><span>ECE · lower is better</span></div>
+<div><small>SCORE ERROR</small><strong id="mae">—</strong><span>Points MAE per team</span></div>
+</div>
+</section>
+<section id="matchups"><div class="section-top"><div><div class="eyebrow">01 / GAME CENTRE</div><h2>CHOOSE YOUR GAME.</h2></div><p>Choose an NBA matchup. Every probability is labelled by its model and information source.</p></div>
+<div class="daily-panel">
+<div class="predictor-toolbar toolbar">
+<label for="model-choice"><span>FORECAST MODEL</span><select id="model-choice"><option value="elo" selected>Elo · production baseline</option><option value="roster">Roster-aware · research beta</option><option value="mc">V5 Monte Carlo · diagnostic</option></select></label>
+<label for="simulations"><span>SIMULATIONS</span><select id="simulations"><option value="1000">1,000 simulations</option><option value="10000" selected>10,000 simulations</option><option value="100000">100,000 simulations</option></select></label>
+<label for="range"><span>GAME RANGE</span><select id="range"><option value="7">Next 7 days</option><option value="21" selected>Next 21 days</option><option value="all">All scheduled</option><option value="final">Recent results</option></select></label>
+<label for="team-search"><span>TEAM FILTER</span><input id="team-search" placeholder="Search any team…" autocomplete="off"></label></div>
+<div class="matchup-layout"><div id="games" class="games" aria-live="polite"><p>Loading NBA games…</p></div><aside class="detail" id="detail"><div class="placeholder"><h3>SELECT A MATCHUP.</h3><p>Win probabilities, predicted score, model context, team form and rest will appear here.</p></div></aside></div>
+</div></section>
+<div class="secondary-grid">
+<section class="daily-panel" id="science"><div class="eyebrow">02 / BASKETBALL SCIENCE</div><h2>THE GAME BEHIND THE SCORE.</h2><p>Strength of opposition, Four Factors, offensive rebounding, turnover pressure, recent performance and styles are measured—not given arbitrary streak or rivalry bonuses.</p><p>Elo remains production. The roster beta has not shown a statistically clear advantage over the earlier player-adjusted model. <a href="../challenge/">See our audited model contest ↗</a></p></section>
+<section class="daily-panel" id="validation"><div class="eyebrow">03 / HEAD-TO-HEAD VALIDATION</div><h2>WHICH MODEL ACTUALLY WORKS?</h2><p id="validation-note">Loading walk-forward performance from the verified model report…</p><span id="validation-sample" class="data-chip blue">Loading scorecard…</span>
+<div class="tablewrap" style="margin-top:14px"><table><thead><tr><th>Model</th><th>Winner %</th><th>Brier</th><th>ECE</th><th>Score MAE</th></tr></thead><tbody><tr><td>Possession Monte Carlo</td><td id="mc-accuracy">—</td><td id="mc-brier">—</td><td id="mc-ece">—</td><td id="mc-mae">—</td></tr><tr><td>Production Elo</td><td id="elo-accuracy">—</td><td id="elo-brier-table">—</td><td id="elo-ece">—</td><td id="elo-mae">—</td></tr></tbody></table></div></section>
+</div>
+<section class="daily-panel" id="power"><div class="section-heading"><div><div class="eyebrow">04 / TEAM POWER</div><h2>LEAGUE STRENGTH RANKINGS.</h2></div><span class="data-chip" id="power-season">Current season</span></div><p>Team Elo with prior-season regression, updated after completed games. Early-season ratings still carry historical context.</p><div class="tablewrap"><table><thead><tr><th>Rank</th><th>Team</th><th>W–L</th><th>Elo</th><th>PPG</th><th>Opp PPG</th><th>Last 5</th></tr></thead><tbody id="teams"><tr><td colspan="7">Loading verified team records…</td></tr></tbody></table></div></section>
+<section class="daily-panel" id="method"><div class="eyebrow">05 / THE METHOD</div><h2>HOW THE MODELS THINK.</h2>
+<div class="action-grid">
+<div class="action-tile"><span class="kicker">01 / TEAM STRENGTH</span><h3>ELO RATINGS</h3><p>Opponent quality, game margins, home-court considerations and season-to-season regression.</p></div>
+<div class="action-tile"><span class="kicker">02 / THE SIMULATION</span><h3>POSSESSIONS</h3><p>Turnovers, shot probabilities, offensive boards and free throws shape experimental outcomes.</p></div>
+<div class="action-tile"><span class="kicker">03 / HONEST MEASUREMENT</span><h3>WALK FORWARD</h3><p>Predictions are evaluated against games that had not happened when the model was trained.</p></div>
+</div><p class="small-note">The roster beta is an inferred rotation proxy, not a verified injury feed. No unavailable source is silently fabricated. Public ESPN feeds are unofficial and may change.</p></section>
+<footer class="site-footer"><span>NBA TWIN LAB · GAME PREDICTOR</span><span>Independent basketball research, not betting advice. <a href="../challenge/daily.html">LOCKED DAILY FORECASTS ↗</a></span></footer>
+</main></body></html>
