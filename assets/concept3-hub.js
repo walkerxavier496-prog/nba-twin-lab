@@ -116,43 +116,43 @@ function basketballFactors(g){
  if(!info.available||!a||!h)return [];
  const pc=v=>numbers(v)?(v*100).toFixed(1)+'%':'—';
  const diff=(x,y)=>numbers(x)&&numbers(y)?(100*(x-y)).toFixed(1)+' pp':'—';
- const reason=(text,detail,why)=>({text,detail,why});
+ const reason=(text,detail,why)=>({text,detail,why:why+' Current-season pretip sample: '+(a.games??'unknown')+' '+g.away.abbr+' games and '+(h.games??'unknown')+' '+g.home.abbr+' games.'});
  const notes=[];
  // Observable 3PA share is NOT "uncontested" or shot-quality tracking.
  if([a.three_rate,h.three_rate,a.opp_three_rate,h.opp_three_rate].every(numbers)){
   const cha=a.three_rate-h.opp_three_rate,was=h.three_rate-a.opp_three_rate;
   const stronger=cha>was?'away':'home',side=stronger==='away'?g.away:g.home;
-  notes.push(reason('Three-point volume matchup',
+  notes.push(reason('Three-point shot-profile mismatch',
    g.away.abbr+' attempts '+pc(a.three_rate)+' of shots from three vs '+g.home.abbr+
    ' allowing '+pc(h.opp_three_rate)+' opponent 3PA. '+g.home.abbr+' attempts '+pc(h.three_rate)+
    ' vs '+g.away.abbr+' allowing '+pc(a.opp_three_rate)+'.',
    'Shot-profile fit: '+side.abbr+' has the larger relative three-point frequency opportunity ('+diff(stronger==='away'?a.three_rate:h.three_rate,stronger==='away'?h.opp_three_rate:a.opp_three_rate)+'). Attempt share is not open-shot quality.'));
  }
  if([a.efg,h.efg,a.opp_efg,h.opp_efg].every(numbers)){
-  notes.push(reason('Shooting efficiency vs defence',
+  notes.push(reason('Effective shooting vs opponent efficiency allowed',
    g.away.abbr+' eFG '+pc(a.efg)+' vs '+g.home.abbr+' opponent eFG allowed '+pc(h.opp_efg)+
    '; '+g.home.abbr+' eFG '+pc(h.efg)+' vs '+g.away.abbr+' allowed '+pc(a.opp_efg)+'.',
    'Compare both attacks with what the opposing defence actually concedes; small early-season samples may exaggerate edges.'));
  }
  if([a.tov_rate,h.tov_rate,a.opp_tov_rate,h.opp_tov_rate].every(numbers)){
-  notes.push(reason('Ball security and pressure',
+  notes.push(reason('Turnover pressure vs opposing ball security',
    g.away.abbr+' turnover rate '+pc(a.tov_rate)+' vs '+g.home.abbr+' forcing '+pc(h.opp_tov_rate)+
    '; '+g.home.abbr+' turnover rate '+pc(h.tov_rate)+' vs '+g.away.abbr+' forcing '+pc(a.opp_tov_rate)+'.',
    'High giveaway rates create transition opportunities. These are observed possession rates, not guaranteed steals.'));
  }
  if([a.orb_rate,h.orb_rate,a.drb_rate,h.drb_rate].every(numbers)){
-  notes.push(reason('Second-chance possessions',
+  notes.push(reason('Offensive glass vs opponent defensive rebounding',
    g.away.abbr+' offensive rebound rate '+pc(a.orb_rate)+' vs '+g.home.abbr+
    ' defensive rebound rate '+pc(h.drb_rate)+'; '+g.home.abbr+' offensive rebound rate '+pc(h.orb_rate)+
    ' vs '+g.away.abbr+' defensive rebound rate '+pc(a.drb_rate)+'.',
    'An offensive glass advantage can offset inefficient shooting; these paired rates are not a calculated rebounding forecast.'));
  }
  if(numbers(a.pace)&&numbers(h.pace)){
-  notes.push(reason('Pace and possession environment',
+  notes.push(reason('Pace mismatch and possession environment',
    g.away.abbr+' '+a.pace.toFixed(1)+' vs '+g.home.abbr+' '+h.pace.toFixed(1)+' estimated possessions per 48 minutes.',
    'The faster team may push tempo; the realised pace depends on both teams and actual rotations.'));
  }
- return notes;
+ return notes.map(note=>({...note,source:'verified season snapshot · pretip only'}));
 }
 function injuryFactors(g){
  const away=teamData(g,'away'),home=teamData(g,'home');
@@ -210,7 +210,7 @@ function fullPostgame(g){
  }).join(' · ');
  return '<section class="c3-postgame-detail" id="c3-postgame-audit">'+
  '<div class="c3-panel-title"><h3>Machines vs Reality</h3><span class="c3-status c3-final">INDEPENDENTLY VERIFIED FINAL</span></div>'+
- '<p>Actual: <strong>'+esc(actual)+' won '+final.home+'–'+final.away+'</strong> ('+
+ '<p>Actual: <strong>'+esc(actual)+' won '+(final.home>final.away?final.home+'–'+final.away:final.away+'–'+final.home)+'</strong> ('+
  esc(g.away.abbr)+' '+final.away+', '+esc(g.home.abbr)+' '+final.home+'). Original locked Elo projected '+
  esc(g.away.abbr)+' '+num0(original?.away)+' – '+num0(original?.home)+' '+esc(g.home.abbr)+
  '. Original predictions are preserved unchanged.</p>'+
@@ -262,7 +262,7 @@ function modelBreakdownPanel(g){
   return '<tr><td>'+esc(label)+'</td><td>'+esc(numbers(hp)?hp>=.5?g.home.abbr:g.away.abbr:'—')+
   '</td><td>'+pct(numbers(hp)?1-hp:null)+'</td><td>'+pct(hp)+'</td>'+
   '<td>'+num0(projected?.away)+' – '+num0(projected?.home)+'</td>'+
-  (completed?'<td class="'+(grade?.correct?'c3-correct':'c3-incorrect')+'">'+
+  (completed?'<td class="'+(grade?(grade.correct?'c3-correct':'c3-incorrect'):'c3-muted')+'">'+
    (grade?(grade.correct?'✓ CORRECT':'✕ WRONG'):'PENDING AUDIT')+'</td>'+
    '<td>'+num(grade?.brier,3)+'</td><td>'+num(grade?.log_loss,3)+'</td>':'')+'</tr>';
  }).join('')+'</tbody></table></div>'+
@@ -290,9 +290,9 @@ function matchupPanel(g){
  const summary=players.map(p=>'<a class="c3-player-match" href="../team/?team='+encodeURIComponent(p.team)+'&player='+encodeURIComponent(p.player_id)+'#team-player-profile">'+
  (portrait(p)?'<img src="'+portrait(p)+'" alt="" loading="lazy">':'')+
  '<span><strong>'+esc(p.name)+' · '+esc(p.team)+'</strong><small>Conditional projection: '+num(p.projection_if_play?.pts)+' PTS / '+num(p.projection_if_play?.ast)+' AST</small></span></a>').join('');
- const factors=basketballFactors(g).slice(0,3);
- const insight='<div class="c3-evidence-notes">'+factors.map(x=>'<div class="c3-factor"><span class="c3-factor-icon">↗</span>'+
- '<div><b>'+esc(x.text)+'</b><small>'+esc(x.detail)+'</small><small class="c3-factor-why">'+esc(x.why)+'</small></div></div>').join('')+'</div>';
+ const factors=basketballFactors(g).slice(0,4);
+ const insight=factors.length?'<div class="c3-evidence-notes">'+factors.map(x=>'<div class="c3-factor"><span class="c3-factor-icon">↗</span>'+
+ '<div><b>'+esc(x.text)+'</b><small>'+esc(x.detail)+'</small><small class="c3-factor-why">'+esc(x.why)+'</small></div></div>').join('')+'</div>':'';
  const teamStat=(code,key)=>{
   const all=review?.team_stats||{},found=Object.keys(all).find(k=>canonicalTeam(k)===canonicalTeam(code));
   return found?all[found]?.[key]:'—';
@@ -309,13 +309,13 @@ function matchupPanel(g){
    '</b><span>'+esc(label)+'</span><b>'+esc(teamStat(g.home.abbr,key))+'</b></div>').join('')+'</div>'+
   '<p class="c3-source-note">Use these results to test the pregame matchup hypotheses. One game cannot establish that any factor caused the model error.</p></section>':'';
  return '<div class="c3-compare-grid"><section class="c3-panel"><h3>Team Comparison · Verified Pregame Cutoff</h3>'+
- '<p class="c3-source-note">2026–27 season · '+esc(g.away.abbr)+' '+esc(away?.games||'—')+
+ '<p class="c3-source-note">Source snapshot '+esc(state.snapshot?.built_at_utc||'unavailable')+' · 2026–27 season · '+esc(g.away.abbr)+' '+esc(away?.games||'—')+
  ' games · '+esc(g.home.abbr)+' '+esc(home?.games||'—')+' games</p>'+
  '<div class="c3-stat-row"><b>'+esc(g.away.abbr)+'</b><span>METRIC</span><b>'+esc(g.home.abbr)+'</b></div>'+rows+'</section>'+
  '<section class="c3-panel"><h3>Players to Watch · Both Teams</h3>'+summary+
  '<p class="c3-source-note">These are rotation projections, not verified defensive assignments or confirmed starters.</p></section>'+
  '<section class="c3-panel"><h3>Matchup Game Script</h3>'+
- (insight||'<p>Insufficient source-backed pregame statistics.</p>')+
+ (insight||'<p class="c3-source-note">No complete pretip source-backed matchups. Missing or post-lock snapshots are not used to invent an explanation.</p>')+
  '<p class="c3-source-note">Original Elo projected '+esc(g.away.abbr)+' '+num0(g.primary_forecast?.projected_score?.away)+
  ' to '+esc(g.home.abbr)+' '+num0(g.primary_forecast?.projected_score?.home)+
  '. No narrative is retroactively attributed to the immutable machine.</p></section></div>'+
