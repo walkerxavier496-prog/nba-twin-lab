@@ -2,13 +2,15 @@
 
 **Design decision:** APPROVED / VISUAL DIRECTION LOCKED  
 **Approved by:** Project owner, 31 October 2026 (Australia/Melbourne)  
-**Status:** V19 implementation committed and applied across primary routes; final visual QA still pending. This document remains the controlling design reference, not permission for unrelated future redesigns.
+**Status:** V20 fidelity pass committed for Home, Predictor, Daily Slate and Accuracy Audit. The full approved composition is the target; desktop/mobile browser screenshot sign-off still pending. No alternative visual theme is authorised.
 
 ## Original reference
 
 The approved visual is **the THIRD generated concept board** from the 31 October 2026 design discussion: the 9-panel image headed by “1. HOME DASHBOARD (CONCEPT)” and “2. GAME PREDICTOR (CONCEPT)”, with the remaining panels “3. GAME DETAILS & ANALYSIS”, “4. EXPECTED LINEUPS”, “5. PLAYER PROJECTIONS”, “6. DAILY PREDICTIONS SLATE”, “7. ACCURACY AUDIT”, “8. MOBILE VIEW” and “9. DESIGN SYSTEM”.
 
 **Exact original reference PNG:** `nba-twin-lab-approved-concept-3.png`, preserved as a conversation file with SHA-256 `ba031a2f0c1ec523c98e14416afc346217ff307686a3ad76f77645ca836a88a2`. The reference image is **not currently committed to this repository**. Retain that PNG when implementing. This specification describes, but does not replace, the visual.
+
+**User-reuploaded complete nine-panel board (31 October 2026):** `nba-twin-lab-approved-concept-3(1).png` from the conversation, 1536×1024 PNG; SHA-256 `f84592f9bf4ab517590105fee511ad9f8516fa2d75df114c928fc42be9f658a5`. The individual panels were also uploaded as eight separate screenshots, and are the **specific acceptance reference** for dimensions, hierarchy, cards, gradients and tab layouts. These image attachments reside in the conversation, not the repository. Do not treat the old textual spec as more authoritative than these supplied screenshots.
 
 **Priority:** Match Concept 3 rather than Concepts 1 or 2. Never restart the aesthetic from scratch for each page.
 
@@ -58,6 +60,8 @@ Palette is a starting implementation approximation, **not exact sampled colours 
 ## Navigation intent
 
 The reference uses a minimal horizontal header with Home / Predict / Daily / Players / Teams / Stats / Audit / Models / About. On narrower widths, consolidate rather than wrap. The functional live game centre, standings/NBA Cup, following players/teams, model comparison and historical test pages must remain reachable even if grouped under menus. Do not remove existing capabilities to match a mockup.
+
+**V20 implementation:** [Concept 3 fidelity checklist and honest data rules](v20-concept3-fidelity.md). The new `assets/concept3-fidelity.css`, `assets/concept3-hub.js` and `assets/concept3-audit.js` implement the reference-facing layouts while retaining all legacy research and dataset source controls.
 
 ## Implementation/change-control rules
 
