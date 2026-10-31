@@ -621,3 +621,8 @@ body.v12 .ribbon .court-ticker__item:hover{background:#123050}
 /* Follow your NBA teams in My Watchlist, not a decorative global colour-picker. */
 body.v12 .app-header .header-action{background:#102845!important;border:1px solid #315988!important;color:#cce8ff!important;box-shadow:none}
 body.v12 .app-header .header-action:hover{background:#174074!important}
+
+/* Home featured matchup team logos/names are clickable team-stat entries. */
+body.v12.home .featured-box a.sports-club{text-decoration:none!important;color:inherit!important;border-radius:9px;padding:7px 3px}
+body.v12.home .featured-box a.sports-club:hover{background:#14385d;border:1px solid #2d7cc3}
+body.v12.home .featured-box a.sports-club:focus-visible{outline:2px solid #57c4ff}
