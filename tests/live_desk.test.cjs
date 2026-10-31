@@ -66,3 +66,39 @@ test('ESPN game summary fails closed on invalid IDs and failed provider replies'
  assert.equal(sample.plays.length,0);
  assert.match(sample.source,/ESPN/);
 });
+
+test('highlight notifications fire only for newly observed qualifying plays after opt-in',async()=>{
+ const els=new Map(),el=id=>{
+  if(!els.has(id))els.set(id,{id,value:'',innerHTML:'',textContent:'',listeners:{},querySelectorAll:()=>[],
+   addEventListener(event,handler){this.listeners[event]=handler},setAttribute(){}});
+  return els.get(id);
+ };
+ const document={getElementById:el,querySelectorAll:()=>[],addEventListener(){}};
+ const notices=[];
+ class Notification{static permission='granted';constructor(title,body){notices.push({title,body})}}
+ let generation=0;
+ const box=()=>({boxscore:{players:[]},plays:[
+  {id:'original',text:'First quarter 2 point layup',period:{number:1},clock:{displayValue:'4:00'}},
+  ...(generation?[
+   {id:'new-three',text:'Shooter makes 29-foot three point jumper',period:{number:2},clock:{displayValue:'6:20'}},
+   {id:'new-miss',text:'Shooter misses jump shot',period:{number:2},clock:{displayValue:'6:16'}}]:[])
+ ]});
+ const fetch=async()=>({ok:true,json:async()=>box()});
+ const window={NbaScores:{label:()=> 'Q2 · 6:20 · LIVE'},NbaMedia:{image:t=>t},TwinTeamPrefs:{get:()=>''}};
+ vm.runInNewContext(read('assets/live-desk.js'),{window,document,fetch,Date,Intl,Promise,Notification,encodeURIComponent});
+ const game={id:'401909277',date:'2026-10-30T23:00:00Z',phase:'live',period:2,clock:'6:20',
+  away:{abbr:'CHA',score:47},home:{abbr:'WSH',score:42}};
+ window.NbaLiveDesk.setFeed({games:[game],fetched_at_utc:'2026-10-31T00:00:00Z'});
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(notices.length,0,'Never notify an existing play when first opening a game');
+ await el('live-alerts-toggle').listeners.click();
+ generation=1;
+ window.NbaLiveDesk.setFeed({games:[game],fetched_at_utc:'2026-10-31T00:01:00Z'});
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(notices.length,1,'New made three should produce exactly one notification');
+ assert.match(notices[0].title,/THREE POINTER/);
+ assert.match(el('live-alert-feed').innerHTML,/THREE POINTER/);
+ window.NbaLiveDesk.setFeed({games:[game],fetched_at_utc:'2026-10-31T00:02:00Z'});
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(notices.length,1,'Replaying the same play must not re-alert');
+});
