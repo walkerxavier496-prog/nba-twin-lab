@@ -504,7 +504,7 @@ async function refreshPostgame(){
  finally{refreshRunning=false}
 }
 if(typeof window.setInterval==='function')window.setInterval(refreshPostgame,45000);
-if(typeof document!=='undefined')document.addEventListener('visibilitychange',()=>{
+if(typeof document!=='undefined'&&typeof document.addEventListener==='function')document.addEventListener('visibilitychange',()=>{
  if(document.visibilityState==='visible')refreshPostgame();
 });
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});else load();
