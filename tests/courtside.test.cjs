@@ -84,7 +84,7 @@ test('daily basketball scorebug and ticker preserve actual locked model comparis
  assert.equal(get('stat-models').textContent,'6');
  assert.equal(get('stat-players').textContent,'228');
  assert.match(get('game-detail').innerHTML,/sports-scorebug/);
- assert.match(get('game-detail').innerHTML,/ARCHIVED PREGAME PROJECTION|PREGAME · SNAPSHOT LOCKED/);
+ assert.match(get('game-detail').innerHTML,/ARCHIVED PREGAME FORECAST/);
  assert.equal((get('daily-ticker').innerHTML.match(/court-ticker__item/g)||[]).length,10);
  assert.equal((get('game-detail').innerHTML.match(/<article class="model-card/g)||[]).length,6);
  assert.match(get('game-detail').innerHTML,/M6 · Weighted Ensemble/);
