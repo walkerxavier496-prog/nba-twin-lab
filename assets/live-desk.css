@@ -81,3 +81,16 @@ body.v12.home #live-games~.hero-grid .lead-story h1{font-size:clamp(50px,5vw,88p
  .desk-player img{width:34px;height:36px}
  .desk-footer>div{padding:12px}
 }
+
+@media(max-width:430px){
+ .desk-game-list{grid-template-columns:1fr;gap:7px}
+ .desk-game{min-height:83px;padding:10px 13px;gap:6px}
+ .desk-game-teams{justify-content:center;gap:9px}
+ .desk-game-teams .team-logo,.desk-game-teams .team-logo--sm{width:32px!important;height:32px!important}
+ .desk-game-teams strong{font-size:19px}
+ .desk-points{font-size:25px;margin:0 7px}
+ .desk-status{font-size:9px}
+ .desk-head-actions>*{font-size:10px}
+ .desk-filters{gap:5px}
+ .desk-filters button{padding:8px 10px}
+}
