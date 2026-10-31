@@ -1,0 +1,14 @@
+/* Reusable accessible sorting controls, no change to actual model values. */
+.twin-sortable th{white-space:nowrap}
+.twin-sortable .twin-sort-head{
+ display:inline-flex;align-items:center;gap:4px;text-align:inherit;color:inherit;
+ background:transparent!important;border:0!important;padding:5px 2px!important;
+ font-size:inherit!important;font-family:inherit!important;font-weight:900;cursor:pointer;line-height:1.2;
+}
+.twin-sortable .twin-sort-head:hover{color:var(--fan-accent,#c6dbff)!important}
+.twin-sortable .twin-sort-head:focus-visible{
+ outline:2px solid var(--fan-accent,#c6dbff)!important;outline-offset:3px;border-radius:4px
+}
+.twin-sortable th[aria-sort=ascending],.twin-sortable th[aria-sort=descending]{color:var(--fan-accent,#c6dbff)!important}
+.twin-sortable tbody tr:hover{background-color:#213648}
+@media(prefers-reduced-motion:reduce){.twin-sortable *{transition:none!important}}
