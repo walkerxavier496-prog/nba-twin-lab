@@ -80,7 +80,7 @@ function leaderCard(team){
 function showLeaders(){
  $('game-leaders').innerHTML=game?(leaderCard(game.away)+leaderCard(game.home)):'';
 }
-const boxCols=[['name','PLAYER'],['minutes','MIN'],['pts','PTS'],['reb','REB'],['ast','AST'],['three','3PM'],['stl','STL'],['blk','BLK'],['tov','TO'],['fgPct','FG%'],['ftPct','FT%'],['plusMinus','+/-'],['fpts','FPTS']];
+const boxCols=[["name","PLAYER"],["minuteValue","MIN"],["pts","PTS"],["fgm","FG"],["fgPct","FG%"],["three","3PT"],["threePct","3P%"],["ftm","FT"],["ftPct","FT%"],["oreb","OREB"],["dreb","DREB"],["reb","REB"],["ast","AST"],["stl","STL"],["blk","BLK"],["tov","TO"],["plusMinus","+/-"],["pf","PF"],["fpts","FPTS"]];
 function orderPlayers(group){
  return group.slice().sort((a,b)=>{
   if(boxSort==='name')return (boxDescending?-1:1)*a.name.localeCompare(b.name);
@@ -96,11 +96,14 @@ function showBox(){
  $('game-box-groups').innerHTML=[game.away,game.home].map(team=>{
   const list=orderPlayers(players.filter(p=>p.team===team.abbr));
   const rows=list.length?list.map(p=>{
-   const vals=[esc(p.name),esc(p.minutes??'—'),formatNumber(p.pts),formatNumber(p.reb),formatNumber(p.ast),formatNumber(p.three),
-   formatNumber(p.stl),formatNumber(p.blk),formatNumber(p.tov),formatNumber(p.fgPct,'%'),formatNumber(p.ftPct,'%'),
-   formatNumber(p.plusMinus),formatNumber(p.fpts)];
-   return '<tr>'+vals.map((v,i)=>'<td'+(i===12?' class="game-fpts"':'')+'>'+(i===0?'<b>'+v+'</b>':v)+'</td>').join('')+'</tr>';
-  }).join(''):'<tr><td colspan="13">No published actual player statistics for this team yet.</td></tr>';
+   const shot=(m,a)=>Number.isFinite(m)&&Number.isFinite(a)?m+'-'+a:'—';
+   const vals=[esc(p.name),esc(p.minutes??'—'),formatNumber(p.pts),
+     shot(p.fgm,p.fga),formatNumber(p.fgPct,'%'),shot(p.three,p.threeA),formatNumber(p.threePct,'%'),
+     shot(p.ftm,p.fta),formatNumber(p.ftPct,'%'),formatNumber(p.oreb),formatNumber(p.dreb),
+     formatNumber(p.reb),formatNumber(p.ast),formatNumber(p.stl),formatNumber(p.blk),formatNumber(p.tov),
+     formatNumber(p.plusMinus),formatNumber(p.pf),formatNumber(p.fpts)];
+   return '<tr>'+vals.map((v,i)=>'<td'+(i===18?' class="game-fpts"':'')+'>'+(i===0?'<b>'+v+'</b>':v)+'</td>').join('')+'</tr>';
+  }).join(''):'<tr><td colspan="19">No published actual player statistics for this team yet.</td></tr>';
   const headings=boxCols.map(([key,label])=>'<th><button type="button" data-game-sort="'+key+'" aria-label="Sort by '+label+'">'+label+(boxSort===key?(boxDescending?' ↓':' ↑'):'')+'</button></th>').join('');
   return '<div class="game-box-team"><div class="game-box-team-title">'+logo(team)+'<h3>'+esc(team.name)+'</h3></div>'+
    '<div class="game-table-scroll"><table><thead><tr>'+headings+'</tr></thead><tbody>'+rows+'</tbody></table></div></div>';
