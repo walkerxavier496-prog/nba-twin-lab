@@ -301,3 +301,37 @@ select{color:var(--ink)}
 .model-grid .model-card p{font-size:11px}
 @media(max-width:950px){.predictor-top{grid-template-columns:1fr}.matchup-layout{grid-template-columns:1fr}.detail{position:static}.games{display:flex;max-height:none;overflow:auto;padding-bottom:9px}.games .game{flex:0 0 236px}}
 @media(max-width:590px){.predictor-metrics{grid-template-columns:repeat(2,1fr)}.predictor-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.predictor-metrics strong{font-size:29px}.detail{padding:13px}.detail .odds .pct{font-size:43px}.detail .forecast strong{font-size:20px}.detail .split{grid-template-columns:1fr}.games .game{flex-basis:210px}.games .teams-line strong{font-size:23px}}
+
+/* Older research routes share the V12 header, palette, surface and form language
+   while preserving their existing data-driven controls and data contracts. */
+body.v12.secondary-page{color:var(--ink);background:var(--paper)}
+body.v12.secondary-page main{padding-top:30px;padding-bottom:75px}
+body.v12.secondary-page :is(h1,h2,h3){color:var(--ink);font-family:var(--heading);letter-spacing:0;text-transform:uppercase}
+body.v12.secondary-page h1{font-size:clamp(55px,8vw,99px);line-height:.95;margin:10px 0 18px}
+body.v12.secondary-page h1 em{font-style:normal;color:var(--blue)}
+body.v12.secondary-page :is(p,.lead){color:#617380;line-height:1.65}
+body.v12.secondary-page .eyebrow{color:var(--blue);font-weight:900}
+body.v12.secondary-page :is(.panel,.tile,.card,.section,.decision,.summary>div){
+ background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:10px;
+}
+body.v12.secondary-page :is(.panel,.tile,.card){padding:20px}
+body.v12.secondary-page :is(.status,.notice,.provenance){background:#e9f0fc;color:#425a76;border:1px solid #ccd9ef;border-radius:8px;padding:12px 15px}
+body.v12.secondary-page :is(.warning,.status.warning){background:#fff2df;color:#9a5b15;border-color:#f0d7ac}
+body.v12.secondary-page :is(input,select,textarea){background:#f9fbfc;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:10px 12px;max-width:100%}
+body.v12.secondary-page :is(label,small){color:#718390}
+body.v12.secondary-page :is(.pill,.chip,.badge){background:#eaf0f9;color:#365d99;border:1px solid #dbe5f3}
+body.v12.secondary-page .button,body.v12.secondary-page button:not(.game){background:var(--blue);color:#fff;border:1px solid var(--blue);border-radius:7px;min-height:40px}
+body.v12.secondary-page .button:hover,body.v12.secondary-page button:hover{filter:brightness(.94)}
+body.v12.secondary-page .tablewrap{overflow:auto;border:1px solid var(--line);border-radius:7px}
+body.v12.secondary-page :is(th,td){border-color:#e6edf1;color:var(--ink)}
+body.v12.secondary-page th{color:#5e7382;background:#edf2f6}
+body.v12.secondary-page tr.best{background:#e8eefb}
+body.v12.secondary-page a:not(.brand):not(.btn):not(.button):not(.site-bottom-nav a):not(.app-header a){color:var(--blue)}
+body.v12.secondary-page footer{border-color:var(--line);color:#82939e}
+body.v12.secondary-page .logo{color:var(--ink)}
+body.v12.secondary-page .logo b{color:var(--blue)}
+body.v12.secondary-page .kpi b{font:900 31px var(--heading)}
+body.v12.secondary-page :is(.hero,.intro){padding-top:28px;padding-bottom:20px}
+body.v12.secondary-page :is(.summary,.kpis){margin:15px 0 23px}
+body.v12.secondary-page :is(.results,.layout,.grid){min-width:0}
+@media(max-width:700px){body.v12.secondary-page main{padding-top:21px}body.v12.secondary-page .panel{padding:16px}body.v12.secondary-page h1{font-size:clamp(49px,12vw,72px)}}
