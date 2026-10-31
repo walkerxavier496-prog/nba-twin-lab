@@ -461,3 +461,10 @@ body.v12.secondary-page :is(.results,.layout,.grid){min-width:0}
  .daily-hero-context{width:100%;padding:13px}
 }
 @media(prefers-reduced-motion:reduce){.game-status--live{animation:none}}
+
+.feature-confidence{background:#fff;border-top:1px solid #e1e6eb;padding:9px 14px}
+.feature-confidence__warning{border-left:4px solid #e9973d;background:#fff4e6;border-radius:5px;padding:10px 11px;color:#7a461b}
+.feature-confidence__quiet{color:#607381;font-size:11px;line-height:1.5}
+.feature-confidence__warning b{display:block;font-size:10px;letter-spacing:.04em}
+.feature-confidence__warning span,.feature-confidence__warning small{display:block;font-size:10px;margin-top:5px;line-height:1.55}
+.feature-confidence__warning small{color:#966039}
