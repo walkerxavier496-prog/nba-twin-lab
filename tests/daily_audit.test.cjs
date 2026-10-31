@@ -112,14 +112,19 @@ test('review metrics score played players only and never turn DNP or absent play
   assert.equal(review.games[0].player_counts.not_listed_excluded, 1);
 });
 
-test('daily builder reproduces the locked production model without touching the existing snapshot', () => {
-  const existing = JSON.parse(fs.readFileSync(path.join(ROOT, 'practice/2026-10-31-melbourne/forecast.lock.json')));
-  const preview = T.buildLock({ date: '2026-10-31', now: Date.parse('2026-10-30T21:49:42.885Z'), simulations: 100 });
-  assert.equal(preview.scope.games, 10);
-  assert.equal(preview.scope.player_projections, 228);
-  assert.equal(preview.model_policy.production, 'production_elo_v7');
-  assert.ok(Math.abs(preview.forecasts[0].primary_forecast.home_win_probability - existing.forecasts[0].primary_forecast.home_win_probability) < 1e-12);
-  assert.ok(Math.abs(preview.forecasts[0].primary_forecast.projected_score.home - existing.forecasts[0].primary_forecast.projected_score.home) < 1e-12);
-  assert.equal(preview.forecasts[0].source, undefined);
-  assert.equal(A.verifyIntegrity(preview), true);
+test('historical pretip forecast remains immutable and a post-tip rebuilding attempt fails closed', () => {
+  const file = path.join(ROOT, 'practice/2026-10-31-melbourne/forecast.lock.json');
+  const bytes = fs.readFileSync(file);
+  const existing = JSON.parse(bytes);
+  assert.ok(A.verifyIntegrity(existing));
+  assert.equal(existing.scope.games, 10);
+  assert.equal(existing.forecasts.length, 10);
+  assert.equal(existing.forecasts.reduce((total, game) => total + (game.v9_player_projections?.length || 0), 0), 228);
+  assert.ok(existing.forecasts.every(game => game.primary_forecast?.winner_probability >= 0 &&
+    game.primary_forecast?.winner_probability <= 1));
+  assert.ok(Date.parse(existing.locked_at_utc) < Date.parse(existing.scope.first_tip_utc));
+  // There is no ethical way to recreate the October 31 lock using post-tip data.
+  assert.throws(() => T.buildLock({ date: '2026-10-31', now: Date.now(), simulations: 100 }),
+    /no longer pregame|Tipoff has begun|Outside lock window/);
+  assert.equal(A.sha256(fs.readFileSync(file)), A.sha256(bytes), 'Archived forecast bytes must not change');
 });
