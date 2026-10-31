@@ -27,12 +27,20 @@ test('player twins only resolves IDs verified from the existing current-season N
  assert.equal(map.lookup('Kevin Durant').id,'201142');
  assert.equal(map.lookup('Jayson Tatum').id,'1628369');
  assert.equal(map.lookup('LeBron James')?.id,'2544');
+ assert.equal(map.lookup('Dirk Nowitzki').id,'1717');
+ assert.equal(map.lookup('Bob Lanier').id,'600005');
+ assert.equal(map.lookup('Brad Miller').id,'1802');
+ assert.equal(map.lookup('Dirk Nowitzki').historical,true);
  assert.equal(map.lookup('Some historical player not in snapshot'),null);
  const html=read('twins/index.html');
  assert.match(html,/assets\/current-players\.js/);
  assert.match(html,/assets\/team-media\.js/);
  assert.match(html,/twin-faceoff/);
  assert.match(html,/headshot\(x.player,"small"\)/);
+ assert.match(html,/match-content/);
+ const styles=read('assets/dark-v13.css');
+ assert.match(styles,/cards \.match \.twin-rank-photo/);
+ assert.match(styles,/display:grid;place-items:center/);
  assert.match(html,/No verified NBA player photo/);
 });
 test('team intelligence has independent favourite, opponent and venue controls',()=>{
