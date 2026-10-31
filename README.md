@@ -18,6 +18,12 @@ NBA Twin Lab is an independent, open-source basketball research platform hosted 
 
 **Legacy experiments remain available under Model Research:** [V6 historical audit](https://walkerxavier496-prog.github.io/nba-twin-lab/history/), [V7 intelligence](https://walkerxavier496-prog.github.io/nba-twin-lab/intelligence/), [V8 research](https://walkerxavier496-prog.github.io/nba-twin-lab/research/), [V9 player stats](https://walkerxavier496-prog.github.io/nba-twin-lab/player-stats/), [Season Test](https://walkerxavier496-prog.github.io/nba-twin-lab/season-test/), [MVP Lab](https://walkerxavier496-prog.github.io/nba-twin-lab/mvp/) and [Championship Archive](https://walkerxavier496-prog.github.io/nba-twin-lab/championship/).
 
+## V18 roster integrity gate (research stage)
+
+The Game Predictor now exposes a **roster/injury integrity audit** with per-player expected minutes and exclusions. A player is removed from the audited expected rotation if an authentic, timely and ID-matched official report marks them **OUT** or if they are not on a separately verified active roster. Questionable/probable/doubtful statuses create unresolved minute scenarios; unavailable official feeds produce an explicit warning, never a fictional lineup. Projected minute leaders are **not confirmed starters**.
+
+The current `data/availability-current.json` explicitly states that **no official roster + injury feed is connected**. Consequently no V18 roster-first win probability is promoted. Existing Elo probabilities are visibly labelled **historical team estimates** rather than verified game-day lineup probabilities. Future daily immutable locks include a V18 input-audit record; the original 31 October 2026 locks are unchanged. See [V18 integration and remaining validation requirements](docs/v18-roster-integrity.md).
+
 ## Early-season roster turnover correction (experimental)
 
 The original Elo baseline still carries last season's team quality into the new season. This can overstate confidence after trades and injuries. The `predict/roster.js` module compares **prior-season rotation minutes** against the players in a strictly pregame current-season inferred rotation. It provides three research features: departed-prior-quality shock, Elo uncertainty when prior rotations changed, and early current-season opponent-adjusted net-rating change. Their coefficients are **learned from earlier seasons**, not manually set to match an individual game.
