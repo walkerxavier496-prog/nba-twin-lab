@@ -626,3 +626,12 @@ body.v12 .app-header .header-action:hover{background:#174074!important}
 body.v12.home .featured-box a.sports-club{text-decoration:none!important;color:inherit!important;border-radius:9px;padding:7px 3px}
 body.v12.home .featured-box a.sports-club:hover{background:#14385d;border:1px solid #2d7cc3}
 body.v12.home .featured-box a.sports-club:focus-visible{outline:2px solid #57c4ff}
+
+/* Actual Game Centre crests and player box-score names open team/player hubs. */
+body.v12.game-page .game-team-profile{display:flex;flex-direction:column;align-items:center;gap:9px;text-decoration:none!important;color:inherit!important;border-radius:12px;padding:8px}
+body.v12.game-page .game-team-profile:hover{background:#102e4e}
+body.v12.game-page .game-team-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none!important;color:#e9f4ff!important}
+body.v12.game-page .game-team-link:hover,body.v12.game-page .game-player-link:hover{text-decoration:underline!important;color:#77cdff!important}
+body.v12.game-page .game-player-link{color:#eff8ff!important;text-decoration:none!important}
+body.v12 .desk-player{text-decoration:none!important;color:#e8f4ff!important}
+body.v12 .desk-player:hover b{color:#6dccff!important;text-decoration:underline}
