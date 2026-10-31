@@ -12,7 +12,11 @@ async function json(location,optional=false){
  try{const response=await fetch(location,{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);return await response.json()}
  catch(error){if(optional)return null;throw Error('Cannot load '+location+': '+error.message)}
 }
-let data=null,selected=null,matchupFilter='all';
+let data=null,selected=null,matchupFilter='all',scoreFeed=null;
+const scoreAdapter=typeof window!=='undefined'?window.NbaScores:null;
+const liveFor=id=>scoreFeed?.games?.find(game=>String(game.id)===String(id))||null;
+const scoreLabel=game=>game?.phase==='final'?'FINAL':game?.phase==='live'?(scoreAdapter?.label?.(game)||'LIVE'):'PREGAME';
+const hasScore=game=>game&&['live','final'].includes(game.phase)&&isNumber(game.home.score)&&isNumber(game.away.score);
 function matchName(g){return g.away.abbr+' @ '+g.home.abbr}
 const media=typeof window!=='undefined'?window.NbaMedia:null;
 const crest=(team,large=false)=>media?.image?.(team.abbr,{size:large?'large':'small',label:team.abbr})||
@@ -55,22 +59,22 @@ function drawGameSelector(){
  });
  $('game-count').textContent=games.length+' of '+(data.lock.forecasts||[]).length+' games'+(query?' · search: '+query:'');
  $('game-selector').innerHTML=games.length?games.map(game=>{
-  const actual=scoreFor(game.game_id),isSelected=String(game.game_id)===String(selected);
+  const actual=scoreFor(game.game_id),observed=liveFor(game.game_id),isSelected=String(game.game_id)===String(selected);
   const featured=modelsFor(game).m6_ensemble?.home_win_probability;
   const picked=isNumber(featured)?(featured>=.5?game.home.abbr:game.away.abbr):game.primary_forecast?.winner;
   const probability=isNumber(featured)?Math.max(featured,1-featured):game.primary_forecast?.winner_probability;
   return '<button type="button" class="game-button" data-game="'+esc(game.game_id)+'" aria-pressed="'+isSelected+'" aria-label="'+esc(matchName(game)+' '+shortTime(game.tip_utc))+'">'+
-   '<div class="game-button__inner"><div class="game-button__meta"><small>'+esc(shortTime(game.tip_utc))+'</small><b>'+esc(matchName(game))+'</b><small>'+(actual?'<span class="score">FINAL '+esc(actual.away.score)+'–'+esc(actual.home.score)+'</span>':'ENS PICK '+esc(picked||'—')+' · '+pct(probability))+'</small></div><div class="game-button__marks">'+crest(game.away)+crest(game.home)+'</div></div></button>';
+   '<div class="game-button__inner"><div class="game-button__meta"><small>'+esc(shortTime(game.tip_utc))+'</small><b>'+esc(matchName(game))+'</b><small>'+(hasScore(observed)?'<span class="score">'+esc(scoreLabel(observed))+' · '+observed.away.score+'–'+observed.home.score+'</span>':actual?'<span class="score">FINAL '+esc(actual.away.score)+'–'+esc(actual.home.score)+'</span>':'ENS PICK '+esc(picked||'—')+' · '+pct(probability))+'</small></div><div class="game-button__marks">'+crest(game.away)+crest(game.home)+'</div></div></button>';
  }).join(''):'<p class="muted">No matchups fit these filters. Try another team or select All games.</p>';
  document.querySelectorAll('#game-selector [data-game]').forEach(button=>button.onclick=()=>selectGame(button.dataset.game));
 }
 function drawGameDetail(){
  const game=(data.lock.forecasts||[]).find(game=>String(game.game_id)===String(selected));
  if(!game){$('game-detail').textContent='No game selected';return}
- const actual=scoreFor(selected),predictions=modelsFor(game),baseline=game.primary_forecast;
+ const actual=scoreFor(selected),observed=liveFor(selected),predictions=modelsFor(game),baseline=game.primary_forecast;
  const audited=data.sidecarReview?.games?.find(row=>String(row.game_id)===String(game.game_id));
  const scoredModels=audited?.models||(data.sidecar?null:actual?.models)||{};
- const score=actual?'<p class="score">Final: '+esc(actual.away.abbr)+' '+esc(actual.away.score)+' · '+esc(actual.home.abbr)+' '+esc(actual.home.score)+'</p>':'';
+ const score=hasScore(observed)?'<p class="score">ESPN '+esc(scoreLabel(observed))+': '+esc(game.away.abbr)+' '+observed.away.score+' · '+esc(game.home.abbr)+' '+observed.home.score+' <small>· not a model projection</small></p>':actual?'<p class="score">Audited final: '+esc(actual.away.abbr)+' '+esc(actual.away.score)+' · '+esc(actual.home.abbr)+' '+esc(actual.home.score)+'</p>':'';
  const availableProbabilities=ids.map(id=>predictions[id]).filter(p=>p?.available===true&&isNumber(p.home_win_probability));
  const homePicks=availableProbabilities.filter(p=>p.home_win_probability>=0.5).length;
  const awayPicks=availableProbabilities.length-homePicks;
@@ -96,14 +100,19 @@ function drawGameDetail(){
    '<div class="model-card__footer"><span>Score '+esc(projectedText)+'</span><span class="model-card__grade'+(graded&&!graded.correct?' wrong':'')+'">'+(graded?(graded.correct?'✓ Correct':'✕ Wrong'):'Pregame')+(graded?' · Brier '+brier:'')+'</span></div>':
    '<div class="model-card__meta"><strong>Unavailable</strong></div><p class="muted">'+(reason||'No eligible pregame model snapshot')+'</p>')+'</article>');
  }
+ const allChances=availableProbabilities.map(p=>p.home_win_probability);
+ const spanPoints=allChances.length>1?(Math.max(...allChances)-Math.min(...allChances))*100:0;
+ const uncertain=spanPoints>=20;
+ const reliability=uncertain?'<div class="uncertainty-banner" role="note"><b>HIGH MODEL DISAGREEMENT · '+spanPoints.toFixed(1)+' percentage points</b><p>These are different forecasts of the same matchup. A strong Elo favourite is not high confidence when other techniques disagree this much. Historical Elo does not incorporate verified starting lineups, injuries or all current roster changes. Do not treat the biggest percentage as the consensus.</p></div>':
+ '<div class="uncertainty-banner uncertainty-banner--quiet"><b>Model probability spread: '+spanPoints.toFixed(1)+' points</b><p>Pregame probabilities remain estimates. Player availability is not independently verified.</p></div>';
  const noChallenge=ids.every(id=>!predictions[id]);
  const tipElapsed=Date.now()>=Date.parse(game.tip_utc);
  const scorebug='<section class="sports-scorebug" aria-label="Locked pregame matchup"><div class="sports-scorebug__top"><b>🏀 GAME NIGHT / LOCKED FORECAST</b><small>'+esc(fullTime(game.tip_utc))+'</small></div>'+
    '<div class="sports-scorebug__match"><div class="sports-club">'+crest(game.away,true)+'<span><b class="sports-club__name">'+esc(game.away.abbr)+'</b><small class="sports-club__city">'+esc(game.away.name)+'</small></span></div>'+
    '<div class="sports-scorebug__vs">AT<div class="sports-pick"><small>ELO PICK</small><strong>'+esc(baseline.winner)+'</strong><em>'+pct(baseline.winner_probability)+'</em></div></div>'+
    '<div class="sports-club sports-club--home">'+crest(game.home,true)+'<span><b class="sports-club__name">'+esc(game.home.abbr)+'</b><small class="sports-club__city">'+esc(game.home.name)+'</small></span></div></div>'+
-   '<div class="sports-scorebug__bottom"><span>'+(actual?'FINAL SCORE VERIFIED':tipElapsed?'ARCHIVED PREGAME PROJECTION':'PREGAME · SNAPSHOT LOCKED')+'</span><strong>'+ (actual?esc(actual.away.abbr)+' '+esc(actual.away.score)+' – '+esc(actual.home.abbr)+' '+esc(actual.home.score):'PROJECTED '+esc(game.away.abbr)+' '+dec(baseline.projected_score?.away,0)+' – '+esc(game.home.abbr)+' '+dec(baseline.projected_score?.home,0))+'</strong></div></section>';
- $('game-detail').innerHTML=scorebug+'<div class="match-title">'+esc(game.away.name)+' @ '+esc(game.home.name)+'</div>'+
+   '<div class="sports-scorebug__bottom"><span>'+(hasScore(observed)?'ESPN '+esc(scoreLabel(observed))+' · NOT A PREDICTION':actual?'AUDITED FINAL':tipElapsed?'ARCHIVED PREGAME FORECAST':'PREGAME · SNAPSHOT LOCKED')+'</span><strong>'+ (hasScore(observed)?esc(game.away.abbr)+' '+observed.away.score+' – '+esc(game.home.abbr)+' '+observed.home.score:actual?esc(actual.away.abbr)+' '+esc(actual.away.score)+' – '+esc(actual.home.abbr)+' '+esc(actual.home.score):'ELO PROJECTED '+esc(game.away.abbr)+' '+dec(baseline.projected_score?.away,0)+' – '+esc(game.home.abbr)+' '+dec(baseline.projected_score?.home,0))+'</strong></div></section>';
+ $('game-detail').innerHTML=scorebug+reliability+'<div class="match-title">'+esc(game.away.name)+' @ '+esc(game.home.name)+'</div>'+
   '<div class="muted">'+esc(fullTime(game.tip_utc))+'</div>'+score+
   '<p>Original production Elo: <b>'+esc(baseline.winner)+' '+pct(baseline.winner_probability)+'</b> · projected '+dec(baseline.projected_score?.away,0)+'–'+dec(baseline.projected_score?.home,0)+'</p>'+consensus+
   (noChallenge?'<p class="callout">No pregame six-model lock exists for this matchup. It will not be backfilled.</p>':'')+
@@ -171,6 +180,20 @@ function selectGame(gameId){
  $('player-game').value=selected;
  updatePlayerTeams();drawGameSelector();drawGameDetail();drawPlayers();
 }
+async function refreshScores(){
+ if(!data?.lock||!scoreAdapter?.fetchDate||!scoreAdapter?.usDate)return;
+ try{
+  const key=scoreAdapter.usDate(data.lock.forecasts[0].tip_utc);
+  const fresh=await scoreAdapter.fetchDate(key);
+  if(!fresh.games?.length)throw Error('No games in provider response');
+  scoreFeed=fresh;
+  if($('daily-live-source'))$('daily-live-source').textContent='ESPN scoreboard · checked '+fullTime(fresh.fetched_at_utc)+' · refreshes every 60 seconds · separate from frozen forecasts';
+ }catch(e){
+  scoreFeed=null;
+  if($('daily-live-source'))$('daily-live-source').textContent='ESPN score feed unavailable · showing locked pregame forecasts only; no live scores inferred';
+ }
+ drawGameSelector();drawGameDetail();
+}
 async function load(){
  const ledger=await json('../data/audit-ledger.json');
  const latest=[...(ledger.entries||[])].filter(entry=>entry.lock_path).sort((a,b)=>String(b.melbourne_date).localeCompare(String(a.melbourne_date)))[0];
@@ -218,6 +241,8 @@ async function load(){
  const deepLink=typeof location!=='undefined'?new URLSearchParams(location.search).get('game'):null;
  selected=String((deepLink&&lock.forecasts.some(g=>String(g.game_id)===String(deepLink)))?deepLink:lock.forecasts[0]?.game_id||'');
  drawDisagreements();selectGame(selected);drawResults();
+ refreshScores();
+ if(typeof setInterval==='function')setInterval(refreshScores,60000);
 }
 load().catch(error=>{ $('error').innerHTML='<div class="panel"><p class="callout">'+esc(error.message)+'</p><p class="muted">No forecast or result has been fabricated. Check the saved GitHub ledger.</p></div>';['game-selector','game-detail'].forEach(id=>$(id).textContent='Data unavailable'); });
 })();
