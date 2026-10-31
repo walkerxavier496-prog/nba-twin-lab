@@ -3,7 +3,7 @@
 <meta name="description" content="NBA Twin Lab — six competing locked pregame predictions, player projections and postgame accuracy, matchup by matchup.">
 <title>Game Day · NBA Twin Lab</title>
 <link rel="stylesheet" href="../assets/site-shell.css"><link rel="stylesheet" href="../assets/v12.css">
-<script defer src="../assets/site-shell.js"></script><script defer src="../assets/team-media.js"></script><script defer src="./daily.js"></script></head>
+<script defer src="../assets/site-shell.js"></script><script defer src="../assets/team-media.js"></script><script defer src="../assets/live-scoreboard.js"></script><script defer src="./daily.js"></script></head>
 <body class="v12 daily">
 <a class="site-skip" href="#site-main">Skip to games</a>
 <header class="app-header"><div class="header-inner">
@@ -14,9 +14,8 @@
 <div class="ribbon"><div class="ribbon-inner"><span class="ribbon-label">NBA / SLATE</span><div class="ribbon-track" id="daily-ticker" aria-label="Select a locked matchup">Loading the latest predictions…</div><a class="ribbon-link" href="#matchups">ALL GAMES ↘</a></div></div>
 <main id="site-main" class="main-body">
 <div class="page-hero"><div><div class="eyebrow">GAME DAY / PREDICTION DESK</div><h1>THE <em>SLATE.</em></h1><p>Every available matchup. Six rival prediction methods. Locked probabilities, player projections and the results that prove them right—or wrong.</p></div>
-<figure class="daily-hero-photo"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Curry_and_James%2C_Team_USA%2C_Olympic_Games_2024.jpg/1280px-Curry_and_James%2C_Team_USA%2C_Olympic_Games_2024.jpg" loading="lazy" decoding="async" alt="Real photograph of Stephen Curry holding the basketball with LeBron James during the Paris 2024 Olympics">
-<figcaption>ARCHIVE PHOTOGRAPH · <a href="https://commons.wikimedia.org/wiki/File:Curry_and_James,_Team_USA,_Olympic_Games_2024.jpg" target="_blank" rel="noopener noreferrer">Clément Bardot</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a> · Cropped for layout<br><span id="slate-date">Loading slate…</span> · Australia/Melbourne</figcaption></figure></div>
-<div class="status-strip"><span class="pill" id="lock-time">Verifying original lock…</span><span class="pill" id="slate-count">— games</span><span class="pill" id="status">Checking forecasts</span></div>
+<div class="daily-hero-context"><div class="eyebrow">LIVE GAME CENTRE</div><p>Selected teams, their actual NBA logos, the verified game state and the locked prediction — no unrelated photos or misleading scores.</p><span id="slate-date">Loading slate…</span></div></div>
+<div id="daily-live-source" class="scoreboard-source" role="status">Checking live ESPN scoreboard…</div><div class="status-strip"><span class="pill" id="lock-time">Verifying original lock…</span><span class="pill" id="slate-count">— games</span><span class="pill" id="status">Checking forecasts</span></div>
 <div id="error" role="status" aria-live="assertive"></div>
 <div class="daily-stats" aria-label="Pregame model summary">
 <div class="daily-stat"><span>GAME PREDICTIONS</span><strong id="stat-games">—</strong><small>Recorded before tipoff</small></div>
