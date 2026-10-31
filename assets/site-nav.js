@@ -9,7 +9,7 @@ function init(){
  const href=p=>new URL(p,base).href;
  const current=location.pathname;
  const machine=/\/(predict|challenge|audit|models|player-stats)\//.test(current);
- const league=/\/(team-intelligence|twins|league|history|research)\//.test(current);
+ const league=/\/(team-intelligence|twins|league|history|research|watchlist)\//.test(current);
  const live=!machine&&!league;
  nav.innerHTML=
   '<a class="nav-main-link'+(live?' active':'')+'" href="'+href('#live-games')+'"'+(live?' aria-current="page"':'')+'>LIVE</a>'+
@@ -19,7 +19,7 @@ function init(){
   '<a class="nav-main-link" href="'+href('#live-player-stats')+'">PLAYER STATS</a>'+
   '<details class="nav-group'+(league?' active':'')+'"><summary>LEAGUE <span aria-hidden="true">⌄</span></summary><div class="nav-dropdown">'+
   '<a href="'+href('league/')+'">Standings</a><a href="'+href('team-intelligence/')+'">Team Intelligence</a>'+
-  '<a href="'+href('twins/')+'">Player Twins</a><a href="'+href('history/')+'">Historical Lab</a></div></details>';
+  '<a href="'+href('twins/')+'">Player Twins</a><a href="'+href('watchlist/')+'">My Watchlist ★</a><a href="'+href('history/')+'">Historical Lab</a></div></details>';
  for(const menu of nav.querySelectorAll('details')){
   menu.addEventListener('toggle',()=>{if(menu.open)for(const other of nav.querySelectorAll('details'))if(other!==menu)other.open=false});
   menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>menu.open=false));
