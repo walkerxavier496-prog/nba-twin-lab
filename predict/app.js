@@ -2,6 +2,7 @@
 (()=>{
 'use strict';
 const E=window.TwinPredict,$=id=>document.getElementById(id);
+const imgTeam=team=>window.NbaMedia?.image?.(team.abbr,{size:'small',label:team.abbr})||'';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=x=>new Intl.DateTimeFormat(undefined,{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(x));
 const pct=x=>Math.round(100*x)+'%';
@@ -168,7 +169,7 @@ function renderGames(){
    const final=g.status==='final',score=final||g.status==='live';
    return '<button type="button" class="game '+(g.id===selected?'active':'')+'" data-id="'+esc(g.id)+'" aria-label="'+esc(g.away.name)+' at '+esc(g.home.name)+'">'+
    '<div class="game-top"><span>'+esc(fmt(g.date))+'</span><span>'+(final?'FINAL':g.status==='live'?'LIVE':'PREGAME')+'</span></div>'+
-   '<div class="teams-line"><strong>'+esc(g.away.abbr||g.away.name)+'</strong><span class="versus">AT</span><strong>'+esc(g.home.abbr||g.home.name)+'</strong></div>'+
+   '<div class="teams-line"><span class="predict-team">'+imgTeam(g.away)+'<strong>'+esc(g.away.abbr||g.away.name)+'</strong></span><span class="versus">AT</span><span class="predict-team">'+imgTeam(g.home)+'<strong>'+esc(g.home.abbr||g.home.name)+'</strong></span></div>'+
    '<div class="pills"><span class="pill">'+(score?esc(g.awayScore)+' – '+esc(g.homeScore):'Model forecast')+'</span><span class="pill gold">'+(final?'Result':g.status==='live'?'In progress':'Preview →')+'</span></div></button>';
  }).join(''):'<div class="empty">No games found for this range. Try “All scheduled” or a different team.</div>';
  if(!list.some(g=>g.id===selected))selected=list[0]?.id||null;
