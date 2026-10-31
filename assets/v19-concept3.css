@@ -296,3 +296,19 @@ body.v12 .site-bottom-nav a{color:#96b3ce}
 @media(prefers-reduced-motion:reduce){
  body.v12 :is(a,button,input,select,textarea){transition:none!important}
 }
+
+
+/* Featured-player portrait: sourced from the same immutable pretip matchup,
+ * never used as an eligibility/injury fact. Fallback is the arena gradient. */
+body.v12.home .v19-hero-athlete{position:absolute;z-index:0;right:-4%;bottom:-8%;width:min(52%,440px);height:96%;pointer-events:none;opacity:.78;
+ filter:drop-shadow(0 0 38px #1664ed77);mask-image:linear-gradient(90deg,transparent 0%,#000 28%,#000 75%,transparent 100%);
+ -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 28%,#000 75%,transparent 100%);
+}
+body.v12.home .v19-hero-athlete .player-photo{display:block;width:100%;height:100%;border:0;background:none;overflow:visible}
+body.v12.home .v19-hero-athlete .player-photo>img{position:absolute;bottom:0;right:0;display:block;width:100%;height:95%;object-fit:contain;object-position:center bottom;
+ filter:contrast(1.12) saturate(.86) drop-shadow(0 0 18px #679dff66)}
+body.v12.home .v19-hero-athlete .player-photo__fallback{display:none!important}
+body.v12.home .lead-story>.eyebrow,body.v12.home .lead-story>div:not(.v19-hero-athlete){position:relative;z-index:2}
+@media(max-width:950px){body.v12.home .v19-hero-athlete{right:0;width:min(48%,400px);opacity:.56}}
+@media(max-width:650px){body.v12.home .v19-hero-athlete{width:60%;right:-12%;opacity:.32}
+ body.v12.home .lead-story>div:not(.v19-hero-athlete) p{max-width:310px}}
