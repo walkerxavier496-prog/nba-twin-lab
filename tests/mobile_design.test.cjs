@@ -79,6 +79,8 @@ test('daily phone view renders real locked data and functioning matchup/player s
  const locked=JSON.parse(file('practice/2026-10-31-melbourne/forecast.lock.json'));
  const sidecar=JSON.parse(file('audit/supplements/2026-10-31/challenge.lock.json'));
  const ledger=JSON.parse(file('data/audit-ledger.json'));
+ ledger.entries=ledger.entries.filter(e=>e.melbourne_date==='2026-10-31');
+ assert.equal(ledger.entries.length,1);
  const content={
   '../data/audit-ledger.json':ledger,
   ['../'+ledger.entries[0].lock_path]:locked,
