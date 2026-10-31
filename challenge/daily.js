@@ -70,6 +70,11 @@ function drawGameSelector(){
 }
 function drawRosterEvidence(game){
  const audited=game.v18_roster_integrity;
+ const strength=game.v18_roster_strength;
+ const research=strength?.available?
+  '<p><b>V18 current-roster impact range:</b> '+dec(strength.home_minus_away_impact_range[0])+' to '+
+   dec(strength.home_minus_away_impact_range[1])+' · home minus away; not a winner probability or predicted score.</p>':
+  '<p>Current-roster strength unavailable: '+esc(strength?.reason||'This archived forecast predates V18')+'.</p>';
  if(audited){
   const makeTeam=team=>{
    const players=(team?.players||[]).slice(0,10).map(p=>{
@@ -84,7 +89,7 @@ function drawRosterEvidence(game){
    '</b> · This is saved pregame reasoning, not a modified game prediction. '+
    'No new roster-first win probability was generated.</p>'+
    '<p>'+esc((audited.issues||[]).join(' · ')||'All stated point-in-time checks passed')+'</p>'+
-   '<div class="split">'+makeTeam(audited.away)+makeTeam(audited.home)+'</div></div>';
+   research+'<div class="split">'+makeTeam(audited.away)+makeTeam(audited.home)+'</div></div>';
  }
  const injuries=game.official_injury_sidecar;
  if(injuries){
