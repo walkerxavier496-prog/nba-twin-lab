@@ -33,8 +33,12 @@ function selectedModel(g){
  return numbers(p)?{home:p,label:'M6 · LOCKED ENSEMBLE'}:
  numbers(g?.primary_forecast?.home_win_probability)?{home:g.primary_forecast.home_win_probability,label:'ELO · PRODUCTION'}:null;
 }
+// NBA / ESPN / research snapshots disagree on some legacy abbreviations.
+const TEAM_ALIASES={WSH:'WAS',GSW:'GS',NYK:'NY',SAS:'SA',NOP:'NO',PHX:'PHO',BKN:'BRK',UTA:'UTAH',CHA:'CHO'};
+const canonicalTeam=abbr=>TEAM_ALIASES[String(abbr||'').toUpperCase()]||String(abbr||'').toUpperCase();
+function reviewFor(g){return state.review?.games?.find(x=>gameId(x)===gameId(g))||null}
 function scoreFor(g){
- const review=state.review?.games?.find(x=>gameId(x)===gameId(g));
+ const review=reviewFor(g);
  if(review&&numbers(review.away?.score)&&numbers(review.home?.score))
   return {away:review.away.score,home:review.home.score,kind:'AUDITED FINAL'};
  const result=state.results?.games?.find(x=>gameId(x)===gameId(g));
@@ -48,9 +52,13 @@ async function get(url,optional=false){
 }
 function otherInfo(g){
  const s=state.snapshot;
- const valid=s?.strict_no_future_data===true&&new Date(s.built_at_utc).getTime()<=new Date(state.lock?.locked_at_utc).getTime();
- const getT=abbr=>valid?s.teams?.find(t=>t.abbr===abbr):null;
- return {away:getT(g.away.abbr),home:getT(g.home.abbr),available:valid};
+ // Never use a later revised team snapshot to justify an already-locked pick.
+ const valid=s?.strict_no_future_data===true &&
+  Number.isFinite(new Date(s.built_at_utc).getTime()) &&
+  new Date(s.built_at_utc).getTime()<=new Date(state.lock?.locked_at_utc).getTime();
+ const teams=valid&&Array.isArray(s.teams)?s.teams:[];
+ const getT=abbr=>teams.find(t=>canonicalTeam(t.abbr)===canonicalTeam(abbr))||null;
+ return {away:getT(g.away.abbr),home:getT(g.home.abbr),available:valid&&!!getT(g.away.abbr)&&!!getT(g.home.abbr),teams};
 }
 function dateStatus(){
  return state.entry?state.entry.melbourne_date+' · locked '+new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'numeric',minute:'2-digit',hour12:true}).format(new Date(state.lock.locked_at_utc))+' AEDT':'No verified lock';
