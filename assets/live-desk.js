@@ -114,11 +114,12 @@ function renderSummary(){
  if($('desk-sort-help'))$('desk-sort-help').textContent='Sort: '+sortStat.toUpperCase()+(sortDescending?' ↓':' ↑')+' · '+active.length+' matchups · scroll horizontally on mobile';
  if(content)content.innerHTML=rows.length?rows.map(p=>{
   const img=p.id&&/^\d+$/.test(p.id)?'<img src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(p.id)+'.png" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'';
-  const cols=['<span class="desk-player">'+img+'<span><b>'+esc(p.name)+'</b><small>'+esc(p.team)+' · '+esc(p.matchup)+'</small></span></span>',
+  const cols=['<span class="desk-player">'+img+'<span><b>'+esc(p.name)+'</b><small>'+esc(p.team)+' · '+esc(p.matchup)+'</small></span></span>'+(p.id&&/^\d+$/.test(p.id)?'<button type="button" class="watch-player-btn" data-watch-player="'+esc(p.id)+'" data-watch-name="'+esc(p.name)+'" data-watch-player-team="'+esc(p.team)+'">+ Follow</button>':''),
    esc(p.minutes??'—'),fmt(p.pts),fmt(p.reb),fmt(p.ast),fmt(p.three),fmt(p.stl),fmt(p.blk),fmt(p.tov),
    fmt(p.fgPct,'%'),fmt(p.ftPct,'%'),fmt(p.plusMinus),fmt(p.fpts)];
   return '<tr>'+cols.map((v,i)=>'<td'+(i===12?' class="desk-fpts"':'')+'>'+v+'</td>').join('')+'</tr>';
  }).join(''):'<tr><td colspan="13">Loading verified player box scores across this filter; no projected statistics are shown.</td></tr>';
+ window.TwinWatchlist?.sync?.();
  const target=$('desk-top-performers');
  if(target){
   const scorers=rows.slice().sort((a,b)=>(b.pts??-1)-(a.pts??-1)).slice(0,5);
