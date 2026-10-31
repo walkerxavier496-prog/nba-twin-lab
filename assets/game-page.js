@@ -57,6 +57,8 @@ const metrics=[
 function showHeader(){
  if(!game)return;
  $('game-away-name').textContent=game.away.name;$('game-home-name').textContent=game.home.name;
+ if($('game-away-profile'))$('game-away-profile').href='../team/?team='+encodeURIComponent(game.away.abbr);
+ if($('game-home-profile'))$('game-home-profile').href='../team/?team='+encodeURIComponent(game.home.abbr);
  $('game-away-logo').innerHTML=logo(game.away);$('game-home-logo').innerHTML=logo(game.home);
  $('game-away-record').textContent=game.away.record||'AWAY';$('game-home-record').textContent=game.home.record||'HOME';
  const hasScores=['live','final'].includes(game.phase)&&game.away.score!==null&&game.home.score!==null;
