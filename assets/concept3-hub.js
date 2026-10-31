@@ -20,7 +20,7 @@ const MODELS=[
  ['m1_elo','Elo'],['m2_science','Basketball Science'],['m3_player_roster','Player / Roster'],
  ['m4_monte_carlo','Monte Carlo'],['m5_regularized_ml','Machine Learning'],['m6_ensemble','Ensemble']
 ];
-const state={entry:null,lock:null,sidecar:null,review:null,snapshot:null,results:null,gid:null,
+const state={entry:null,lock:null,sidecar:null,review:null,gameReviews:{},snapshot:null,results:null,gid:null,
  tab:'prediction',slateTab:'full',playerSort:'pts',playerTeam:'all',showOut:false,search:'',slateSearch:''};
 function gameId(g){return String(g?.game_id||g?.id||'')}
 function byId(id){return state.lock?.forecasts?.find(g=>gameId(g)===String(id))||null}
@@ -36,7 +36,7 @@ function selectedModel(g){
 // NBA / ESPN / research snapshots disagree on some legacy abbreviations.
 const TEAM_ALIASES={WSH:'WAS',GSW:'GS',NYK:'NY',SAS:'SA',NOP:'NO',PHX:'PHO',BKN:'BRK',UTA:'UTAH',CHA:'CHO'};
 const canonicalTeam=abbr=>TEAM_ALIASES[String(abbr||'').toUpperCase()]||String(abbr||'').toUpperCase();
-function reviewFor(g){return state.review?.games?.find(x=>gameId(x)===gameId(g))||null}
+function reviewFor(g){return state.gameReviews[gameId(g)]||state.review?.games?.find(x=>gameId(x)===gameId(g))||null}
 function scoreFor(g){
  const review=reviewFor(g);
  if(review&&numbers(review.away?.score)&&numbers(review.home?.score))
@@ -49,6 +49,20 @@ function scoreFor(g){
 async function get(url,optional=false){
  try{const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return await r.json()}
  catch(err){if(optional)return null;throw err}
+}
+async function loadGameReview(id){
+ if(!state.entry||!state.lock||!(/^\d{6,12}$/.test(String(id))))return false;
+ if(state.gameReviews[String(id)])return true;
+ const path='../audit/reviews/'+encodeURIComponent(state.entry.melbourne_date)+'/games/'+id+'.review.json';
+ const data=await get(path,true);
+ if(data?.schema!=='nba-twin-lab-game-review-v1'||String(data.game_id)!==String(id)||
+ data.source_lock_integrity_sha256!==state.entry.lock_integrity_sha256||
+ !Array.isArray(data.games)||data.games.length!==1||
+ gameId(data.games[0])!==String(id)||
+ !numbers(data.games[0].away?.score)||!numbers(data.games[0].home?.score))
+  return false;
+ state.gameReviews[String(id)]=data.games[0];
+ return true;
 }
 function otherInfo(g){
  const s=state.snapshot;
@@ -368,6 +382,8 @@ function renderLab(){
 }
 function bindLab(){
  $('c3-game-select').onchange=e=>{state.gid=e.target.value;state.playerTeam='all';state.tab='prediction';renderLab();
+ const requested=state.gid;
+ loadGameReview(requested).then(found=>{if(found&&state.gid===requested)renderLab()});
  if(typeof window.history?.replaceState==='function')window.history.replaceState(null,'','?game='+encodeURIComponent(state.gid))};
  document.querySelectorAll('[data-c3-game-tab]').forEach(el=>el.onclick=()=>{state.tab=el.dataset.c3GameTab;renderLab()});
  const post=$('c3-lab')?.querySelector?.('[data-c3-show-audit]');
@@ -443,9 +459,18 @@ async function load(){
   if(!lock.forecasts?.length||!lock.locked_at_utc)throw Error('Immutable forecast lock is incomplete');
   state.entry=entry;state.lock=lock;state.sidecar=sidecar;state.review=review;state.snapshot=snapshot;state.results=results;
   state.gid=new URLSearchParams(location.search).get('game')||gameId(lock.forecasts[0]);
+  if($('c3-lab'))await loadGameReview(state.gid);
   if($('c3-lab'))renderLab();
   else renderSlate();
  }catch(err){parent.innerHTML='<div class="c3-panel"><h2>Verified forecast unavailable</h2><p>'+esc(err.message)+'. No replacement probabilities are generated.</p></div>'}
 }
+// GitHub Pages is static: Actions publish game reviews after verified final.
+// While a Predictor page is open, check for its single-game review periodically.
+if(typeof window.setInterval==='function')window.setInterval(async()=>{
+ if(!$('c3-lab')||!state.entry||document.visibilityState==='hidden')return;
+ const id=state.gid,g=byId(id);
+ if(!g||reviewFor(g))return;
+ if(await loadGameReview(id) && state.gid===id)renderLab();
+},120000);
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});else load();
 })();
