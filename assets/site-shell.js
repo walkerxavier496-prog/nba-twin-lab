@@ -3,7 +3,13 @@
   if(typeof document==='undefined'||!document.body)return;
   const root=new URL('../',document.currentScript?.src||location.href);
   const path=location.pathname;
-  const entries=[["Live","#live-games","<circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"M4 12h16M12 4v16\"/>"],["Machine","challenge/","<path d=\"M3 20h18M5 17l4-6 4 3 6-9\"/>"],["Stats","#live-player-stats","<path d=\"M4 21v-3a8 8 0 0 1 16 0v3\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/>"],["League","league/","<path d=\"M4 19V7l8-4 8 4v12z\"/><path d=\"M4 19h16M12 3v16\"/>"]];
+  const entries=[
+    ["Home","","<path d=\"M3 11L12 3l9 8v10H3z\"/><path d=\"M9 21v-8h6v8\"/>"],
+    ["Live","#live-games","<circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"M4 12h16M12 4v16\"/>"],
+    ["Predict","challenge/daily.html#matchups","<path d=\"M3 20h18M5 17l4-6 4 3 6-9\"/>"],
+    ["Players","player-stats/","<path d=\"M4 21v-3a8 8 0 0 1 16 0v3\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/>"],
+    ["League","league/","<path d=\"M4 19V7l8-4 8 4v12z\"/><path d=\"M4 19h16M12 3v16\"/>"]
+  ];
   const nav=document.createElement('nav');
   nav.className='site-bottom-nav';nav.setAttribute('aria-label','Mobile navigation');
   for(const [label,destination,svg] of entries){
@@ -13,9 +19,10 @@
     const canonical=p=>p.endsWith('/index.html')?p.slice(0,-10):p;
     const current=canonical(path),target=canonical(href.pathname);
     const isRoot=current===canonical(root.pathname);
-    const active=destination.startsWith('#')?
-      (isRoot||current.includes('/game/')) && (location.hash==='#live-player-stats'?label==='Stats':label==='Live'):
-      current===target || (target.endsWith('/') && current===target.slice(0,-1));
+    const active=label==='Home'?isRoot&&!location.hash:
+      label==='Live'?isRoot&&['#live-games','#live-player-stats'].includes(location.hash)||current.includes('/game/'):
+      label==='Predict'?current.includes('/challenge/')||current.includes('/predict/'):
+      current===target || (target.endsWith('/')&&current===target.slice(0,-1));
     if(active)a.setAttribute('aria-current','page');
     a.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+svg+'</svg><span>'+label+'</span>';
     nav.append(a);
