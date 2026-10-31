@@ -116,7 +116,7 @@ function renderRotation(){
   const id=safeID(p.player_id),url=id?photo(id):null;
   const score=p.stats_if_play||{};
   return '<a class="team-player-card" href="?team='+encodeURIComponent(abbr)+'&player='+encodeURIComponent(id||'')+'#team-player-profile" data-player-id="'+esc(id||'')+'">'+
-   '<div class="team-player-photo">'+(url?'<img src="'+esc(url)+'" alt="Portrait of '+esc(p.name)+'" loading="lazy" onerror="this.style.display=\\'none\\'">':'')+
+   '<div class="team-player-photo">'+(url?'<img src="'+esc(url)+'" alt="Portrait of '+esc(p.name)+'" loading="lazy" onerror="this.style.display=\'none\'">':'')+
    '<b aria-hidden="true">'+esc(p.name?.charAt(0)||'NBA')+'</b></div>'+
    '<div class="team-player-info"><strong>'+esc(p.name)+'</strong><span>'+fixed(p.expected_minutes)+' expected MIN · '+(p.availability||'inferred')+'</span>'+
    '<small>'+fixed(score.points)+' PTS · '+fixed(score.rebounds)+' REB · '+fixed(score.assists)+' AST <em>(if playing)</em></small></div></a>';
