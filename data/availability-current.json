@@ -1,9 +1,320 @@
 {
   "schema": "nba-twin-lab-availability-v18",
-  "status": "unavailable",
+  "status": "verified",
   "strict_no_future_data": true,
-  "published_at_utc": null,
-  "source": null,
-  "games": [],
-  "note": "Official roster/injury ingestion did not pass strict validation: Unexpected third team in official injury PDF"
+  "published_at_utc": "2026-10-31T16:15:00Z",
+  "built_at_utc": "2026-10-31T16:24:38.106818Z",
+  "source": {
+    "type": "official",
+    "url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-31_12_15PM.pdf",
+    "league_roster": "https://www.nba.com/team/{team-id}/roster",
+    "sha256": "be4f39b4ba3d55f96affde7f8b25dcdecf0b90937aec18a0eabe0336eba07605",
+    "team_rosters": [
+      "https://www.nba.com/team/1610612737/roster",
+      "https://www.nba.com/team/1610612766/roster",
+      "https://www.nba.com/team/1610612739/roster",
+      "https://www.nba.com/team/1610612745/roster",
+      "https://www.nba.com/team/1610612763/roster",
+      "https://www.nba.com/team/1610612749/roster",
+      "https://www.nba.com/team/1610612750/roster",
+      "https://www.nba.com/team/1610612740/roster",
+      "https://www.nba.com/team/1610612760/roster",
+      "https://www.nba.com/team/1610612755/roster",
+      "https://www.nba.com/team/1610612757/roster",
+      "https://www.nba.com/team/1610612758/roster",
+      "https://www.nba.com/team/1610612759/roster",
+      "https://www.nba.com/team/1610612762/roster"
+    ]
+  },
+  "games": [
+    {
+      "game_id": "401909896",
+      "injury_report_verified": true,
+      "teams": {
+        "POR": {
+          "roster_verified": true,
+          "roster_player_ids": [
+            "203081",
+            "1630703",
+            "1629630",
+            "1642959",
+            "201950",
+            "1630166",
+            "1642910",
+            "1630695",
+            "1642382",
+            "1642905",
+            "1631101",
+            "1642270",
+            "1630249",
+            "1643257",
+            "1641739",
+            "1629057",
+            "1631321"
+          ],
+          "injuries": [
+            {
+              "player_id": "1643257",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1629630",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1631101",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1642910",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1629057",
+              "status": "QUESTIONABLE"
+            },
+            {
+              "player_id": "1642959",
+              "status": "QUESTIONABLE"
+            }
+          ],
+          "roster_source_url": "https://www.nba.com/team/1610612757/roster"
+        },
+        "UTA": {
+          "roster_verified": true,
+          "roster_player_ids": [
+            "1631127",
+            "1642271",
+            "1641718",
+            "1641723",
+            "1630182",
+            "1642268",
+            "1629004",
+            "1629637",
+            "1628396",
+            "1641725",
+            "1642846",
+            "1628991",
+            "1629006",
+            "1643408",
+            "1628374",
+            "1641729",
+            "203994",
+            "1628964"
+          ],
+          "injuries": [
+            {
+              "player_id": "1641725",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1641723",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1631127",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1628991",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1628374",
+              "status": "QUESTIONABLE"
+            },
+            {
+              "player_id": "203994",
+              "status": "OUT"
+            }
+          ],
+          "roster_source_url": "https://www.nba.com/team/1610612762/roster"
+        }
+      }
+    },
+    {
+      "game_id": "401909898",
+      "injury_report_verified": true,
+      "teams": {
+        "ATL": {
+          "roster_verified": true,
+          "roster_player_ids": [
+            "1629652",
+            "1642484",
+            "1642933",
+            "1630552",
+            "1630598",
+            "203468",
+            "1643412",
+            "1630700",
+            "1629638",
+            "1627827",
+            "1643539",
+            "1642854",
+            "1630168",
+            "1631243",
+            "1643544",
+            "1630592",
+            "1630557",
+            "1629111"
+          ],
+          "injuries": [
+            {
+              "player_id": "1642484",
+              "status": "DOUBTFUL"
+            },
+            {
+              "player_id": "1643544",
+              "status": "DOUBTFUL"
+            },
+            {
+              "player_id": "1631243",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1629111",
+              "status": "AVAILABLE"
+            },
+            {
+              "player_id": "1643539",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1630592",
+              "status": "DOUBTFUL"
+            }
+          ],
+          "roster_source_url": "https://www.nba.com/team/1610612737/roster"
+        },
+        "NOP": {
+          "roster_verified": true,
+          "roster_player_ids": [
+            "1642847",
+            "1629627",
+            "1630529",
+            "1629673",
+            "1627749",
+            "201599",
+            "1643738",
+            "1630570",
+            "1643555",
+            "1631121",
+            "1642882",
+            "1642358",
+            "1631255",
+            "1642274",
+            "1642852",
+            "1631097",
+            "1630530",
+            "1630180"
+          ],
+          "injuries": [
+            {
+              "player_id": "1643738",
+              "status": "QUESTIONABLE"
+            },
+            {
+              "player_id": "1642274",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1643555",
+              "status": "QUESTIONABLE"
+            },
+            {
+              "player_id": "1629673",
+              "status": "OUT"
+            }
+          ],
+          "roster_source_url": "https://www.nba.com/team/1610612740/roster"
+        }
+      }
+    },
+    {
+      "game_id": "401909899",
+      "injury_report_verified": true,
+      "teams": {
+        "SAC": {
+          "roster_verified": true,
+          "roster_player_ids": [
+            "1628370",
+            "1642951",
+            "1643411",
+            "203897",
+            "1630173",
+            "1642363",
+            "1627734",
+            "1631099",
+            "1629631",
+            "1641778",
+            "1642367",
+            "1627732",
+            "1631342",
+            "1642928",
+            "1642284",
+            "1643567",
+            "1642875"
+          ],
+          "injuries": [
+            {
+              "player_id": "1642928",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1631099",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1642875",
+              "status": "OUT"
+            },
+            {
+              "player_id": "1627732",
+              "status": "OUT"
+            }
+          ],
+          "roster_source_url": "https://www.nba.com/team/1610612758/roster"
+        },
+        "MEM": {
+          "roster_verified": true,
+          "roster_player_ids": [
+            "1642377",
+            "1630590",
+            "1629660",
+            "203924",
+            "1642914",
+            "1641744",
+            "1631200",
+            "1641765",
+            "1643721",
+            "1642942",
+            "1641707",
+            "1642907",
+            "1642285",
+            "1643409",
+            "1630191",
+            "1643510",
+            "1642366",
+            "1641713"
+          ],
+          "injuries": [
+            {
+              "player_id": "1629660",
+              "status": "QUESTIONABLE"
+            },
+            {
+              "player_id": "1630590",
+              "status": "QUESTIONABLE"
+            },
+            {
+              "player_id": "1642366",
+              "status": "DOUBTFUL"
+            }
+          ],
+          "roster_source_url": "https://www.nba.com/team/1610612763/roster"
+        }
+      }
+    }
+  ],
+  "note": "NBA.com active roster and NBA official PDF at recorded cutoff; unlisted not assumed healthy"
 }
