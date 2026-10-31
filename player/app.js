@@ -21,7 +21,7 @@ function renderHero(){
  $('player-team-link').href='../team/?team='+encodeURIComponent(team||'BOS');
  $('player-team-link').textContent='EXPLORE '+teamName.toUpperCase()+' ↗';
  $('player-espn-link').href=good?'https://www.espn.com/nba/player/_/id/'+encodeURIComponent(id):'https://www.espn.com/nba/';
- if(good)$('player-portrait').innerHTML='<img src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(id)+'.png" alt="" onerror="this.style.display=\\'none\\'">';
+ if(good)$('player-portrait').innerHTML='<img src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(id)+'.png" alt="" onerror="this.style.display=\'none\'">';
 }
 function parseStats(data){
  const stats=data?.statistics;
@@ -82,7 +82,7 @@ async function load(){
    ['MIN (IF PLAYING)',fmt(found.minutes_if_play),'Inferred rotation'],
    ['PLAY CHANCE',fmt(100*found.play_probability)+'%','Inferred; not official']
   ].map(m=>metric(...m)).join('');
-  if(!good&&/^\d{4,10}$/.test(String(found.player_id)))$('player-portrait').innerHTML='<img src="https://cdn.nba.com/headshots/nba/latest/260x190/'+encodeURIComponent(found.player_id)+'.png" alt="" onerror="this.style.display=\\'none\\'">';
+  if(!good&&/^\d{4,10}$/.test(String(found.player_id)))$('player-portrait').innerHTML='<img src="https://cdn.nba.com/headshots/nba/latest/260x190/'+encodeURIComponent(found.player_id)+'.png" alt="" onerror="this.style.display=\'none\'">';
  }catch(e){$('player-research').innerHTML='<p class="team-empty">'+esc(e.message)+'. No substitute performance data has been invented.</p>'}
 }
 renderHero();
