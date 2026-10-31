@@ -144,7 +144,7 @@ function listen(){
 }
 async function init(){
  listen();
- if(String(location.hash||'').includes('cup'))activate('cup');
+ if(typeof location!=='undefined'&&String(location.hash||'').includes('cup'))activate('cup');
  try{
   const response=await fetch('../data/games.json',{cache:'no-store'});
   if(!response.ok)throw Error('No verified game results feed');
