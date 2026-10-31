@@ -6,6 +6,7 @@ const path = require('node:path');
 const E = require('../predict/engine.js');
 const R = require('../predict/roster.js');
 const RI = require('../predict/roster-integrity.js');
+const RS = require('../predict/roster-strength.js');
 const A = require('./audit-core.cjs');
 const C = require('./five_model_challenge.cjs');
 
@@ -189,6 +190,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
     const challenge = C.predictLiveModels({ game, baseline: primary, snapshot, rosterForecast: roster,
       report: challengeReport, gameData, simulations });
     const rosterIntegrity = RI.auditGame({game,snapshot,availability:officialAvailability,now});
+    const rosterStrength = RS.matchup(rosterIntegrity);
     forecasts.push({
       game_id: String(game.id), tip_utc: new Date(game.date).toISOString(), tip_melbourne: A.melbourneDisplay(game.date),
       away: { id: String(game.away.id), name: game.away.name, abbr: game.away.abbr },
@@ -222,6 +224,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
         availability: prediction.availability, roster_uncertainty: prediction.roster_uncertainty,
       } : { model_id: modelId, model_version: challengeReport.version, version_status: 'unavailable', available: false, reason: prediction.reason }])),
       v18_roster_integrity: rosterIntegrity,
+      v18_roster_strength: rosterStrength,
       v9_player_projections: v9Projections(game, teams),
     });
   }
