@@ -79,3 +79,52 @@ test('game detail does not touch immutable forecasts and requires real score fee
  assert.match(app,/No verified immutable pregame forecast/);
  assert.match(app,/No forecast is recalculated|locked_at_utc/);
 });
+
+
+test('Game Centre grades a single verified final before the full-slate review exists',async()=>{
+ const ledger=JSON.parse(read('data/audit-ledger.json'));
+ const entry={...ledger.entries.find(x=>x.melbourne_date==='2026-10-31'),review_path:null,status:'partial'};
+ const lock=JSON.parse(read(entry.lock_path));
+ const perGame=JSON.parse(read('audit/reviews/2026-10-31/games/401909277.review.json'));
+ const supplement=JSON.parse(read('audit/supplements/2026-10-31/challenge.lock.json'));
+ const data=JSON.parse(read('data/games.json'));
+ assert.equal(perGame.source_lock_integrity_sha256,entry.lock_integrity_sha256);
+ const raw={header:{id:'401909277',competitions:[{
+  id:'401909277',date:'2026-10-30T23:00:00Z',status:{type:{completed:true,state:'post'}},
+  competitors:[
+   {homeAway:'away',team:{abbreviation:'CHA',displayName:'Charlotte Hornets'},score:'79'},
+   {homeAway:'home',team:{abbreviation:'WSH',displayName:'Washington Wizards'},score:'95'}
+  ]}]},boxscore:{teams:[],players:[]}};
+ const files={
+  '../data/audit-ledger.json':{...ledger,entries:[entry]},
+  ['../'+entry.lock_path]:lock,
+  '../audit/supplements/2026-10-31/challenge.lock.json':supplement,
+  '../audit/reviews/2026-10-31/games/401909277.review.json':perGame
+ };
+ const run=async invalid=>{
+  const elements=new Map(),get=id=>{if(!elements.has(id))elements.set(id,node(id));return elements.get(id)};
+  const win={NbaMedia:{image:t=>'<span>'+t.abbr+'</span>'},NbaLiveDesk:{parseBoxscore:()=>[],extractPlays:()=>[]}};
+  const fetch=async url=>{
+   const item=url.includes('site.api.espn.com')?raw:
+    url.endsWith('.review.json')&&invalid?{...perGame,source_lock_integrity_sha256:'wrong-lock'}:files[url];
+   return {ok:item!==undefined,status:item===undefined?404:200,json:async()=>item};
+  };
+  const document={getElementById:get,querySelectorAll:()=>[],visibilityState:'visible'};
+  vm.runInNewContext(read('assets/game-page.js'),{
+   window:win,document,location:{search:'?id=401909277'},URLSearchParams,fetch,Date,Intl,Promise,console
+  },{filename:'assets/game-page.js'});
+  await new Promise(resolve=>setImmediate(resolve));
+  win.NbaGamePage.activate('machine');
+  await new Promise(resolve=>setImmediate(resolve));
+  return get('game-forecast').innerHTML;
+ };
+ const complete=await run(false);
+ assert.match(complete,/MACHINES VS REALITY/);
+ assert.match(complete,/SIX ENGINES VS REALITY/);
+ assert.match(complete,/PLAYER FORECASTS VS ACTUALS/);
+ assert.match(complete,/0\.574/,'Genuine six-machine result, not reconstructed from final scores');
+ const rejected=await run(true);
+ assert.match(rejected,/FINAL · AUDIT PENDING/);
+ assert.doesNotMatch(rejected,/SIX ENGINES VS REALITY/);
+ assert.equal(lock.forecasts[0].primary_forecast.home_win_probability,0.20674107431349767);
+});
