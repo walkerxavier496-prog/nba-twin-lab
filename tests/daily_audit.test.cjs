@@ -184,3 +184,29 @@ test('historical pretip forecast remains immutable and a post-tip rebuilding att
     /no longer pregame|Tipoff has begun|Outside lock window/);
   assert.equal(A.sha256(fs.readFileSync(file)), A.sha256(bytes), 'Archived forecast bytes must not change');
 });
+
+test('official game grades remain bound to the exact original lock and frozen probabilities', () => {
+  const lockPath = path.join(ROOT, 'practice/2026-10-31-melbourne/forecast.lock.json');
+  const lock = JSON.parse(fs.readFileSync(lockPath));
+  const sidecar = JSON.parse(fs.readFileSync(path.join(ROOT, 'audit/supplements/2026-10-31/challenge.lock.json')));
+  const review = JSON.parse(fs.readFileSync(path.join(ROOT, 'audit/reviews/2026-10-31/games/401909277.review.json')));
+  const forecast = lock.forecasts.find(game => String(game.game_id) === '401909277');
+  const challengeGame = sidecar.games.find(game => String(game.game_id) === '401909277');
+  const gradedGame = review.games[0];
+
+  assert.equal(T.verifyChallengeLink(lockPath, lock, sidecar), sidecar);
+  assert.doesNotThrow(() => T.verifyReviewProbabilities(forecast, challengeGame, gradedGame));
+
+  const reboundSidecar = A.withIntegrity({ ...sidecar, original_forecast_sha256: '0'.repeat(64) });
+  assert.throws(() => T.verifyChallengeLink(lockPath, lock, reboundSidecar), /does not reference the original forecast/);
+
+  const changedProductionGrade = JSON.parse(JSON.stringify(gradedGame));
+  changedProductionGrade.models.production_elo_v7.p += 0.001;
+  assert.throws(() => T.verifyReviewProbabilities(forecast, challengeGame, changedProductionGrade),
+    /differs from immutable lock.*production_elo_v7/);
+
+  const changedChallengeGrade = JSON.parse(JSON.stringify(gradedGame));
+  changedChallengeGrade.models.m6_ensemble.p += 0.001;
+  assert.throws(() => T.verifyReviewProbabilities(forecast, challengeGame, changedChallengeGrade),
+    /differs from immutable lock.*m6_ensemble/);
+});

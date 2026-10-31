@@ -122,5 +122,8 @@ test('predictor receives live game clock/score from separate adapter and keeps m
  assert.match(app,/real-score-banner/);
  assert.match(app,/MODEL UNCERTAINTY/);
  assert.match(app,/No pregame|frozen six-model challenge/);
+ assert.match(app,/RESEARCH ESTIMATE · NOT ARCHIVED/);
+ assert.match(app,/not archived pregame forecasts, and are not used for official grading/);
+ assert.doesNotMatch(app,/g\.status==='final'\?'ARCHIVED PREGAME'/);
  assert.match(app,/setInterval\(refreshLiveScores,60000\)/);
 });

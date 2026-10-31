@@ -84,11 +84,50 @@ function gameReviewFiles(date) {
   return fs.readdirSync(directory).filter(name => /^\d+\.review\.json$/.test(name)).sort().map(name => path.join(directory, name));
 }
 
-function challengeLockForDate(date) {
+function verifyChallengeLink(lockFile, lock, value) {
+  const date = lock.scope?.melbourne_date;
+  const firstTip = Date.parse(lock.scope?.first_tip_utc);
+  const lockedAt = Date.parse(value?.locked_at_utc);
+  const originalPath = path.relative(ROOT, lockFile).replaceAll(path.sep, '/');
+  if (!A.verifyIntegrity(value) || value.schema !== 'nba-twin-lab-challenge-sidecar-v1' ||
+      value.melbourne_date !== date) throw new Error(`Challenge lock integrity failed for ${date}`);
+  if (value.original_forecast_path !== originalPath ||
+      value.original_forecast_sha256 !== A.sha256(fs.readFileSync(lockFile))) {
+    throw new Error(`Challenge lock does not reference the original forecast for ${date}`);
+  }
+  if (!Number.isFinite(firstTip) || Date.parse(value.first_tip_utc) !== firstTip ||
+      !Number.isFinite(lockedAt) || lockedAt >= firstTip) {
+    throw new Error(`Challenge lock was not verified before the original first tip for ${date}`);
+  }
+  const sidecarGames = value.games;
+  if (!Array.isArray(sidecarGames) || sidecarGames.length !== lock.forecasts?.length) {
+    throw new Error(`Challenge game coverage mismatch for ${date}`);
+  }
+  const byId = new Map(sidecarGames.map(game => [String(game.game_id), game]));
+  if (byId.size !== sidecarGames.length) throw new Error(`Duplicate challenge game for ${date}`);
+  for (const forecast of lock.forecasts || []) {
+    const game = byId.get(String(forecast.game_id));
+    if (!game || Date.parse(game.tip_utc) !== Date.parse(forecast.tip_utc) ||
+        A.canonicalTeam(game.home) !== A.canonicalTeam(forecast.home.abbr) ||
+        A.canonicalTeam(game.away) !== A.canonicalTeam(forecast.away.abbr)) {
+      throw new Error(`Challenge game does not match original lock for ${forecast.game_id}`);
+    }
+    for (const modelId of C.ALL_IDS) {
+      const prediction = game.predictions?.[modelId];
+      if (!prediction || typeof prediction.available !== 'boolean' ||
+          (prediction.available && (finite(prediction.home_win_probability) === null ||
+            prediction.home_win_probability < 0 || prediction.home_win_probability > 1))) {
+        throw new Error(`Invalid locked challenge probability for ${forecast.game_id}/${modelId}`);
+      }
+    }
+  }
+  return value;
+}
+
+function challengeLockForDate(date, lockFile, lock) {
   const file = path.join(AUDIT, 'supplements', date, 'challenge.lock.json');
   if (!fs.existsSync(file)) return null;
-  const value = readJson(file);
-  if (!A.verifyIntegrity(value) || value.melbourne_date !== date) throw new Error(`Challenge lock integrity failed for ${date}`);
+  const value = verifyChallengeLink(lockFile, lock, readJson(file));
   return { file, value };
 }
 
@@ -200,7 +239,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
   const profiles = contextProfiles(context, season), teams = playerTeams(snapshot);
   const forecasts = [];
   for (const game of games) {
-    const state = E.ratings(gameData.games, game.date);
+    const state = E.ratings(gameData.games, new Date(Math.min(now, Date.parse(game.date))).toISOString());
     if (state.finals < 800) throw new Error('Historical Elo coverage is insufficient');
     const primary = E.forecast(game, state, profiles);
     const simulation = E.monteCarlo(game, state, profiles, { simulations, seed: `daily-audit-v2|${game.id}|${game.date}|${simulations}` });
@@ -354,7 +393,7 @@ async function processFinalGames(lockFile, now, { fetcher = fetchJson, dryRun = 
   const lock = readJson(lockFile);
   if (!A.verifyIntegrity(lock)) throw new Error(`Forecast lock integrity failed: ${path.relative(ROOT, lockFile)}`);
   const date = lock.scope.melbourne_date;
-  const challenge = challengeLockForDate(date);
+  const challenge = challengeLockForDate(date, lockFile, lock);
   const outcomes = { reviewed: [], pending: [], existing: [] };
   for (const forecast of lock.forecasts || []) {
     const gameId = String(forecast.game_id), destination = gameReviewFile(date, gameId);
@@ -494,21 +533,113 @@ function buildLedger(now) {
   return ledger;
 }
 
+function verifyLockedProbability(reviewGame, modelId, lockedProbability, context, required = false) {
+  const probability = finite(lockedProbability);
+  const graded = reviewGame.models?.[modelId];
+  if (probability === null) {
+    if (required || graded) throw new Error(`Missing locked probability for ${context}/${modelId}`);
+    return;
+  }
+  if (probability < 0 || probability > 1 || !graded || graded.p !== probability) {
+    throw new Error(`Graded probability differs from immutable lock for ${context}/${modelId}`);
+  }
+}
+
+function verifyReviewProbabilities(forecast, challengeGame, reviewGame) {
+  const gameId = String(forecast.game_id);
+  if (String(reviewGame.game_id) !== gameId) throw new Error(`Reviewed game does not match lock for ${gameId}`);
+  verifyLockedProbability(reviewGame, forecast.primary_forecast?.model_id || 'production_elo_v7',
+    forecast.primary_forecast?.home_win_probability, gameId, true);
+  const monteCarlo = forecast.diagnostics?.monte_carlo;
+  verifyLockedProbability(reviewGame, monteCarlo?.model_id || 'possession_monte_carlo_v5',
+    monteCarlo?.home_win_probability, gameId);
+  const roster = forecast.diagnostics?.roster_aware_beta;
+  verifyLockedProbability(reviewGame, roster?.model_id || 'roster_beta_v1',
+    roster?.home_win_probability, gameId);
+  for (const modelId of C.ALL_IDS) {
+    const prediction = challengeGame?.predictions?.[modelId];
+    if (!prediction) {
+      if (reviewGame.models?.[modelId]) throw new Error(`Unexpected graded challenge model for ${gameId}/${modelId}`);
+      continue;
+    }
+    verifyLockedProbability(reviewGame, modelId,
+      prediction.available === true ? prediction.home_win_probability : null,
+      gameId);
+  }
+}
+
 function verifyAll() {
+  const lockRecords = new Map();
   for (const file of lockFiles()) {
     const value = readJson(file);
     if (!A.verifyIntegrity(value)) throw new Error(`Lock integrity failed: ${path.relative(ROOT, file)}`);
     if (!value.scope?.melbourne_date || !(value.forecasts || []).length) throw new Error(`Lock coverage failed: ${path.relative(ROOT, file)}`);
+    const relative = path.relative(ROOT, file).replaceAll(path.sep, '/');
+    lockRecords.set(relative, { file, relative, value, sha256: A.sha256(fs.readFileSync(file)) });
   }
-  for (const file of filesUnder(path.join(AUDIT, 'reviews'), 'review.json')) {
-    if (!A.verifyIntegrity(readJson(file))) throw new Error(`Review integrity failed: ${path.relative(ROOT, file)}`);
+  const dailyReviews = filesUnder(path.join(AUDIT, 'reviews'), 'review.json');
+  for (const file of dailyReviews) {
+    const review = readJson(file), relative = path.relative(ROOT, file).replaceAll(path.sep, '/');
+    if (!A.verifyIntegrity(review)) throw new Error(`Review integrity failed: ${relative}`);
+    if (review.source_lock_integrity_sha256) {
+      const source = [...lockRecords.values()].find(record =>
+        record.value.scope.melbourne_date === review.melbourne_date &&
+        record.value.integrity?.canonical_payload_without_integrity === review.source_lock_integrity_sha256);
+      if (!source) throw new Error(`Daily review source lock mismatch: ${relative}`);
+      const challenge = challengeLockForDate(review.melbourne_date, source.file, source.value);
+      const challengeGames = new Map((challenge?.value.games || []).map(game => [String(game.game_id), game]));
+      for (const game of review.games || []) {
+        const forecast = source.value.forecasts.find(item => String(item.game_id) === String(game.game_id));
+        if (!forecast) throw new Error(`Daily review contains an unlocked game: ${relative}/${game.game_id}`);
+        verifyReviewProbabilities(forecast, challengeGames.get(String(game.game_id)), game);
+      }
+    }
   }
   const gameReviews = fs.existsSync(path.join(AUDIT, 'reviews')) ? fs.readdirSync(path.join(AUDIT, 'reviews'), { withFileTypes: true }).flatMap(entry =>
     entry.isDirectory() ? gameReviewFiles(entry.name) : []) : [];
-  for (const file of gameReviews) if (!A.verifyIntegrity(readJson(file))) throw new Error(`Game review integrity failed: ${path.relative(ROOT, file)}`);
+  for (const file of gameReviews) {
+    const artifact = readJson(file), relative = path.relative(ROOT, file).replaceAll(path.sep, '/');
+    if (!A.verifyIntegrity(artifact) || artifact.schema !== 'nba-twin-lab-game-review-v1' ||
+        !Array.isArray(artifact.games) || artifact.games.length !== 1) {
+      throw new Error(`Game review integrity failed: ${relative}`);
+    }
+    const source = lockRecords.get(artifact.source_lock_path);
+    if (!source || artifact.melbourne_date !== source.value.scope.melbourne_date ||
+        artifact.source_lock_sha256 !== source.sha256 ||
+        artifact.source_lock_integrity_sha256 !== source.value.integrity?.canonical_payload_without_integrity) {
+      throw new Error(`Game review source lock mismatch: ${relative}`);
+    }
+    const challenge = challengeLockForDate(artifact.melbourne_date, source.file, source.value);
+    const expectedChallengePath = challenge ? path.relative(ROOT, challenge.file).replaceAll(path.sep, '/') : null;
+    const expectedChallengeHash = challenge ? A.sha256(fs.readFileSync(challenge.file)) : null;
+    if ((artifact.challenge_lock_path || null) !== expectedChallengePath ||
+        (artifact.challenge_lock_sha256 || null) !== expectedChallengeHash) {
+      throw new Error(`Game review challenger sidecar hash mismatch: ${relative}`);
+    }
+    const game = artifact.games[0];
+    const forecast = source.value.forecasts.find(item => String(item.game_id) === String(artifact.game_id));
+    if (!forecast || String(game.game_id) !== String(artifact.game_id)) {
+      throw new Error(`Game review does not match a locked game: ${relative}`);
+    }
+    const challengeGame = challenge?.value.games.find(item => String(item.game_id) === String(artifact.game_id));
+    verifyReviewProbabilities(forecast, challengeGame, game);
+  }
   const ledger = readJson(path.join(DATA, 'audit-ledger.json'));
   if (ledger.schema !== 'nba-twin-lab-audit-ledger-v2' || !Array.isArray(ledger.entries)) throw new Error('Ledger schema invalid');
-  console.log(`Verified ${lockFiles().length} immutable lock(s), ${gameReviews.length} append-only game review(s), ${filesUnder(path.join(AUDIT, 'reviews'), 'review.json').length} daily roll-up(s), and the derived ledger`);
+  for (const entry of ledger.entries) {
+    const source = lockRecords.get(entry.lock_path);
+    if (!source || entry.lock_sha256 !== source.sha256 ||
+        entry.lock_integrity_sha256 !== source.value.integrity?.canonical_payload_without_integrity) {
+      throw new Error(`Ledger forecast-lock hash mismatch: ${entry.lock_path}`);
+    }
+    if (entry.review_path) {
+      const reviewFilePath = path.join(ROOT, entry.review_path);
+      if (!fs.existsSync(reviewFilePath) || entry.review_sha256 !== A.sha256(fs.readFileSync(reviewFilePath))) {
+        throw new Error(`Ledger postgame-review hash mismatch: ${entry.review_path}`);
+      }
+    }
+  }
+  console.log(`Verified ${lockRecords.size} immutable lock(s), original lock hashes, ${gameReviews.length} append-only game review(s), challenger sidecar hashes, locked-to-graded probabilities, ${dailyReviews.length} daily roll-up(s), and the derived ledger`);
 }
 
 function reviewWindowOpen(lock, now) {
@@ -571,6 +702,6 @@ if (require.main === module) main().catch(error => { console.error(error.stack |
 
 module.exports = {
   buildLock, buildReview, buildLedger, buildPerformanceCentre, processFinalGames, derivedReviewForDate,
-  verifyAll, reviewWindowOpen, v9Projections, contextProfiles, gameReviewFile,
+  verifyAll, verifyChallengeLink, verifyReviewProbabilities, reviewWindowOpen, v9Projections, contextProfiles, gameReviewFile,
   LOCK_MINUTES_BEFORE_TIP, LOCK_MAX_MINUTES_BEFORE_TIP,
 };

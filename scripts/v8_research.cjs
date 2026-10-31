@@ -2,6 +2,7 @@
 /* V8 research audit: direct, regularized pregame features on top of Elo.
    Experimental only: never promote a model from the test season. */
 'use strict';
+const IO=require('./research_io.cjs');
 const fs=require('node:fs'),path=require('node:path'),E=require('../predict/engine.js');
 const ROOT=path.join(__dirname,'..');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -20,7 +21,9 @@ const modes={
 };
 function pregameFeatures(item,elo){
   const h=item.feature.pregame.home,a=item.feature.pregame.away;
+  E.assertHistoricalSnapshotBefore(item.game,h);E.assertHistoricalSnapshotBefore(item.game,a);
   if(h.as_of!==item.feature.date||a.as_of!==item.feature.date)throw Error('Feature timestamp mismatch '+item.game.id);
+  if(h.chronology_policy!=='result-availability-v1'||a.chronology_policy!=='result-availability-v1')throw Error('Chronology policy mismatch '+item.game.id);
   const net=s=>{
     const c=s.season||{},p=s.prior||{},n=Number(s.games)||0;
     const current=Number(c.adj_ortg)-Number(c.adj_drtg);
@@ -33,6 +36,7 @@ function pregameFeatures(item,elo){
   const y=item.game.homeScore>item.game.awayScore?1:0;
   if(item.game.homeScore===item.game.awayScore)throw Error('Tied final');
   return {id:item.game.id,season:item.game.season,date:item.game.date,y,p:elo.homeWin,
+    outcomeAvailableAt:E.resultAvailability(item.game),
     homeScore:elo.homeScore,awayScore:elo.awayScore,
     features:{
       elo:clamp(logit(elo.homeWin),-4,4),
@@ -88,15 +92,16 @@ function pairedBootstrap(a,b,reps=800){
   return {delta_brier:delta,ci95:[quantile(draws,.025),quantile(draws,.975)]};
 }
 function buildRows(){
-  const intel=JSON.parse(fs.readFileSync(path.join(ROOT,'data/v7-intelligence.json'),'utf8'));
-  const history=JSON.parse(fs.readFileSync(path.join(ROOT,'data/historical-games.json'),'utf8'));
-  const context=JSON.parse(fs.readFileSync(path.join(ROOT,'data/context.json'),'utf8'));
+  const intel=IO.read('v7-intelligence.json');
+  const history=IO.read('historical-games.json');
+  const context=IO.read('context.json');
+  IO.requireChronology(intel);
   if(!intel.strict_no_future_data||intel.coverage.evaluated_games!==6150)throw Error('Invalid V7 pregame dataset');
   const historicalById=new Map(history.games.map(g=>[String(g.id),g]));
   const ids=new Map();for(const g of history.games)for(const t of [g.home,g.away])ids.set(canonical(t.abbr),String(t.id));
   const features=intel.games.map(f=>{
     const original=historicalById.get(String(f.result_id));
-    const game={id:String(f.result_id),date:original?.date||f.date+'T23:00:00Z',season:f.season,status:'final',
+    const game={id:String(f.result_id),date:f.prediction_at_utc||original?.date||f.date,season:f.season,status:'final',
       home:{id:ids.get(canonical(f.home.abbr)),abbr:canonical(f.home.abbr),name:f.home.name},
       away:{id:ids.get(canonical(f.away.abbr)),abbr:canonical(f.away.abbr),name:f.away.name},
       homeScore:f.home_score,awayScore:f.away_score};
@@ -113,7 +118,7 @@ function buildRows(){
       profileMap.set(game.season,p);
     }
     const state=E.ratings(allGames,game.date);
-    if(state.allGames.some(g=>Date.parse(g.date)>=Date.parse(game.date)))throw Error('Pregame leakage '+game.id);
+    if(state.allGames.some(g=>!E.resultKnownBefore(g,game.date)))throw Error('Pregame leakage '+game.id);
     const elo=E.forecast(game,state,profileMap.get(game.season));
     rows.push(pregameFeatures(item,elo));
     if((i+1)%1000===0)console.log('Prepared '+(i+1)+' / '+features.length+' games');
@@ -125,7 +130,7 @@ function audit(rows){
   const picks=Object.fromEntries(Object.keys(modes).map(k=>[k,[]]));
   const fits={};
   for(const season of [...SEASONS,FRESH]){
-    const training=rows.filter(r=>r.season<season),test=rows.filter(r=>r.season===season);
+    const training=IO.trainingRows(rows,season),test=rows.filter(r=>r.season===season);
     if(training.length<1000||!test.length)throw Error('Insufficient rolling data for '+season);
     fits[season]={};
     for(const mode of Object.keys(modes)){
@@ -151,10 +156,10 @@ function audit(rows){
   return report;
 }
 if(require.main===module){
-  const output=path.resolve(process.argv[2]||path.join(ROOT,'data/v8-research-report.json'));
+  const output=process.argv[2];
   const report=audit(buildRows());
-  fs.writeFileSync(output,JSON.stringify(report));
-  console.log('Wrote '+output);
+  const saved=IO.write('v8-research-report.json',{...report,chronology_policy:E.CHRONOLOGY_POLICY},output);
+  console.log('Wrote '+saved);
   for(const [k,v] of Object.entries(report.models))console.log(k,'rolling',v.rolling,'fresh',v.fresh);
 }
 module.exports={pregameFeatures,fit,predict,metrics,pairedBootstrap,buildRows,audit};

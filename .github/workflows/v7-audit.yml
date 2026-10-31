@@ -22,17 +22,22 @@ concurrency:
   cancel-in-progress: false
 jobs:
   audit:
+    if: github.ref == 'refs/heads/main'
+    env:
+      NBA_REVIEW_OUTPUT_DIR: research-reviews/chronology-v1/runs/${{ github.run_id }}-${{ github.run_attempt }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: pip install -r requirements.txt pytest
+      - run: pip install -r requirements.txt -r requirements-test.txt
       - run: python -m pytest -q tests/test_v7_intelligence.py
       - run: node --test tests/monte_carlo.test.cjs tests/v7_report.test.cjs
       - run: node --check predict/engine.js && node --check intelligence/app.js && node --check scripts/v7_backtest.cjs
@@ -41,14 +46,8 @@ jobs:
       - name: Refresh current inferred rotations
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: python build_v7_intelligence.py --output /tmp/v7-intelligence.json --current-output data/v7-current.json
-      - name: Publish validated current snapshot
+      - name: Publish validated data and deployment receipt
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/v7-current.json data/rotation-history.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'Refresh V7 pregame team and rotation history snapshots'
-            git pull --rebase origin main
-            git push origin HEAD:main
-          fi
+        uses: ./.github/actions/publish-data
+        with:
+          workflow: v7-audit

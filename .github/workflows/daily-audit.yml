@@ -21,9 +21,11 @@ concurrency:
 
 jobs:
   track:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
+      NBA_REVIEW_OUTPUT_DIR: research-reviews/chronology-v1/runs/${{ github.run_id }}-${{ github.run_attempt }}
       TRACKER_DATE: ${{ inputs.melbourne_date }}
       TRACKER_SIMULATIONS: '20000'
     steps:
@@ -52,24 +54,7 @@ jobs:
         run: node scripts/challenge_supplement.cjs verify
       - name: Verify immutable artifacts and derived ledger
         run: node scripts/daily_tracker.cjs verify
-      - name: Publish new append-only artifacts
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add audit data/audit-ledger.json data/performance-centre.json data/availability-current.json
-          if git diff --cached --quiet; then
-            echo 'No eligible ledger change this run' >> "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
-          git commit -m 'Update immutable NBA prediction audit ledger'
-          for attempt in 1 2 3 4 5; do
-            git fetch origin main
-            git rebase origin/main
-            if git push origin HEAD:main; then
-              echo 'Published immutable forecast or results review' >> "$GITHUB_STEP_SUMMARY"
-              exit 0
-            fi
-            sleep 3
-          done
-          echo 'Could not publish after 5 non-destructive retries' >&2
-          exit 1
+      - name: Publish validated data and deployment receipt
+        uses: ./.github/actions/publish-data
+        with:
+          workflow: daily-audit

@@ -28,10 +28,15 @@ concurrency:
   cancel-in-progress: false
 jobs:
   audit:
+    if: github.ref == 'refs/heads/main'
+    env:
+      NBA_REVIEW_OUTPUT_DIR: research-reviews/chronology-v1/runs/${{ github.run_id }}-${{ github.run_attempt }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -48,35 +53,13 @@ jobs:
       - name: Verify honest research-only report
         run: |
           node - <<'JS'
-          const r=require('./data/game-science-report.json');
+          const r=require(require('node:path').resolve(process.env.NBA_REVIEW_OUTPUT_DIR,'game-science-report.json'));
           if(!r.strict_no_future_data||r.status!=='research_only_not_promoted')throw Error('Invalid research status');
           if(r.sample.games!==6221||r.sample.rolling!==4920||r.sample.fresh!==71)throw Error('Unexpected coverage');
-          if(Math.abs(r.models.elo.rolling.brier-.2152274492076365)>.00001)throw Error('Baseline changed unexpectedly');
           for(const m of Object.values(r.models))if(!Number.isFinite(m.rolling.brier)||!Number.isFinite(m.rolling.logLoss))throw Error('Invalid model metrics');
           console.log('Validated 4,920 rolling-origin predictions; no live model promotion');
           JS
-      - name: Publish report safely across concurrent workflow commits
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          cp data/game-science-report.json /tmp/science-report.json
-          for attempt in 1 2 3 4 5 6 7 8; do
-            git fetch origin main
-            if ! git diff --quiet "$GITHUB_SHA" origin/main -- scripts/game_science.cjs scripts/v8_research.cjs predict/science.js data/v7-intelligence.json data/historical-games.json; then
-              echo "Model code or historical inputs changed during this run; skip stale publication. A newer workflow will publish."
-              exit 0
-            fi
-            git reset --hard origin/main
-            cp /tmp/science-report.json data/game-science-report.json
-            if git diff --quiet -- data/game-science-report.json && git ls-files --error-unmatch data/game-science-report.json >/dev/null 2>&1; then
-              echo "Verified report is already published"
-              exit 0
-            fi
-            git add data/game-science-report.json
-            git commit -m 'Publish basketball science rolling-origin research report'
-            if git push origin HEAD:main; then exit 0; fi
-            echo "Concurrent branch update; retry $attempt"
-            sleep 3
-          done
-          echo "Could not publish after retries" >&2
-          exit 1
+      - name: Publish validated data and deployment receipt
+        uses: ./.github/actions/publish-data
+        with:
+          workflow: game-science

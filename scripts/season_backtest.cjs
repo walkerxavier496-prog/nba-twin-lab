@@ -3,6 +3,7 @@
    evolving regular-season trends, and model-vs-actual standings.
    No 2026-27 game result is used before its tipoff. */
 'use strict';
+const IO=require('./research_io.cjs');
 const fs=require('node:fs');
 const path=require('node:path');
 const E=require('../predict/engine.js');
@@ -176,7 +177,7 @@ if(require.main===module){
  let preseason=null;try{preseason=load('preseason.json')}catch(e){console.warn('Preseason not available; running prior-season-only comparison')}
  const result=run(games,context,preseason);
  const dest=path.join(ROOT,'data','season-test.json');
- fs.writeFileSync(dest,JSON.stringify(result));
+ IO.write('season-test.json',{...result,chronology_policy:E.CHRONOLOGY_POLICY});
  console.log('NBA Twin Lab · opening-night walk-forward season test');
  console.log('Preseason games:',result.methodology.preseason_games);
  console.log('Games evaluated:',result.metrics.withPreseason.games);

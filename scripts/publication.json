@@ -1,0 +1,48 @@
+{
+  "challenge-supplement-2026-10-31": [
+    "audit/supplements/2026-10-31/challenge.lock.json"
+  ],
+  "daily-audit": [
+    "audit/**/*.json",
+    "data/audit-ledger.json",
+    "data/performance-centre.json",
+    "data/availability-current.json"
+  ],
+  "five-model-challenge": [
+    "research-reviews/**/*.json"
+  ],
+  "game-science": [
+    "research-reviews/**/*.json"
+  ],
+  "roster-research": [
+    "research-reviews/**/*.json"
+  ],
+  "season-test": [
+    "data/preseason.json",
+    "research-reviews/**/*.json"
+  ],
+  "update-championships": [
+    "data/champions.json"
+  ],
+  "update-context": [
+    "data/context.json"
+  ],
+  "update-data": [
+    "data/seasons.json"
+  ],
+  "update-predictions": [
+    "data/games.json",
+    "research-reviews/**/*.json"
+  ],
+  "v7-audit": [
+    "data/v7-current.json",
+    "research-reviews/**/*.json"
+  ],
+  "v8-research": [
+    "research-reviews/**/*.json"
+  ],
+  "v9-player-stats": [
+    "data/v7-current.json",
+    "research-reviews/**/*.json"
+  ]
+}

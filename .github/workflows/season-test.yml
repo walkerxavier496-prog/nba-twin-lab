@@ -20,17 +20,22 @@ concurrency:
   cancel-in-progress: false
 jobs:
   backtest:
+    if: github.ref == 'refs/heads/main'
+    env:
+      NBA_REVIEW_OUTPUT_DIR: research-reviews/chronology-v1/runs/${{ github.run_id }}-${{ github.run_attempt }}
     runs-on: ubuntu-latest
     timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: pip install -r requirements.txt pytest
+      - run: pip install -r requirements.txt -r requirements-test.txt
       - run: python -m pytest -q tests/test_preseason.py
       - run: node --test tests/prediction_engine.test.cjs tests/season_backtest.test.cjs
       - name: Validate season test UI
@@ -41,27 +46,7 @@ jobs:
         run: python build_preseason.py
       - name: Generate projected vs actual standings
         run: node scripts/season_backtest.cjs
-      - name: Publish validated experiment
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/preseason.json data/season-test.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'Refresh opening-night projected vs actual NBA standings'
-            for attempt in 1 2 3 4 5; do
-              git fetch origin main
-              if ! git rebase origin/main; then
-                git rebase --abort
-                git reset --hard origin/main
-                python build_preseason.py
-                node scripts/season_backtest.cjs
-                git add data/preseason.json data/season-test.json
-                if git diff --cached --quiet; then exit 0; fi
-                git commit -m 'Refresh opening-night projected vs actual NBA standings'
-              fi
-              if git push origin HEAD:main; then exit 0; fi
-              sleep 3
-            done
-            echo 'Failed to publish season backtest after retries' >&2
-            exit 1
-          fi
+      - name: Publish validated data and deployment receipt
+        uses: ./.github/actions/publish-data
+        with:
+          workflow: season-test

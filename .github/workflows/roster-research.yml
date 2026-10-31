@@ -19,10 +19,15 @@ concurrency:
   cancel-in-progress: false
 jobs:
   research:
+    if: github.ref == 'refs/heads/main'
+    env:
+      NBA_REVIEW_OUTPUT_DIR: research-reviews/chronology-v1/runs/${{ github.run_id }}-${{ github.run_attempt }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -48,35 +53,15 @@ jobs:
       - name: Verify audit, coverage and finite probabilities
         run: |
           node - <<'JS'
-          const r=require('./data/roster-research-report.json'),p=require('./data/roster-priors.json');
+          const io=require('./scripts/research_io.cjs');
+          const r=JSON.parse(require('node:fs').readFileSync(io.outputPath('roster-research-report.json'))),p=JSON.parse(require('node:fs').readFileSync(io.outputPath('roster-priors.json')));
           if(!r.strict_no_future_data||r.status!=='research_only_not_promoted'||!p.strict_no_future_data)throw Error('Unverified research');
           if(r.sample.games!==6221||r.sample.rolling!==4920||r.sample.fresh!==71)throw Error('Wrong historical sample');
           if(Object.keys(p.teams).length!==30||p.target_season!==2027)throw Error('Missing prior team rotations');
           for(const [k,m] of Object.entries(r.models))if(!Number.isFinite(m.rolling.brier)||!Number.isFinite(m.rolling.logLoss))throw Error('Invalid '+k+' metrics');
           console.log('Research only; no live model promotion');
           JS
-      - name: Safely publish pregame priors and research report
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          cp data/roster-research-report.json /tmp/roster-research-report.json
-          cp data/roster-priors.json /tmp/roster-priors.json
-          cp data/rotation-history.json /tmp/rotation-history.json
-          for attempt in 1 2 3 4 5 6 7 8; do
-            git fetch origin main
-            if ! git diff --quiet "$GITHUB_SHA" origin/main -- scripts/roster_research.cjs predict/roster.js build_v7_intelligence.py data/v7-intelligence.json data/historical-games.json; then
-              echo "Historical inputs or model code changed; newer workflow must publish"
-              exit 0
-            fi
-            git reset --hard origin/main
-            cp /tmp/roster-research-report.json data/roster-research-report.json
-            cp /tmp/roster-priors.json data/roster-priors.json
-            cp /tmp/rotation-history.json data/rotation-history.json
-            git add data/roster-research-report.json data/roster-priors.json data/rotation-history.json
-            if git diff --cached --quiet; then exit 0; fi
-            git commit -m 'Publish pregame roster-change audit and prior-season rotation anchors'
-            if git push origin HEAD:main; then exit 0; fi
-            sleep 3
-          done
-          echo "Failed to publish verified report" >&2
-          exit 1
+      - name: Publish validated data and deployment receipt
+        uses: ./.github/actions/publish-data
+        with:
+          workflow: roster-research

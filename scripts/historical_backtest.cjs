@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /* NBA Twin Lab V6: reproducible, strictly pre-tipoff historical evaluation. */
 'use strict';
+const IO=require('./research_io.cjs');
 const fs=require('node:fs');
 const path=require('node:path');
 const E=require('../predict/engine.js');
@@ -10,7 +11,7 @@ const context=JSON.parse(fs.readFileSync(path.join(root,'data','context.json'),'
 const args=Object.fromEntries(process.argv.slice(2).map((x,i,a)=>x.startsWith('--')?[x.slice(2),a[i+1]]:null).filter(Boolean));
 const simulations=Math.max(100,Math.min(100000,Number(args.simulations)||1000));
 const bootstrapSamples=Math.max(100,Math.min(10000,Number(args.bootstrap)||1000));
-const output=path.resolve(args.output||path.join(root,'data','historical-model-report.json'));
+const output=args.output||IO.outputPath('historical-model-report.json');
 const EVAL=[2022,2023,2024,2025,2026],TRAIN=[2022,2023,2024],VALIDATION=[2025],TEST=[2026];
 const aliases={GS:'GSW',NY:'NYK',SA:'SAS',NO:'NOP',UTAH:'UTA',WSH:'WAS',PHX:'PHO',BKN:'BRK',CHA:'CHO'};
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -100,7 +101,7 @@ let leakageViolations=0;
 console.log(`Replaying ${history.coverage.evaluation_games} games with ${simulations} simulations per Monte Carlo model...`);
 for(const game of games.filter(g=>EVAL.includes(g.season))){
   const state=E.ratings(games,game.date),profiles=profilesFor(game.season,true),srsOnly=profilesFor(game.season,false);
-  if(state.allGames.some(g=>new Date(g.date)>=new Date(game.date)))leakageViolations++;
+  if(state.allGames.some(g=>!E.resultKnownBefore(g,game.date)))leakageViolations++;
   const e=E.forecast(game,state,profiles);
   const meta={early:Math.min(e.home.games,e.away.games)<10,b2b:e.homeRest===0||e.awayRest===0,
     rest:e.homeRest==null||e.awayRest==null||e.homeRest===e.awayRest?'equal':e.homeRest>e.awayRest?'home':'away'};
@@ -128,7 +129,7 @@ const report={schema:1,generated_at_utc:new Date().toISOString(),strict_no_futur
   methodology:{walk_forward:'Each game is reconstructed immediately before tipoff from earlier finals only.',
     profiles:'Only the previous completed season team profile is used; same-season and future profiles are rejected.',
     split:{training:TRAIN,validation:VALIDATION,test:TEST},
-    optimization:'Blend, calibration slope/bias, and score weight selected on training seasons only; 2025 is validation and 2026 remains untouched test.',
+    optimization:'Blend, calibration slope/bias, and score weight selected on training seasons only; 2025 is validation and 2026 is previously inspected retrospective evaluation.',
     early_season:'Either team had played fewer than 10 current-season games before tipoff.',
     back_to_back:'At least one team had zero full rest days.',bootstrap_samples:bootstrapSamples},
   data:{...history.coverage,results_source:history.source.results,profile_source:history.source.validation,
@@ -145,7 +146,7 @@ const report={schema:1,generated_at_utc:new Date().toISOString(),strict_no_futur
     'Historical results come from an unofficial ESPN endpoint; every season is independently reconciled to 30 Basketball Reference team records.',
     `Historical Monte Carlo uses ${simulations.toLocaleString()} draws per game for tractability; the live simulator supports up to 100,000.`,
     'Previous-season team tendencies are safe but intentionally slow to react to trades, coaching changes, and roster turnover.']};
-fs.writeFileSync(output,JSON.stringify(report));
+IO.write('historical-model-report.json',{...report,chronology_policy:E.CHRONOLOGY_POLICY},output);
 console.log(`Wrote ${path.relative(root,output)}`);
 console.log(`Chosen blend: ${(chosen.blend*100).toFixed(0)}% Monte Carlo, slope ${chosen.slope.toFixed(2)}, bias ${chosen.bias.toFixed(2)}, score blend ${(chosen.scoreBlend*100).toFixed(0)}%`);
 for(const [name,s] of Object.entries(summaries)){const m=s.by_split.test;console.log(`${name}: test n=${m.count}, acc=${(m.accuracy*100).toFixed(1)}%, Brier=${m.brier.toFixed(4)}, logloss=${m.logLoss.toFixed(4)}, score MAE=${m.scoreMAE.toFixed(2)}`)}

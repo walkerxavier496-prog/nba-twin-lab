@@ -23,7 +23,7 @@ test('forecast never trains on a future game',()=>{
  const a=game(1,iso(2026,10,25),120,100,2027);
  const before=E.ratings([a],iso(2026,10,24));
  assert.equal(before.finals,0);
- const after=E.ratings([a],iso(2026,10,26));
+ const after=E.ratings([a],iso(2026,10,27)); // unknown final time: conservative availability
  assert.equal(after.finals,1);assert.ok(after.teams.get('1').elo>1500);
 });
 test('prior season strength regresses between seasons and win probabilities sum to one',()=>{
@@ -31,7 +31,7 @@ test('prior season strength regresses between seasons and win probabilities sum 
  for(let i=0;i<150;i++){
    const date=new Date(Date.UTC(2025,9,21+i));historical.push(game(i,date.toISOString(),i%4?120:100,100,2026));
  }
- const current=game('new',iso(2026,10,24),110,108,2027);
+ const current={...game('new',iso(2026,10,24),110,108,2027),result_available_at_utc:'2026-10-25T02:00:00Z',result_availability_verified:true,result_availability_source:'fixture final observation'};
  const state=E.ratings([...historical,current],iso(2026,10,25));
  const p=E.forecast(game('future',iso(2026,10,28),null,null,2027,'scheduled'),state);
  assert.ok(p.homeWin>.5);assert.ok(p.homeWin<1);

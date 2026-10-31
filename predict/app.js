@@ -253,7 +253,7 @@ function renderDetail(){
  const liveBanner=verifiedObserved?'<div class="real-score-banner"><b>ESPN '+esc(scoreState(observed))+'</b><strong>'+esc(g.away.abbr)+' '+observed.away.score+' – '+esc(g.home.abbr)+' '+observed.home.score+'</strong><small>Real scoreboard · completely separate from the probabilities below</small></div>':'';
  if(!g){$('detail').innerHTML='<div class="placeholder"><div class="placeholder-icon">◎</div><h3>No game selected</h3><p>Choose an upcoming NBA matchup.</p></div>';return}
  if(!hasHistory){$('detail').innerHTML='<div class="placeholder"><h3>Insufficient verified history</h3><p>The model requires at least 800 completed games from the previous season. No probabilities will be shown until this data is available.</p></div>';return}
- const state=E.ratings(games,g.date),simulations=Number($('simulations').value),mode=$('model-choice').value,cacheKey=g.id+'|'+g.date+'|'+simulations;
+ const state=E.ratings(games,new Date(Math.min(Date.now(),Date.parse(g.date))).toISOString()),simulations=Number($('simulations').value),mode=$('model-choice').value,cacheKey=g.id+'|'+g.date+'|'+simulations+'|'+mode+'|'+JSON.stringify(games)+'|'+(window.dataRevision||'');
  if(!simulationCache.has(cacheKey))simulationCache.set(cacheKey,E.monteCarlo(g,state,profiles,{simulations}));
  const simulation=simulationCache.get(cacheKey),base=simulation.baseline;
  const roster=rosterPreview(g,base);
@@ -286,7 +286,7 @@ function renderDetail(){
     '<strong>'+pct(m.p)+'</strong><div class="v19-model-meter" role="img" aria-label="'+esc(g.home.abbr)+' win probability '+pct(m.p)+'"><i style="width:'+Math.max(0,Math.min(100,m.p*100))+'%"></i></div><p>'+esc(g.home.abbr)+' win chance · '+esc(m.desc)+'</p>')+
    '</article>').join('')+'</div><p class="v19-model-note">The roster beta uses inferred player participation; V18 game-day official roster verification is displayed separately below. Model probabilities are not votes and should not be averaged without validation.</p></section>';
  const modelName=mode==='elo'?'ELO · HISTORICAL BASELINE':mode==='roster'?(roster.available?'ROSTER-AWARE · BETA':'ROSTER DATA UNAVAILABLE · ELO FALLBACK'):'V5 POSSESSION MONTE CARLO';
- const tag=(g.status==='final'?'ARCHIVED PREGAME':g.status==='live'?'PREGAME · LIVE GAME':'PREGAME')+' · '+modelName;
+ const tag=(g.status==='final'?'RESEARCH ESTIMATE · NOT ARCHIVED':g.status==='live'?'PREGAME · LIVE GAME':'PREGAME')+' · '+modelName;
  const combinedGames=h.games+a.games;
  const oddsGap=Math.abs(simulation.homeWin-base.homeWin);
  const baselineHigh=Math.max(base.homeWin,base.awayWin)>=.7;
@@ -323,7 +323,7 @@ function renderDetail(){
  rosterIntegrityPanel(integrity)+
  rosterStrengthPanel(strength)+
  sciencePanel(g,base)+
- (g.status==='final'?'<p class="context"><b>Actual final:</b> '+esc(g.away.abbr)+' '+g.awayScore+' – '+g.homeScore+' '+esc(g.home.abbr)+'. This forecast was recomputed using only games before tip-off.</p>':'')+
+ (g.status==='final'?'<p class="context"><b>Actual final:</b> '+esc(g.away.abbr)+' '+g.awayScore+' – '+g.homeScore+' '+esc(g.home.abbr)+'. The probabilities above are reconstructed research estimates using pre-tip information, not archived pregame forecasts, and are not used for official grading.</p>':'')+
  '<p class="disclaimer">'+esc(base.confidence)+'. Selected model: '+modelName+'. Seeded Monte Carlo diagnostics reproduce with identical inputs. Legacy Elo has no trade, injury, confirmed-lineup, travel or betting-market input. The roster experiment uses inferred rotation changes, not verified player availability; prior-season style can miss offseason changes; a probability is never a guarantee. This is not betting advice.</p>';
 }
 function renderTeams(){

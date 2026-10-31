@@ -181,6 +181,29 @@ def build(session: requests.Session, today: dt.date) -> dict:
     }
 
 
+def record_final_observations(payload, previous):
+    """Retain first-observed finals without assigning invented past finish times.
+
+    Backfilled archive finals keep the conservative historical policy. Only a
+    witnessed transition from scheduled/live gets a new verified observation.
+    """
+    old = {str(g["id"]): g for g in previous.get("games", [])}
+    keys = ("result_available_at_utc", "result_availability_source", "result_availability_verified")
+    for game in payload["games"]:
+        before = old.get(str(game["id"]))
+        if game["status"] != "final" or not before:
+            continue
+        if before.get("status") in ("scheduled", "live") or (
+                before.get("status") == "final" and any(game.get(k) != before.get(k) for k in ("homeScore", "awayScore", "date"))):
+            game.update(result_available_at_utc=payload["built_at_utc"],
+                        result_availability_verified=True,
+                        result_availability_source=ENDPOINT + " first observed final transition")
+        elif all(before.get(k) is not None for k in keys) and all(
+                game.get(k) == before.get(k) for k in ("homeScore", "awayScore", "date")):
+            game.update({k: before[k] for k in keys})
+    return payload
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--output", type=pathlib.Path, default=OUTPUT)
@@ -191,6 +214,7 @@ def main():
     if args.output.exists():
         try:
             old = json.loads(args.output.read_text(encoding="utf-8"))
+            record_final_observations(payload, old)
             if (old.get("games") == payload["games"] and
                     old.get("coverage") == payload["coverage"] and
                     old.get("source") == payload["source"]):

@@ -14,6 +14,32 @@ const BASE=1500,HOME=65,K=18;
 const number=x=>x===null||x===undefined||x===''?null:Number(x);
 const safe=x=>Number.isFinite(x)?x:null;
 const dateMs=x=>new Date(x).getTime();
+const CHRONOLOGY_POLICY='result-availability-v1';
+// A final status in today's archive does not establish when a historical
+// predictor could know it. Missing evidence is delayed to the second UTC
+// midnight after the game date (24–48h after a timestamped tip).
+function resultAvailability(g){
+  const tip=dateMs(g?.date);if(!Number.isFinite(tip))return Infinity;
+  if(String(g?.date).length>10&&!/(?:Z|[+-]\d{2}:\d{2})$/.test(g.date))return Infinity;
+  if(g?.result_available_at_utc!==undefined){
+    const t=dateMs(g.result_available_at_utc);
+    return g.result_availability_verified===true&&typeof g.result_availability_source==='string'&&g.result_availability_source.length>0&&/(?:Z|[+-]\d{2}:\d{2})$/.test(g.result_available_at_utc)&&Number.isFinite(t)&&t>tip?t:Infinity;
+  }
+  if(g?.status==='postponed'||g?.status==='suspended')return Infinity;
+  return Math.floor(tip/86400000)*86400000+2*86400000;
+}
+const resultKnownBefore=(g,asOf)=>resultAvailability(g)<dateMs(asOf);
+function assertSnapshotBefore(game,snapshot){
+  if(!snapshot?.information_cutoff_utc)return;
+  const cutoff=dateMs(snapshot.information_cutoff_utc),target=dateMs(game.date);
+  if(!Number.isFinite(cutoff)||!Number.isFinite(target)||cutoff>target||
+     snapshot.max_result_available_at_utc&&(!Number.isFinite(dateMs(snapshot.max_result_available_at_utc))||dateMs(snapshot.max_result_available_at_utc)>=cutoff))
+    throw Error('Historical snapshot exceeds prediction information cutoff');
+}
+function assertHistoricalSnapshotBefore(game,snapshot){
+  if(!snapshot?.information_cutoff_utc)throw Error('Historical snapshot lacks information_cutoff_utc');
+  return assertSnapshotBefore(game,snapshot);
+}
 const days=(a,b)=>Math.floor((dateMs(a)-dateMs(b))/86400000);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const mean=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:null;
@@ -78,7 +104,7 @@ function merge(...lists){
 function blank(t){return {id:t.id,name:t.name||t.abbr,abbr:t.abbr||t.name,logo:t.logo||'',elo:BASE,
   games:0,wins:0,losses:0,points:0,allowed:0,lastDate:null,recent:[],prev:null};}
 function ratings(games,asOf){
-  const teams=new Map(),finals=merge(games).filter(g=>g.status==='final'&&dateMs(g.date)<dateMs(asOf));
+  const teams=new Map(),finals=merge(games).filter(g=>g.status==='final'&&resultKnownBefore(g,asOf));
   let season=null;const league=[];let priorLeagueMean=null;
   const get=t=>{if(!teams.has(t.id))teams.set(t.id,blank(t));const v=teams.get(t.id);
     v.name=t.name||v.name;v.abbr=t.abbr||v.abbr;v.logo=t.logo||v.logo;return v;};
@@ -118,7 +144,8 @@ function ratings(games,asOf){
     }
     season=target;league.length=0;
   }
-  return {teams,season,finals:finals.length,leagueMean:mean(league)||priorLeagueMean,allGames:finals};
+  return {teams,season,finals:finals.length,leagueMean:mean(league)||priorLeagueMean,allGames:finals,
+    informationCutoff:asOf,chronologyPolicy:CHRONOLOGY_POLICY};
 }
 function restDays(t,date){
   if(!t?.lastDate)return null;
@@ -234,6 +261,7 @@ function calibratedEventProfile(values,targetPpp,pace){
 }
 function independentExpectation(game,intelligence,config={}){
   if(!intelligence?.home||!intelligence?.away)throw Error('Independent model requires home and away pregame features');
+  assertSnapshotBefore(game,intelligence.home);assertSnapshotBefore(game,intelligence.away);
   const h=rollingValues(intelligence.home,config),a=rollingValues(intelligence.away,config);
   const league=mean([Number(intelligence.home.league_ortg),Number(intelligence.away.league_ortg)].filter(Number.isFinite))||113;
   const pace=clamp(mean([h.pace,a.pace].filter(Number.isFinite))||99,88,110);
@@ -385,11 +413,12 @@ function teamTable(state){
       form:t.recent.slice(-5).map(x=>x.win?'W':'L').join(' ')}));
 }
 function matchupHistory(games,game){
-  const arr=merge(games).filter(g=>g.status==='final'&&dateMs(g.date)<dateMs(game.date)&&
+  const arr=merge(games).filter(g=>g.status==='final'&&resultKnownBefore(g,game.date)&&
     ((g.home.id===game.home.id&&g.away.id===game.away.id)||(g.home.id===game.away.id&&g.away.id===game.home.id)));
   return arr.slice(-5).reverse();
 }
 return {normalise,merge,ratings,forecast,monteCarlo,independentExpectation,independentMonteCarlo,
   evaluate,evaluateComparison,calibration,possessionProfile,rollingValues,teamTable,matchupHistory,
+  resultAvailability,resultKnownBefore,assertSnapshotBefore,assertHistoricalSnapshotBefore,CHRONOLOGY_POLICY,
   logistic,restDays,seededRandom};
 });

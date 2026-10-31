@@ -18,10 +18,15 @@ concurrency:
   cancel-in-progress: false
 jobs:
   research:
+    if: github.ref == 'refs/heads/main'
+    env:
+      NBA_REVIEW_OUTPUT_DIR: research-reviews/chronology-v1/runs/${{ github.run_id }}-${{ github.run_attempt }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -32,13 +37,7 @@ jobs:
           node --test tests/v8_research.test.cjs
       - name: Run 6,221 strict pregame predictions
         run: node scripts/v8_research.cjs
-      - name: Publish audited report
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/v8-research-report.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'Publish V8 rolling-origin direct player impact research'
-            git pull --rebase origin main
-            git push origin HEAD:main
-          fi
+      - name: Publish validated data and deployment receipt
+        uses: ./.github/actions/publish-data
+        with:
+          workflow: v8-research

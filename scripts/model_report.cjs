@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 /* Build a strictly walk-forward Elo vs possession Monte Carlo scorecard. */
+const IO=require('./research_io.cjs');
 const fs=require('node:fs');
 const path=require('node:path');
 const E=require('../predict/engine.js');
@@ -21,7 +22,7 @@ const report={schema:1,generated_at_utc:new Date().toISOString(),season,
  simulations_per_game:comparison.simulationsPerGame,strict_no_future_data:true,
  methodology:'Each held-out game is reconstructed immediately before tip-off. Team ratings and current-season scoring include only earlier finals; advanced team profiles are from the previous season.',
  elo:clean(comparison.elo),monte_carlo:clean(comparison.monteCarlo)};
-fs.writeFileSync(path.join(root,'data','model-report.json'),JSON.stringify(report));
+IO.write('model-report.json',{...report,chronology_policy:E.CHRONOLOGY_POLICY});
 console.log('NBA Twin Lab strict walk-forward model comparison');
 console.log('Season: '+(season-1)+'–'+String(season).slice(2));
 console.log('Held-out pregame predictions: '+report.held_out_games);

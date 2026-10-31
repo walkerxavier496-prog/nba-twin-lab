@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const IO=require('./research_io.cjs');
 
 const crypto = require('node:crypto');
 const fs = require('node:fs');
@@ -29,7 +30,7 @@ const quantile = (values, q) => {
   return sorted[low] + (sorted[high] - sorted[low]) * (position - low);
 };
 const canonical = value => ({ GS: 'GSW', NY: 'NYK', SA: 'SAS', NO: 'NOP', UTAH: 'UTA', WSH: 'WAS', PHO: 'PHX', BRK: 'BKN', CHO: 'CHA' }[value] || value);
-const sha256File = file => crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, file))).digest('hex');
+const sha256File = file => crypto.createHash('sha256').update(fs.readFileSync(file.startsWith('data/')?IO.inputPath(file.slice(5)):path.join(ROOT,file))).digest('hex');
 
 function baseFeatureVector(home, away, baseline) {
   const net = snapshot => {
@@ -53,7 +54,7 @@ function baseFeatureVector(home, away, baseline) {
 function currentHeadToHead(game, games) {
   const pair = [canonical(game.home.abbr), canonical(game.away.abbr)].sort().join('|');
   const home = canonical(game.home.abbr);
-  const meetings = (games || []).filter(item => item.status === 'final' && item.date < game.date && item.season >= game.season - 2 &&
+  const meetings = (games || []).filter(item => item.status === 'final' && E.resultKnownBefore(item,game.date) && item.season >= game.season - 2 &&
     [canonical(item.home.abbr), canonical(item.away.abbr)].sort().join('|') === pair).slice(-8).reverse();
   if (!meetings.length) return 0;
   let numerator = 0, denominator = 0;
@@ -67,8 +68,10 @@ function currentHeadToHead(game, games) {
 }
 
 function buildHistoricalRows(simulations = 400) {
-  const intel = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/v7-intelligence.json')));
-  const rotation = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/rotation-history.json')));
+  const intel = IO.read('v7-intelligence.json');
+  const rotation = IO.read('rotation-history.json');
+  IO.requireChronology(intel);
+  IO.requireChronology(rotation);
   if (!intel.strict_no_future_data || intel.coverage?.evaluated_games !== 6150) throw new Error('Historical pregame intelligence failed provenance checks');
   const baseRows = V8.buildRows();
   const scienceRows = ScienceResearch.pregameScienceRows(baseRows, intel.games);
@@ -112,7 +115,7 @@ function modelRow(row, p, homeScore = null, awayScore = null) {
 function fitBaseModels(rows) {
   const fits = {};
   for (const season of [...EVALUATION_SEASONS, FRESH_SEASON]) {
-    const train = rows.filter(row => row.season < season), test = rows.filter(row => row.season === season);
+    const train = IO.trainingRows(rows,season), test = rows.filter(row => row.season === season);
     if (train.length < 1000 || !test.length) throw new Error(`Insufficient chronological sample for ${season}`);
     const m2 = V8.fit(train, M2_NAMES);
     const rosterTrain = train.filter(row => row.rosterCoverage);
@@ -155,7 +158,7 @@ function addNestedEnsemble(rows) {
   const weights = {};
   for (const season of [...EVALUATION_SEASONS, FRESH_SEASON]) {
     const test = rows.filter(row => row.season === season);
-    const priorOOF = rows.filter(row => row.season >= 2023 && row.season < season && MODEL_IDS.every(id => row.models[id]?.available));
+    const priorOOF = IO.trainingRows(rows,season).filter(row => row.season >= 2023 && MODEL_IDS.every(id => row.models[id]?.available));
     if (!priorOOF.length) {
       weights[season] = { available: false, reason: 'No earlier out-of-fold season available' };
       for (const row of test) row.models.m6_ensemble = { available: false, reason: weights[season].reason };
@@ -251,10 +254,10 @@ function generateReport(options = {}) {
       unavailable_games_2023_to_2027: rows.filter(row => row.season >= 2023 && row.season <= 2027 && !row.models[id]?.available).length,
     };
   }
-  const legacy = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/historical-model-report.json')));
+  const legacy = IO.read('historical-model-report.json');
   const benchmarkRows = primaryRows.filter(row => row.benchmarks.v8_combined?.available);
   const report = {
-    schema: 'nba-twin-lab-five-model-challenge-v1', generated_at_utc: new Date().toISOString(), version: '1.0.0',
+    schema: 'nba-twin-lab-five-model-challenge-v1', generated_at_utc: new Date().toISOString(), version: '1.0.0', chronology_policy:E.CHRONOLOGY_POLICY,
     status: 'research_only_not_promoted', strict_no_future_data: true, primary_metric: 'Brier score',
     production_model_unchanged: 'production_elo_v7', simulations_per_historical_game: simulations,
     common_evaluation: { seasons: PRIMARY_SEASONS, games: primaryRows.length, rule: 'Only games with all five base models and the already-fitted ensemble available are ranked.',
@@ -274,8 +277,8 @@ function generateReport(options = {}) {
     slices: { early_season: 'Either team had fewer than 10 games at tipoff.', high_roster_change: 'Pregame inferred prior-rotation replacement uncertainty at least 0.25; injuries and trades can be confounded.' },
     player_stat_policy: { tracked_separately: true, metrics: ['PTS MAE', 'REB MAE', 'AST MAE', '3PM MAE'], source: 'data/audit-ledger.json', rule: 'Only players with observed minutes > 0 are scored; DNP and absent rows are excluded.' },
     source_provenance: {
-      historical_pregame_features: { path: 'data/v7-intelligence.json', sha256: sha256File('data/v7-intelligence.json') },
-      rotation_history: { path: 'data/rotation-history.json', sha256: sha256File('data/rotation-history.json') },
+      historical_pregame_features: { path: path.relative(ROOT,IO.inputPath('v7-intelligence.json')), sha256: sha256File('data/v7-intelligence.json') },
+      rotation_history: { path: path.relative(ROOT,IO.inputPath('rotation-history.json')), sha256: sha256File('data/rotation-history.json') },
       historical_results: { path: 'data/historical-games.json', sha256: sha256File('data/historical-games.json') },
       generator: { path: 'scripts/five_model_challenge.cjs', sha256: sha256File('scripts/five_model_challenge.cjs') },
     },
@@ -314,11 +317,11 @@ function predictLiveModels({ game, baseline, snapshot, rosterForecast, report, g
 }
 
 if (require.main === module) {
-  const output = path.resolve(process.argv[2] || path.join(ROOT, 'data/five-model-report.json'));
+  const output = process.argv[2]?.startsWith('--')?undefined:process.argv[2];
   const simulationsArg = process.argv.find(value => value.startsWith('--simulations='));
   const report = generateReport({ simulations: simulationsArg ? Number(simulationsArg.split('=')[1]) : 400 });
-  fs.writeFileSync(output, JSON.stringify(report));
-  console.log(`Wrote ${path.relative(ROOT, output)} with ${report.common_evaluation.games} common games`);
+  const saved=IO.write('five-model-report.json',{...report,chronology_policy:E.CHRONOLOGY_POLICY},output);
+  console.log(`Wrote ${saved} with ${report.common_evaluation.games} common games`);
   for (const id of ALL_IDS) {
     const m = report.models[id].common;
     console.log(`${id}: n=${m.games} accuracy=${(m.accuracy * 100).toFixed(1)}% Brier=${m.brier.toFixed(4)} logloss=${m.logLoss.toFixed(4)} ECE=${m.ece.toFixed(4)}`);

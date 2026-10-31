@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 /* NBA Twin Lab V7: rolling-origin audit of independent team/player models. */
 'use strict';
+const IO=require('./research_io.cjs');
 const fs=require('node:fs'),path=require('node:path'),E=require('../predict/engine.js');
 const root=path.join(__dirname,'..');
-const intelligence=JSON.parse(fs.readFileSync(path.join(root,'data','v7-intelligence.json'),'utf8'));
-const historical=JSON.parse(fs.readFileSync(path.join(root,'data','historical-games.json'),'utf8'));
-const context=JSON.parse(fs.readFileSync(path.join(root,'data','context.json'),'utf8'));
+const intelligence=IO.read('v7-intelligence.json');
+const historical=IO.read('historical-games.json');
+const context=IO.read('context.json');
 const args=Object.fromEntries(process.argv.slice(2).map((x,i,a)=>x.startsWith('--')?[x.slice(2),a[i+1]]:null).filter(Boolean));
 const simulations=Math.max(100,Math.min(100000,Number(args.simulations)||300));
 const bootstrapSamples=Math.max(100,Math.min(5000,Number(args.bootstrap)||800));
-const output=path.resolve(args.output||path.join(root,'data','v7-model-report.json'));
+const output=args.output||IO.outputPath('v7-model-report.json');
+IO.requireChronology(intelligence);
 const ORIGINS=[2023,2024,2025,2026],FRESH=2027;
 const aliases={GS:'GSW',NY:'NYK',SA:'SAS',NO:'NOP',UTAH:'UTA',WSH:'WAS',PHO:'PHX',BRK:'BKN',CHO:'CHA'};
 const canonical=x=>aliases[x]||x;
@@ -24,7 +26,7 @@ for(const g of historical.games)for(const t of [g.home,g.away])teamIds.set(canon
 
 function gameFromFeature(feature){
   const original=gameById.get(String(feature.result_id));
-  const date=original?.date||feature.date+'T23:00:00Z';
+  const date=feature.prediction_at_utc||original?.date||feature.date;
   return {id:String(feature.result_id),date,season:feature.season,status:'final',
     home:{id:teamIds.get(canonical(feature.home.abbr)),abbr:canonical(feature.home.abbr),name:feature.home.name},
     away:{id:teamIds.get(canonical(feature.away.abbr)),abbr:canonical(feature.away.abbr),name:feature.away.name},
@@ -62,7 +64,8 @@ const candidates=[];
 for(const window of ['last5','last10','season'])for(const priorGames of [6,12,20])candidates.push({window,priorGames,playerWeight:0});
 function analyticPick(item,cfg){const x=E.independentExpectation(item.game,item.feature.pregame,cfg);return row(item.game,x.homeWin,x.homeScore,x.awayScore)}
 function tune(origin,player=false){
-  const train=featureGames.filter(x=>x.game.season>=2022&&x.game.season<origin);
+  const cutoff=new Date(Math.min(...featureGames.filter(x=>x.game.season===origin).map(x=>Date.parse(x.game.date)))).toISOString();
+  const train=featureGames.filter(x=>x.game.season>=2022&&x.game.season<origin&&E.resultKnownBefore(x.game,cutoff));
   let best=null;
   for(const base of candidates)for(const playerWeight of (player?[.25,.5,1]:[0])){
     const cfg={...base,playerWeight},picks=train.map(x=>analyticPick(x,cfg)),m=metrics(picks);
@@ -85,7 +88,7 @@ for(let index=0;index<featureGames.length;index++){
   const item=featureGames[index],{game,feature}=item,profiles=profilesFor(game.season);
   if(feature.pregame.home.as_of!==feature.date||feature.pregame.away.as_of!==feature.date)leakageViolations++;
   const state=E.ratings(allGames,game.date),elo=E.forecast(game,state,profiles);
-  if(state.allGames.some(g=>new Date(g.date)>=new Date(game.date)))leakageViolations++;
+  if(state.allGames.some(g=>!E.resultKnownBefore(g,game.date)))leakageViolations++;
   const v5=E.monteCarlo(game,state,profiles,{simulations,seed:`v7|v5|${game.id}`});
   const independent=E.independentMonteCarlo(game,feature.pregame,{...configs.team[game.season],simulations,seed:`v7|team|${game.id}`});
   const player=E.independentMonteCarlo(game,feature.pregame,{...configs.player[game.season],simulations,seed:`v7|player|${game.id}`});
@@ -105,7 +108,7 @@ if(leakageViolations)throw Error(`Detected ${leakageViolations} leakage/timestam
 const combinationWeights={};
 for(const season of [2022,...ORIGINS,FRESH]){
   if(season===2022){combinationWeights[season]=.5;continue}
-  const e=models.elo.filter(x=>x.season<season),p=playerUncombined.filter(x=>x.season<season);let best={weight:0,brier:Infinity};
+  const e=IO.trainingRows(models.elo,season),p=IO.trainingRows(playerUncombined,season);let best={weight:0,brier:Infinity};
   for(const weight of [0,.25,.5,.75,1]){const b=mean(e.map((x,i)=>{const q=(1-weight)*x.p+weight*p[i].p;return(q-x.actual)**2}));if(b<best.brier)best={weight,brier:b}}
   combinationWeights[season]=best.weight;
 }
@@ -146,6 +149,6 @@ const report={schema:1,generated_at_utc:new Date().toISOString(),strict_no_futur
   ablations:{window_and_shrinkage_analytic:windowAudit,
     player_value:{team_only:summaries.independent_team.rolling_origin,with_player_proxy:summaries.player_adjusted.rolling_origin}},
   limitations:['No reliable archive of timestamped official pregame injury reports was found; availability is inferred from prior appearances and is not an injury diagnosis.','Player impact is a transparent, heavily clipped on-court/box proxy—not EPM, RAPM or causal player value.','NBA player logs omit DNP rows, so missed games can mean injury, rest, coach decision or roster movement.','Shot-location and tracking fields were not added because the validated game-log source did not provide a complete five-season pregame-safe series.','The upstream nba_data repository declares no license; only derived factual aggregates are published, not raw parquet files.',`Historical possession models use ${simulations} seeded simulations per game for tractability; the live engine supports 100,000.`]};
-fs.writeFileSync(output,JSON.stringify(report));
+IO.write('v7-model-report.json',{...report,chronology_policy:E.CHRONOLOGY_POLICY},output);
 console.log(`Wrote ${path.relative(root,output)}`);
 for(const [name,s] of Object.entries(summaries)){const m=s.rolling_origin,f=s.fresh_2027;console.log(`${name}: rolling n=${m.count} acc=${(m.accuracy*100).toFixed(1)}% Brier=${m.brier.toFixed(4)} logloss=${m.logLoss.toFixed(4)} MAE=${m.scoreMAE.toFixed(2)} | 2027 n=${f.count} acc=${(f.accuracy*100).toFixed(1)}% Brier=${f.brier.toFixed(4)}`)}

@@ -33,10 +33,10 @@ test('pregame feature remains unchanged if current result is flipped',()=>{
  const home=snap('2026-10-30'),away=snap('2026-10-30');
  const first={result_id:'1',date:'2026-10-30',season:2027,home:{abbr:'ATL'},away:{abbr:'BOS'},home_score:110,away_score:100,
    pregame:{home,away}};
- const second={...first,result_id:'2',date:'2026-11-01',home_score:90,away_score:120,
-   pregame:{home:{...home,as_of:'2026-11-01'},away:{...away,as_of:'2026-11-01'}}};
+ const second={...first,result_id:'2',date:'2026-11-02',home_score:90,away_score:120,
+   pregame:{home:{...home,as_of:'2026-11-02'},away:{...away,as_of:'2026-11-02'}}};
  const baselines=[{id:'1',date:'2026-10-30',features:{elo:.4,team:.2}},
-   {id:'2',date:'2026-11-01',features:{elo:.4,team:.2}}];
+   {id:'2',date:'2026-11-02',features:{elo:.4,team:.2}}];
  const a=S.pregameScienceRows(baselines,[first,second]);
  const b=S.pregameScienceRows(baselines,[{...first,home_score:80,away_score:100},second]);
  assert.deepEqual(a[0].features,b[0].features);

@@ -3,8 +3,10 @@
  * pregame V7 snapshot or strictly earlier head-to-head final.
  * Experimental: never change the production predictor based on this report. */
 'use strict';
+const IO=require('./research_io.cjs');
 const fs=require('node:fs'),path=require('node:path');
 const V8=require('./v8_research.cjs');
+const E=require('../predict/engine.js');
 const ROOT=path.join(__dirname,'..');
 const SEASONS=[2023,2024,2025,2026],FRESH=2027;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -26,7 +28,7 @@ const {blended,matchup,scienceFeatures}=require('../predict/science.js');
 function pairKey(a,b){return [canonical(a),canonical(b)].sort().join('|');}
 function headToHeadPrior(history,game){
   const pair=pairKey(game.home.abbr,game.away.abbr);
-  const meetings=(history.get(pair)||[]).filter(x=>x.date<game.date&&x.season>=game.season-2).slice(-8);
+  const meetings=(history.get(pair)||[]).filter(x=>E.resultKnownBefore(x,game.prediction_at_utc||game.date)&&x.season>=game.season-2).slice(-8);
   if(!meetings.length)return {value:0,meetings:0};
   const home=canonical(game.home.abbr);
   let numerator=0,denominator=0;
@@ -51,12 +53,14 @@ function pregameScienceRows(baselineRows,sourceGames){
     const pair=pairKey(f.home.abbr,f.away.abbr),games=history.get(pair)||[];
     const winner=f.home_score>f.away_score?canonical(f.home.abbr):canonical(f.away.abbr);
     if(f.home_score===f.away_score)throw Error('Historical tie');
-    games.push({date:f.date,season:f.season,winner});history.set(pair,games);
+    games.push({date:f.prediction_at_utc||f.date,season:f.season,winner,
+      ...(f.result_available_at_utc?{result_available_at_utc:f.result_available_at_utc,result_availability_source:f.result_availability_source,result_availability_verified:f.result_availability_verified}:{})});history.set(pair,games);
   }
   return out;
 }
 function buildRows(){
-  const raw=JSON.parse(fs.readFileSync(path.join(ROOT,'data/v7-intelligence.json'),'utf8'));
+  const raw=IO.read('v7-intelligence.json');
+  IO.requireChronology(raw);
   if(!raw.strict_no_future_data||raw.coverage?.evaluated_games!==6150)throw Error('Historical intelligence dataset not verified');
   const baseline=V8.buildRows();
   const rows=pregameScienceRows(baseline,raw.games);
@@ -106,7 +110,7 @@ function evaluate(rows){
   const predictions=Object.fromEntries(Object.keys(modeFeatures).map(m=>[m,[]]));
   const fits={};
   for(const season of [...SEASONS,FRESH]){
-    const train=rows.filter(r=>r.season<season),test=rows.filter(r=>r.season===season);
+    const train=IO.trainingRows(rows,season),test=rows.filter(r=>r.season===season);
     if(train.length<1000||test.length<30)throw Error('Not enough training/test games '+season);
     fits[season]={};
     for(const [mode,names] of Object.entries(modeFeatures)){
@@ -175,10 +179,10 @@ function evaluate(rows){
   return result;
 }
 if(require.main===module){
-  const output=path.resolve(process.argv[2]||path.join(ROOT,'data/game-science-report.json'));
+  const output=process.argv[2];
   const report=evaluate(buildRows());
-  fs.writeFileSync(output,JSON.stringify(report));
-  console.log('Saved '+output);
+  const saved=IO.write('game-science-report.json',{...report,chronology_policy:'result-availability-v1'},output);
+  console.log('Saved '+saved);
   for(const [name,x] of Object.entries(report.models))console.log(name,JSON.stringify({rolling:x.rolling,fresh:x.fresh}));
   console.log('Comparison:',JSON.stringify(report.comparisons));
 }

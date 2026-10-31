@@ -17,9 +17,12 @@ import math
 import pathlib
 import statistics
 import sys
+import heapq
+import os
 from typing import Any
 
 import duckdb
+from historical_chronology import POLICY, prediction_time, result_availability, load_evidence
 
 ROOT = pathlib.Path(__file__).parent
 OUTPUT = ROOT / "data" / "v7-intelligence.json"
@@ -225,8 +228,8 @@ class PlayerState:
                 "availability": "inferred", "last_game": self.last_date}
 
 
-def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
-    team_rows, player_rows = fetch_rows(connection)
+def build_payload(connection: duckdb.DuckDBPyConnection, *, rows=None, as_of=None) -> dict:
+    team_rows, player_rows = rows if rows is not None else fetch_rows(connection)
     team_abbr = {(row["season"], row["team_id"]): canonical(row["nba_abbrev"])
                  for row in team_rows}
     players_by_game: dict[tuple[int, str, str], list[dict]] = collections.defaultdict(list)
@@ -240,8 +243,15 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
 
     local = json.loads(HISTORY.read_text(encoding="utf-8"))
     local_index: dict[tuple[int, tuple[str, str]], list[dict]] = collections.defaultdict(list)
-    for game in local["games"]:
-        if game["season"] in EVALUATED:
+    current_results = json.loads((ROOT / "data/games.json").read_text())
+    proof_file = ROOT / "research-reviews/chronology-v1/inputs/result-availability.json"
+    evidence = load_evidence(proof_file)
+    unique_results = {str(g["id"]): g for g in local["games"] + current_results["games"]}
+    for game in unique_results.values():
+        observed = evidence.get(str(game["id"]))
+        if observed and all(observed.get(k) == game.get(k) for k in ("homeScore", "awayScore")) and prediction_time(observed["date"]) == prediction_time(game["date"]):
+            game = {**game, **observed}
+        if game.get("status") == "final":
             pair = tuple(sorted((canonical(game["home"]["abbr"]), canonical(game["away"]["abbr"]))))
             local_index[(game["season"], pair)].append(game)
 
@@ -250,6 +260,7 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
     season_games: dict[int, list[tuple[dict, dict]]] = collections.defaultdict(list)
     ordered_games: list[tuple[dict, dict, dict | None]] = []
     score_matches = 0
+    used_result_ids = set()
     for (season, _game_id), rows in boxes.items():
         if len(rows) != 2:
             raise ValueError(f"{season} {_game_id} has {len(rows)} team rows")
@@ -260,22 +271,31 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
         source_date = dt.date.fromisoformat(rows[0]["game_date"])
         local_game = None
         if home and away:
-            local_game = next((game for game in candidates
+            matches = [game for game in candidates
                 if canonical(game["home"]["abbr"]) == home["nba_abbrev"]
                 and canonical(game["away"]["abbr"]) == away["nba_abbrev"]
                 and (game["homeScore"], game["awayScore"]) == (home["pts"], away["pts"])
-                and abs((dt.date.fromisoformat(game["date"][:10]) - source_date).days) <= 1), None)
+                and abs((dt.date.fromisoformat(game["date"][:10]) - source_date).days) <= 1]
+            if len(matches) > 1:
+                raise ValueError(f"Ambiguous historical result identity for {season} {_game_id}")
+            local_game = matches[0] if matches else None
         else:
             # Neutral-site NBA rows omit home/away. ESPN supplies the display
             # designation, so use the independently matching score record.
-            local_game = next((game for game in candidates
+            matches = [game for game in candidates
                 if sorted((game["homeScore"], game["awayScore"])) == sorted((rows[0]["pts"], rows[1]["pts"]))
-                and abs((dt.date.fromisoformat(game["date"][:10]) - source_date).days) <= 1), None)
+                and abs((dt.date.fromisoformat(game["date"][:10]) - source_date).days) <= 1]
+            if len(matches) > 1:
+                raise ValueError("Ambiguous neutral-site historical result identity")
+            local_game = matches[0] if matches else None
             if local_game:
                 home_abbr = canonical(local_game["home"]["abbr"])
                 home = next(row for row in rows if row["nba_abbrev"] == home_abbr)
                 away = next(row for row in rows if row is not home)
-        if local_game:
+        if local_game and season in EVALUATED:
+            if local_game["id"] in used_result_ids:
+                raise ValueError("Historical result matched more than once")
+            used_result_ids.add(local_game["id"])
             score_matches += 1
         elif season in EVALUATED:
             raise ValueError(f"No independent score match for {season} {_game_id}")
@@ -283,9 +303,13 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
             home, away = rows
         season_games[season].append((home, away))
         ordered_games.append((home, away, local_game))
-    if score_matches != 6150:
-        raise ValueError(f"Only {score_matches}/6150 historical scores cross-validated")
+    expected_counts = collections.Counter(g["season"] for g in local["games"] if g["season"] in EVALUATED and g.get("status") == "final")
+    expected_total = sum(expected_counts.values())
+    if score_matches != expected_total:
+        raise ValueError(f"Only {score_matches}/{expected_total} historical scores cross-validated")
 
+    prior_ready = {}
+    availability_by_game = {h["game_id"]: result_availability(g or {"date": h["game_date"]}) for h, a, g in ordered_games}
     for season, games in season_games.items():
         by_team: dict[str, list[dict]] = collections.defaultdict(list)
         for home, away in games:
@@ -293,6 +317,7 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
             by_team[away["nba_abbrev"]].append(box_metrics(away, home))
         for abbr, rows in by_team.items():
             prior_team[(season + 1, abbr)] = summarise(rows)
+            prior_ready[(season + 1, abbr)] = max(availability_by_game[h["game_id"]] for h, a in games if abbr in (h["nba_abbrev"], a["nba_abbrev"]))
     for row in player_rows:
         abbr = team_abbr.get((row["season"], row["team_id"]))
         if abbr:
@@ -304,6 +329,7 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
     player_states: dict[tuple[int, str, str], PlayerState] = {}
     team_players: dict[tuple[int, str], set[str]] = collections.defaultdict(set)
     league_history: dict[int, list[float]] = collections.defaultdict(list)
+    latest_availability = {}
     output_games: list[dict] = []
     rotation_history: list[dict] = []
     stat_errors: dict[int, dict[str, dict]] = collections.defaultdict(
@@ -313,9 +339,9 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
         lambda: {"actual_appearances": 0, "matched_projections": 0})
     names = {row["player_id"]: row["name"] for row in player_rows}
 
-    def seed_prior_roster(season: int, abbr: str) -> None:
+    def seed_prior_roster(season: int, abbr: str, cutoff) -> None:
         key = (season, abbr)
-        if team_players[key]:
+        if team_players[key] or prior_ready.get(key, cutoff) >= cutoff:
             return
         for (target, prior_abbr, player_id), logs in prior_player.items():
             if target == season and prior_abbr == abbr:
@@ -324,9 +350,10 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
                 player_states[(season, abbr, player_id)] = state
                 team_players[key].add(player_id)
 
-    def snapshot(season: int, abbr: str, date: str, include_rotation: bool = False) -> dict:
+    def snapshot(season: int, abbr: str, date: str, include_rotation: bool = False, cutoff=None) -> dict:
         key, rows = (season, abbr), team_history[(season, abbr)]
-        prior = prior_team.get((season, abbr)) or {"games": 0}
+        cutoff = cutoff or prediction_time(date)
+        prior = (prior_team.get((season, abbr)) if prior_ready.get((season, abbr), cutoff) < cutoff else None) or {"games": 0}
         last = team_last_date.get(key)
         rest = None if not last else max(0, (dt.date.fromisoformat(date) - dt.date.fromisoformat(last)).days - 1)
         projections = [player_states[(season, abbr, pid)].projection(len(rows))
@@ -341,6 +368,8 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
         baseline = statistics.fmean(lineup_history[key][-10:]) if lineup_history[key] else expected_lineup
         continuity = sum(p["expected_minutes"] for p in rotation if p["missed_team_games"] == 0) / 240
         result = {"as_of": date, "games": len(rows), "rest_days": rest,
+                "information_cutoff_utc": cutoff.isoformat(), "chronology_policy": POLICY,
+                "max_result_available_at_utc": latest_availability[season].isoformat() if season in latest_availability else None,
                 "prior": prior, "last5": summarise(rows, 5),
                 "last10": summarise(rows, 10), "season": summarise(rows),
                 "league_ortg": statistics.fmean(league_history[season]) if league_history[season]
@@ -361,19 +390,55 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
             return (n * a + pseudo * b) / (n + pseudo)
         return a if a is not None else (b if b is not None else 112.0)
 
-    ordered_games.sort(key=lambda x: (x[0]["season"], x[0]["game_date"], x[0]["game_id"]))
+    pending = []
+    def target_time(item):
+        return prediction_time(item[2]["date"] if item[2] else item[0]["game_date"])
+
+    def ingest(home, away, date, home_metrics, away_metrics, available):
+        season = home["season"]
+        latest_availability[season] = max(latest_availability.get(season, available), available)
+        for row, metrics in ((home, home_metrics), (away, away_metrics)):
+            abbr, key = row["nba_abbrev"], (season, row["nba_abbrev"])
+            actual_lineup_total = 0.0
+            for p_row in players_by_game[(season, row["game_id"], row["team_id"])]:
+                p_key = (season, abbr, p_row["player_id"])
+                state = player_states.get(p_key)
+                if state is None:
+                    state = PlayerState(p_row["player_id"], p_row["name"],
+                                        prior_player.get((season, abbr, p_row["player_id"]), []) if prior_ready.get(key, available) < available else [])
+                    player_states[p_key] = state
+                projected = state.projection(len(team_history[key]))
+                actual = player_game(p_row)
+                actual_lineup_total += actual["minutes"] * projected["impact_proxy"]
+                state.games = (state.games + [actual])[-20:]
+                state.team_games_last_played = len(team_history[key])
+                state.last_date = date
+                team_players[key].add(p_row["player_id"])
+            lineup_history[key].append(actual_lineup_total / 240)
+            team_history[key].append(metrics)
+            team_last_date[key] = date
+        league_history[season].extend((home_metrics["ortg"], away_metrics["ortg"]))
+
+    ordered_games.sort(key=lambda x: (target_time(x), x[0]["game_id"]))
     for home, away, local_game in ordered_games:
         season, date = home["season"], home["game_date"]
         if season < 2022:
             continue
+        cutoff = target_time((home, away, local_game))
+        while pending and pending[0][0] < cutoff:
+            _available, _id, update = heapq.heappop(pending)
+            ingest(*update, _available)
         h_abbr, a_abbr = home["nba_abbrev"], away["nba_abbrev"]
-        seed_prior_roster(season, h_abbr)
-        seed_prior_roster(season, a_abbr)
+        seed_prior_roster(season, h_abbr, cutoff)
+        seed_prior_roster(season, a_abbr, cutoff)
         # Emit projections before any player box score from this game is ingested.
         # The historical audit is conditional on actual participation because
         # the upstream feed omits official DNP and pregame injury statuses.
         include = season in EVALUATED or season == 2027
-        hs, ass = snapshot(season, h_abbr, date, include), snapshot(season, a_abbr, date, include)
+        hs, ass = snapshot(season, h_abbr, date, include, cutoff), snapshot(season, a_abbr, date, include, cutoff)
+        for snap in (hs, ass):
+            snap["information_cutoff_utc"] = cutoff.isoformat()
+            snap["chronology_policy"] = POLICY
         if include:
             # Save only compact, inferred PRE-game rotation IDs/minutes for
             # point-in-time roster continuity research. Do not include target
@@ -413,8 +478,11 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
                 ass.pop("rotation", None)
         if season in EVALUATED or season == 2027:
             output_games.append({"nba_game_id": home["game_id"],
+                **{k: local_game[k] for k in ("result_available_at_utc", "result_availability_source", "result_availability_verified") if local_game and k in local_game},
                 "result_id": local_game["id"] if local_game else home["game_id"],
                 "date": date, "season": season,
+                "prediction_at_utc": cutoff.isoformat(),
+                "prediction_timestamp_source": "archived_tip" if local_game else "date_only_00_utc",
                 "home": {"abbr": h_abbr, "name": home["full_name"]},
                 "away": {"abbr": a_abbr, "name": away["full_name"]},
                 "home_score": home["pts"], "away_score": away["pts"],
@@ -426,36 +494,22 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
         home_metrics["adj_drtg"] = home_metrics["drtg"] - pregame_value(ass, "ortg") + league
         away_metrics["adj_ortg"] = away_metrics["ortg"] - pregame_value(hs, "drtg") + league
         away_metrics["adj_drtg"] = away_metrics["drtg"] - pregame_value(hs, "ortg") + league
-        for row, metrics in ((home, home_metrics), (away, away_metrics)):
-            abbr, key = row["nba_abbrev"], (season, row["nba_abbrev"])
-            actual_lineup_total = 0.0
-            for p_row in players_by_game[(season, row["game_id"], row["team_id"])]:
-                p_key = (season, abbr, p_row["player_id"])
-                state = player_states.get(p_key)
-                if state is None:
-                    state = PlayerState(p_row["player_id"], p_row["name"],
-                                        prior_player.get((season, abbr, p_row["player_id"]), []))
-                    player_states[p_key] = state
-                projected = state.projection(len(team_history[key]))
-                actual = player_game(p_row)
-                actual_lineup_total += actual["minutes"] * projected["impact_proxy"]
-                state.games = (state.games + [actual])[-20:]
-                state.team_games_last_played = len(team_history[key])
-                state.last_date = date
-                team_players[key].add(p_row["player_id"])
-            lineup_history[key].append(actual_lineup_total / 240)
-            team_history[key].append(metrics)
-            team_last_date[key] = date
-        league_history[season].extend((home_metrics["ortg"], away_metrics["ortg"]))
+        available = result_availability(local_game or {"date": date})
+        heapq.heappush(pending, (available, home["game_id"],
+                                (home, away, date, home_metrics, away_metrics)))
 
-    current_date = dt.datetime.now(dt.timezone.utc).date().isoformat()
-    current = [{"abbr": abbr, **snapshot(2027, abbr, current_date, True)}
+    now = prediction_time(as_of) if as_of else dt.datetime.now(dt.timezone.utc)
+    while pending and pending[0][0] < now:
+        _available, _id, update = heapq.heappop(pending)
+        ingest(*update, _available)
+    current_date = now.date().isoformat()
+    current = [{"abbr": abbr, **snapshot(2027, abbr, current_date, True, now)}
                for abbr in sorted({abbr for season, abbr in team_history if season == 2027})]
     counts = collections.Counter(game["season"] for game in output_games)
     for season in EVALUATED:
-        if counts[season] != 1230:
-            raise ValueError(f"Season {season} has {counts[season]} games, expected 1230")
-    player_report = {"schema": 1, "strict_no_future_data": True,
+        if counts[season] != expected_counts[season]:
+            raise ValueError(f"Season {season} coverage differs from validated results")
+    player_report = {"schema": 1, "chronology_policy": POLICY, "strict_no_future_data": True,
         "status": "experimental_not_promoted",
         "method": "Prior-game decayed per-36 rates multiplied by expected minutes if playing",
         "evaluation": "Conditional on actual participation, matched among pregame top-12 rotation; excludes unobserved DNPs",
@@ -471,9 +525,9 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
                      for stat in PLAYER_STATS
                      for agg in (stat_errors[season][stat],)}}
             for season in (*EVALUATED, 2027)}}
-    return round_tree({"schema": 1,
+    return round_tree({"schema": 1, "chronology_policy": POLICY,
         "player_report": player_report,
-        "rotation_history": {"schema": 1, "strict_no_future_data": True,
+        "rotation_history": {"schema": 1, "chronology_policy": POLICY, "strict_no_future_data": True,
             "source": "Compact inferred pregame player IDs and expected minutes; no target-game results",
             "games": rotation_history},
         "built_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
@@ -483,10 +537,10 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
             "documentation": "https://github.com/llimllib/nba_data/blob/main/docs/DATA_DICTIONARY.md",
             "upstream_license": "No license declared in the upstream GitHub repository as of build date",
             "redistribution": "Only derived pregame aggregates are published; raw parquet files are not vendored"},
-        "coverage": {"evaluated_seasons": list(EVALUATED), "evaluated_games": 6150,
+        "coverage": {"evaluated_seasons": list(EVALUATED), "evaluated_games": expected_total,
             "fresh_2027_games": counts[2027], "score_crosschecks": score_matches,
             "player_rows": len(player_rows), "team_rows": len(team_rows)},
-        "methodology": {"feature_timing": "Snapshot emitted before target game is applied to state",
+        "methodology": {"feature_timing": "Only results with availability strictly before prediction_at_utc enter state; unknown availability uses second UTC midnight",
             "team_windows": ["last 5 exponentially weighted", "last 10 exponentially weighted", "season", "prior completed season", "online opponent-adjusted efficiency residuals"],
             "player_minutes": "Prior appearances only; recent minutes decayed and discounted after missed team games",
             "availability": "Inferred only; DNPs and official historical pregame injury designations are absent",
@@ -496,17 +550,31 @@ def build_payload(connection: duckdb.DuckDBPyConnection) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=pathlib.Path, default=OUTPUT)
+    parser.add_argument("--output", type=pathlib.Path)
+    parser.add_argument("--rows-input", type=pathlib.Path, help="Frozen private raw rows for paired replay")
+    parser.add_argument("--as-of", help="Explicit UTC current-snapshot cutoff")
+    parser.add_argument("--review-dir", type=pathlib.Path)
     parser.add_argument("--current-output", type=pathlib.Path, default=CURRENT_OUTPUT)
-    parser.add_argument("--player-report-output", type=pathlib.Path, default=ROOT / "data/v9-player-report.json")
-    parser.add_argument("--rotation-history-output", type=pathlib.Path, default=ROOT / "data/rotation-history.json")
+    parser.add_argument("--player-report-output", type=pathlib.Path)
+    parser.add_argument("--rotation-history-output", type=pathlib.Path, default=pathlib.Path("/tmp/v7-rotation-history.json"))
     parser.add_argument("--extension-dir", default="/tmp/nba-twin-duckdb-extensions")
     args = parser.parse_args()
-    connection = duckdb.connect()
-    connection.execute(f"SET extension_directory='{args.extension_dir}'")
-    connection.execute("INSTALL httpfs; LOAD httpfs")
-    connection.execute(f"ATTACH '{CATALOG}' AS nba")
-    payload = build_payload(connection)
+    review_dir = args.review_dir or pathlib.Path(os.environ.get("NBA_REVIEW_OUTPUT_DIR") or
+        ROOT / "research-reviews/chronology-v1/runs" / dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ"))
+    args.output = args.output or review_dir / "v7-intelligence.json"
+    args.player_report_output = args.player_report_output or review_dir / "v9-player-report.json"
+    for output in (args.output, args.player_report_output, args.rotation_history_output):
+        if (ROOT / "data").resolve() in output.resolve().parents or output.exists():
+            raise ValueError(f"Refusing to overwrite historical evidence: {output}")
+    if args.rows_input:
+        frozen = json.loads(args.rows_input.read_text())
+        payload = build_payload(None, rows=(frozen["team_rows"], frozen["player_rows"]), as_of=args.as_of)
+    else:
+        connection = duckdb.connect()
+        connection.execute(f"SET extension_directory='{args.extension_dir}'")
+        connection.execute("INSTALL httpfs; LOAD httpfs")
+        connection.execute(f"ATTACH '{CATALOG}' AS nba")
+        payload = build_payload(connection, as_of=args.as_of)
     report = payload.pop("player_report")
     rotation_history = payload.pop("rotation_history")
     args.rotation_history_output.parent.mkdir(parents=True, exist_ok=True)
@@ -522,7 +590,7 @@ def main() -> None:
     tmp = args.output.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     tmp.replace(args.output)
-    current_payload = {"schema": 1, "built_at_utc": payload["built_at_utc"],
+    current_payload = {"schema": 1, "chronology_policy": POLICY, "built_at_utc": payload["built_at_utc"],
         "strict_no_future_data": True, "source": payload["source"],
         "coverage": {"season": 2027, "completed_games": payload["coverage"]["fresh_2027_games"]},
         "availability": payload["methodology"]["availability"], "teams": payload["current"]}

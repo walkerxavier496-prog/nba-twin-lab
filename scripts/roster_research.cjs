@@ -4,10 +4,11 @@
  * cannot contain target-season results. No official injury feed is assumed.
  */
 'use strict';
+const IO=require('./research_io.cjs');
 const fs=require('node:fs'),path=require('node:path');
 const V8=require('./v8_research.cjs'),S=require('./game_science.cjs'),R=require('../predict/roster.js');
 const ROOT=path.join(__dirname,'..'),SEASONS=[2023,2024,2025,2026],FRESH=2027;
-const read=p=>JSON.parse(fs.readFileSync(path.join(ROOT,'data',p),'utf8'));
+const read=IO.read;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const MODE={
  elo:[],
@@ -55,7 +56,7 @@ function evaluate(rows){
  const predictions=Object.fromEntries(Object.keys(MODE).map(k=>[k,[]]));
  const fits={};
  for(const season of [...SEASONS,FRESH]){
-  const train=rows.filter(r=>r.season<season),test=rows.filter(r=>r.season===season);
+  const train=IO.trainingRows(rows,season),test=rows.filter(r=>r.season===season);
   if(train.length<1000||test.length<30)throw Error('Insufficient rolling sample '+season);
   fits[season]={};
   for(const [name,features] of Object.entries(MODE)){
@@ -110,12 +111,12 @@ function currentPriorRotations(index,season=FRESH){
   availability:'Inferred; not an official transaction or injury report',teams};
 }
 if(require.main===module){
- const intel=read('v7-intelligence.json'),rotation=read('rotation-history.json'),base=V8.buildRows();
+ const intel=IO.requireChronology(read('v7-intelligence.json')),rotation=IO.requireChronology(read('rotation-history.json')),base=V8.buildRows();
  const {rows,index,coverage}=buildRows(intel,base,rotation);
  const report=evaluate(rows);
  report.coverage=coverage;
- fs.writeFileSync(path.join(ROOT,'data/roster-research-report.json'),JSON.stringify(report));
- fs.writeFileSync(path.join(ROOT,'data/roster-priors.json'),JSON.stringify(currentPriorRotations(index)));
+ IO.write('roster-research-report.json',{...report,chronology_policy:'result-availability-v1'});
+ IO.write('roster-priors.json',{...currentPriorRotations(index),chronology_policy:'result-availability-v1'});
  console.log('Rotation research coverage',coverage);
  for(const [name,model] of Object.entries(report.models))console.log(name,JSON.stringify({rolling:model.rolling,early:model.early,fresh:model.fresh}));
  console.log('Paired comparisons',JSON.stringify(report.comparisons));

@@ -1,0 +1,12 @@
+{
+  "schema": "nba-chronology-input-manifest-v1",
+  "raw_rows_sha256": "57d5881b278a0d1c7e86b3e6ab29223acd49912cc4410eebcafe681e9c43959c",
+  "raw_rows_location": "/private/tmp/nba-chronology-fixed-rows.json (private; not redistributed)",
+  "team_rows": 14602,
+  "player_rows": 155942,
+  "evaluation_games": 6150,
+  "inspected_fresh_games": 71,
+  "published_feature_rows_different_from_legacy_replay": 422,
+  "legacy_builder_source_sha256": "772da2b6da33c3548436669e4e17400e6d2925a73f97123715bcbff58dfcc138",
+  "note": "Exact paired comparisons use frozen derived replay inputs. Legacy regeneration differs from published feature rows; possible source revisions and legacy tie/order nondeterminism are not attributed to chronology."
+}

@@ -82,7 +82,7 @@ function lockChallenge() {
     requireSafe(Date.parse(game.date) === Date.parse(prior.tip_utc), 'Tipoff changed relative to original lock');
     requireSafe(A.canonicalTeam(game.home.abbr) === A.canonicalTeam(prior.home.abbr) &&
       A.canonicalTeam(game.away.abbr) === A.canonicalTeam(prior.away.abbr), 'Teams changed since original lock');
-    const state = E.ratings(gameData.games, game.date);
+    const state = E.ratings(gameData.games, new Date(Math.min(now, Date.parse(game.date))).toISOString());
     requireSafe(state.finals >= 800, 'Insufficient prior finals for Elo');
     const baseline = E.forecast(game, state, profiles);
     const roster = R.modelForecast({ game, baseline, snapshot, priorRotations: rosterPriors, report: rosterReport, now });
