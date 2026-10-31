@@ -298,8 +298,14 @@ def main():
     try:
         doc=build(now.astimezone(timezone.utc))
     except Exception as exc:
-        print("Official data unavailable, failing closed:",str(exc),file=sys.stderr)
-        doc=unavailable(str(exc))
+        message=str(exc)
+        if (not args.strict and
+            (message.startswith("Outside pretip official roster/injury evidence window") or
+             message.startswith("No scheduled games in next 24 hours"))):
+            print("No eligible pretip refresh; preserving last timestamped feed")
+            return
+        print("Official data unavailable, failing closed:",message,file=sys.stderr)
+        doc=unavailable(message)
         if args.strict:raise
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     temp=OUTPUT.with_suffix(".json.tmp")
