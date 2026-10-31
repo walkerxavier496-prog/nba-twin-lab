@@ -141,6 +141,9 @@ async function init(){
        const lock=await json('./'+entries[0].lock_path);
        if(lock.scope?.melbourne_date===entries[0].melbourne_date&&Date.parse(lock.locked_at_utc)<Date.parse(lock.scope.first_tip_utc)){
         archive={entry:entries[0],lock,sidecar:null};
+        const count=(lock.forecasts||[]).reduce((total,g)=>total+(Array.isArray(g.v9_player_projections)?g.v9_player_projections.length:0),0);
+        if(count>0)show('home-projections',count.toLocaleString('en-AU'));
+
         try{
           const dated=await json('./audit/supplements/'+entries[0].melbourne_date+'/challenge.lock.json');
           if(dated.original_forecast_sha256===entries[0].lock_sha256&&Date.parse(dated.locked_at_utc)<Date.parse(lock.scope.first_tip_utc))
