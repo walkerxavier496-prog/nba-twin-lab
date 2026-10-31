@@ -83,7 +83,11 @@ function headToHead(home,away,asOf){
 function draw(){
  const home=teams.get($('home').value),away=teams.get($('away').value);
  if(!home||!away||home.abbr===away.abbr){$('home-name').textContent='Team A';$('away-name').textContent='Team B';$('metrics').innerHTML='<tr><td colspan="3">Select your team and another NBA opponent.</td></tr>';$('factors').innerHTML='<article>Select two different teams to compare their styles.</article>';$('h2h').textContent='Historical matchups appear after selecting two teams.';return;}
- $('home-name').textContent=home.abbr;$('away-name').textContent=away.abbr;
+ const mine=$('my-team').value;
+ $('home-name').textContent=home.abbr+(home.abbr===mine?' · YOUR TEAM':' · HOME');
+ $('away-name').textContent=away.abbr+(away.abbr===mine?' · YOUR TEAM':' · AWAY');
+ $('home-name').setAttribute('data-favourite',String(home.abbr===mine));
+ $('away-name').setAttribute('data-favourite',String(away.abbr===mine));
  const bl=(s,k)=>S.blended(s,k);
  const net=s=>{const o=bl(s,'adj_ortg'),d=bl(s,'adj_drtg');return o===null||d===null?null:o-d;};
  const last=s=>S.net(s,'last5'),season=s=>S.net(s,'season');
