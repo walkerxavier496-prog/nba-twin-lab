@@ -5,7 +5,7 @@ function init(){
  const nav=document.querySelector('.app-header nav[aria-label="Main navigation"]');
  if(!nav)return;
  const src=document.currentScript?.src;
- const base=new URL('../',src||document.querySelector('.app-header .brand')?.href||location.href);
+ const base=src?new URL('../',src):new URL(document.querySelector('.app-header .brand')?.href||location.href);
  const href=p=>new URL(p,base).href;
  const current=location.pathname;
  const machine=/\/(predict|challenge|audit|models|player-stats)\//.test(current);
