@@ -12,7 +12,7 @@ async function json(location,optional=false){
  try{const response=await fetch(location,{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);return await response.json()}
  catch(error){if(optional)return null;throw Error('Cannot load '+location+': '+error.message)}
 }
-let data=null,selected=null,matchupFilter='all',scoreFeed=null;
+let data=null,selected=null,matchupFilter='all',scoreFeed=null,liveDeskDate=null;
 const scoreAdapter=typeof window!=='undefined'?window.NbaScores:null;
 const liveFor=id=>scoreFeed?.games?.find(game=>String(game.id)===String(id))||null;
 const scoreLabel=game=>game?.phase==='final'?'FINAL':game?.phase==='live'?(scoreAdapter?.label?.(game)||'LIVE'):'PREGAME';
@@ -224,29 +224,35 @@ function selectGame(gameId){
  updatePlayerTeams();drawGameSelector();drawGameDetail();drawPlayers();
 }
 async function refreshScores(){
- if(!data?.lock||!scoreAdapter?.fetchDate||!scoreAdapter?.usDate)return;
- const today=scoreAdapter.usDate(new Date());
- const locked=scoreAdapter.usDate(data.lock.forecasts[0].tip_utc);
+ if(!data?.lock||!scoreAdapter?.fetchDate)return;
+ const today=liveDeskDate||scoreAdapter.melbourneDate?.(new Date())||scoreAdapter.usDate?.(new Date());
+ const locked=data.lock.scope?.melbourne_date?.replaceAll('-','')||scoreAdapter.melbourneDate?.(data.lock.forecasts[0].tip_utc)||scoreAdapter.usDate?.(data.lock.forecasts[0].tip_utc);
+ const fetchGameDay=date=>scoreAdapter.fetchMelbourneDate?scoreAdapter.fetchMelbourneDate(date):scoreAdapter.fetchDate(date);
  let fresh=null;
- // The LIVE desk always uses the current US game date, never the most recent
- // pretip forecast lock date (which could be yesterday or last month).
+ // The LIVE desk is keyed to a Melbourne calendar date. The adapter resolves
+ // the two ESPN US buckets that can overlap that local game day.
  try{
-  fresh=await scoreAdapter.fetchDate(today);
-  if(!fresh.games?.length)throw Error('No games on current scoreboard');
+  fresh=await fetchGameDay(today);
+  if(!Array.isArray(fresh.games))throw Error('No games array on current scoreboard');
   window.NbaLiveDesk?.setFeed?.(fresh);
  }catch(e){window.NbaLiveDesk?.unavailable?.();}
  // The archived prediction comparison is always scoped to the locked slate.
  // Its scores must never be silently mapped to a newer game's results.
  try{
-  scoreFeed=locked===today?fresh:await scoreAdapter.fetchDate(locked);
+  scoreFeed=locked===today?fresh:await fetchGameDay(locked);
   if(!scoreFeed?.games?.length)scoreFeed=null;
  }catch(e){scoreFeed=null;}
  if($('daily-live-source'))$('daily-live-source').textContent=fresh?
   'LIVE GAME CENTRE: ESPN checked '+fullTime(fresh.fetched_at_utc)+
-  ' · current date scores · every 60 seconds · locked model forecasts are separate':
+  ' · Melbourne game date '+today+' · ESPN US buckets '+(fresh.espn_dates||[today]).join(' + ')+' · every 60 seconds · locked model forecasts are separate':
   'Current ESPN scoreboard unavailable · no live scores invented. Archived lock comparisons remain historical.';
  drawGameSelector();drawGameDetail();
 }
+liveDeskDate=scoreAdapter?.melbourneDate?.(new Date())||scoreAdapter?.usDate?.(new Date())||null;
+document.addEventListener?.('twinlab:scoredatechange',event=>{
+ const date=event?.detail?.date;
+ if(/^\d{8}$/.test(String(date))&&date!==liveDeskDate){liveDeskDate=date;refreshScores()}
+});
 async function load(){
  const ledger=await json('../data/audit-ledger.json');
  const latest=[...(ledger.entries||[])].filter(entry=>entry.lock_path).sort((a,b)=>String(b.melbourne_date).localeCompare(String(a.melbourne_date)))[0];

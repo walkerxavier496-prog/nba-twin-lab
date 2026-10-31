@@ -17,7 +17,7 @@ const club=(team,isHome=false)=>'<a class="sports-club'+(isHome?' sports-club--h
  '" href="./team/?team='+encodeURIComponent(String(team.abbr))+'" aria-label="View '+esc(team.name)+' team statistics and roster">'+teamImage(team)+
  '<span><b class="sports-club__name">'+esc(team.abbr)+'</b><small class="sports-club__city">'+esc(team.name)+'</small></span></a>';
 async function json(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return await r.json()}
-let archive=null,liveFeed=null;
+let archive=null,liveFeed=null,selectedMelbourneDate=null;
 function matchingForecast(game){
  return archive?.lock.forecasts?.find(g=>String(g.game_id)===String(game.id))||null;
 }
@@ -144,15 +144,28 @@ function render(){
  ).join(''):'<p class="c3-muted">No verified recent NBA finals are available.</p>';
 
 }
-async function refresh(){
- if(!scores?.fetchDate||!scores?.usDate)return;
+function showLiveAccess(feed){
+ const target=$('hero-live-status');
+ if(!target)return;
+ if(!feed){target.textContent='LIVE SCOREBOARD UNAVAILABLE · NO SCORES GUESSED';target.classList?.remove?.('is-live');return}
+ const games=feed.games||[],live=games.filter(g=>g.phase==='live').length,finals=games.filter(g=>g.phase==='final').length;
+ const upcoming=games.filter(g=>g.phase==='scheduled').length;
+ target.textContent=live?live+' LIVE NOW · '+finals+' FINAL · '+upcoming+' UPCOMING':
+  'NO GAMES LIVE NOW · '+finals+' FINAL · '+upcoming+' UPCOMING';
+ target.classList?.toggle?.('is-live',live>0);
+}
+async function refresh(date=selectedMelbourneDate){
+ if(!scores?.fetchDate)return;
  try{
-   const currentDate=scores.usDate(new Date());
-   const feed=await scores.fetchDate(currentDate);
-   if(!Array.isArray(feed.games)||feed.games.length===0)throw Error('No games returned');
+   selectedMelbourneDate=date||scores.melbourneDate?.(new Date())||scores.usDate?.(new Date());
+   const feed=scores.fetchMelbourneDate?
+     await scores.fetchMelbourneDate(selectedMelbourneDate):
+     await scores.fetchDate(scores.usDate(new Date()));
+   if(!Array.isArray(feed.games))throw Error('No games array returned');
    liveFeed=feed;
    window.NbaLiveDesk?.setFeed?.(feed);
- }catch(error){liveFeed=null;window.NbaLiveDesk?.unavailable?.();}
+   showLiveAccess(feed);
+ }catch(error){liveFeed=null;window.NbaLiveDesk?.unavailable?.();showLiveAccess(null);}
  render();
 }
 async function init(){
@@ -180,6 +193,11 @@ async function init(){
    }
  }
  render();
+ selectedMelbourneDate=scores?.melbourneDate?.(new Date())||scores?.usDate?.(new Date())||null;
+ document.addEventListener?.('twinlab:scoredatechange',event=>{
+   const date=event?.detail?.date;
+   if(/^\d{8}$/.test(String(date))&&date!==selectedMelbourneDate){selectedMelbourneDate=date;refresh(date)}
+ });
  await refresh();
  if(typeof setInterval==='function')setInterval(refresh,60000);
 }

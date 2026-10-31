@@ -22,23 +22,22 @@ function init(){
  const isDaily=/\/challenge\/daily\.html$/.test(current);
  const isAudit=/\/audit\/$/.test(current);
  const isModels=/\/(models|challenge)\/$/.test(current);
- // Home already has a Live tab; use the header shortcut for real team/player
- // following instead of another redundant scoreboard button.
+ // Keep live scores one click away above the fold. Watchlist remains in More.
  const shortcut=document.querySelector('.app-header .header-action');
  if(shortcut){
-  shortcut.href=href('watchlist/');
-  shortcut.textContent='MY WATCHLIST ★';
-  shortcut.setAttribute('aria-label','Manage your followed NBA teams and players');
+  shortcut.href=href('#live-games');
+  shortcut.textContent='LIVE GAMES ↗';
+  shortcut.setAttribute('aria-label','Open live NBA games, finals and box scores');
  }
  const link=(label,url,active)=>'<a class="nav-main-link'+(active?' active':'')+
   '" href="'+href(url)+'"'+(active?' aria-current="page"':'')+'>'+label+'</a>';
  nav.innerHTML=
   link('HOME','',onHome&&!isScores)+
+  link('LIVE','#live-games',isScores||isGame)+
   link('PREDICT','predict/',isPredict)+
   link('DAILY','challenge/daily.html',isDaily)+
   link('PLAYERS','player-stats/',isStats)+
   link('TEAMS','league/',isTeams)+
-  link('STATS','#live-player-stats',isScores||isGame)+
   link('AUDIT','audit/',isAudit)+
   link('MODELS','challenge/',isModels)+
   '<details class="nav-group nav-explore"><summary aria-label="More NBA tools">MORE <span aria-hidden="true">⌄</span></summary>'+
@@ -67,8 +66,8 @@ function init(){
   if(location.pathname.replace(/index\.html$/,'')!==rootPath)return;
   const stats=['#live-games','#live-player-stats'].includes(location.hash);
   for(const a of nav.querySelectorAll('.nav-main-link')){
-   if(!['HOME','STATS'].includes(a.textContent))continue;
-   const active=a.textContent==='STATS'?stats:!stats;
+   if(!['HOME','LIVE'].includes(a.textContent))continue;
+   const active=a.textContent==='LIVE'?stats:!stats;
    a.classList.toggle('active',active);
    if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
   }

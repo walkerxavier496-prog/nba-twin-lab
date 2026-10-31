@@ -15,6 +15,19 @@
     const o=Object.fromEntries(parts.map(x=>[x.type,x.value]));
     return o.year+o.month+o.day;
   }
+  function melbourneDate(value){
+    const d=new Date(value);
+    if(!Number.isFinite(d.getTime()))return null;
+    const parts=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);
+    const o=Object.fromEntries(parts.map(x=>[x.type,x.value]));
+    return o.year+o.month+o.day;
+  }
+  function shiftDateKey(value,days){
+    const key=String(value);
+    if(!/^\d{8}$/.test(key)||!Number.isInteger(days))return null;
+    const d=new Date(Date.UTC(Number(key.slice(0,4)),Number(key.slice(4,6))-1,Number(key.slice(6,8))+days));
+    return d.toISOString().slice(0,10).replaceAll('-','');
+  }
   function status(event){
     const v=event?.status||event?.competitions?.[0]?.status||{};
     const type=v.type||{};
@@ -56,6 +69,31 @@
     const games=parse(await response.json());
     return {date,games,fetched_at_utc:new Date().toISOString(),source:'ESPN public scoreboard (unofficial)'};
   }
+  async function fetchMelbourneDate(date,{fetchImpl=fetch}={}){
+    const key=String(date);
+    if(!/^\d{8}$/.test(key))throw Error('Invalid Melbourne NBA game date');
+    // ESPN groups the NBA slate by the US calendar date. A Melbourne calendar
+    // day straddles two of those buckets, so both must be checked before games
+    // can be filtered by their actual Melbourne-local tip time.
+    const espnDates=[shiftDateKey(key,-1),key];
+    const replies=await Promise.allSettled(espnDates.map(value=>fetchDate(value,{fetchImpl})));
+    const successful=replies.filter(reply=>reply.status==='fulfilled').map(reply=>reply.value);
+    if(!successful.length){
+      const reason=replies.map(reply=>reply.status==='rejected'?reply.reason?.message:'').filter(Boolean).join('; ');
+      throw Error('ESPN Melbourne scoreboard unavailable'+(reason?': '+reason:''));
+    }
+    const unique=new Map();
+    for(const reply of successful)for(const game of reply.games){
+      if(melbourneDate(game.date)===key)unique.set(String(game.id),game);
+    }
+    const games=[...unique.values()].sort((a,b)=>Date.parse(a.date)-Date.parse(b.date)||String(a.id).localeCompare(String(b.id)));
+    return {
+      date:key,melbourne_date:key,games,fetched_at_utc:new Date().toISOString(),
+      source:'ESPN public scoreboard (unofficial)',time_zone:'Australia/Melbourne',
+      espn_dates:espnDates,successful_espn_dates:successful.map(reply=>reply.date),
+      partial:successful.length!==espnDates.length
+    };
+  }
   const label=game=>{
     if(!game)return 'SCORE UNAVAILABLE';
     if(game.phase==='final')return 'FINAL';
@@ -65,5 +103,5 @@
     }
     return 'SCHEDULED';
   };
-  window.NbaScores=Object.freeze({parse,fetchDate,usDate,label});
+  window.NbaScores=Object.freeze({parse,fetchDate,fetchMelbourneDate,usDate,melbourneDate,shiftDateKey,label});
 })();

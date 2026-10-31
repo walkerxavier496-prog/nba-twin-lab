@@ -7,22 +7,26 @@ const build=()=>{
  vm.runInNewContext(read('assets/live-desk.js'),{window:win,document:doc,Date,Intl,Promise,fetch:async()=>({ok:false,status:503}),encodeURIComponent,Notification:undefined});
  return win.NbaLiveDesk;
 };
-test('Live Games and Player Stats are the first section on desktop and phone',()=>{
+test('Live Games and Player Stats keep clear above-fold navigation without displacing the approved Concept 3 hero',()=>{
  for(const page of ['index.html','challenge/daily.html']){
   const html=read(page);
   assert.ok(html.indexOf('id="live-games"')>=0);
-  assert.ok(html.indexOf('id="live-games"')<html.indexOf('class="hero-grid"')||html.indexOf('id="live-games"')<html.indexOf('class="page-hero"'),page+' live desk hidden below model widgets');
   for(const id of ['live-game-list','live-player-stats','live-stats-rows','live-alerts-toggle','live-plays','live-alert-feed','live-sort']){
    assert.match(html,new RegExp('id="'+id+'"'),page+' missing '+id);
   }
   assert.match(html,/assets\/live-desk\.js/);
   assert.match(html,/assets\/live-desk\.css/);
+  assert.match(html,/href="#live-games"/);
+  assert.match(html,/id="live-date"/);
+  assert.match(html,/data-desk-date="-1"/);
  }
  const nav=read('assets/site-shell.js');
  assert.match(nav,/\["Live","#live-games"/);
- assert.match(nav,/\["Stats","#live-player-stats"/);
+ assert.match(nav,/\["Players","player-stats\/"/);
  assert.match(read('assets/live-desk.css'),/@media\(max-width:590px\)/);
  assert.match(read('assets/live-desk.js'),/OPEN GAME CENTRE/);
+ assert.match(read('assets/site-nav.js'),/link\('LIVE','#live-games'/);
+ assert.match(read('index.html'),/id="hero-live-status"[^>]+href="#live-games"/);
 });
 test('ESPN boxscore maps genuine NBA game statistics instead of player predictions',()=>{
  const desk=build();
@@ -102,4 +106,20 @@ test('highlight notifications fire only for newly observed qualifying plays afte
  window.NbaLiveDesk.setFeed({games:[game],fetched_at_utc:'2026-10-31T00:02:00Z'});
  await new Promise(resolve=>setImmediate(resolve));
  assert.equal(notices.length,1,'Replaying the same play must not re-alert');
+});
+
+test('zero live games is distinguished from ten available final results',async()=>{
+ const els=new Map(),make=id=>({id,value:'',innerHTML:'',textContent:'',listeners:{},classList:{toggle(){}},
+  addEventListener(event,handler){this.listeners[event]=handler},setAttribute(){}}),get=id=>{
+   if(!els.has(id))els.set(id,make(id));return els.get(id);
+  };
+ const filters=['all','live','final','mine'].map(name=>({...make(name),dataset:{deskFilter:name}}));
+ const document={getElementById:get,querySelectorAll:selector=>selector==='[data-desk-filter]'?filters:[],addEventListener(){},dispatchEvent(){}};
+ const window={location:{pathname:'/nba-twin-lab/'},NbaScores:{label:()=> 'FINAL',melbourneDate:()=> '20261031',shiftDateKey:(key,days)=>days===-1?'20261030':days===1?'20261101':key},NbaMedia:{image:t=>t.abbr},TwinTeamPrefs:{get:()=>''}};
+ vm.runInNewContext(read('assets/live-desk.js'),{window,document,fetch:async()=>({ok:false,status:503}),Date,Intl,Promise,Notification:undefined,encodeURIComponent,CustomEvent:class{}});
+ const games=Array.from({length:10},(_,i)=>({id:String(401909277+i),date:'2026-10-3'+(i?'1':'0')+'T0'+(i%9)+':00:00Z',phase:'final',away:{abbr:'AWY',score:100+i},home:{abbr:'HME',score:90+i}}));
+ window.NbaLiveDesk.setFeed({melbourne_date:'20261031',date:'20261031',games,fetched_at_utc:'2026-10-31T04:29:00Z',espn_dates:['20261030','20261031']});
+ assert.equal(get('desk-counts').textContent,'0 LIVE · 10 FINAL · 0 UPCOMING');
+ filters.find(button=>button.dataset.deskFilter==='live').listeners.click();
+ assert.match(get('live-game-list').innerHTML,/No games are live right now\. 10 completed games are available under Final\./);
 });

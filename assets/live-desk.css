@@ -12,6 +12,12 @@
 .desk-head-actions a,.desk-head-actions button{font-size:11px;white-space:nowrap}
 .desk-source{border:1px solid #3b5368;border-radius:9px;background:#0a1625;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;gap:10px;flex-wrap:wrap;font-size:11px;margin:10px 0}
 .desk-source strong{color:#f0f7fc;font-weight:900;letter-spacing:.04em}.desk-source span{color:#9db6c7}
+.desk-date-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 2px;padding:10px;border:1px solid #29445d;border-radius:10px;background:#091625}
+.desk-date-quick{display:flex;gap:5px;flex-wrap:wrap}.desk-date-quick button{min-height:36px;padding:8px 12px;border:1px solid #36516b;border-radius:7px;background:#12263a;color:#b9cde0;font:800 10px/1 inherit;letter-spacing:.035em;text-transform:uppercase}
+.desk-date-quick button.active{background:linear-gradient(110deg,#1879ff,#2664e8);border-color:#438efc;color:#fff}
+.desk-date-bar label{display:flex;align-items:center;gap:8px;color:#a9bfd2;font-size:10px;font-weight:850;letter-spacing:.04em;text-transform:uppercase}
+.desk-date-bar input{min-height:36px;border:1px solid #36516b;border-radius:7px;background:#0f2235;color:#eef7ff;color-scheme:dark;padding:6px 9px;font:inherit}
+.desk-date-bar>span{margin-left:auto;color:#8faabd;font-size:10px;line-height:1.4}
 .desk-filters{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
 .desk-filters button{border:1px solid #374e61;background:#162a3c;padding:10px 16px;color:#b9cde0;font-size:11px;font-weight:900;letter-spacing:.025em;border-radius:7px;min-height:42px}
 .desk-filters button.active{color:#071320;background:var(--fan-accent,#ddf983);border-color:var(--fan-accent,#ddf983)}
@@ -61,6 +67,7 @@ body.v12.home #live-games~.hero-grid .lead-story h1{font-size:clamp(50px,5vw,88p
 @media(max-width:1180px){.desk-game-list{grid-template-columns:repeat(4,minmax(0,1fr))}.desk-section-top{align-items:start}}
 @media(max-width:870px){.desk-game-list{grid-template-columns:repeat(2,minmax(0,1fr))}.desk-section-top{flex-direction:column;align-items:stretch}.desk-footer{grid-template-columns:1fr}}
 @media(max-width:590px){
+ .desk-date-bar{align-items:stretch}.desk-date-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%}.desk-date-quick button{padding:8px 5px}.desk-date-bar label{justify-content:space-between;width:100%}.desk-date-bar>span{margin-left:0;width:100%}
  .live-desk{padding:12px;border-radius:10px;margin-bottom:20px}
  .desk-section-top h1{font-size:43px}
  .desk-head-actions{display:flex;width:100%}

@@ -134,6 +134,10 @@ body.v12.home .lead-story h1 em{
 }
 body.v12.home .lead-story p{max-width:425px;font-size:13px;line-height:1.75;color:#bfd4e9}
 body.v12.home .lead-actions .btn{min-height:45px;letter-spacing:.005em;font-size:11px}
+body.v12.home .hero-live-status{display:inline-flex;align-items:center;margin:11px 0 0;padding:7px 10px;border:1px solid #2c5f8d;border-radius:999px;background:#091a2dcc;color:#9fcaf0;font-size:9px;font-weight:850;letter-spacing:.07em;text-decoration:none}
+body.v12.home .hero-live-status:before{content:'';width:7px;height:7px;margin-right:7px;border-radius:50%;background:#6f8aa2;box-shadow:0 0 0 3px #6f8aa226}
+body.v12.home .hero-live-status.is-live{border-color:#e84d68;color:#ffe5ea;background:#3b1420cc}
+body.v12.home .hero-live-status.is-live:before{background:#ff4967;box-shadow:0 0 0 3px #ff496733}
 body.v12.home .hero-stamp{font-size:9px;color:#85adce;letter-spacing:.13em}
 body.v12.home .featured-box{border:1px solid #25517b!important;background:linear-gradient(160deg,#102542,#08182a)!important;border-radius:16px;overflow:hidden}
 body.v12.home .feature-head{background:#0c1d34!important;border-bottom:1px solid #254365;padding:18px}

@@ -9,6 +9,7 @@ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const numeric=x=>x!==null&&x!==undefined&&String(x).trim()!==''&&Number.isFinite(Number(x))?Number(x):null;
 const valid=id=>/^\d{7,10}$/.test(String(id||''));
 const fmtTime=x=>{const d=new Date(x);return Number.isFinite(d.getTime())?new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}).format(d):'Time unavailable'};
+const dateLabel=key=>/^\d{8}$/.test(String(key))?new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',weekday:'short',day:'numeric',month:'short',year:'numeric'}).format(new Date(Date.UTC(Number(key.slice(0,4)),Number(key.slice(4,6))-1,Number(key.slice(6,8)),12))):'selected date';
 const logo=team=>window.NbaMedia?.image?.(team.abbr,{size:'small',label:team.abbr})||'<b>'+esc(team.abbr)+'</b>';
 const status=g=>g.phase==='live'?(window.NbaScores?.label?.(g)||'LIVE'):g.phase==='final'?'FINAL':'UPCOMING';
 const gameHref=id=>{const segment=String(window.location?.pathname||'').includes('/challenge/')?'../game/':'./game/';return segment+'?id='+encodeURIComponent(String(id))};
@@ -92,6 +93,16 @@ function showGames(){
  if(!$('live-game-list'))return;
  const all=feed?.games||[];
  const filtered=filteredGames();
+ const liveCount=all.filter(g=>g.phase==='live').length,finalCount=all.filter(g=>g.phase==='final').length,upcomingCount=all.filter(g=>g.phase==='scheduled').length;
+ const empty=!all.length&&feed?.partial?'ESPN returned only one of the two required US date buckets. Results may be incomplete, so no scores are being guessed.':
+    gameFilter==='mine'&&!followedTeams().length?
+    'No teams followed yet. <a href="'+(String(window.location?.pathname||'').includes('/challenge/')?'../':'./')+'watchlist/">Manage followed teams</a> to customise this filter.':
+    gameFilter==='live'&&finalCount?'No games are live right now. '+finalCount+' completed game'+(finalCount===1?' is':'s are')+' available under Final.':
+    gameFilter==='live'?'No games are live right now for this Melbourne date. Upcoming and final games remain available in their filters.':
+    gameFilter==='final'&&upcomingCount?'No final results yet for this Melbourne date. '+upcomingCount+' game'+(upcomingCount===1?' is':'s are')+' still upcoming.':
+    gameFilter==='final'?'No completed games were returned for this Melbourne date.':
+    all.length?'No followed teams have a game on this Melbourne date.':
+    'No NBA games were returned for '+esc(dateLabel(feed?.melbourne_date||feed?.date))+'. ESPN’s adjacent US date buckets were checked.';
  $('live-game-list').innerHTML=filtered.length?filtered.map(g=>{
   const s=g.phase==='live'?'LIVE':g.phase==='final'?'FINAL':'UPCOMING';
   const points=g.phase==='scheduled'?'<span class="desk-time">'+esc(fmtTime(g.date))+'</span>':
@@ -99,11 +110,9 @@ function showGames(){
   return '<a class="desk-game '+(String(g.id)===String(selected)?'selected':'')+'" href="'+esc(gameHref(g.id))+'" aria-label="Open game centre for '+esc(g.away.abbr)+' at '+esc(g.home.abbr)+'" data-live-game="'+esc(g.id)+'">'+
   '<span class="desk-game-head"><span class="desk-status desk-status-'+(g.phase||'scheduled')+'">'+s+'</span><span>'+esc(status(g))+'</span></span>'+
   '<span class="desk-game-teams">'+logo(g.away)+'<strong>'+esc(g.away.abbr)+'</strong>'+points+'<strong>'+esc(g.home.abbr)+'</strong>'+logo(g.home)+'</span><span class="desk-game-open">OPEN GAME CENTRE ↗</span></a>';
- }).join(''):'<p class="desk-empty">'+(gameFilter==='mine'&&!followedTeams().length?
-    'No teams followed yet. <a href="'+(String(window.location?.pathname||'').includes('/challenge/')?'../':'./')+'watchlist/">Manage followed teams</a> to customise this filter.':
-    'No games match this filter.')+'</p>';
+ }).join(''):'<p class="desk-empty">'+empty+'</p>';
  // Game card links open the dedicated game centre; inline stats default to the selected game.
- if($('desk-counts'))$('desk-counts').textContent=all.filter(g=>g.phase==='live').length+' LIVE · '+all.filter(g=>g.phase==='final').length+' FINAL · '+all.filter(g=>g.phase==='scheduled').length+' UPCOMING';
+ if($('desk-counts'))$('desk-counts').textContent=(feed?.partial?'PARTIAL · ':'')+liveCount+' LIVE · '+finalCount+' FINAL · '+upcomingCount+' UPCOMING';
 }
 function sortable(rows){
  const key=sortStat,desc=sortDescending;
@@ -120,7 +129,7 @@ function renderSummary(){
  const active=filteredGames().filter(g=>g.phase!=='scheduled');
  const rows=sortable(active.flatMap(g=>(summaryCache.get(String(g.id))?.players||[]).map(p=>({...p,gameId:g.id,matchup:g.away.abbr+' @ '+g.home.abbr}))));
  const title=$('desk-matchup'),content=$('live-stats-rows');
- if(title)title.textContent=gameFilter==='all'?'ALL GAMES · TODAY’S STANDOUTS':gameFilter==='live'?'LIVE GAMES · PLAYER LEADERS':gameFilter==='final'?'FINAL GAMES · PLAYER LEADERS':gameFilter==='mine'?'FOLLOWED TEAMS · GAME LEADERS':'PLAYER STATS';
+ if(title)title.textContent=gameFilter==='all'?'GAME DAY · STANDOUTS':gameFilter==='live'?'LIVE GAMES · PLAYER LEADERS':gameFilter==='final'?'FINAL GAMES · PLAYER LEADERS':gameFilter==='mine'?'FOLLOWED TEAMS · GAME LEADERS':'PLAYER STATS';
  if($('desk-game-source'))$('desk-game-source').textContent='ESPN public game summaries · '+summaryCache.size+' available box scores · FPTS ESPN default format';
  if($('desk-sort-help'))$('desk-sort-help').textContent='Sort: '+sortStat.toUpperCase()+(sortDescending?' ↓':' ↑')+' · '+active.length+' matchups · scroll horizontally on mobile';
  if(content)content.innerHTML=rows.length?rows.map(p=>{
@@ -139,7 +148,7 @@ function renderSummary(){
  const target=$('desk-top-performers');
  if(target){
   const scorers=rows.slice().sort((a,b)=>(b.pts??-1)-(a.pts??-1)).slice(0,5);
-  target.innerHTML=scorers.length?'<div class="desk-top-title"><b>TODAY’S TOP SCORERS</b><small>Single-game standouts, not multi-game streaks</small></div><div class="desk-performance-list">'+scorers.map((p,i)=>
+  target.innerHTML=scorers.length?'<div class="desk-top-title"><b>SELECTED DAY’S TOP SCORERS</b><small>Single-game standouts, not multi-game streaks</small></div><div class="desk-performance-list">'+scorers.map((p,i)=>
    '<a href="'+esc(gameHref(p.gameId))+'" class="desk-performance"><b>#'+(i+1)+'</b><span><strong>'+esc(p.name)+'</strong><small>'+esc(p.team)+' · '+esc(p.matchup)+'</small></span><em>'+fmt(p.pts)+' PTS</em>'+
    '<small class="desk-hot-tag">'+esc(window.TwinBoxscorePlus?.performanceTag?.(p)||'GAME LEADER')+'</small></a>').join('')+'</div>':
    '<p>No verified performances are available for these games yet.</p>';
@@ -209,8 +218,25 @@ function selectGame(id){
  if(String(selected)!==String(id)){selected=String(id);lastLoaded=null;request++}
  showGames();loadSelected();
 }
+function updateDateControls(){
+ const key=String(feed?.melbourne_date||feed?.date||'');
+ const today=window.NbaScores?.melbourneDate?.(new Date());
+ for(const button of document.querySelectorAll('[data-desk-date]')){
+  const candidate=window.NbaScores?.shiftDateKey?.(today,Number(button.dataset.deskDate));
+  const active=candidate===key;
+  button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
+ }
+ const picker=$('live-date');if(picker&&/^\d{8}$/.test(key))picker.value=key.slice(0,4)+'-'+key.slice(4,6)+'-'+key.slice(6,8);
+ if($('live-date-note'))$('live-date-note').textContent='Melbourne game date: '+dateLabel(key)+' · ESPN US buckets '+(feed?.espn_dates||[]).join(' + ')+(feed?.partial?' · partial provider response':'');
+}
+function requestDate(key){
+ if(!/^\d{8}$/.test(String(key))||String(key)===String(feed?.melbourne_date||feed?.date))return;
+ document.dispatchEvent(new CustomEvent('twinlab:scoredatechange',{detail:{date:String(key)}}));
+}
 function setFeed(value){
  if(!value||!Array.isArray(value.games))return;
+ const changed=String(feed?.melbourne_date||feed?.date||'')!==String(value.melbourne_date||value.date||'');
+ if(changed){selected=null;lastLoaded=null;request++;batchRequest++;summaryCache.clear();}
  feed={...value,games:value.games.slice().sort((a,b)=>{
   const order=g=>g.phase==='live'?0:g.phase==='scheduled'?1:2;
   return order(a)-order(b)||Date.parse(a.date)-Date.parse(b.date);
@@ -223,12 +249,14 @@ function setFeed(value){
   selected=prefer?.id||null;
  }
  const freshness=Number.isFinite(Date.parse(feed.fetched_at_utc))?fmtTime(feed.fetched_at_utc):'checked just now';
- if($('live-feed-freshness'))$('live-feed-freshness').textContent='ESPN scoreboard · checked '+freshness+' · automatic refresh';
+ if($('live-feed-freshness'))$('live-feed-freshness').textContent='ESPN scoreboard · '+dateLabel(feed.melbourne_date||feed.date)+' Melbourne · checked '+freshness+' · automatic refresh';
+ updateDateControls();
  keepVisibleSelection();showGames();loadSelected();loadBatch();
 }
 function unavailable(){
  feed=null;lastLoaded=null;request++;batchRequest++;summaryCache.clear();
  if($('live-game-list'))$('live-game-list').innerHTML='<p class="desk-empty">ESPN live scoreboard unavailable. No scores or player stats are being guessed.</p>';
+ if($('desk-counts'))$('desk-counts').textContent='ESPN SCOREBOARD UNAVAILABLE';
  if($('live-feed-freshness'))$('live-feed-freshness').textContent='ESPN unavailable · no live claim';
  if($('live-stats-rows'))$('live-stats-rows').innerHTML='<tr><td colspan="6">Live player data unavailable.</td></tr>';
  if($('desk-top-performers'))$('desk-top-performers').innerHTML='<p>Verified player data unavailable.</p>';
@@ -238,6 +266,11 @@ function init(){
  if(!mounted)return;
  for(const button of document.querySelectorAll('[data-desk-filter]'))
   button.addEventListener('click',()=>{gameFilter=button.dataset.deskFilter;for(const b of document.querySelectorAll('[data-desk-filter]')){const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))}keepVisibleSelection();showGames();loadSelected();loadBatch()});
+ for(const button of document.querySelectorAll('[data-desk-date]'))button.addEventListener('click',()=>{
+  const today=window.NbaScores?.melbourneDate?.(new Date());
+  requestDate(window.NbaScores?.shiftDateKey?.(today,Number(button.dataset.deskDate)));
+ });
+ if($('live-date'))$('live-date').addEventListener('change',event=>requestDate(String(event.target.value||'').replaceAll('-','')));
  if($('live-sort'))$('live-sort').addEventListener('change',e=>{sortStat=e.target.value;sortDescending=true;renderSummary()});
  for(const b of document.querySelectorAll('[data-stat-sort]'))b.addEventListener('click',()=>{const key=b.dataset.statSort;sortDescending=sortStat===key?!sortDescending:true;sortStat=key;if($('live-sort'))$('live-sort').value=key;renderSummary()});
  const alertsButton=$('live-alerts-toggle');

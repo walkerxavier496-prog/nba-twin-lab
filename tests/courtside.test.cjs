@@ -55,7 +55,7 @@ test('homepage sports desk uses the immutable original game predictions',async()
  assert.equal(get('home-locked').textContent,'1');
  assert.equal((get('home-ticker').innerHTML.match(/court-ticker__item/g)||[]).length,10);
  assert.equal((get('featured-game').innerHTML.match(/class="club-mark/g)||[]).length,2);
- assert.match(get('featured-game').innerHTML,/ELO PICK/);
+ assert.match(get('featured-game').innerHTML,/WIN PROBABILITY · HISTORICAL ELO/);
  assert.doesNotMatch(get('featured-game').innerHTML,/LIVE SCORE/);
 });
 

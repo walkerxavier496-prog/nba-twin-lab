@@ -35,6 +35,40 @@ test('fresh ESPN score is never guessed and requires a valid provider response',
  await assert.rejects(()=>scores.fetchDate('20261030',{fetchImpl:async()=>({ok:false,status:503})}),/HTTP 503/);
  await assert.rejects(()=>scores.fetchDate('20261030',{fetchImpl:async()=>({ok:true,json:async()=>({noEvents:true})})}),/events array/);
 });
+test('Melbourne game day merges the adjacent ESPN US dates and excludes the next local day',async()=>{
+ const scores=adapter(),requested=[];
+ const event=(id,date,kind)=>{const fixture=sample(kind);fixture.events[0].id=id;fixture.events[0].date=date;return fixture.events[0]};
+ const payloads={
+  20261030:{events:[event('401909277','2026-10-30T23:00:00Z','final')]},
+  20261031:{events:[
+   event('401909288','2026-10-31T10:00:00Z','scheduled'),
+   event('401909896','2026-10-31T19:00:00Z','scheduled')
+  ]}
+ };
+ const feed=await scores.fetchMelbourneDate('20261031',{fetchImpl:async url=>{
+  const key=new URL(url).searchParams.get('dates');requested.push(key);
+  return {ok:true,json:async()=>payloads[key]};
+ }});
+ assert.deepEqual(requested,['20261030','20261031']);
+ assert.equal(scores.melbourneDate('2026-10-30T23:00:00Z'),'20261031');
+ assert.equal(scores.melbourneDate('2026-10-31T19:00:00Z'),'20261101');
+ assert.equal(scores.shiftDateKey('20261031',-1),'20261030');
+ assert.deepEqual(Array.from(feed.games,g=>g.id),['401909277','401909288']);
+ assert.equal(feed.games[0].phase,'final','Prior US date final must remain visible on the Melbourne day');
+ assert.equal(feed.games[1].phase,'scheduled','Same-day upcoming game remains visible when its Melbourne tip date matches');
+ assert.deepEqual(Array.from(feed.espn_dates),['20261030','20261031']);
+ assert.equal(feed.partial,false);
+});
+test('Melbourne scoreboard fails closed only when both ESPN date buckets fail',async()=>{
+ const scores=adapter();
+ const partial=await scores.fetchMelbourneDate('20261031',{fetchImpl:async url=>{
+  const key=new URL(url).searchParams.get('dates');
+  if(key==='20261031')return {ok:false,status:503};
+  return {ok:true,json:async()=>sample('final')};
+ }});
+ assert.equal(partial.games.length,1);assert.equal(partial.partial,true);
+ await assert.rejects(()=>scores.fetchMelbourneDate('20261031',{fetchImpl:async()=>({ok:false,status:503})}),/Melbourne scoreboard unavailable/);
+});
 test('homepage shows genuine sourced score separately from frozen pregame predictions',async()=>{
  const scores=adapter();
  const ledger=JSON.parse(read('data/audit-ledger.json'));
@@ -50,7 +84,8 @@ test('homepage shows genuine sourced score separately from frozen pregame predic
  };
  const document={getElementById:get};
  let latestFeed=null;
- const window={NbaLiveDesk:{setFeed:v=>{latestFeed=v},unavailable:()=>{}},NbaScores:{...scores,fetchDate:async()=>({date:'20261030',games:scores.parse(sample('live')),fetched_at_utc:'2026-10-31T00:02:00Z'})}};
+ const liveResult={date:'20261031',melbourne_date:'20261031',games:scores.parse(sample('live')),fetched_at_utc:'2026-10-31T00:02:00Z',espn_dates:['20261030','20261031']};
+ const window={NbaLiveDesk:{setFeed:v=>{latestFeed=v},unavailable:()=>{}},NbaScores:{...scores,melbourneDate:()=> '20261031',fetchDate:async()=>liveResult,fetchMelbourneDate:async()=>liveResult}};
  const payloads={'./data/audit-ledger.json':ledger,
   './data/five-model-report.json':{common_evaluation:{games:3643}},
   ['./'+entry.lock_path]:original,
@@ -63,7 +98,7 @@ test('homepage shows genuine sourced score separately from frozen pregame predic
  assert.match(card,/ELO PICK/);
  assert.match(get('scoreboard-source').textContent,/ARCHIVED PREGAME FORECASTS/);
  assert.ok(latestFeed&&latestFeed.games[0].away.score===47,'Real scores must reach the independent live desk');
- assert.match(get('feature-detail').textContent,/NOT A PREDICTION/);
+ assert.match(get('feature-detail').textContent,/Archived pretip forecast/);
  assert.match(get('feature-confidence').innerHTML,/MODELS DISAGREE/);
  assert.match(get('feature-confidence').innerHTML,/25\.1 PERCENTAGE POINTS/);
  const untouched=original.forecasts.find(g=>g.game_id==='401909277');

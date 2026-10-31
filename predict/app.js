@@ -219,10 +219,10 @@ function available(){
  return range==='final'?list.reverse():list;
 }
 async function refreshLiveScores(){
- if(!liveSource?.fetchDate||!liveSource?.usDate)return;
+ if(!liveSource?.fetchDate)return;
  try{
-  const d=liveSource.usDate(new Date());
-  const source=await liveSource.fetchDate(d);
+  const d=liveSource.melbourneDate?.(new Date())||liveSource.usDate?.(new Date());
+  const source=liveSource.fetchMelbourneDate?await liveSource.fetchMelbourneDate(d):await liveSource.fetchDate(d);
   if(!Array.isArray(source.games)||!source.games.length)throw Error('No games returned');
   liveScoreFeed=source;
  }catch(err){liveScoreFeed=null;}
