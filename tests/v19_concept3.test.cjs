@@ -89,8 +89,9 @@ test('Player Stats is a distinct route from live NBA box scores',()=>{
  assert.ok(player.includes('Live Box Scores'));
  assert.ok(home.includes('LIVE GAMES <em>& BOX SCORES.</em>'));
  const css=read('assets/v19-concept3.css');
- assert.ok(css.includes('images.unsplash.com/photo-1752166672426-3bf676f61248'));
- assert.ok(home.includes('Luke Miller / Unsplash'));
+ assert.ok(css.includes('LeBron_James%27_pregame_ritual.jpg'));
+ assert.ok(home.includes('Photo by Keith Allison'));
+ assert.ok(home.includes('creativecommons.org/licenses/by-sa/2.0/'));
  assert.ok(!css.includes('photo-1783826352825-d2bf5a0e302a'));
  assert.ok(!read('assets/team-prefs.js').includes('function render()'),'No useless header team selector');
  assert.ok(!css.includes('.v19-hero-athlete'));
