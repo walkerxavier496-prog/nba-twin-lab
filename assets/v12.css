@@ -240,3 +240,64 @@ select{color:var(--ink)}
   .site-footer{display:block}.site-footer span{display:block;margin:5px 0}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* V12 Predictor: same graphical grammar as the match centre, not legacy dark UI. */
+.predictor-top{display:grid;grid-template-columns:minmax(260px,.55fr) minmax(0,1.45fr);gap:12px;margin:15px 0 28px}
+.predictor-top .daily-panel{margin-bottom:0}
+.predictor-top .hero-value{font:900 53px var(--heading);margin:13px 0 4px}
+.predictor-top .kicker{color:#687c89;font-weight:850;font-size:11px;margin-top:8px}
+.predictor-top .kicker #signal{color:var(--green)}
+.predictor-top .minirow{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding:11px 0;font-size:11px}
+.predictor-top .minirow span{color:var(--sub)}.predictor-top .minirow strong{text-align:right}
+.predictor-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.predictor-metrics>div{border:1px solid var(--line);background:#fff;border-radius:9px;padding:17px;min-width:0}
+.predictor-metrics small{font-size:10px;font-weight:900;color:#6a7d88;letter-spacing:.08em;display:block}
+.predictor-metrics strong{font:900 35px var(--heading);display:block;color:var(--ink);margin:9px 0 2px}
+.predictor-metrics span{font-size:10px;color:#81919c}
+.model-notice{background:#eaf0fc;border:1px solid #cbd8ec;padding:13px 16px;border-radius:8px;color:#4a5c76;font-size:11px}
+.model-notice a{color:var(--blue);font-weight:900}
+.predictor-toolbar{display:grid;grid-template-columns:1.3fr .9fr 1fr 1fr;gap:10px;margin-bottom:18px}
+.predictor-toolbar label{display:grid;min-width:0;gap:6px;font-size:10px;font-weight:900;letter-spacing:.07em;color:#758690}
+.predictor-toolbar :is(select,input){display:block;min-width:0;width:100%;background:#f9fafb;border:1px solid var(--line);border-radius:7px;padding:11px 9px;color:var(--ink);min-height:44px;font-size:12px}
+.matchup-layout{display:grid;grid-template-columns:minmax(225px,.72fr) minmax(0,1.28fr);align-items:start;gap:13px}
+.games{display:grid;gap:8px;max-height:880px;overflow-y:auto;padding-right:4px}
+.games .game{width:100%;display:block;text-align:left;padding:15px;border:1px solid var(--line);background:#f9fbfb;color:var(--ink);border-radius:8px;min-height:90px}
+.games .game:hover,.games .game.active{background:#edf2ff;border-color:var(--blue);box-shadow:inset 3px 0 0 var(--blue)}
+.games .game-top{display:flex;justify-content:space-between;font-size:10px;color:#71818d;margin-bottom:12px;gap:7px}
+.games .teams-line{display:flex;align-items:center;justify-content:space-between;gap:10px}.games .teams-line strong{font:900 27px var(--heading)}.games .teams-line .versus{font-size:9px;color:#8b9baa;font-weight:900}
+.games .pills{display:flex;gap:5px;margin-top:12px}
+.games .pill{border:1px solid #dce3e9;background:#fff;font-size:10px;letter-spacing:0}
+.games .pill.gold{background:#dfe9ff;border-color:#d5e1ff;color:var(--blue)}
+.detail{background:#f9fbfc;border:1px solid var(--line);border-radius:9px;padding:18px;min-width:0;position:sticky;top:90px}
+.detail .headrow{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:10px}
+.detail .badge{background:#e8eef9;color:#385bb7;font-size:10px;padding:5px 8px;border-radius:5px}
+.detail h3{font:900 34px var(--heading);margin:16px 0 12px}
+.detail .odds{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.detail .odds>div{background:#fff;padding:15px;border:1px solid var(--line);border-radius:7px}
+.detail .odds .name{font-size:10px;color:#72828e;font-weight:900}
+.detail .odds .pct{font:900 52px var(--heading);letter-spacing:.01em}
+.detail .bar{height:9px;background:#d5e4fb;display:block;margin:10px 0 17px}
+.detail .bar span{display:block;height:100%;background:var(--blue)}
+.detail .forecast{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:15px}
+.detail .forecast>div{border:1px solid var(--line);border-radius:7px;padding:12px;background:#fff}
+.detail .forecast strong{display:block;font:900 24px var(--heading)}.detail .forecast small{color:#81919d;font-size:10px}
+.detail .split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.detail .split>div{padding:12px;border:1px solid var(--line);border-radius:7px;background:#fff;min-width:0}
+.detail h4{font:900 22px var(--heading);margin:0 0 11px}
+.detail .metricrow{display:flex;justify-content:space-between;gap:7px;border-bottom:1px solid #edf1f3;padding:6px 0;font-size:10px}
+.detail .metricrow span{color:#768692}.detail .metricrow b{text-align:right}
+.detail .context{font-size:11px;color:#73838d;line-height:1.6}
+.detail .disclaimer{border-top:1px solid var(--line);margin-top:19px;padding-top:13px;font-size:10px;color:#85939d}
+.detail .empty,.games .empty,.detail .placeholder{padding:25px 17px;text-align:center;color:#7b8996}
+.detail .placeholder h3{font-size:31px}
+#method .action-grid{margin-top:17px}
+#power,#method{margin-top:17px}
+.stats-details{margin:12px 0}
+.stats-details summary{list-style:none;cursor:pointer;font-size:10px;font-weight:900;letter-spacing:.06em;color:var(--blue);padding:11px 13px;border:1px solid var(--line);border-radius:6px;width:max-content;max-width:100%}
+.stats-details summary:hover{background:#f2f5ff}
+.stats-details[open] summary{margin-bottom:12px}
+.model-grid .model-card{min-height:0}
+.model-grid .model-card .eyebrow{font-size:10px}
+.model-grid .model-card p{font-size:11px}
+@media(max-width:950px){.predictor-top{grid-template-columns:1fr}.matchup-layout{grid-template-columns:1fr}.detail{position:static}.games{display:flex;max-height:none;overflow:auto;padding-bottom:9px}.games .game{flex:0 0 236px}}
+@media(max-width:590px){.predictor-metrics{grid-template-columns:repeat(2,1fr)}.predictor-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.predictor-metrics strong{font-size:29px}.detail{padding:13px}.detail .odds .pct{font-size:43px}.detail .forecast strong{font-size:20px}.detail .split{grid-template-columns:1fr}.games .game{flex-basis:210px}.games .teams-line strong{font-size:23px}}
