@@ -97,21 +97,70 @@ function modelCards(g){
  '<small>'+esc(favour)+' pick</small></div>';
  }).join('')+'</div>';
 }
+function basketballFactors(g){
+ const info=otherInfo(g),a=info.away?.season,h=info.home?.season;
+ if(!info.available||!a||!h)return [];
+ const pc=v=>numbers(v)?(v*100).toFixed(1)+'%':'—';
+ const diff=(x,y)=>numbers(x)&&numbers(y)?(100*(x-y)).toFixed(1)+' pp':'—';
+ const reason=(text,detail,why)=>({text,detail,why});
+ const notes=[];
+ // Observable 3PA share is NOT "uncontested" or shot-quality tracking.
+ if([a.three_rate,h.three_rate,a.opp_three_rate,h.opp_three_rate].every(numbers)){
+  const cha=a.three_rate-h.opp_three_rate,was=h.three_rate-a.opp_three_rate;
+  const stronger=cha>was?'away':'home',side=stronger==='away'?g.away:g.home;
+  notes.push(reason('Three-point volume matchup',
+   g.away.abbr+' attempts '+pc(a.three_rate)+' of shots from three vs '+g.home.abbr+
+   ' allowing '+pc(h.opp_three_rate)+' opponent 3PA. '+g.home.abbr+' attempts '+pc(h.three_rate)+
+   ' vs '+g.away.abbr+' allowing '+pc(a.opp_three_rate)+'.',
+   'Shot-profile fit: '+side.abbr+' has the larger relative three-point frequency opportunity ('+diff(stronger==='away'?a.three_rate:h.three_rate,stronger==='away'?h.opp_three_rate:a.opp_three_rate)+'). Attempt share is not open-shot quality.'));
+ }
+ if([a.efg,h.efg,a.opp_efg,h.opp_efg].every(numbers)){
+  notes.push(reason('Shooting efficiency vs defence',
+   g.away.abbr+' eFG '+pc(a.efg)+' vs '+g.home.abbr+' opponent eFG allowed '+pc(h.opp_efg)+
+   '; '+g.home.abbr+' eFG '+pc(h.efg)+' vs '+g.away.abbr+' allowed '+pc(a.opp_efg)+'.',
+   'Compare both attacks with what the opposing defence actually concedes; small early-season samples may exaggerate edges.'));
+ }
+ if([a.tov_rate,h.tov_rate,a.opp_tov_rate,h.opp_tov_rate].every(numbers)){
+  notes.push(reason('Ball security and pressure',
+   g.away.abbr+' turnover rate '+pc(a.tov_rate)+' vs '+g.home.abbr+' forcing '+pc(h.opp_tov_rate)+
+   '; '+g.home.abbr+' turnover rate '+pc(h.tov_rate)+' vs '+g.away.abbr+' forcing '+pc(a.opp_tov_rate)+'.',
+   'High giveaway rates create transition opportunities. These are observed possession rates, not guaranteed steals.'));
+ }
+ if([a.orb_rate,h.orb_rate,a.drb_rate,h.drb_rate].every(numbers)){
+  notes.push(reason('Second-chance possessions',
+   g.away.abbr+' offensive rebound rate '+pc(a.orb_rate)+' vs '+g.home.abbr+
+   ' defensive rebound rate '+pc(h.drb_rate)+'; '+g.home.abbr+' offensive rebound rate '+pc(h.orb_rate)+
+   ' vs '+g.away.abbr+' defensive rebound rate '+pc(a.drb_rate)+'.',
+   'An offensive glass advantage can offset inefficient shooting; these paired rates are not a calculated rebounding forecast.'));
+ }
+ if(numbers(a.pace)&&numbers(h.pace)){
+  notes.push(reason('Pace and possession environment',
+   g.away.abbr+' '+a.pace.toFixed(1)+' vs '+g.home.abbr+' '+h.pace.toFixed(1)+' estimated possessions per 48 minutes.',
+   'The faster team may push tempo; the realised pace depends on both teams and actual rotations.'));
+ }
+ return notes;
+}
 function injuryFactors(g){
  const away=teamData(g,'away'),home=teamData(g,'home');
- const m=models(g);const mp=MODELS.map(([id])=>m[id]).filter(p=>p?.available&&numbers(p.home_win_probability)).map(p=>p.home_win_probability);
+ const m=models(g),mp=MODELS.map(([id])=>m[id]).filter(p=>p?.available&&numbers(p.home_win_probability)).map(p=>p.home_win_probability);
  const spread=mp.length>1?(Math.max(...mp)-Math.min(...mp))*100:null;
- const info=otherInfo(g);
- const factors=[
- ['✚','Official pretip absences',g.away.abbr+' '+away.absent.length+' OUT · '+g.home.abbr+' '+home.absent.length+' OUT'],
- ['♧','Rotation evidence','Projected player minutes; confirmed starters unavailable'],
- ['↗','Model disagreement',spread===null?'Insufficient comparable model probabilities':spread.toFixed(1)+' percentage-point spread across '+mp.length+' models'],
- ['◷','Game-day inputs',info.available?'Pregame research snapshot available · not confirmed lineup':'Verified current-season roster source unavailable at lock cutoff'],
- ['⊙','Forecast integrity','Historical team ratings; saved official injury sidecar did not change these model probabilities']
- ];
+ const f=basketballFactors(g);
+ const factors=f.slice(0,4).map((x,i)=>['◉',x.text,x.detail+' '+x.why]);
+ const absent=[...away.absent.map(x=>x.name+' ('+g.away.abbr+')'),...home.absent.map(x=>x.name+' ('+g.home.abbr+')')];
+ factors.push(['✚','Availability and rotation',
+  (absent.length?'Officially OUT: '+absent.join(', ')+'. ':'No officially OUT players in the frozen projection list. ')+
+  'Lineups are inferred, not confirmed; official injury data was captured separately and DID NOT change locked probabilities.']);
+ factors.push(['↗','Six-model uncertainty',
+  spread===null?'Comparable model probabilities unavailable.':
+  spread.toFixed(1)+' percentage points between most bullish and bearish models. This spread is model disagreement, NOT a calibrated confidence interval.']);
+ if(!f.length)return '<p class="c3-muted">No reliable two-team pretip basketball statistics were available at the forecast cutoff.</p>';
  return '<div class="c3-factors">'+factors.map(([icon,title,detail])=>
   '<div class="c3-factor"><span class="c3-factor-icon" aria-hidden="true">'+icon+'</span>'+
-  '<div><b>'+esc(title)+'</b><small>'+esc(detail)+'</small></div></div>').join('')+'</div>';
+  '<div><b>'+esc(title)+'</b><small>'+esc(detail)+'</small></div></div>').join('')+'</div>'+
+ '<p class="c3-source-note">Verified cutoff '+esc(state.snapshot?.built_at_utc||'unknown')+
+ ' · current season samples: '+esc(g.away.abbr)+' '+(state.snapshot?.teams?.find(t=>canonicalTeam(t.abbr)===canonicalTeam(g.away.abbr))?.season?.games||'—')+
+ ', '+esc(g.home.abbr)+' '+(state.snapshot?.teams?.find(t=>canonicalTeam(t.abbr)===canonicalTeam(g.home.abbr))?.season?.games||'—')+
+ ' games. Descriptive observations only; no proven causal contribution to this locked probability.</p>';
 }
 function predictionPanel(g){
  const selection=selectedModel(g),p=selection?.home,away=numbers(p)?1-p:null;
