@@ -1,0 +1,61 @@
+/* Concept 3 / My NBA: a personal sports dashboard, not a static settings list. */
+body.v12 .watchlist-main{max-width:1510px;padding-top:18px}
+body.v12 .watchlist-hero{position:relative;display:grid;grid-template-columns:1.2fr .9fr;align-items:stretch;gap:18px;min-height:340px;
+padding:32px clamp(25px,4vw,50px);background:radial-gradient(ellipse 60% 110% at 90% 0%,#3d348455,transparent 80%),radial-gradient(ellipse 40% 90% at 7% 110%,#1471ff3b,transparent 75%),linear-gradient(140deg,#0a1b31,#0e2947)!important;
+border:1px solid #2e567e;border-radius:17px;overflow:hidden}
+body.v12 .watchlist-hero:before{content:"";position:absolute;inset:0 38% 0 0;pointer-events:none;background:repeating-radial-gradient(ellipse at 90% 120%,transparent 0 78px,#65c6fa18 80px 81px,transparent 83px 111px)}
+body.v12 .watch-hero-copy{position:relative;z-index:1;max-width:640px;align-self:center}
+body.v12 .watchlist-hero h1{font:900 clamp(42px,5.5vw,77px)/.98 "DM Sans",Inter,system-ui,sans-serif;letter-spacing:-.075em;margin:19px 0}
+body.v12 .watchlist-hero h1 em{background:linear-gradient(110deg,#24c2fb,#4b7ffa,#9557ff);-webkit-background-clip:text;background-clip:text;color:transparent!important;font-style:normal}
+body.v12 .watchlist-hero p{font-size:13px;line-height:1.7;color:#bcd2e8;max-width:500px;margin-top:16px}
+body.v12 .watchlist-hero .watch-privacy-note{font-size:10px;color:#83a6c4;line-height:1.4}
+body.v12 .watch-hero-spotlight{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:11px;
+padding:25px 29px;background:linear-gradient(150deg,#112e51d9,#09192bdd);border:1px solid #30628d;border-radius:14px;box-shadow:0 12px 50px #0002;min-width:0}
+body.v12 .watch-spotlight-logos{display:flex;align-items:center;gap:5px;margin-bottom:14px}
+body.v12 .watch-spotlight-logos>a{width:65px;height:65px;display:grid;place-items:center;border-radius:50%;background:#092138;border:1px solid #32648b;margin-right:-10px;transition:transform .15s}
+body.v12 .watch-spotlight-logos>a:hover{transform:translateY(-5px);z-index:3}
+body.v12 .watch-spotlight-logos .team-logo{width:60px!important;height:60px!important}
+body.v12 .watch-hero-spotlight p{font-size:10px;font-weight:850;letter-spacing:.16em;color:#52d3ff;margin:0}
+body.v12 .watch-hero-spotlight strong{font:900 clamp(23px,2.5vw,34px)/1.18 "DM Sans",Inter,sans-serif;letter-spacing:-.04em;color:#fff}
+body.v12 .watch-hero-spotlight small{font-size:11px;color:#95b7d7;line-height:1.65}
+body.v12 .watch-spotlight-action{display:inline-flex;align-items:center;justify-content:center;margin-top:12px;background:linear-gradient(110deg,#168dff,#315ff0);border-radius:9px;padding:12px 16px;font:850 11px Inter,sans-serif;color:#fff!important;text-decoration:none}
+body.v12 .watch-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:13px 0}
+body.v12 .watch-overview>div{display:flex;align-items:center;gap:14px;padding:16px 21px;background:#0b2138;border:1px solid #244a70;border-radius:11px}
+body.v12 .watch-overview strong{font:900 33px "DM Sans",Inter,sans-serif;letter-spacing:-.05em}
+body.v12 .watch-overview span{font:850 10px Inter,sans-serif;color:#8bafd1;letter-spacing:.07em}
+body.v12 .watchlist-summary{background:#0b1c30;color:#93afc9;font-size:10px;border:1px solid #234361;padding:11px 17px;margin:12px 0 18px;border-radius:9px}
+body.v12 .watchlist-grid{grid-template-columns:1.2fr .85fr;gap:14px}
+body.v12 .watchlist-panel{padding:21px;background:linear-gradient(155deg,#10253f,#09192d)!important;border:1px solid #254a6a!important;border-radius:14px}
+body.v12 .watchlist-panel h2{font:900 26px "DM Sans",Inter,sans-serif;letter-spacing:-.05em;margin:0 0 18px}
+body.v12 .watchlist-items{gap:10px}
+body.v12 .watch-team-card{display:flex;align-items:stretch;justify-content:space-between;gap:8px;background:linear-gradient(125deg,#102845,#0d1e32);border:1px solid #2b5072;border-radius:11px;padding:10px;transition:border-color .15s,transform .15s}
+body.v12 .watch-team-card:hover{transform:translateY(-2px);border-color:#55b0fc}
+body.v12 .watch-team-main{display:flex;align-items:center;gap:16px;min-width:0;flex:1;text-decoration:none!important;padding:7px}
+body.v12 .watch-logo{width:72px;height:72px;display:grid;place-items:center;flex:none;background:#0a1c31;border:1px solid #244d74;border-radius:12px}
+body.v12 .watch-logo .team-logo{width:66px!important;height:66px!important}
+body.v12 .watch-team-identity{display:flex;flex-direction:column;min-width:0;gap:6px}
+body.v12 .watch-team-identity>small{color:#63c4ff;font-size:9px;font-weight:850;letter-spacing:.08em}
+body.v12 .watch-team-identity>strong{font:850 clamp(14px,1.5vw,18px) "DM Sans",Inter,sans-serif;color:#f0f8ff;letter-spacing:-.025em}
+body.v12 .watch-team-record{font-size:12px;color:#bad8ef;font-weight:850}
+body.v12 .watch-team-record i{font-size:9px;color:#829db8;font-style:normal}
+body.v12 .watch-team-identity .watch-next{font-size:10px;color:#82b7dd}
+body.v12 .watch-open{font-size:23px;color:#59c5ff;margin-left:auto}
+body.v12 .watchlist-remove{align-self:center;border-color:#2b5576!important;background:#112b46!important;color:#8fd2ff!important;font-size:9px;font-weight:850;min-width:86px;min-height:40px}
+body.v12 .watchlist-remove:hover{border-color:#4fa1f9!important;background:#1d4366!important}
+body.v12 .watch-player-card{position:relative;background:linear-gradient(135deg,#163451,#0a1b31);border:1px solid #315477;border-radius:12px;overflow:hidden;min-height:280px}
+body.v12 .watch-player-main{display:flex;align-items:stretch;color:inherit!important;text-decoration:none!important;min-height:235px}
+body.v12 .watch-player-art{position:relative;flex:0 0 53%;background:radial-gradient(ellipse at 48% 115%,#367bdb6e,transparent 80%),linear-gradient(135deg,#0d3051,#10203e);overflow:hidden}
+body.v12 .watch-player-art img{position:absolute;z-index:2;bottom:0;width:112%;height:100%;object-fit:contain;object-position:center bottom;left:-4%}
+body.v12 .watch-player-initial{position:absolute;inset:0;display:grid;place-items:center;color:#3f6795;font:900 130px "DM Sans",sans-serif;z-index:0}
+body.v12 .watch-player-data{flex:1;display:flex;flex-direction:column;gap:10px;justify-content:center;padding:20px 17px}
+body.v12 .watch-player-data>small{font-size:9px;color:#63caff;font-weight:850;letter-spacing:.04em}
+body.v12 .watch-player-data>strong{font:900 clamp(23px,2.2vw,32px)/1.15 "DM Sans",sans-serif;letter-spacing:-.045em}
+body.v12 .watch-player-data>span{font-size:11px;line-height:1.6;color:#bed9ed}
+body.v12 .watch-player-data>b{font-size:10px;color:#77d1ff;letter-spacing:.05em}
+body.v12 .watch-player-card .watchlist-remove{position:absolute;right:12px;bottom:12px;z-index:3;min-width:100px}
+body.v12 .watchlist-bottom a{background:#112b4a!important;border-color:#2e5880!important;color:#94d2ff!important;border-radius:8px!important}
+body.v12 .watchlist-bottom a:hover{background:#164073!important;color:#fff!important}
+body.v12 .watchlist-empty a{display:inline-flex;margin-top:12px;color:#8ad1ff}
+@media(max-width:1000px){body.v12 .watchlist-hero{grid-template-columns:1fr 1fr;min-height:285px}body.v12 .watchlist-grid{grid-template-columns:1fr 1fr}body.v12 .watch-team-main{gap:10px}body.v12 .watch-logo{width:53px;height:53px}body.v12 .watch-logo .team-logo{width:48px!important;height:48px!important}body.v12 .watch-player-main{display:block}body.v12 .watch-player-art{height:180px}body.v12 .watch-player-card .watchlist-remove{position:static;margin:0 12px 12px}}
+@media(max-width:730px){body.v12 .watchlist-hero{grid-template-columns:1fr;padding:24px;gap:17px}body.v12 .watchlist-hero h1{font-size:clamp(42px,9vw,63px)}body.v12 .watch-hero-spotlight{padding:18px}body.v12 .watch-overview{grid-template-columns:repeat(3,minmax(0,1fr))}body.v12 .watch-overview>div{display:block;padding:13px 10px}body.v12 .watch-overview strong{font-size:26px}body.v12 .watch-overview span{font-size:8px;display:block;margin-top:7px}body.v12 .watchlist-grid{grid-template-columns:1fr}body.v12 .watch-team-card{padding:8px}body.v12 .watch-team-main{gap:9px}body.v12 .watch-team-identity>strong{font-size:14px}body.v12 .watchlist-remove{min-width:40px;font-size:8px;padding:7px}body.v12 .watch-player-main{display:flex;min-height:195px}body.v12 .watch-player-art{height:auto;flex:0 0 45%}body.v12 .watch-player-data{padding:15px 12px}body.v12 .watch-player-data>strong{font-size:24px}}
+@media(prefers-reduced-motion:reduce){body.v12 .watch-team-card{transition:none}}
