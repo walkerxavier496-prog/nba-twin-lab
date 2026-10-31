@@ -33,6 +33,14 @@ function featured(entry,lock){
   return '<a class="court-ticker__item" href="./challenge/daily.html?game='+encodeURIComponent(game.game_id)+'#matchups" aria-label="'+esc(game.away.name+' at '+game.home.name+' locked forecast')+'">'+
     '<b>'+esc(game.away.abbr)+'</b><small>AT</small><b>'+esc(game.home.abbr)+'</b><small>ELO '+esc(p.winner)+' '+pct(p.winner_probability)+'</small></a>';
  }).join('');
+ if($('home-games'))$('home-games').innerHTML=lock.forecasts.map(game=>{
+  const p=game.primary_forecast;
+  if(!p||!Number.isFinite(p.winner_probability))return '';
+  return '<a class="home-game" href="./challenge/daily.html?game='+encodeURIComponent(game.game_id)+'#matchups">'+
+   '<div class="home-game__top"><span>'+esc(formatTime(game.tip_utc))+'</span><span>PRETIP</span></div>'+
+   '<div class="home-game__teams"><span class="club-mark" data-team="'+esc(game.away.abbr)+'">'+esc(game.away.abbr)+'</span><span class="home-game__vs">AT</span><span class="club-mark" data-team="'+esc(game.home.abbr)+'">'+esc(game.home.abbr)+'</span></div>'+
+   '<div class="home-game__foot"><span>ELO PICK <strong>'+esc(p.winner)+'</strong></span><strong>'+pct(p.winner_probability)+'</strong></div></a>';
+ }).join('');
 }
 Promise.allSettled([
  read('./data/audit-ledger.json'),
