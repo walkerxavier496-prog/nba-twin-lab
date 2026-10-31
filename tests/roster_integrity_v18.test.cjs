@@ -79,4 +79,9 @@ test('v18 frontend must display roster gate without rewriting original 31 Octobe
  const locked=JSON.parse(fs.readFileSync(path.join(__dirname,'../practice/2026-10-31-melbourne/forecast.lock.json')));
  assert.equal(locked.scope.games,10);
  assert.equal(locked.forecasts[0].primary_forecast.winner,'CHA');
+ const nextTracker=fs.readFileSync(path.join(__dirname,'../scripts/daily_tracker.cjs'),'utf8');
+ assert.ok(nextTracker.includes('v18_roster_integrity: rosterIntegrity'));
+ assert.ok(nextTracker.includes('RI.auditGame({game,snapshot,availability:officialAvailability,now})'));
+ const feed=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/availability-current.json')));
+ assert.equal(feed.status,'unavailable','Do not fabricate a verified official live injury feed');
 });
