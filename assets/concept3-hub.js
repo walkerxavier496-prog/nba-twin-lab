@@ -233,16 +233,28 @@ function lineupPanel(g){
  '<p class="c3-source-note">Important: lineup groups show estimated minutes from the frozen forecast. Official OUT designations are excluded. Players not on the injury report are not necessarily confirmed to play.</p>';
 }
 function modelBreakdownPanel(g){
- const m=models(g),source=selectedModel(g);
- return '<div class="c3-panel"><h3>Six prediction engines · pretip audit</h3>'+
- '<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>ENGINE</th><th>PICK</th><th>AWAY %</th><th>HOME %</th><th>PREDICTED SCORE</th></tr></thead><tbody>'+
+ const m=models(g),review=reviewFor(g),final=scoreFor(g),completed=!!final;
+ return '<div class="c3-panel"><div class="c3-panel-title"><h3>Six prediction engines · pretip audit</h3>'+
+ '<span class="c3-status '+(completed?'c3-final':'')+'">'+(completed?'VERIFIED FINAL':'AWAITING FINAL')+'</span></div>'+
+ (completed?'<p class="c3-source-note">Actual '+esc(g.away.abbr)+' '+final.away+' – '+final.home+' '+esc(g.home.abbr)+
+ '. The original locked predictions remain unchanged.</p>':'')+
+ '<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>ENGINE</th><th>LOCKED PICK</th>'+
+ '<th>AWAY %</th><th>HOME %</th><th>PREDICTED SCORE</th>'+
+ (completed?'<th>VERDICT</th><th>BRIER ↓</th><th>LOG LOSS ↓</th>':'')+
+ '</tr></thead><tbody>'+
  MODELS.map(([id,label])=>{
- const row=m[id],hp=row?.available?row.home_win_probability:null;
- const projected=row?.projected_score;
- return '<tr><td>'+esc(label)+'</td><td>'+esc(numbers(hp)?hp>=.5?g.home.abbr:g.away.abbr:'—')+
- '</td><td>'+pct(numbers(hp)?1-hp:null)+'</td><td>'+pct(hp)+'</td><td>'+num0(projected?.away)+' – '+num0(projected?.home)+'</td></tr>';
+  const row=m[id],hp=row?.available?row.home_win_probability:null;
+  const projected=row?.projected_score,grade=review?.models?.[id];
+  return '<tr><td>'+esc(label)+'</td><td>'+esc(numbers(hp)?hp>=.5?g.home.abbr:g.away.abbr:'—')+
+  '</td><td>'+pct(numbers(hp)?1-hp:null)+'</td><td>'+pct(hp)+'</td>'+
+  '<td>'+num0(projected?.away)+' – '+num0(projected?.home)+'</td>'+
+  (completed?'<td class="'+(grade?.correct?'c3-correct':'c3-incorrect')+'">'+
+   (grade?(grade.correct?'✓ CORRECT':'✕ WRONG'):'PENDING AUDIT')+'</td>'+
+   '<td>'+num(grade?.brier,3)+'</td><td>'+num(grade?.log_loss,3)+'</td>':'')+'</tr>';
  }).join('')+'</tbody></table></div>'+
- '<p class="c3-source-note">Model values saved before tipoff · '+esc(dateStatus())+'. Sidecar injuries were captured but not fed back into those probabilities. Original Elo win chance: '+pct(g.primary_forecast?.winner_probability)+'.</p></div>';
+ '<p class="c3-source-note">Model values saved before tipoff · '+esc(dateStatus())+
+ '. Official injury data was captured in the sidecar but did not feed back into the saved probabilities. Original Elo win chance: '+
+ pct(g.primary_forecast?.winner_probability)+'.</p></div>';
 }
 function matchupPanel(g){
  const context=otherInfo(g),review=reviewFor(g),final=scoreFor(g);
