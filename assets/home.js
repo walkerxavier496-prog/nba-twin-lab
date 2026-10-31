@@ -20,7 +20,7 @@ let archive=null,liveFeed=null;
 function matchingForecast(game){
  return archive?.lock.forecasts?.find(g=>String(g.game_id)===String(game.id))||null;
 }
-function gameLink(game){return matchingForecast(game)?'./challenge/daily.html?game='+encodeURIComponent(String(game.id))+'#matchups':'./predict/'}
+function gameLink(game){return './game/?id='+encodeURIComponent(String(game.game_id||game.id))}
 function statusOf(g){
  if(!g)return {text:'SCORE UNAVAILABLE',kind:'unavailable'};
  if(g.phase==='live')return {text:scores?.label?.(g)||'IN PROGRESS',kind:'live'};
@@ -36,7 +36,7 @@ function gameTile(game){
  const isLocked=!!game.primary_forecast,meta=observedScore(game);
  const teamAway=game.away,teamHome=game.home,p=isLocked?game.primary_forecast:null;
  const matchId=String(game.game_id||game.id);
- const href=isLocked?'./challenge/daily.html?game='+encodeURIComponent(matchId)+'#matchups':'./predict/';
+ const href=gameLink(game);
  const when=fmt(usableTime(game.tip_utc,game.date,meta.s?.date));
  const out='<div class="home-game__versus">AT</div>'; // Locked picks only; real results live above.
  return '<a class="home-game" href="'+href+'" aria-label="'+esc(teamAway.name)+' at '+esc(teamHome.name)+'">'+
@@ -111,6 +111,7 @@ function render(){
   '<div class="sports-scorebug__vs">AT<div class="sports-pick"><small>'+(meta.actual?'ESPN '+(meta.s.phase==='final'?'FINAL':'LIVE SCORE'):prediction?'ELO PICK':'SCHEDULED')+'</small><strong>'+esc(meta.actual?meta.s.away.score+'–'+meta.s.home.score:prediction?prediction.winner:'VS')+'</strong><em>'+esc(meta.actual?meta.state.text:prediction?pct(prediction.winner_probability):'')+'</em></div></div>'+
   club(chosen.home,true);
  show('feature-detail',detail);
+ if($('feature-game-link'))$('feature-game-link').href=gameLink(chosen);
  // Headshots must be from the exact game in the frozen forecast. No unrelated
  // old team photographs or NBA-cup/Team-USA visual claims.
  showModelDisagreement(chosen);
