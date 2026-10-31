@@ -174,3 +174,38 @@ body.v12.secondary-page .gap b{color:#6fe1c7}
 
 /* A supporter always sees which column represents their side, even away. */
 body.v12.secondary-page th[data-favourite="true"]{color:var(--fan-accent)!important;background:color-mix(in srgb,var(--fan-accent),#152536 91%)!important;box-shadow:inset 0 -3px 0 var(--fan-accent)}
+
+/* Player Twins player cards: actual sized player photographs, not empty tall tiles. */
+body.v12.secondary-page .cards{align-items:stretch;gap:10px}
+body.v12.secondary-page .cards .match{
+ display:flex!important;flex-direction:column;align-items:center;justify-content:flex-start;
+ text-align:center;padding:15px 10px;gap:7px;min-height:197px;height:auto;background:#121f30!important;
+ border:1px solid #3c5165!important;border-radius:12px;overflow:hidden;color:#eef6fc!important
+}
+body.v12.secondary-page .cards .match.on{border-color:var(--fan-accent)!important;background:#233549!important}
+body.v12.secondary-page .cards .match .twin-rank-photo{
+ position:relative;display:grid;place-items:center;flex:none;width:80px;height:76px;
+ border:1px solid #4b6176;border-radius:10px;background:linear-gradient(160deg,#2c4561,#0b1826);
+ overflow:hidden;margin:0 auto 2px
+}
+body.v12.secondary-page .cards .match .twin-rank-photo img{
+ display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+ object-position:50% 18%;z-index:2
+}
+body.v12.secondary-page .cards .match .twin-rank-photo .fallback{
+ display:grid;place-items:center;width:100%;height:100%;font:900 27px 'Barlow Condensed',Impact,sans-serif;
+ color:#b2c9dd;z-index:1
+}
+body.v12.secondary-page .cards .match .match-content{display:grid;gap:5px;justify-items:center;min-width:0;max-width:100%}
+body.v12.secondary-page .cards .match .rank{font-size:10px;font-weight:900;color:var(--fan-accent)}
+body.v12.secondary-page .cards .match strong{
+ display:block;font:900 19px/1.05 'Barlow Condensed',Impact,sans-serif;
+ margin:0;max-width:100%;overflow-wrap:anywhere;min-height:22px
+}
+body.v12.secondary-page .cards .match small{font-size:10px;color:#a6bbcd;line-height:1.25}
+body.v12.secondary-page .twin-headshot .fallback{font:900 37px 'Barlow Condensed',Impact,sans-serif}
+@media(max-width:560px){
+ body.v12.secondary-page .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.v12.secondary-page .cards .match{min-height:180px;padding:11px 7px}
+ body.v12.secondary-page .cards .match .twin-rank-photo{width:68px;height:66px}
+}
