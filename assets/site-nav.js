@@ -19,6 +19,16 @@ function init(){
  const isStats=/\/player-stats\/$/.test(current);
  const isLeague=/\/league\/$/.test(current);
  const isMachine=/\/(predict|challenge|audit|models)\//.test(current);
+ // Home already has a Live tab; use the header shortcut for real team/player
+ // following instead of another redundant scoreboard button.
+ if(onHome){
+  const shortcut=document.querySelector('.app-header .header-action');
+  if(shortcut){
+   shortcut.href=href('watchlist/');
+   shortcut.textContent='MY WATCHLIST ★';
+   shortcut.setAttribute('aria-label','Manage followed NBA teams and players');
+  }
+ }
  const link=(label,url,active)=>'<a class="nav-main-link'+(active?' active':'')+
   '" href="'+href(url)+'"'+(active?' aria-current="page"':'')+'>'+label+'</a>';
  nav.innerHTML=
