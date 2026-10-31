@@ -102,12 +102,15 @@ function showBox(){
      shot(p.ftm,p.fta),formatNumber(p.ftPct,'%'),formatNumber(p.oreb),formatNumber(p.dreb),
      formatNumber(p.reb),formatNumber(p.ast),formatNumber(p.stl),formatNumber(p.blk),formatNumber(p.tov),
      formatNumber(p.plusMinus),formatNumber(p.pf),formatNumber(p.fpts)];
-   return '<tr>'+vals.map((v,i)=>'<td'+(i===18?' class="game-fpts"':'')+'>'+(i===0?'<b>'+v+'</b>':v)+'</td>').join('')+'</tr>';
+   const follow=p.id&&/^\d+$/.test(String(p.id))?
+     '<button type="button" class="watch-player-btn" data-watch-player="'+esc(p.id)+'" data-watch-name="'+esc(p.name)+'" data-watch-player-team="'+esc(p.team)+'">+ Follow</button>':'';
+   return '<tr>'+vals.map((v,i)=>'<td'+(i===18?' class="game-fpts"':'')+'>'+(i===0?'<b>'+v+'</b>'+follow:v)+'</td>').join('')+'</tr>';
   }).join(''):'<tr><td colspan="19">No published actual player statistics for this team yet.</td></tr>';
   const headings=boxCols.map(([key,label])=>'<th><button type="button" data-game-sort="'+key+'" aria-label="Sort by '+label+'">'+label+(boxSort===key?(boxDescending?' ↓':' ↑'):'')+'</button></th>').join('');
   return '<div class="game-box-team"><div class="game-box-team-title">'+logo(team)+'<h3>'+esc(team.name)+'</h3></div>'+
    '<div class="game-table-scroll"><table><thead><tr>'+headings+'</tr></thead><tbody>'+rows+'</tbody></table></div></div>';
  }).join('');
+ window.TwinWatchlist?.sync?.();
  for(const button of $('game-box-groups').querySelectorAll?.('[data-game-sort]')||[])button.addEventListener('click',()=>{
   const key=button.dataset.gameSort;boxDescending=key===boxSort?!boxDescending:true;boxSort=key;showBox();
  });
