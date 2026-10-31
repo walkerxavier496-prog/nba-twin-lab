@@ -6,7 +6,7 @@
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pct=v=>typeof v==='number'&&Number.isFinite(v)?(v*100).toFixed(1)+'%':'—';
-const fmt=v=>{const d=new Date(v);return Number.isFinite(d.getTime())?'Date unavailable':new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}).format(d)};
+const fmt=v=>{const d=new Date(v);return !Number.isFinite(d.getTime())?'Date unavailable':new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}).format(d)};
 const media=typeof window!=='undefined'?window.NbaMedia:null;
 const scores=typeof window!=='undefined'?window.NbaScores:null;
 const show=(id,value)=>{if($(id))$(id).textContent=value};
