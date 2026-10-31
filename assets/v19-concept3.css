@@ -359,3 +359,88 @@ body.v12.predictor .v19-model-note{font-size:10px;color:#88a6c3;line-height:1.6;
  body.v12.predictor .v19-model-heading{align-items:start}
  body.v12.predictor .v19-model-heading a{text-align:right}
 }
+
+
+/* DAILY PREDICTIONS — approved Concept 3 slate / model comparison */
+body.v12.daily .page-hero{align-items:center;background:radial-gradient(ellipse 70% 130% at 92% 0%,#2c267e55,transparent 70%),linear-gradient(115deg,#0b2140,#09182c);
+ border:1px solid #294d77;border-radius:15px;padding:23px clamp(18px,2.5vw,33px);margin:18px 0 12px}
+body.v12.daily .page-hero h1{font:900 clamp(30px,4.1vw,55px)/1.05 var(--v19-heading);letter-spacing:-.055em;text-transform:none}
+body.v12.daily .page-hero h1 em{color:#76c1ff!important}
+body.v12.daily .page-hero p{font-size:12px}
+body.v12.daily .daily-hero-context{background:#0b1e35;border:1px solid #28527b;border-radius:11px;padding:15px;max-width:300px}
+body.v12.daily .daily-hero-context p{font-size:11px;line-height:1.55}
+body.v12.daily .daily-stats{gap:11px;margin:12px 0 26px}
+body.v12.daily .daily-stat{padding:18px;background:#0e2139!important;border:1px solid #214365!important}
+body.v12.daily .daily-stat strong{font:850 clamp(24px,3vw,39px)/1.1 var(--v19-heading);letter-spacing:-.04em;color:#edf7ff}
+body.v12.daily .daily-stat span{color:#93b8d6}
+body.v12.daily #matchups .dashboard-grid{gap:15px}
+body.v12.daily .game-button{border:1px solid #224567!important;background:#0b2038!important;border-radius:11px}
+body.v12.daily .game-button[aria-pressed=true]{border-color:#349bff!important;background:#132b4c!important}
+body.v12.daily .game-detail{border:1px solid #264a71!important;background:#0b1d33!important}
+body.v12.daily .model-card{background:#0e2541!important;border:1px solid #234c77!important}
+body.v12.daily .model-card .model-card__bar{height:7px;border-radius:99px;overflow:hidden}
+body.v12.daily .model-card .model-card__fill{background:var(--v19-gradient)}
+body.v12.daily .model-card__meta strong{font-family:var(--v19-heading);letter-spacing:-.03em}
+body.v12.daily .status-strip{gap:8px}
+body.v12.daily .status-strip .pill{background:#10305a;border:1px solid #29577b;color:#9bcaf0}
+body.v12.daily .live-desk{background:#081829;border:1px solid #234665;border-radius:15px;padding:21px;margin-top:38px}
+body.v12.daily .desk-section-top h1{font-family:var(--v19-heading);font-size:clamp(26px,3.4vw,43px);text-transform:none;letter-spacing:-.04em}
+/* PLAYER PROJECTIONS — dense sortable information on coherent dark surfaces */
+body.v12.secondary-page:has(#players) main{max-width:1450px}
+body.v12.secondary-page:has(#players) h1{
+ margin:13px 0 15px;font:900 clamp(36px,4.2vw,58px)/1.06 var(--v19-heading);text-transform:none;letter-spacing:-.055em
+}
+body.v12.secondary-page:has(#players) h1 em{font-style:normal;color:#68b9ff}
+body.v12.secondary-page:has(#players) .lead{font-size:14px;max-width:880px;color:#b5cbe1}
+body.v12.secondary-page:has(#players) .summary{gap:11px;margin:18px 0 25px}
+body.v12.secondary-page:has(#players) .summary>div{background:#102740!important;border:1px solid #274968!important;border-radius:12px}
+body.v12.secondary-page:has(#players) .summary strong{color:#e9f6ff;font-family:var(--v19-heading);font-size:28px}
+body.v12.secondary-page:has(#players) .panel{padding:clamp(17px,2vw,26px);margin-bottom:17px}
+body.v12.secondary-page:has(#players) .controls label{color:#a1bdd7}
+body.v12.secondary-page:has(#players) .switcher{background:#0b1c30;padding:4px;border:1px solid #284866;border-radius:11px}
+body.v12.secondary-page:has(#players) .switcher button{background:transparent!important;border-color:transparent!important;color:#afc6e0!important}
+body.v12.secondary-page:has(#players) .switcher button.selected{background:#1269f1!important;color:#fff!important;border-color:#237af6!important}
+body.v12.secondary-page:has(#players) table.projections th{white-space:nowrap}
+body.v12.secondary-page:has(#players) table.projections td{white-space:nowrap;font-variant-numeric:tabular-nums}
+/* TEAM INTELLIGENCE — Concept 3 matchup and four-factors */
+body.v12.secondary-page:has(#compare-summary) main{max-width:1450px}
+body.v12.secondary-page:has(#compare-summary) h1{
+ font:900 clamp(34px,4.3vw,59px)/1.05 var(--v19-heading);text-transform:none;letter-spacing:-.05em;
+ margin-top:14px;margin-bottom:15px
+}
+body.v12.secondary-page:has(#compare-summary) h1 em{color:#6fbaff!important}
+body.v12.secondary-page:has(#compare-summary) .panel{padding:clamp(17px,2vw,26px);margin-bottom:16px}
+body.v12.secondary-page:has(#compare-summary) .fan-compare-head{border-color:#285078;background:linear-gradient(120deg,#102748,#0d1a2f);border-radius:12px;padding:20px}
+body.v12.secondary-page:has(#compare-summary) .factor article{background:#102943;border:1px solid #284968;border-radius:12px}
+/* AUDIT — reliable scorecard, never illustrative fake performance stats */
+body.v12.audit .page-hero{background:radial-gradient(ellipse 70% 150% at 100% 0%,#2b247f66,transparent 80%),linear-gradient(110deg,#0e2544,#091929);
+ border:1px solid #23496d;padding:25px;border-radius:15px;margin-top:18px}
+body.v12.audit .page-hero h1{font:900 clamp(35px,4.3vw,58px)/1.06 var(--v19-heading);text-transform:none}
+body.v12.audit .page-hero h1 em{color:#75c5ff!important}
+body.v12.audit .audit-grid{gap:11px}
+body.v12.audit .audit-grid article{background:#0d263f!important;border-color:#275078!important;border-radius:12px}
+body.v12.audit .audit-grid article strong{color:#f3f9ff;font-family:var(--v19-heading);letter-spacing:-.035em}
+body.v12.audit .panel{background:#0b1f34!important;border:1px solid #224464!important;border-radius:13px;margin-bottom:16px}
+body.v12.audit #entries{display:grid;gap:10px}
+body.v12.audit :is(.entry,.review-card){border-radius:11px}
+/* LIVE GAME CENTER — ESPN-style match hero + serious data tables */
+body.v12.game-page .game-scoreboard{background:radial-gradient(ellipse 60% 130% at 50% 5%,#284f9555,transparent 70%),linear-gradient(155deg,#122c4e,#09182c);
+ border:1px solid #315781;border-radius:15px;padding:20px}
+body.v12.game-page .game-score-match{min-width:0}
+body.v12.game-page .game-team h2{font-family:var(--v19-heading);font-size:clamp(16px,2.2vw,30px);letter-spacing:-.035em;text-transform:none}
+body.v12.game-page .game-score{font-family:var(--v19-heading);letter-spacing:-.055em;color:#f3f9ff}
+body.v12.game-page .game-tabs{background:#0c2037;border:1px solid #2b4c71;border-radius:12px;padding:5px;gap:4px}
+body.v12.game-page .game-tabs button{border-radius:8px}
+body.v12.game-page .game-tabs button[aria-selected="true"]{background:#156ff0!important;color:#fff!important}
+body.v12.game-page .game-tab-panel{background:#0b1c30;border:1px solid #244567;border-radius:13px}
+/* LEAGUE standings and Cup */
+body.v12:has(#league-title) #league-title{font-family:var(--v19-heading);letter-spacing:-.055em;text-transform:none}
+body.v12:has(#league-title) :is(.conference-card,.standings-panel,.cup-panel){border-radius:12px}
+body.v12:has(#league-title) :is(.conference-card,.standings-panel,.cup-panel,article){border-color:#244567}
+@media(max-width:760px){
+ body.v12.daily .page-hero{display:block}
+ body.v12.daily .daily-hero-context{max-width:none;margin-top:12px}
+ body.v12.daily .daily-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.v12.daily .live-desk{padding:13px}
+ body.v12.game-page .game-scoreboard{padding:12px}
+}
