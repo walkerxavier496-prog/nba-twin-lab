@@ -7,9 +7,9 @@ on:
     paths:
       - '.github/workflows/challenge-supplement-2026-10-31.yml'
       - 'scripts/challenge_supplement.cjs'
-      - 'challenge/daily.js'
-      - 'challenge/daily.html'
       - 'tests/challenge_daily.test.cjs'
+      - 'tests/daily_audit.test.cjs'
+      - 'tests/five_model_challenge.test.cjs'
 
 permissions:
   contents: write
