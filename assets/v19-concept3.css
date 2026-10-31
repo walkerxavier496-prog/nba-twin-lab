@@ -528,3 +528,51 @@ body.v12.home .hero-stamp{color:#bed5eb!important}
  body.v12.secondary-page .v19-page-modes a{text-align:center;font-size:11px;padding:9px 8px}
  body.v12 .site-bottom-nav a{font-size:10px}
 }
+
+
+/* Match the approved small Featured Matchup card, not a 700px sidebar. */
+body.v12.home .featured-box{align-self:start;min-height:0!important}
+body.v12.home .featured-box .feature-score{flex:none;min-height:165px}
+body.v12.home .featured-box .feature-bottom{padding:12px 16px}
+body.v12.home .v19-feature-insights{
+ border-top:1px solid #204564;margin:0;background:#0a1b2f
+}
+body.v12.home .v19-feature-insights summary{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ padding:14px 17px;font-size:10px;font-weight:850;color:#a3cdf1;letter-spacing:.09em;
+ cursor:pointer;list-style:none
+}
+body.v12.home .v19-feature-insights summary::-webkit-details-marker{display:none}
+body.v12.home .v19-feature-insights summary:hover{color:#fff;background:#132c49}
+body.v12.home .v19-feature-insights[open] summary span{transform:rotate(180deg)}
+body.v12.home .v19-feature-insights .feature-confidence,
+body.v12.home .v19-feature-insights .feature-players{margin:0 13px 10px;background:#0b2137!important}
+body.v12.home .lead-story{min-height:460px}
+body.v12.home .feature-score .sports-club .team-logo{width:76px;height:76px}
+body.v12.home .featured-box .feature-score .sports-club__name{color:#eef7ff}
+body.v12.home .featured-box .sports-scorebug__vs{gap:8px}
+
+/* A chosen favourite team must not repaint the entire blue Concept 3 live desk
+ * orange or lime. Team identity/colour still lives on its logo and preference. */
+body.v12 .live-desk .desk-section-top h1 em{color:#69bfff!important}
+body.v12 .live-desk .eyebrow{color:#32c6ff!important}
+body.v12 .live-desk .desk-filters button.active{
+ background:linear-gradient(110deg,#1879ff,#2664e8)!important;
+ border-color:#438efc!important;color:#fff!important
+}
+body.v12 .live-desk .desk-game:hover,
+body.v12 .live-desk .desk-game.selected{
+ border-color:#3a9afe!important;background:#142d48!important;
+}
+body.v12 .live-desk .desk-game.selected{box-shadow:inset 0 -3px #2c8eff!important}
+body.v12 .live-desk .desk-game-open,
+body.v12 .live-desk .desk-top-title,
+body.v12 .live-desk .desk-performance>b,
+body.v12 .live-desk .desk-fpts{color:#80c6ff!important}
+body.v12 .live-desk .desk-performance{background:#10283e;border-color:#285274}
+body.v12 .live-desk .desk-game{background:#10243a!important;border-color:#274764!important}
+@media(max-width:650px){
+ body.v12.home .lead-story{min-height:350px}
+ body.v12.home .feature-score .sports-club .team-logo{width:54px;height:54px}
+ body.v12.home .v19-feature-insights summary{font-size:9px}
+}
