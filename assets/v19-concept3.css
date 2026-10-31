@@ -353,6 +353,18 @@ body.v12.home .home-trend-cards article{display:grid;gap:5px;padding:10px;border
 body.v12.home .home-trend-cards article strong{color:#9edbff;font-size:10px}
 body.v12.home .home-trend-cards article span,body.v12.home .home-trend-source{color:#91a9bc;font-size:9px;line-height:1.45}
 body.v12.home .home-trend-source{margin:10px 0 0}
+body.v12.home .home-player-trend-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+body.v12.home .home-player-trend{min-width:0;padding:10px;border:1px solid #2d4960;border-radius:7px;background:#102239}
+body.v12.home .home-player-trend header{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+body.v12.home .home-player-trend header strong{min-width:0;overflow-wrap:anywhere;color:#e5f4ff;font-size:11px}
+body.v12.home .home-player-trend header span{flex:none;color:#8ecfff;font-size:9px;font-weight:800}
+body.v12.home .home-player-trend>p{margin:5px 0;color:#91a9bc;font-size:9px;line-height:1.4}
+body.v12.home .home-player-trend__metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+body.v12.home .home-player-trend__metrics span{min-width:0;padding:5px;border-radius:5px;background:#091a2b;color:#c3d8e8;font-size:9px}
+body.v12.home .home-player-trend__metrics b{color:#91d7ff}
+body.v12.home .home-player-trend__metrics small{color:#809bb2}
+body.v12.home .home-player-trend__form{padding-top:5px;border-top:1px solid #29445e}
+body.v12.home .home-player-trend__stale{padding:7px;border:1px solid #835b28;border-radius:6px;background:#2c2114;color:#ffd89a;font-size:9px}
 body.v12.home .home-scorecard-summary{display:flex;flex-wrap:wrap;gap:7px}
 body.v12.home .home-scorecard-summary>*{padding:8px 10px;border:1px solid #2d4960;border-radius:6px;background:#102239;color:#c5d8e6;font-size:10px}
 body.v12.home .home-scorecard-summary>strong{color:#d8f39b}
@@ -367,6 +379,7 @@ body.v12.home .home-research-scorecard summary{color:#c1d9e8;font-size:9px;font-
 body.v12.home .home-game__records{display:flex;justify-content:space-between;color:#91a9bc;font-size:9px}
 body.v12.home .home-game__records i{font-style:normal;color:#587188}
 @media(max-width:760px){body.v12.home .home-command-panels{grid-template-columns:1fr}}
+@media(max-width:760px){body.v12.home .home-player-trend-cards{grid-template-columns:1fr}}
 body.v12.home .feature-score .sports-feature__match{
  grid-template-columns:minmax(0,1fr) minmax(85px,100px) minmax(0,1fr);
  gap:8px

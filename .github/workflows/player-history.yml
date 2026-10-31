@@ -1,0 +1,42 @@
+name: Append-only NBA player-game history
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '40 13 * * *'
+  push:
+    branches: [main]
+    paths:
+      - scripts/player_history.cjs
+      - tests/player_history.test.cjs
+      - scripts/publication.json
+      - scripts/publish_data.py
+      - .github/workflows/player-history.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nba-twin-lab-player-history
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test player history calculations and collection rules
+        run: node --test tests/player_history.test.cjs
+      - name: Collect verified completed-game observations
+        run: node scripts/player_history.cjs collect
+      - name: Publish append-only observations and derived trends
+        uses: ./.github/actions/publish-data
+        with:
+          workflow: player-history

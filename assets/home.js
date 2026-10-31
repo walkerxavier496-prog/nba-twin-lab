@@ -29,7 +29,7 @@ async function verifiedJson(url,expectedSha){
  if(actual!==String(expectedSha).toLowerCase())throw Error('Artifact SHA-256 does not match the audit ledger');
  return JSON.parse(text);
 }
-let archive=null,liveFeed=null,selectedMelbourneDate=null,ledgerEntries=[],archiveCache=new Map(),historySnapshot=null;
+let archive=null,liveFeed=null,selectedMelbourneDate=null,ledgerEntries=[],archiveCache=new Map(),historySnapshot=null,playerTrendSnapshot=null,playerTrendStatus='';
 let archiveStatus='not loaded',reviewStatus='Daily review not loaded',sidecarStatus='Research sidecar not loaded';
 function matchingForecast(game){
  return archive?.lock.forecasts?.find(g=>String(g.game_id)===String(game.id))||null;
@@ -105,7 +105,7 @@ function showModelDisagreement(game){
 function render(){
  if(!archive&&!liveFeed){
   show('scoreboard-source','Live scoreboard unavailable · '+archiveStatus);
-  renderMachineScorecard();renderTeamTrends(historySnapshot);return;
+  renderMachineScorecard();renderTeamTrends(historySnapshot);renderPlayerTrends(playerTrendSnapshot,Date.now(),playerTrendStatus);return;
  }
  const games=candidateGames();
  const source='ARCHIVED PREGAME FORECASTS · Actual live NBA scores and player box scores appear in the game centre above.';
@@ -132,7 +132,7 @@ function render(){
  // Feature the latest immutable pretip prediction, NEVER use a live score as a pick.
  const chosen=(archive?.lock?.forecasts||[]).find(g=>g.primary_forecast)||
    games.find(g=>g.primary_forecast)||games[0];
- if(!chosen){renderMachineScorecard();renderTeamTrends(historySnapshot);return}
+ if(!chosen){renderMachineScorecard();renderTeamTrends(historySnapshot);renderPlayerTrends(playerTrendSnapshot,Date.now(),playerTrendStatus);return}
 
  const prediction=chosen.primary_forecast,meta=observedScore(chosen);
  const homeChance=prediction?.home_win_probability;
@@ -162,6 +162,7 @@ function render(){
  ).join(''):'<p class="c3-muted">No verified recent NBA finals are available.</p>';
  renderMachineScorecard();
  renderTeamTrends(historySnapshot);
+ renderPlayerTrends(playerTrendSnapshot,Date.now(),playerTrendStatus);
 }
 function showLiveAccess(feed){
  const target=$('hero-live-status');
@@ -247,6 +248,53 @@ function renderTeamTrends(snapshot){
   '<article><strong>'+esc(streak.team.abbr)+' · '+esc(streak.count)+'-GAME '+(streak.outcome==='W'?'WIN':'LOSS')+' STREAK</strong><span>'+esc(streak.team.name||streak.team.abbr)+' · '+esc(streak.count)+' consecutive finals · '+esc(shortDate(streak.start))+'–'+esc(shortDate(streak.through))+'</span></article>').join('')+'</div>'+
   '<p class="home-trend-source">Final scores: '+esc(snapshot.source?.name||'dated ESPN scoreboard snapshot')+' · snapshot created '+esc(snapshot.built_at_utc)+'. Streaks use consecutive completed games in the latest 30 days.</p>';
 }
+function renderPlayerTrends(snapshot,now=Date.now(),unavailableReason=''){
+ const target=$('home-player-trends');if(!target)return;
+ if(unavailableReason){
+  target.innerHTML='<p class="home-panel-unavailable">Verified player history is unavailable: '+esc(unavailableReason)+'. No recent-form claims are displayed.</p>';
+  return;
+ }
+ if(snapshot?.schema==='nba-twin-lab-player-trends-v1'&&snapshot.status==='not_collected'){
+  target.innerHTML='<p class="home-panel-unavailable">Verified player-game history collection has not run yet. Trend claims remain unavailable.</p>';
+  return;
+ }
+ if(!snapshot||snapshot.schema!=='nba-twin-lab-player-trends-v1'||
+    !Number.isFinite(Date.parse(snapshot.generated_at_utc))||!Number.isFinite(Date.parse(snapshot.as_of_utc))||
+    !Array.isArray(snapshot.players)){
+  target.innerHTML='<p class="home-panel-unavailable">Verified player-game history has not been published yet. Trend claims remain unavailable.</p>';
+  return;
+ }
+ const generated=Date.parse(snapshot.generated_at_utc),asOf=Date.parse(snapshot.as_of_utc);
+ if(generated>now||asOf>now){
+  target.innerHTML='<p class="home-panel-unavailable">Player-history snapshot is future-dated; no trends are displayed.</p>';
+  return;
+ }
+ const stale=now-generated>48*60*60*1000;
+ const labels={points:'PTS',rebounds:'REB',assists:'AST',three_pointers:'3PM',fantasy_points:'FPTS'};
+ const cards=snapshot.players.slice(0,8).map(player=>{
+  const metrics=Object.entries(labels).map(([key,label])=>{
+   const metric=player.metrics?.[key];
+   return '<span><b>'+label+'</b> '+(metric?.available&&Number.isFinite(metric.average)?
+    metric.average.toFixed(1)+' <small>n='+esc(metric.sample_size)+'</small>':
+    'Unavailable <small>n='+esc(metric?.sample_size??0)+'/'+esc(metric?.required_games??snapshot.methodology?.minimum_games??5)+'</small>')+'</span>';
+  }).join('');
+  const form=player.recent_form?.available?
+   '<p class="home-player-trend__form">Last five vs prior five: points '+(Number.isFinite(player.recent_form.points_change)?(player.recent_form.points_change>0?'+':'')+player.recent_form.points_change.toFixed(1):'unavailable')+
+   (Number.isFinite(player.recent_form.fantasy_points_change)?' · fantasy '+(player.recent_form.fantasy_points_change>0?'+':'')+player.recent_form.fantasy_points_change.toFixed(1):'')+'</p>':'';
+  return '<article class="home-player-trend"><header><strong>'+esc(player.name)+'</strong><span>'+esc(player.last_recorded_team?.abbr||'Team unavailable')+'</span></header>'+
+   '<p>'+esc(player.sample_size)+' verified appearances · '+esc(player.date_range?.start_utc||'')+' – '+esc(player.date_range?.end_utc||'')+'</p>'+
+   '<div class="home-player-trend__metrics">'+metrics+'</div>'+form+'</article>';
+ }).join('');
+ const empty=snapshot.players.length?'':'<p class="home-panel-unavailable">No player has at least '+esc(snapshot.methodology?.minimum_games??5)+' verified appearances in the rolling '+esc(snapshot.methodology?.window_days??30)+'-day window. Recent-form claims are withheld while the append-only history accumulates.</p>';
+ const conflicts=snapshot.identity_conflicts?.length?
+  '<p class="home-panel-unavailable">'+esc(snapshot.identity_conflicts.length)+' ESPN player ID/name conflict'+(snapshot.identity_conflicts.length===1?'':'s')+' excluded from trends.</p>':'';
+ const unavailable=Number.isInteger(snapshot.coverage?.unavailable_game_count)&&snapshot.coverage.unavailable_game_count>0?
+  '<p class="home-panel-unavailable">Player box-score collection is incomplete for '+esc(snapshot.coverage.unavailable_game_count)+' game'+(snapshot.coverage.unavailable_game_count===1?'':'s')+'; those rows are not used in published trends.</p>':'';
+ const staleNotice=stale?'<p class="home-player-trend__stale">STALE SNAPSHOT · last generated '+esc(snapshot.generated_at_utc)+'; figures are as of '+esc(snapshot.as_of_utc)+'.</p>':'';
+ target.innerHTML=staleNotice+empty+conflicts+unavailable+(cards?'<div class="home-player-trend-cards">'+cards+'</div>':'')+
+  '<p class="home-trend-source">'+esc(snapshot.methodology?.source||'ESPN public summary (unofficial)')+' · as of '+esc(snapshot.as_of_utc)+
+  ' · '+esc(snapshot.methodology?.window_days??30)+'-day window · minimum '+esc(snapshot.methodology?.minimum_games??5)+' appearances. Missing stats and DNPs are excluded, not treated as zero.</p>';
+}
 async function loadDailyArchive(date){
  const entry=ledgerEntries.find(item=>item.melbourne_date===date&&item.lock_path);
  if(!entry){
@@ -315,11 +363,14 @@ async function refresh(date=selectedMelbourneDate){
 }
 async function init(){
  selectedMelbourneDate=scores?.melbourneDate?.(new Date())||scores?.usDate?.(new Date())||null;
- const [led,report,historyData]=await Promise.allSettled([
-  json('./data/audit-ledger.json'),json('./data/five-model-report.json'),json('./data/games.json')
+ const [led,report,historyData,playerTrendData]=await Promise.allSettled([
+  json('./data/audit-ledger.json'),json('./data/five-model-report.json'),json('./data/games.json'),
+  json('./data/player-game-history/trends.json')
  ]);
  if(report.status==='fulfilled'&&Number.isFinite(report.value.common_evaluation?.games))show('home-backtest',report.value.common_evaluation.games.toLocaleString('en-AU')+' games');
  if(historyData.status==='fulfilled')historySnapshot=historyData.value;
+ if(playerTrendData.status==='fulfilled')playerTrendSnapshot=playerTrendData.value;
+ else playerTrendStatus=String(playerTrendData.reason?.message||'history file unavailable');
  if(led.status==='fulfilled'){
    ledgerEntries=(led.value.entries||[]).filter(e=>e.lock_path).sort((a,b)=>String(b.melbourne_date).localeCompare(String(a.melbourne_date)));
    show('home-locked',String(ledgerEntries.length));
@@ -334,5 +385,5 @@ async function init(){
  if(typeof setInterval==='function')setInterval(refresh,60000);
 }
 init().catch(()=>{show('scoreboard-source','Scoreboard unavailable — no live scores displayed');render()});
-if(typeof window!=='undefined')window.NbaHome=Object.freeze({teamStreaks,renderTeamTrends,renderMachineScorecard});
+if(typeof window!=='undefined')window.NbaHome=Object.freeze({teamStreaks,renderTeamTrends,renderPlayerTrends,renderMachineScorecard});
 })();

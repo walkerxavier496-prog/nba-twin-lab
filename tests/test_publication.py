@@ -290,7 +290,7 @@ def test_every_publisher_uses_shared_action_and_nonrecursive_pages_handoff():
     producers = json.loads((ROOT / "scripts/publication.json").read_text())
     pages = workflow(ROOT / ".github/workflows/static.yml")
     triggers = pages["on"]["workflow_run"]["workflows"]
-    assert len(triggers) == len(producers) == 13
+    assert len(triggers) == len(producers) == 14
     for name in producers:
         path = ROOT / ".github/workflows" / f"{name}.yml"
         spec = workflow(path)
@@ -319,6 +319,18 @@ def test_every_publisher_uses_shared_action_and_nonrecursive_pages_handoff():
     assert "data.commit.sha === process.env.RELEASE_REVISION" in pages["jobs"]["deploy"]["steps"][0]["with"]["script"]
     assert "node --test tests/*.test.cjs" in (ROOT / "scripts/validate_release.sh").read_text()
     assert "python -m pytest" in (ROOT / "scripts/validate_release.sh").read_text()
+
+
+def test_player_history_observations_are_immutable_while_indexes_are_derived():
+    assert pub.immutable("data/player-game-history/observations/401909280-version.json")
+    assert not pub.immutable("data/player-game-history/index.json")
+    assert not pub.immutable("data/player-game-history/trends.json")
+    config = json.loads((ROOT / "scripts/publication.json").read_text())
+    assert set(config["player-history"]) == {
+        "data/player-game-history/index.json",
+        "data/player-game-history/trends.json",
+        "data/player-game-history/observations/*.json",
+    }
 
 
 def test_v7_and_v9_declare_all_builder_outputs():

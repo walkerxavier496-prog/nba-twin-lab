@@ -1,0 +1,16 @@
+{
+  "schema": "nba-twin-lab-player-trends-v1",
+  "status": "not_collected",
+  "methodology": {
+    "source": "ESPN public summary (unofficial)",
+    "window_days": 30,
+    "minimum_games": 5
+  },
+  "coverage": {
+    "verified_final_games": 0,
+    "players_meeting_minimum": 0,
+    "identity_conflict_count": 0
+  },
+  "identity_conflicts": [],
+  "players": []
+}

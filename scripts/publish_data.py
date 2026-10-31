@@ -30,6 +30,7 @@ def paths_changed(base=None):
 def immutable(path):
     return (path.startswith("practice/") or
             path.startswith("research-reviews/") or
+            path.startswith("data/player-game-history/observations/") or
             path in ("data/v7-intelligence.json", "data/rotation-history.json") or
             (path.startswith("data/") and path.endswith("report.json")) or
             path.startswith("audit/snapshots/") or
