@@ -242,3 +242,48 @@ body.v12.c3-slate-page .c3-data-table{min-width:760px}
 body.v12.c3-slate-page .c3-data-table td:nth-child(3){min-width:190px}
 body.v12.c3-audit-page .c3-status-tag{background:#102d47;color:#a4d7f6;border-color:#265c84}
 body.v12 .c3-tab:focus-visible{outline:2px solid #38c3fc;outline-offset:3px}
+
+
+/* Matchup evidence and immutable Machines vs Reality: real graded results
+ * are visually distinct from pretip probability and cannot overwrite it. */
+body.v12 .c3-postgame-bar{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;
+ padding:17px 20px;margin:13px 0 15px;border:1px solid #2c6185;border-left:4px solid #48befc;
+ background:linear-gradient(120deg,#0d2b43,#0c1c30);border-radius:11px}
+body.v12 .c3-postgame-bar>div{display:flex;flex-direction:column;gap:7px}
+body.v12 .c3-postgame-label{font:850 9px Inter,sans-serif;letter-spacing:.09em;color:#91bbd7}
+body.v12 .c3-postgame-bar strong{font:900 clamp(15px,1.8vw,23px) Inter,sans-serif;line-height:1.2}
+body.v12 .c3-postgame-bar .c3-btn{min-height:42px;border-color:#3982bc;color:#a9e4ff}
+body.v12 .c3-postgame-detail{margin-top:14px;padding:17px 18px;border:1px solid #34769e;
+ background:linear-gradient(145deg,#0b2941,#091b2f);border-radius:11px;scroll-margin-top:110px}
+body.v12 .c3-postgame-detail>p{max-width:1020px;font-size:12px}
+body.v12 .c3-postgame-detail .c3-data-table th,
+body.v12 .c3-postgame-detail .c3-data-table td{padding:11px}
+body.v12 .c3-correct{color:#53e4b0!important;font-weight:850}
+body.v12 .c3-incorrect{color:#ff7b9b!important;font-weight:850}
+body.v12 .c3-final{background:#0e413c!important;color:#70e9c0!important;border:1px solid #246d62}
+body.v12 .c3-postgame-evidence{margin-top:14px}
+body.v12 .c3-postgame-evidence>.c3-source-note{margin:9px 0}
+body.v12 .c3-postgame-evidence .c3-stats-real{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:22px}
+body.v12 .c3-postgame-evidence .c3-stat-row{padding:13px 4px}
+body.v12 .c3-postgame-evidence .c3-stat-row span{font-size:10px}
+body.v12 .c3-evidence-notes .c3-factor{align-items:flex-start;gap:10px;padding:12px 0}
+body.v12 .c3-evidence-notes .c3-factor small{font-size:10px;line-height:1.5}
+body.v12 .c3-evidence-notes .c3-factor-why{color:#d0dfed!important;margin-top:7px!important}
+body.v12 .c3-factor{align-items:flex-start}
+body.v12 .c3-factor small{line-height:1.55}
+body.v12 .c3-out-player{opacity:.74;background:#241b2a}
+body.v12 .c3-out-player td{background:#1c2234!important}
+body.v12 .c3-out-toggle[aria-pressed="true"]{border-color:#ff7591;color:#ff8fab}
+body.v12 .c3-compare-grid .c3-panel{min-width:0}
+@media(max-width:1050px){
+ body.v12 .c3-compare-grid{grid-template-columns:1fr 1fr}
+ body.v12 .c3-compare-grid .c3-panel:last-child{grid-column:1/-1}
+}
+@media(max-width:680px){
+ body.v12 .c3-compare-grid{grid-template-columns:1fr}
+ body.v12 .c3-compare-grid .c3-panel:last-child{grid-column:auto}
+ body.v12 .c3-postgame-bar{padding:13px}
+ body.v12 .c3-postgame-bar .c3-btn{width:100%}
+ body.v12 .c3-postgame-evidence .c3-stats-real{grid-template-columns:1fr}
+ body.v12 .c3-postgame-detail{padding:12px}
+}
