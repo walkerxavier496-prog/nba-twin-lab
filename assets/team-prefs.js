@@ -22,20 +22,10 @@ function apply(team,persist=true){
  document.dispatchEvent(new CustomEvent('twinlab:teamchange',{detail:{team:next,name:NAMES[next]||'',accent:COLOURS[next]||'#c6dbff'}}));
  return next;
 }
-function render(){
- const head=document.querySelector('.app-header .header-inner');
- if(!head||document.getElementById('fan-team-picker'))return;
- const group=document.createElement('div');group.className='fan-picker';
- const label=document.createElement('label');label.htmlFor='fan-team-picker';label.textContent='YOUR TEAM';
- const select=document.createElement('select');select.id='fan-team-picker';select.setAttribute('aria-label','Choose your favourite NBA team for site accent');
- const opts=[['','No team preference'],...Object.keys(NAMES).sort((a,b)=>NAMES[a].localeCompare(NAMES[b])).map(k=>[k,NAMES[k]])];
- for(const [abbr,name]of opts){const opt=document.createElement('option');opt.value=abbr;opt.textContent=name;select.append(opt)}
- select.value=current;select.addEventListener('change',()=>apply(select.value));
- group.append(label,select);
- const before=head.querySelector('.header-action');
- if(before)head.insertBefore(group,before);else head.append(group);
-}
+// V19 UX: no global header team-colour picker. Team preference remains a
+// stable local API for Team Intelligence and existing users. To follow clubs,
+// use the meaningful My Watchlist controls rather than a decorative selector.
 window.TwinTeamPrefs=Object.freeze({get:()=>current,set:apply,canonical,names:NAMES,accent:COLOURS});
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{render();apply(current,false)},{once:true});
-else{render();apply(current,false)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>apply(current,false),{once:true});
+else apply(current,false)
 })();
