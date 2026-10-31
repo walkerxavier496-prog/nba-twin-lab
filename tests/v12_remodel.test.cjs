@@ -52,6 +52,8 @@ test('new homepage dynamically builds clickable slate cards from only original l
  assert.equal((get('home-games').innerHTML.match(/class="home-game"/g)||[]).length,10);
  assert.ok(get('home-games').innerHTML.includes('./game/?id='));
  assert.ok(get('home-games').innerHTML.includes('ELO PICK'));
+ assert.doesNotMatch(get('home-games').innerHTML,/Date unavailable/,'Valid game times must render in Melbourne time');
+ assert.match(get('home-games').innerHTML,/31 Oct/,'Archive cards need readable Melbourne dates');
  assert.equal(get('home-locked').textContent,'1');
  assert.ok(!get('home-games').innerHTML.includes('LIVE SCORE'));
 });
