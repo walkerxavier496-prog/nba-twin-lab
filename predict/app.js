@@ -85,6 +85,18 @@ function rosterIntegrityPanel(audit){
   '<div class="split">'+describe(audit.away)+describe(audit.home)+'</div>'+
   '<p class="disclaimer">OUT means 0 estimated minutes when an official matching injury designation is available; questionable players receive a range. When the official feed is unavailable all minutes are inferred and must not be treated as confirmed participation.</p></div>';
 }
+function rosterStrengthPanel(strength){
+ if(!strength)return '';
+ if(!strength.available)return '<div class="context"><h4>V18 · PLAYER-STRENGTH EXPERIMENT</h4><p>Unavailable: '+esc(strength.reason||'Unverified live roster')+'. No roster-first winner probability has been published.</p></div>';
+ const range=strength.home_minus_away_impact_range;
+ const home=strength.home,away=strength.away;
+ return '<div class="context"><h4>V18 · CURRENT PLAYERS ONLY · RESEARCH</h4>'+
+  '<p><b>Home minus away player-impact range: '+one(range[0])+' to '+one(range[1])+
+  '</b> (not predicted points, scores or win probability). Player impact follows the current verified roster; absent players do not contribute.</p>'+
+  '<p>'+esc(home.team)+' '+home.scenarios+'/'+home.possible_scenarios+' plausible availability cases · '+
+  esc(away.team)+' '+away.scenarios+'/'+away.possible_scenarios+' cases · regulation minutes conserved at 240 per team.</p>'+
+  '<p class="disclaimer">Impact proxies and replacement minutes are not historically calibrated to win probability. This experiment does not replace or modify Elo.</p></div>';
+}
 function rosterPreview(game,baseline){
  if(!window.TwinRoster||!scienceSnapshot||!rosterPriors||!rosterReport)return {available:false,reason:'Verified roster research data is not yet published'};
  return window.TwinRoster.modelForecast({
@@ -247,6 +259,7 @@ function renderDetail(){
  const roster=rosterPreview(g,base);
  const integrity=window.TwinRosterIntegrity?.auditGame({
   game:g,snapshot:scienceSnapshot,availability:officialAvailability,now:Date.now()})||null;
+ const strength=window.TwinRosterStrength?.matchup(integrity)||null;
  const p=mode==='roster'&&roster.available?
    {...simulation,homeWin:roster.homeWin,awayWin:roster.awayWin,homeScore:base.homeScore,awayScore:base.awayScore,total:base.total,margin:base.margin}:
    mode==='mc'?simulation:{...simulation,homeWin:base.homeWin,awayWin:base.awayWin,homeScore:base.homeScore,awayScore:base.awayScore,total:base.total,margin:base.margin};
@@ -290,6 +303,7 @@ function renderDetail(){
  '<p>Last '+h2h.length+' head-to-head meeting'+(h2h.length===1?'':'s')+': '+(h2h.length?h2h.map(x=>esc(x.away.abbr)+' '+x.awayScore+'–'+x.homeScore+' '+esc(x.home.abbr)).join(' · '):'No verified recent meetings')+'. Head-to-head history is context only, not a separate predictive weight.</p></div>'+
  rosterPanel(g,base,roster)+
  rosterIntegrityPanel(integrity)+
+ rosterStrengthPanel(strength)+
  sciencePanel(g,base)+
  (g.status==='final'?'<p class="context"><b>Actual final:</b> '+esc(g.away.abbr)+' '+g.awayScore+' – '+g.homeScore+' '+esc(g.home.abbr)+'. This forecast was recomputed using only games before tip-off.</p>':'')+
  '<p class="disclaimer">'+esc(base.confidence)+'. Selected model: '+modelName+'. Seeded Monte Carlo diagnostics reproduce with identical inputs. Legacy Elo has no trade, injury, confirmed-lineup, travel or betting-market input. The roster experiment uses inferred rotation changes, not verified player availability; prior-season style can miss offseason changes; a probability is never a guarantee. This is not betting advice.</p>';
