@@ -41,3 +41,10 @@ test('headline predictions never silently fall back to Elo',()=>{
  assert.doesNotMatch(hub,/ELO · PRODUCTION/);
  assert.match(hub,/return numbers\(p\)\?\{home:p,label:'M5 · ML RESEARCH CHALLENGER'\}:null/);
 });
+
+test('headline score is labelled as a different Monte Carlo engine, never Elo',()=>{
+ const hub=read('assets/concept3-hub.js');
+ assert.match(hub,/const mc=models\(g\)\.m4_monte_carlo/);
+ assert.match(hub,/Separate Monte Carlo score estimate:/);
+ assert.doesNotMatch(hub,/Projected score \(Elo\):/);
+});

@@ -225,11 +225,12 @@ function fullPostgame(g){
 }
 function predictionPanel(g){
  const selection=selectedModel(g),p=selection?.home,away=numbers(p)?1-p:null;
- const scored=g.primary_forecast?.projected_score;
+ const mc=models(g).m4_monte_carlo;
+ const scored=mc?.available?mc.projected_score:null;
  return '<div class="c3-main-grid"><section class="c3-panel"><div class="c3-panel-title"><h3>Win Probability</h3><span class="c3-muted">'+esc(selection?.label||'UNAVAILABLE')+'</span></div>'+
  '<div class="c3-prob-score"><div>'+logo(g.away,true)+'<strong>'+pct(away)+'</strong></div><div><strong>'+pct(p)+'</strong>'+logo(g.home,true)+'</div></div>'+
  track(away,p)+modelCards(g)+
- '<p class="c3-source-note">Projected score (Elo): '+esc(g.away.abbr)+' '+num0(scored?.away)+' – '+num0(scored?.home)+' '+esc(g.home.abbr)+'. Six research engines share inputs and are not independent votes. Headline M5 is a historical challenger, not the production model.</p>'+
+ '<p class="c3-source-note">'+(scored&&numbers(scored.away)&&numbers(scored.home)?'Separate Monte Carlo score estimate: '+esc(g.away.abbr)+' '+num0(scored.away)+' – '+num0(scored.home)+' '+esc(g.home.abbr)+'. ':'Monte Carlo score estimate unavailable. ')+'Research engines share inputs and are not independent votes. Headline M5 is a historical challenger, not the production model.</p>'+
  '</section><section class="c3-panel"><div class="c3-panel-title"><h3>Key Factors</h3><span class="c3-muted">PREGAME EVIDENCE</span></div>'+injuryFactors(g)+'</section></div>'+fullPostgame(g);
 }
 function lineupPanel(g){
