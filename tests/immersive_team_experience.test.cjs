@@ -31,7 +31,8 @@ test('NBA team-centre routes, rich watchlist and stat pages have working data de
  assert.match(read('assets/home.js'),/\.\/team\/\?team=/);
  assert.match(read('assets/game-page.js'),/\.\.\/player\/\?id=/);
  assert.match(read('assets/live-desk.js'),/player\/\?id=/);
- assert.match(read('assets/site-nav.js'),/My Teams & Players/);
+ assert.match(read('assets/site-nav.js'),/Manage followed NBA teams and players/);
+ assert.match(read('assets/site-nav.js'),/href\('watchlist\/'\)/);
 });
 test('Watchlist displays real KD ESPN ID=3202 portrait and deep-links matched NBA ID=201142',async()=>{
  const {get}=elements(),events={};

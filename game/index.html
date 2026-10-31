@@ -3,8 +3,8 @@
 <meta name="description" content="NBA Twin Lab Game Centre — live NBA scores, quarter scores, player box scores, play-by-play, team stats and locked model predictions.">
 <title>Game Centre · NBA Twin Lab</title>
 <link rel="stylesheet" href="../assets/site-shell.css"><link rel="stylesheet" href="../assets/v12.css"><link rel="stylesheet" href="../assets/dark-v13.css"><link rel="stylesheet" href="../assets/nav-v15.css">
-<link rel="stylesheet" href="../assets/game-page.css?v21_2">
-<script defer src="../assets/site-shell.js?v23_1"></script><script defer src="../assets/team-media.js"></script><script defer src="../assets/live-scoreboard.js"></script><script defer src="../assets/boxscore-plus.js"></script><script defer src="../assets/live-desk.js?v23_1"></script><script defer src="../assets/team-prefs.js?v19_3"></script><script defer src="../assets/site-nav.js?v23_1"></script><script defer src="../assets/game-page.js?v23_2"></script>
+<link rel="stylesheet" href="../assets/game-page.css?v22_0">
+<script defer src="../assets/site-shell.js?v24_1"></script><script defer src="../assets/team-media.js"></script><script defer src="../assets/live-scoreboard.js?v25_1"></script><script defer src="../assets/boxscore-plus.js?v24_1"></script><script defer src="../assets/live-desk.js?v25_1"></script><script defer src="../assets/team-prefs.js?v19_3"></script><script defer src="../assets/site-nav.js?v24_1"></script><script defer src="../assets/game-page.js?v25_6"></script>
 <link rel="stylesheet" href="../assets/sortable-v17.css"><script defer src="../assets/sortable-tables.js"></script><link rel="stylesheet" href="../assets/watchlist-v17.css"><script defer src="../assets/watchlist.js"></script><link rel="stylesheet" href="../assets/v19-concept3.css?v19_4"></head><body class="v12 game-page">
 <a class="site-skip" href="#site-main">Skip to game centre</a>
 <header class="app-header"><div class="header-inner">
@@ -25,30 +25,33 @@
  <div id="game-periods" class="game-periods" aria-label="Quarter by quarter scores"></div>
  <div id="game-updated" class="game-updated" aria-live="polite">Source: ESPN public game summary (unofficial). Loading…</div>
 </section>
-<section class="game-leaders" aria-label="Actual game leaders" id="game-leaders"></section>
 <div class="game-tabs" role="tablist" aria-label="Game centre views">
- <button id="tab-box" role="tab" aria-selected="true" aria-controls="pane-box" tabindex="0" data-tab="box">BOX SCORE</button>
- <button id="tab-plays" role="tab" aria-selected="false" aria-controls="pane-plays" tabindex="-1" data-tab="plays">PLAY-BY-PLAY</button>
- <button id="tab-team" role="tab" aria-selected="false" aria-controls="pane-team" tabindex="-1" data-tab="team">TEAM STATS</button>
- <button id="tab-machine" role="tab" aria-selected="false" aria-controls="pane-machine" tabindex="-1" data-tab="machine">THE MACHINE · VS REALITY</button>
+ <button id="tab-overview" role="tab" aria-selected="true" aria-controls="pane-overview" tabindex="0" data-tab="overview">OVERVIEW</button>
+ <button id="tab-matchup" role="tab" aria-selected="false" aria-controls="pane-matchup" tabindex="-1" data-tab="matchup">MATCHUP</button>
+ <button id="tab-box" role="tab" aria-selected="false" aria-controls="pane-box" tabindex="-1" data-tab="box">BOX SCORE</button>
+ <button id="tab-machine" role="tab" aria-selected="false" aria-controls="pane-machine" tabindex="-1" data-tab="machine">MACHINES</button>
 </div>
-<section id="pane-box" class="game-tab-panel" role="tabpanel" aria-labelledby="tab-box">
- <div class="game-panel-top"><div><div class="eyebrow">ACTUAL PERFORMANCE</div><h2>PLAYER BOX SCORE.</h2></div><span class="game-source">ESPN game summary</span></div>
- <p class="game-stat-guidance">Click any stat heading to sort both teams. Swipe horizontally for shooting splits, steals, blocks, plus/minus and fantasy points. <strong>FPTS</strong> follows ESPN default points-league scoring; unavailable components produce —.</p>
+<section id="pane-overview" class="game-tab-panel" role="tabpanel" aria-labelledby="tab-overview">
+ <div class="game-panel-top"><div><div class="eyebrow">GAME SNAPSHOT</div><h2>OVERVIEW.</h2></div><span class="game-source">Verified game detail · ESPN public summary</span></div>
+ <p id="game-overview-context" class="game-stat-guidance">Loading verified game information…</p>
+ <section class="game-freshness" aria-labelledby="game-freshness-heading"><h3 id="game-freshness-heading">DATA FRESHNESS & COVERAGE</h3><div id="game-freshness-details" aria-live="polite">Checking ESPN source timestamps…</div></section>
+ <section id="game-leaders" class="game-leaders" aria-label="Game leaders and notable performances"></section>
+ <details class="overview-plays"><summary>Play-by-play · latest available actions</summary><div id="game-play-list" class="game-play-list"><p>Loading play-by-play…</p></div></details>
+</section>
+<section id="pane-matchup" class="game-tab-panel" role="tabpanel" aria-labelledby="tab-matchup" hidden>
+ <div class="game-panel-top"><div><div class="eyebrow">TIMESTAMPED TEAM EVIDENCE</div><h2>HOW THIS MATCHUP COULD TURN.</h2></div><span class="game-source">Research context · no added forecast</span></div>
+ <div id="game-matchup"><p class="game-empty">Open Matchup to check for pre-tip team evidence.</p></div>
+</section>
+<section id="pane-box" class="game-tab-panel" role="tabpanel" aria-labelledby="tab-box" hidden>
+ <div class="game-panel-top"><div><div class="eyebrow">ACTUAL PERFORMANCE</div><h2>BOX SCORE.</h2></div><span class="game-source">ESPN public game summary · unofficial</span></div>
+ <section class="game-team-totals" aria-labelledby="game-team-totals-heading"><h3 id="game-team-totals-heading">TEAM TOTALS</h3><div id="game-team-stats" class="game-team-stats"><p>Loading verified team totals…</p></div></section>
+ <p class="game-stat-guidance">Select any column heading to sort both teams. Swipe horizontally on mobile. <strong>FPTS</strong> follows ESPN default points-league scoring: PTS + 3PM + 2 FGM − FGA + FTM − FTA + REB + 2 AST + 4 STL + 4 BLK − 2 TOV. Missing categories remain unavailable; DNP is not scored.</p>
  <div class="game-box-groups" id="game-box-groups"><p>Loading player statistics…</p></div>
 </section>
-<section id="pane-plays" class="game-tab-panel" role="tabpanel" aria-labelledby="tab-plays" hidden>
- <div class="game-panel-top"><div><div class="eyebrow">EVERY POSSESSION MATTERS</div><h2>PLAY-BY-PLAY.</h2></div><span class="game-source">Latest available 120 plays</span></div>
- <div class="game-play-list" id="game-play-list"><p>Loading verified play-by-play…</p></div>
-</section>
-<section id="pane-team" class="game-tab-panel" role="tabpanel" aria-labelledby="tab-team" hidden>
- <div class="game-panel-top"><div><div class="eyebrow">SIDE BY SIDE</div><h2>TEAM STATS.</h2></div><span class="game-source">Actual game metrics</span></div>
- <div id="game-team-stats" class="game-team-stats"><p>Loading team statistics…</p></div>
-</section>
 <section id="pane-machine" class="game-tab-panel" role="tabpanel" aria-labelledby="tab-machine" hidden>
- <div class="game-panel-top"><div><div class="eyebrow">FROZEN PREGAME / VERIFIED FINAL</div><h2>MACHINES VS REALITY.</h2></div><span class="game-source">Six engines · automatic postgame grading</span></div>
+ <div class="game-panel-top"><div><div class="eyebrow">ORIGINAL LOCK / VERIFIED FINAL</div><h2>FORECASTS & GRADING.</h2></div><span class="game-source">Production first · research separate</span></div>
  <div id="game-forecast"><p>Looking for an immutable pretip prediction…</p></div>
- <p class="game-disclaimer">No forecast is recalculated using live scores. Historical predictions and research are kept separate from the actual game.</p>
+ <p class="game-disclaimer">No forecast is recalculated using live scores. Historical predictions and research remain separate from actual game results.</p>
 </section>
 <footer class="site-footer"><span>NBA TWIN LAB · INDEPENDENT RESEARCH</span><span>ESPN data is provided by an unofficial public feed; if unavailable, no live score or stat is invented. <a href="../">HOME ↗</a></span></footer>
 </main></body></html>

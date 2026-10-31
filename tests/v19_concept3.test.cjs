@@ -21,17 +21,20 @@ test('V19 approved Concept 3 stylesheet loads AFTER each existing dark styleshee
  const design=read('docs/approved-design-concept-3.md');
  assert.match(design,/APPROVED WEBSITE DESIGN: CONCEPT 3/);
 });
-test('homepage matches approved hierarchy without dropping verified live desk or sortable stats',()=>{
+test('homepage leads with the Games Command Centre without dropping the hero or sortable stats',()=>{
  const html=read('index.html');
  const order=['class="hero-grid"','class="metric-strip"','id="live-games"','id="home-games"'];
  const index=order.map(x=>html.indexOf(x));
  assert.ok(index.every(n=>n>0),JSON.stringify(index));
- assert.deepEqual([...index].sort((a,b)=>a-b),index,'Hero/metrics/live/slate layout is out of order');
+ assert.deepEqual([...index].sort((a,b)=>a-b),index,'Hero, live desk and locked slate remain in source order');
+ assert.match(read('assets/v19-concept3.css'),/body\.v12\.home #live-games\{order:-1/,'Live scoreboard must visually lead the page');
  for(const id of ['featured-game','feature-tip','feature-confidence','feature-players','home-backtest','home-locked','home-projections',
   'live-player-stats','live-stats-rows','live-game-list','desk-top-performers','live-alerts-toggle']){
   assert.ok(html.includes('id="'+id+'"'),id+' was lost');
  }
  assert.ok(html.includes('Smarter<br><em>NBA Predictions.</em>'));
+ assert.ok(html.includes('id="home-team-trends"'));
+ assert.ok(html.includes('id="home-machine-scorecard"'));
  assert.ok(html.includes('class="v19-hero-art"'));
  assert.ok(!html.includes('v19-hero-athlete'),'undersized portrait must not fill homepage');
  const js=read('assets/home.js');
@@ -82,13 +85,13 @@ test('Player Stats is a distinct route from live NBA box scores',()=>{
  const player=read('player-stats/index.html');
  const home=read('index.html');
  assert.ok(desktop.includes("link('PLAYERS','player-stats/',isStats)"));
- assert.ok(desktop.includes("link('LIVE','#live-games',"));
+ assert.ok(desktop.includes("link('GAMES','#live-games',"));
  assert.ok(desktop.includes("link('PLAYERS','player-stats/',"));
  assert.ok(!desktop.includes("link('PLAYERS','#live-player-stats'"));
  assert.ok(mobile.includes('"Players","player-stats/"'));
  assert.ok(player.includes('Pregame Projections'));
  assert.ok(player.includes('Live Box Scores'));
- assert.ok(home.includes('LIVE GAMES <em>& BOX SCORES.</em>'));
+ assert.ok(home.includes('GAMES <em>COMMAND CENTRE.</em>'));
  const css=read('assets/v19-concept3.css');
  assert.ok(css.includes('LeBron_James%27_pregame_ritual.jpg'));
  assert.ok(home.includes('Photo by Keith Allison'));

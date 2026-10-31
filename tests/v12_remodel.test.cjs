@@ -3,6 +3,11 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const root=path.join(__dirname,'..');
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 const primary=['index.html','challenge/daily.html','challenge/index.html','predict/index.html','audit/index.html'];
+const waitFor=async predicate=>{
+ const limit=Date.now()+3000;
+ while(Date.now()<limit){if(predicate())return;await new Promise(resolve=>setTimeout(resolve,10))}
+ assert.ok(predicate(),'Timed out waiting for byte-verified homepage data');
+};
 
 test('V12 app pages use one navigation system and do not load the superseded dark theme',()=>{
  const css=read('assets/v12.css');
@@ -45,13 +50,14 @@ test('new homepage dynamically builds clickable slate cards from only original l
   return elements.get(id);
  };
  const document={getElementById:get};
- const sources={'./data/audit-ledger.json':ledger,'./data/five-model-report.json':{common_evaluation:{games:3643}},['./'+ledger.entries[0].lock_path]:original};
- const fetch=async url=>({ok:Object.hasOwn(sources,url),json:async()=>sources[url]});
- vm.runInNewContext(read('assets/home.js'),{document,fetch,Date,Intl,Promise,console},{filename:'assets/home.js'});
- await new Promise(resolve=>setImmediate(resolve));
+ const lockPath='./'+ledger.entries[0].lock_path;
+ const sources={'./data/audit-ledger.json':ledger,'./data/five-model-report.json':{common_evaluation:{games:3643}},[lockPath]:original};
+ const fetch=async url=>({ok:Object.hasOwn(sources,url),json:async()=>sources[url],text:async()=>url===lockPath?read(ledger.entries[0].lock_path):JSON.stringify(sources[url])});
+ vm.runInNewContext(read('assets/home.js'),{window:{},document,fetch,Date,Intl,Promise,console,crypto:crypto.webcrypto,TextEncoder},{filename:'assets/home.js'});
+ await waitFor(()=>((get('home-games').innerHTML.match(/class="home-game"/g)||[]).length===10));
  assert.equal((get('home-games').innerHTML.match(/class="home-game"/g)||[]).length,10);
  assert.ok(get('home-games').innerHTML.includes('./game/?id='));
- assert.ok(get('home-games').innerHTML.includes('ELO PICK'));
+ assert.ok(get('home-games').innerHTML.includes('PRODUCTION ELO · LOCKED'));
  assert.doesNotMatch(get('home-games').innerHTML,/Date unavailable/,'Valid game times must render in Melbourne time');
  assert.match(get('home-games').innerHTML,/31 Oct/,'Archive cards need readable Melbourne dates');
  assert.equal(get('home-locked').textContent,'1');

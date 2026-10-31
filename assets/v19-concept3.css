@@ -338,6 +338,35 @@ body.v12.home .featured-box .feature-score .sports-club__city{
  display:block;max-width:160px;font-size:10px;line-height:1.35;
  color:#9bb6cf;white-space:normal
 }
+
+body.v12.home #site-main{display:flex;flex-direction:column;gap:clamp(20px,2.4vw,34px)}
+body.v12.home #live-games{order:-1;margin-top:8px}
+body.v12.home .hero-grid{margin-top:0}
+body.v12.home .home-command-panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 17px}
+body.v12.home .home-command-panels>section{min-width:0;padding:16px;border:1px solid #29445e;border-radius:11px;background:#0b1928}
+body.v12.home .home-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+body.v12.home .home-panel-heading h2{margin:4px 0 0;font-size:clamp(21px,2vw,29px);letter-spacing:-.035em}
+body.v12.home .home-panel-heading>a{color:#7dc9ff;font-size:10px;font-weight:800;white-space:nowrap}
+body.v12.home .home-panel-unavailable{margin:8px 0;color:#9eb4c6;font-size:11px}
+body.v12.home .home-trend-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+body.v12.home .home-trend-cards article{display:grid;gap:5px;padding:10px;border:1px solid #2d4960;border-radius:7px;background:#102239}
+body.v12.home .home-trend-cards article strong{color:#9edbff;font-size:10px}
+body.v12.home .home-trend-cards article span,body.v12.home .home-trend-source{color:#91a9bc;font-size:9px;line-height:1.45}
+body.v12.home .home-trend-source{margin:10px 0 0}
+body.v12.home .home-scorecard-summary{display:flex;flex-wrap:wrap;gap:7px}
+body.v12.home .home-scorecard-summary>*{padding:8px 10px;border:1px solid #2d4960;border-radius:6px;background:#102239;color:#c5d8e6;font-size:10px}
+body.v12.home .home-scorecard-summary>strong{color:#d8f39b}
+body.v12.home .home-scorecard-provenance,body.v12.home .home-research-scorecard>p{color:#8fa8bc;font-size:9px;line-height:1.45}
+body.v12.home .home-scorecard-table-wrap{width:100%;overflow:auto}
+body.v12.home .home-scorecard-table{width:100%;min-width:480px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+body.v12.home .home-scorecard-table :is(th,td){padding:8px;text-align:left;border-bottom:1px solid #20384f;color:#dbe8f2;font-size:9px;white-space:nowrap}
+body.v12.home .home-scorecard-table th{color:#a7c3d9}
+body.v12.home .home-scorecard-table caption{text-align:left;padding:7px 0;color:#89cfff;font-size:9px;font-weight:900;text-transform:uppercase}
+body.v12.home .home-research-scorecard{margin-top:12px;border-top:1px solid #29445e;padding-top:10px}
+body.v12.home .home-research-scorecard summary{color:#c1d9e8;font-size:9px;font-weight:900;cursor:pointer}
+body.v12.home .home-game__records{display:flex;justify-content:space-between;color:#91a9bc;font-size:9px}
+body.v12.home .home-game__records i{font-style:normal;color:#587188}
+@media(max-width:760px){body.v12.home .home-command-panels{grid-template-columns:1fr}}
 body.v12.home .feature-score .sports-feature__match{
  grid-template-columns:minmax(0,1fr) minmax(85px,100px) minmax(0,1fr);
  gap:8px

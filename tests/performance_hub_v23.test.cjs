@@ -6,13 +6,14 @@ const path=require('node:path');
 const vm=require('node:vm');
 const read=name=>fs.readFileSync(path.join(__dirname,'..',name),'utf8');
 
-test('four-destination desktop and mobile navigation preserves deeper research routes',()=>{
+test('five-destination desktop and mobile navigation preserves contextual research routes',()=>{
  const desktop=read('assets/site-nav.js'),mobile=read('assets/site-shell.js');
- for(const route of ['LIVE','#live-games','THE MACHINE','predict/','PLAYERS','player-stats/','LEAGUE','league/'])
+ for(const route of ['GAMES','#live-games','PREDICTIONS','predict/','PLAYERS','player-stats/','LEAGUE','league/','MODEL LAB','challenge/'])
   assert.ok(desktop.includes(route),route+' missing');
- for(const route of ['challenge/daily.html','audit/','challenge/','watchlist/'])
-  assert.ok(desktop.includes(route),route+' missing from More menu');
- for(const label of ['Live','Machine','Players','League'])
+ for(const route of ['challenge/daily.html','audit/','challenge/','team-intelligence/','twins/'])
+  assert.ok(read('index.html').includes(route),route+' missing from contextual navigation');
+ assert.ok(desktop.includes('watchlist/'),'Watchlist remains available through the contextual header action');
+ for(const label of ['Games','Predictions','Players','League','Model Lab'])
   assert.match(mobile,new RegExp('"'+label+'"'));
  const brand=read('assets/concept3-fidelity.css');
  assert.match(brand,/\.brand-icon:before\{content:none!important/);

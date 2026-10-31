@@ -1,7 +1,12 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
+const waitFor=async predicate=>{
+ const limit=Date.now()+3000;
+ while(Date.now()<limit){if(predicate())return;await new Promise(resolve=>setTimeout(resolve,10))}
+ assert.ok(predicate(),'Timed out waiting for byte-verified homepage data');
+};
 
 test('homepage ticker renders real team-mark components, scores and accessible matchup names',async()=>{
  const ledger=JSON.parse(read('data/audit-ledger.json'));
@@ -24,16 +29,17 @@ test('homepage ticker renders real team-mark components, scores and accessible m
  };
  const doc={getElementById:get};
  const window={NbaMedia:{image:abbr=>'<span class="ticker-logo-test" data-logo="'+abbr+'"><img src="verified-logo.png" alt=""></span>',playerImage:()=>''}};
- const fetch=async uri=>({ok:Object.hasOwn(files,uri),json:async()=>files[uri]});
- vm.runInNewContext(read('assets/home.js'),{document:doc,window,fetch,Date,Intl,Promise,console},{filename:'assets/home.js'});
- await new Promise(resolve=>setImmediate(resolve));
+ const lockPath='./'+entry.lock_path;
+ const fetch=async uri=>({ok:Object.hasOwn(files,uri),json:async()=>files[uri],text:async()=>uri===lockPath?read(entry.lock_path):JSON.stringify(files[uri])});
+ vm.runInNewContext(read('assets/home.js'),{document:doc,window,fetch,Date,Intl,Promise,console,crypto:crypto.webcrypto,TextEncoder},{filename:'assets/home.js'});
+ await waitFor(()=>((get('home-ticker').innerHTML.match(/class="ticker-logo-test"/g)||[]).length>=20));
  const markup=get('home-ticker').innerHTML;
  assert.ok((markup.match(/class="ticker-logo-test"/g)||[]).length>=20,'Ten games need two logo components each');
  assert.match(markup,/class="court-ticker__matchup"/);
  assert.match(markup,/class="court-ticker__score"/);
  assert.match(markup,/aria-label="Charlotte Hornets at Washington Wizards/);
  assert.doesNotMatch(markup,/<b>CHA<\/b>/,'Do not render team abbreviations as ticker primary graphics');
- assert.match(markup,/79|ELO|LOCKED PRETIP/,'Shows genuine pregame prediction or independently confirmed final score');
+ assert.match(markup,/79|PRODUCTION ELO|LOCKED/,'Shows genuine pregame prediction or independently confirmed final score');
 });
 test('header team selector is removed while preference data and watchlist remain usable',()=>{
  const code=read('assets/team-prefs.js');
@@ -57,7 +63,7 @@ test('header team selector is removed while preference data and watchlist remain
  assert.match(desk,/TwinWatchlist\?\.state\?\.\(\)\.teams/);
  assert.match(desk,/twinlab:watchlistchange/);
  const nav=read('assets/site-nav.js');
- assert.match(nav,/link\('LIVE'/);
+ assert.match(nav,/link\('GAMES'/);
  assert.match(nav,/MY WATCHLIST/);
 });
 test('hero is a sourced, Creative-Commons-licensed photograph of NBA LeBron chalk toss',()=>{

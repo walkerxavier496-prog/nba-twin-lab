@@ -21,11 +21,11 @@ test('Live Games and Player Stats keep clear above-fold navigation without displ
   assert.match(html,/data-desk-date="-1"/);
  }
  const nav=read('assets/site-shell.js');
- assert.match(nav,/\["Live","#live-games"/);
+ assert.match(nav,/\["Games","#live-games"/);
  assert.match(nav,/\["Players","player-stats\/"/);
  assert.match(read('assets/live-desk.css'),/@media\(max-width:590px\)/);
  assert.match(read('assets/live-desk.js'),/OPEN GAME CENTRE/);
- assert.match(read('assets/site-nav.js'),/link\('LIVE','#live-games'/);
+ assert.match(read('assets/site-nav.js'),/link\('GAMES','#live-games'/);
  assert.match(read('index.html'),/id="hero-live-status"[^>]+href="#live-games"/);
 });
 test('ESPN boxscore maps genuine NBA game statistics instead of player predictions',()=>{
@@ -70,6 +70,28 @@ test('ESPN game summary fails closed on invalid IDs and failed provider replies'
  assert.equal(sample.players.length,0);
  assert.equal(sample.plays.length,0);
  assert.match(sample.source,/ESPN/);
+});
+
+test('completed-score cross-check preserves independent ESPN observations and flags disagreements',()=>{
+ const desk=build(),game={id:'401909277',phase:'final',away:{abbr:'CHA',score:79},home:{abbr:'WSH',score:95}};
+ const same={score:{away:79,home:95,final:true},checkedAt:new Date().toISOString()};
+ const agreement=desk.scoreCrossCheck(game,same,'scoreboard retrieval time');
+ assert.equal(agreement.disagreement,false);
+ assert.match(agreement.message,/ESPN sources agree/);
+ const conflict=desk.scoreCrossCheck(game,{...same,score:{away:80,home:95,final:true}},'scoreboard retrieval time');
+ assert.equal(conflict.disagreement,true);
+ assert.match(conflict.message,/ESPN sources disagree/);
+ assert.match(conflict.message,/scoreboard 79–95, summary 80–95/);
+ const missing=desk.scoreCrossCheck(game,null,'scoreboard retrieval time');
+ assert.equal(missing.disagreement,false);
+ assert.match(missing.message,/summary not retrieved/);
+ const stale=desk.scoreCrossCheck(game,{...same,checkedAt:new Date(Date.now()-120000).toISOString()},'scoreboard retrieval time');
+ assert.equal(stale.disagreement,false);
+ assert.match(stale.message,/observation is stale; comparison withheld/);
+ const parsed=desk.summaryScore({header:{competitions:[{status:{type:{completed:true}},competitors:[
+  {homeAway:'away',score:'79'},{homeAway:'home',score:'95'}
+ ]}]}});
+ assert.deepEqual({away:parsed.away,home:parsed.home,final:parsed.final},{away:79,home:95,final:true});
 });
 
 test('highlight notifications fire only for newly observed qualifying plays after opt-in',async()=>{

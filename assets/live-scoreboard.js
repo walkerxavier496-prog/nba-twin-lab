@@ -31,12 +31,20 @@
   function status(event){
     const v=event?.status||event?.competitions?.[0]?.status||{};
     const type=v.type||{};
-    const phase=type.completed===true||type.state==='post'||type.name==='STATUS_FINAL'?'final':
+    const statusText=[type.name,type.shortDetail,type.detail].filter(Boolean).join(' ');
+    const phase=/postponed/i.test(statusText)?'postponed':
+      type.completed===true||type.state==='post'||type.name==='STATUS_FINAL'?'final':
       type.state==='in'||String(type.name||'').startsWith('STATUS_IN')?'live':'scheduled';
     const period=num(v.period);
     const clock=cleanText(v.displayClock||'');
     const description=cleanText(type.shortDetail||type.detail||'');
     return {phase,period,clock,description};
+  }
+  function teamRecord(competitor){
+    const records=Array.isArray(competitor?.records)?competitor.records:[];
+    const record=records.find(item=>/overall|total/i.test(String(item.type||item.name||'')))||
+      (records.length===1?records[0]:null);
+    return cleanText(record?.summary||'');
   }
   function parse(data){
     if(!data||!Array.isArray(data.events))throw Error('ESPN response is missing its events array');
@@ -49,13 +57,14 @@
       if(!Number.isFinite(when.getTime()))continue;
       const state=status(event);
       // Only present 0–0 as a real score if it is actually in progress.
-      const hScore=state.phase==='scheduled'?null:num(home.score);
-      const aScore=state.phase==='scheduled'?null:num(away.score);
-      if(state.phase!=='scheduled'&&(!Number.isFinite(hScore)||!Number.isFinite(aScore)))continue;
+      const noScoreYet=state.phase==='scheduled'||state.phase==='postponed';
+      const hScore=noScoreYet?null:num(home.score);
+      const aScore=noScoreYet?null:num(away.score);
+      if(!noScoreYet&&(!Number.isFinite(hScore)||!Number.isFinite(aScore)))continue;
       out.push({
         id:id(event.id),date:when.toISOString(),
-        home:{abbr:cleanText(home.team?.abbreviation||home.team?.shortDisplayName),name:cleanText(home.team?.displayName),score:hScore},
-        away:{abbr:cleanText(away.team?.abbreviation||away.team?.shortDisplayName),name:cleanText(away.team?.displayName),score:aScore},
+        home:{abbr:cleanText(home.team?.abbreviation||home.team?.shortDisplayName),name:cleanText(home.team?.displayName),score:hScore,record:teamRecord(home)},
+        away:{abbr:cleanText(away.team?.abbreviation||away.team?.shortDisplayName),name:cleanText(away.team?.displayName),score:aScore,record:teamRecord(away)},
         ...state
       });
     }
@@ -96,6 +105,7 @@
   }
   const label=game=>{
     if(!game)return 'SCORE UNAVAILABLE';
+    if(game.phase==='postponed')return 'POSTPONED';
     if(game.phase==='final')return 'FINAL';
     if(game.phase==='live'){
       const q=game.period>4?'OT'+(game.period>5?' '+(game.period-4):''):'Q'+(game.period||'?');

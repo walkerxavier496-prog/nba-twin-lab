@@ -149,6 +149,15 @@ body.v12.home #live-games~.hero-grid .lead-story h1{font-size:clamp(50px,5vw,88p
 @media(max-width:900px){.performance-night{grid-template-columns:1fr 110px}.performance-night>img{width:110px;height:145px}.performance-night-stats{grid-column:1/-1;width:100%;padding-bottom:15px}.performance-category-grid{grid-template-columns:1fr}}
 @media(max-width:590px){.performance-controls{padding-inline:11px}.performance-controls label{flex:1;min-width:105px}.performance-night{grid-template-columns:1fr 92px;padding:15px 12px 0}.performance-night>img{width:92px;height:125px}.performance-night-copy>strong{font-size:31px}.performance-night-stats{overflow-x:auto;grid-template-columns:repeat(5,66px)}.performance-night-stats b{font-size:20px}.performance-history>a{grid-template-columns:1fr 90px}.performance-spark{grid-column:1/-1}.performance-rank-card{grid-template-columns:30px 18px minmax(0,1fr) auto}.performance-rank-card>img{width:30px;height:32px}.performance-history-empty{display:grid}}
 
+.live-desk .desk-game{gap:7px;min-height:148px}
+.desk-game-records{display:flex;justify-content:space-between;gap:4px;color:#8da7ba;font-size:8px;font-variant-numeric:tabular-nums}
+.desk-game-records span{max-width:48%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.desk-production-probability{display:block;color:#bce9ad;font-size:8px;font-weight:900;letter-spacing:.015em;text-align:center}
+.desk-probability-unavailable{color:#8ea3b3}
+.desk-score-crosscheck{display:block;color:#8fb4c5;font-size:8px;line-height:1.35;text-align:center}
+.desk-score-disagreement{padding:4px;border:1px solid #d88a55;border-radius:4px;background:#532b1a;color:#ffd2aa}
+@media(max-width:590px){.live-desk .desk-game{min-height:155px}.desk-game-records{font-size:7px}.desk-production-probability,.desk-score-crosscheck{font-size:7px}}
+
 
 /* V21.3: One clear, sortable performance leaderboard replaces six repetitive panels. */
 .performance-leaderboard{min-width:0;overflow:hidden;border:1px solid #33536b;border-radius:12px;background:linear-gradient(180deg,#10273b,#0b1a2b 28%);color:#edf7ff}

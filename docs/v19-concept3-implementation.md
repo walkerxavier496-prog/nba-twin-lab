@@ -4,6 +4,16 @@
 **Status:** Implementation committed; awaiting visual comparison in an actual desktop/mobile browser and GitHub Actions verification.
 **Date:** 31 October 2026 (Australia/Melbourne)
 
+## Games Command Centre update — Phase 3, Increment 4
+
+- The homepage now visually leads with the existing live scoreboard, Melbourne date controls and actual box-score performance hub. The Concept 3 hero and its archived forecast detail remain below the Games section.
+- Desktop and mobile navigation now share five primary destinations: Games, Predictions, League, Players and Model Lab. Secondary research routes remain available through contextual links and the watchlist action.
+- Scoreboard cards include ESPN records and production probabilities only when a same-date forecast lock passes its raw SHA-256, canonical integrity, date and pre-tip checks. Finals link directly to Game Centre and show an ESPN scoreboard-versus-summary comparison with separate retrieval times; disagreements are flagged, never reconciled automatically.
+- The production scorecard verifies the daily review file hash and its binding to the original lock, then checks each reviewed production probability and winner against that lock and the reviewed final. Daily aggregate metrics are withheld below five verified games. Research-machine summaries are separately labelled and never replace production.
+- Team streaks are computed from consecutive finals in the timestamped `data/games.json` snapshot, limited to its latest 30 days, and disclose both sample count and date window. Player recent-form claims remain unavailable until enough append-only player-game records exist; current history is not sufficient for a streak claim.
+- Browser verification: desktop 1440 px, mobile 390 px and narrow mobile 320 px had no document-width overflow. At 320 px the scorecard table scrolls within its own panel.
+- Release verification: `scripts/validate_release.sh` passed with 188 JavaScript tests and 69 Python tests; original lock, review, challenger-sidecar, probability-binding and syntax checks passed.
+
 ## Implemented
 
 - One shared dark navy, electric-blue/cyan and restrained-violet visual system: `assets/v19-concept3.css`.

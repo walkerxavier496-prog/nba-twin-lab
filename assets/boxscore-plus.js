@@ -8,6 +8,13 @@
 const n=value=>value!==null&&value!==undefined&&String(value).trim()!==''&&Number.isFinite(Number(value))?Number(value):null;
 const shot=s=>{const m=String(s??'').match(/^(\d+)\s*-\s*(\d+)$/);return m?{made:Number(m[1]),attempts:Number(m[2])}:null};
 const id=s=>String(s??'').toUpperCase().replace(/[^A-Z0-9+\-%]/g,'');
+const minutes=value=>{
+ const text=String(value??'').trim();
+ const match=text.match(/^(\d+):([0-5]\d)(?:\.\d+)?$/);
+ if(match)return Number(match[1])*60+Number(match[2]);
+ const number=n(text);
+ return number===null?null:number*60;
+};
 const getStat=(labels,values,...keys)=>{
  for(const key of keys){const index=labels.findIndex(l=>id(l)===id(key));if(index>=0)return values[index]}
  return null;
@@ -27,19 +34,21 @@ function parseBoxscore(raw){
   for(const statGroup of group.statistics||[]){
    const labels=(statGroup.labels||statGroup.names||[]).map(id);
    for(const entry of statGroup.athletes||[]){
-    if(entry.didNotPlay===true||entry.dnp===true||entry.active===false&&entry.didNotPlay)continue;
     const athlete=entry.athlete||{},stats=entry.stats||[],stat=(...keys)=>getStat(labels,stats,...keys);
     const name=String(athlete.displayName||athlete.fullName||'').trim();
     if(!name)continue;
+    const dnp=entry.didNotPlay===true||entry.dnp===true||
+     typeof entry.didNotPlay==='string'&&/dnp|did not play/i.test(entry.didNotPlay);
+    const dnpReason=String(entry.reason||entry.status||entry.didNotPlayReason||
+     (typeof entry.didNotPlay==='string'?entry.didNotPlay:'')).trim();
     const pts=n(stat('PTS')),reb=n(stat('REB')),ast=n(stat('AST'));
-    if(pts===null&&reb===null&&ast===null)continue;
     const fgs=shot(stat('FG','FGM-A')),threes=shot(stat('3PT','3PM-A','3FG')),fts=shot(stat('FT','FTM-A'));
     const pick=(value,alternate)=>n(value)??n(alternate);
     const obj={
      id:String(athlete.id||''),name,team,
      pts,reb,ast,
      minutes:String(stat('MIN')??'—'),
-     minuteValue:parseFloat(String(stat('MIN')??'')),
+     minuteValue:minutes(stat('MIN')),
      fgm:pick(stat('FGM'),fgs?.made),fga:pick(stat('FGA'),fgs?.attempts),
      three:pick(stat('3PM','3FGM'),threes?.made),threeA:pick(stat('3PA','3FGA'),threes?.attempts),
      ftm:pick(stat('FTM'),fts?.made),fta:pick(stat('FTA'),fts?.attempts),
@@ -48,12 +57,20 @@ function parseBoxscore(raw){
      pf:n(stat('PF','FOULS')),plusMinus:n(stat('+/-','PLUSMINUS','PLUS-MINUS')),
      starter:entry.starter===true,position:String(athlete.position?.abbreviation||'')
     };
+    obj.dnp=dnp;
+    obj.dnpReason=dnpReason;
+    if(dnp){
+     for(const key of ['pts','reb','ast','minuteValue','fgm','fga','three','threeA','ftm','fta','stl','blk','tov','oreb','dreb','pf','plusMinus'])obj[key]=null;
+     obj.minutes='DNP';obj.dnpReason=dnpReason||'Did not play';
+    }
+    obj.unavailable=!dnp&&['pts','reb','ast','minuteValue','fgm','fga','three','threeA','ftm','fta',
+     'stl','blk','tov','oreb','dreb','pf','plusMinus'].every(key=>obj[key]===null);
     obj.fgPct=obj.fga>0?Math.round(obj.fgm/obj.fga*1000)/10:null;
     obj.threePct=obj.threeA>0?Math.round(obj.three/obj.threeA*1000)/10:null;
     obj.ftPct=obj.fta>0?Math.round(obj.ftm/obj.fta*1000)/10:null;
-    obj.fpts=fantasyPoints(obj);
-    obj.doubleDouble=['pts','reb','ast','stl','blk'].filter(k=>obj[k]!==null&&obj[k]>=10).length>=2;
-    obj.tripleDouble=['pts','reb','ast','stl','blk'].filter(k=>obj[k]!==null&&obj[k]>=10).length>=3;
+    obj.fpts=dnp?null:fantasyPoints(obj);
+    obj.doubleDouble=!dnp&&['pts','reb','ast','stl','blk'].filter(k=>obj[k]!==null&&obj[k]>=10).length>=2;
+    obj.tripleDouble=!dnp&&['pts','reb','ast','stl','blk'].filter(k=>obj[k]!==null&&obj[k]>=10).length>=3;
     players.push(obj);
    }
   }
@@ -82,5 +99,5 @@ function performanceTag(p){
  if(p.stl>=5||p.blk>=5)return 'DEFENSIVE STANDOUT';
  return '';
 }
-window.TwinBoxscorePlus=Object.freeze({parseBoxscore,fantasyPoints,performanceTag,sort,shot});
+window.TwinBoxscorePlus=Object.freeze({parseBoxscore,fantasyPoints,performanceTag,sort,shot,minutes});
 })();

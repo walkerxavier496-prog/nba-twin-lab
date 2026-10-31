@@ -1,17 +1,23 @@
 'use strict';
-const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto');
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const waitFor=async predicate=>{
+ const limit=Date.now()+3000;
+ while(Date.now()<limit){if(predicate())return;await new Promise(resolve=>setTimeout(resolve,10))}
+ assert.ok(predicate(),'Timed out waiting for byte-verified homepage data');
+};
 function adapter(){
  const window={};vm.runInNewContext(read('assets/live-scoreboard.js'),{window,URL,Intl,Date,Number,Object});
  return window.NbaScores;
 }
 const sample=(kind='live')=>{
- const type=kind==='live'?{state:'in',name:'STATUS_IN_PROGRESS',shortDetail:'Q2 8:12'}:
-    kind==='final'?{state:'post',completed:true,name:'STATUS_FINAL',shortDetail:'Final'}:{state:'pre',name:'STATUS_SCHEDULED'};
- return {events:[{id:'401909277',date:'2026-10-30T23:00:00Z',status:{type,period:2,displayClock:'8:12'},
+ const type=kind==='live'||kind==='overtime'?{state:'in',name:'STATUS_IN_PROGRESS',shortDetail:kind==='overtime'?'OT 2':'Q2 8:12'}:
+    kind==='final'?{state:'post',completed:true,name:'STATUS_FINAL',shortDetail:'Final'}:
+    kind==='postponed'?{state:'post',completed:false,name:'STATUS_POSTPONED',shortDetail:'Postponed'}:{state:'pre',name:'STATUS_SCHEDULED'};
+ return {events:[{id:'401909277',date:'2026-10-30T23:00:00Z',status:{type,period:kind==='overtime'?6:2,displayClock:kind==='overtime'?'2:00':'8:12'},
  competitions:[{competitors:[
- {homeAway:'home',score:'42',team:{abbreviation:'WSH',displayName:'Washington Wizards'}},
- {homeAway:'away',score:'47',team:{abbreviation:'CHA',displayName:'Charlotte Hornets'}}
+ {homeAway:'home',score:'42',team:{abbreviation:'WSH',displayName:'Washington Wizards'},records:[{type:'total',summary:'2-3'}]},
+ {homeAway:'away',score:'47',team:{abbreviation:'CHA',displayName:'Charlotte Hornets'},records:[{type:'total',summary:'3-2'}]}
  ]}]}]};
 };
 test('ESPN live scoreboard adapter distinguishes scheduled, in-game, and final results',()=>{
@@ -19,8 +25,15 @@ test('ESPN live scoreboard adapter distinguishes scheduled, in-game, and final r
  const scheduled=scores.parse(sample('scheduled'))[0],live=scores.parse(sample('live'))[0],final=scores.parse(sample('final'))[0];
  assert.equal(scheduled.phase,'scheduled');assert.equal(scheduled.home.score,null);assert.equal(scheduled.away.score,null);
  assert.equal(live.phase,'live');assert.equal(live.away.score,47);assert.equal(live.home.score,42);
+ assert.equal(live.away.record,'3-2');assert.equal(live.home.record,'2-3');
  assert.match(scores.label(live),/Q2/);assert.match(scores.label(live),/8:12/);
  assert.equal(final.phase,'final');assert.equal(scores.label(final),'FINAL');
+ const postponed=scores.parse(sample('postponed'))[0];
+ assert.equal(postponed.phase,'postponed');
+ assert.equal(postponed.away.score,null);assert.equal(postponed.home.score,null);
+ assert.equal(scores.label(postponed),'POSTPONED');
+ const overtime=scores.parse(sample('overtime'))[0];
+ assert.equal(overtime.phase,'live');assert.equal(scores.label(overtime),'OT 2 · 2:00 · LIVE');
  assert.equal(scores.usDate('2026-10-30T23:00:00Z'),'20261030');
  assert.throws(()=>scores.parse({}),/events array/);
 });
@@ -86,16 +99,17 @@ test('homepage shows genuine sourced score separately from frozen pregame predic
  let latestFeed=null;
  const liveResult={date:'20261031',melbourne_date:'20261031',games:scores.parse(sample('live')),fetched_at_utc:'2026-10-31T00:02:00Z',espn_dates:['20261030','20261031']};
  const window={NbaLiveDesk:{setFeed:v=>{latestFeed=v},unavailable:()=>{}},NbaScores:{...scores,melbourneDate:()=> '20261031',fetchDate:async()=>liveResult,fetchMelbourneDate:async()=>liveResult}};
+ const lockPath='./'+entry.lock_path;
  const payloads={'./data/audit-ledger.json':ledger,
   './data/five-model-report.json':{common_evaluation:{games:3643}},
-  ['./'+entry.lock_path]:original,
+  [lockPath]:original,
   './audit/supplements/2026-10-31/challenge.lock.json':sidecar};
- const fetch=async url=>({ok:!!payloads[url],json:async()=>payloads[url]});
- vm.runInNewContext(read('assets/home.js'),{window,document,fetch,Date,Intl,Promise,console,encodeURIComponent});
- await new Promise(resolve=>setImmediate(resolve));
+ const fetch=async url=>({ok:!!payloads[url],json:async()=>payloads[url],text:async()=>url===lockPath?read(entry.lock_path):JSON.stringify(payloads[url])});
+ vm.runInNewContext(read('assets/home.js'),{window,document,fetch,Date,Intl,Promise,console,encodeURIComponent,crypto:crypto.webcrypto,TextEncoder});
+ await waitFor(()=>get('feature-detail').textContent.includes('Archived pretip forecast'));
  const card=get('home-games').innerHTML;
- assert.doesNotMatch(card,/47–42|47<\/b>|42<\/b>/,'Archived prediction cards must not pretend to be a live scoreboard');
- assert.match(card,/ELO PICK/);
+ assert.match(card,/47 – 42/,'Live score appears as an ESPN observation, separately from the lock');
+ assert.match(card,/ESPN SCORE/);
  assert.match(get('scoreboard-source').textContent,/ARCHIVED PREGAME FORECASTS/);
  assert.ok(latestFeed&&latestFeed.games[0].away.score===47,'Real scores must reach the independent live desk');
  assert.match(get('feature-detail').textContent,/Archived pretip forecast/);

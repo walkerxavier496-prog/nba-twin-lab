@@ -2,13 +2,13 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080e17"><meta name="description" content="NBA Twin Lab — today's NBA predictions, team matchups, six-model power rankings, player projections and verified accuracy.">
 <title>NBA Twin Lab · Game Day</title>
 <link rel="stylesheet" href="./assets/site-shell.css"><link rel="stylesheet" href="./assets/v12.css">
-<script defer src="./assets/site-shell.js?v23_1"></script><script defer src="./assets/team-media.js"></script><script defer src="./assets/live-scoreboard.js?v21_1"></script><script defer src="./assets/boxscore-plus.js"></script><script defer src="./assets/live-desk.js?v23_1"></script><script defer src="./assets/home.js?v21_1"></script><link rel="stylesheet" href="./assets/dark-v13.css"><link rel="stylesheet" href="./assets/live-desk.css?v23_1"><script defer src="./assets/team-prefs.js?v19_4"></script><link rel="stylesheet" href="./assets/nav-v15.css"><script defer src="./assets/site-nav.js?v23_1"></script><link rel="stylesheet" href="./assets/sortable-v17.css"><script defer src="./assets/sortable-tables.js"></script><link rel="stylesheet" href="./assets/watchlist-v17.css"><script defer src="./assets/watchlist.js"></script><link rel="stylesheet" href="./assets/v19-concept3.css?v21_1"><link rel="stylesheet" href="./assets/concept3-fidelity.css?v23_1"></head>
+<script defer src="./assets/site-shell.js?v24_1"></script><script defer src="./assets/team-media.js"></script><script defer src="./assets/live-scoreboard.js?v25_1"></script><script defer src="./assets/boxscore-plus.js"></script><script defer src="./assets/live-desk.js?v25_1"></script><script defer src="./assets/home.js?v25_1"></script><link rel="stylesheet" href="./assets/dark-v13.css"><link rel="stylesheet" href="./assets/live-desk.css?v24_1"><script defer src="./assets/team-prefs.js?v19_4"></script><link rel="stylesheet" href="./assets/nav-v15.css"><script defer src="./assets/site-nav.js?v24_1"></script><link rel="stylesheet" href="./assets/sortable-v17.css"><script defer src="./assets/sortable-tables.js"></script><link rel="stylesheet" href="./assets/watchlist-v17.css"><script defer src="./assets/watchlist.js"></script><link rel="stylesheet" href="./assets/v19-concept3.css?v24_1"><link rel="stylesheet" href="./assets/concept3-fidelity.css?v23_1"></head>
 <body class="v12 home">
 <a class="site-skip" href="#site-main">Skip to content</a>
 <header class="app-header"><div class="header-inner">
  <a href="./" class="brand" aria-label="NBA Twin Lab home"><span class="brand-icon">TL</span><span class="wordmark">TWIN <span>LAB</span><small>BASKETBALL INTELLIGENCE</small></span></a>
- <nav aria-label="Main navigation"><a class="active" href="#live-games" aria-current="page">Live Games</a><a href="./player-stats/">Player Projections</a><a href="./">Home</a><a href="./predict/">Game Predictor</a><a href="./team-intelligence/">Team Intelligence</a><a href="./challenge/daily.html">Daily Predictions</a><a href="./challenge/">Model Rankings</a><a href="./audit/">Accuracy Ledger</a><a href="./twins/">Player Twins</a></nav>
- <a class="header-action" href="#live-games">LIVE GAMES & STATS <span aria-hidden="true">↗</span></a>
+ <nav aria-label="Main navigation"><a class="active" href="#live-games" aria-current="page">Games</a><a href="./predict/">Predictions</a><a href="./league/">League</a><a href="./player-stats/">Players</a><a href="./challenge/">Model Lab</a></nav>
+ <a class="header-action" href="./challenge/daily.html">TODAY’S PREDICTIONS <span aria-hidden="true">↗</span></a>
 </div></header>
 <div class="ribbon"><div class="ribbon-inner"><span class="ribbon-label">THE SLATE</span><div class="ribbon-track" id="home-ticker" aria-label="Verified pregame prediction ticker">Loading latest locked games…</div><a class="ribbon-link" href="./challenge/daily.html">VIEW ALL ↗</a></div></div>
 <main id="site-main" class="main-body">
@@ -41,7 +41,7 @@
  </div>
 
 <section id="live-games" class="live-desk" aria-labelledby="live-desk-heading">
- <div class="desk-section-top"><div><div class="eyebrow"><span class="desk-pulse"></span> NBA GAME CENTRE</div><h1 id="live-desk-heading">LIVE GAMES <em>& BOX SCORES.</em></h1><p>Real scores, player box scores and recent plays come first. Model predictions remain separate below.</p></div>
+ <div class="desk-section-top"><div><div class="eyebrow"><span class="desk-pulse"></span> NBA GAMES · MELBOURNE TIME</div><h1 id="live-desk-heading">GAMES <em>COMMAND CENTRE.</em></h1><p>Live, upcoming and final games, original production locks, verified player performances and dated team form.</p></div>
  <div class="desk-head-actions"><a class="btn lime" href="#live-player-stats">VIEW BOX SCORES ↓</a><button id="live-alerts-toggle" type="button" class="btn" aria-pressed="false">Enable highlight alerts</button></div></div>
  <div class="desk-source"><strong id="desk-counts">Connecting to live NBA games…</strong><span id="live-feed-freshness">Checking ESPN scoreboard…</span></div>
  <div class="desk-date-bar"><div class="desk-date-quick" role="group" aria-label="Choose Melbourne NBA game day"><button type="button" data-desk-date="-1" aria-pressed="false">Yesterday</button><button type="button" data-desk-date="0" aria-pressed="true">Today</button><button type="button" data-desk-date="1" aria-pressed="false">Tomorrow</button></div><label for="live-date">Melbourne date <input id="live-date" type="date"></label><span id="live-date-note">Games are grouped by their tip time in Australia/Melbourne.</span></div>
@@ -52,6 +52,10 @@
   <button type="button" data-desk-filter="mine" aria-pressed="false">Following</button>
  </div>
  <div id="live-game-list" class="desk-game-list" aria-label="Choose an NBA game to see live player statistics"><p class="desk-empty">Connecting to the game scoreboard…</p></div>
+ <div class="home-command-panels">
+  <section class="home-trends-panel" aria-labelledby="home-trends-heading"><div class="home-panel-heading"><div><div class="eyebrow">DATED RESULTS · NO INFERRED FORM</div><h2 id="home-trends-heading">TEAM STREAKS.</h2></div><a href="./team-intelligence/">Team intelligence ↗</a></div><div id="home-team-trends" aria-live="polite"><p class="home-panel-unavailable">Loading dated final-game history…</p></div></section>
+  <section class="home-scorecard-panel" aria-labelledby="home-scorecard-heading"><div class="home-panel-heading"><div><div class="eyebrow">ORIGINAL LOCKS · VERIFIED FINALS</div><h2 id="home-scorecard-heading">PREDICTION SCORECARD.</h2></div><a href="./audit/">Full accuracy ledger ↗</a></div><div id="home-machine-scorecard" aria-live="polite"><p class="home-panel-unavailable">Checking immutable forecast and review hashes…</p></div></section>
+ </div>
  <div id="live-player-stats" class="desk-stats" aria-labelledby="live-stats-heading">
   <div class="desk-stats-head"><div><div class="eyebrow">REAL BOX SCORES · NOT PREDICTIONS</div><h2 id="live-stats-heading">PLAYER STATS.</h2><p id="desk-matchup">Select a live game</p></div>
   <label class="desk-sort">Sort by <select id="live-sort"><option value="pts">PTS</option><option value="fpts">Fantasy pts (ESPN)</option><option value="reb">REB</option><option value="ast">AST</option><option value="three">3PM</option><option value="stl">STL</option><option value="blk">BLK</option><option value="tov">TO</option><option value="minuteValue">MIN</option><option value="fgPct">FG%</option><option value="ftPct">FT%</option><option value="plusMinus">+/-</option></select></label></div>
@@ -62,7 +66,7 @@
  </div>
  <div class="desk-footer"><div><h3>PLAY-BY-PLAY.</h3><ol id="live-plays"><li>Recent plays load with the selected game.</li></ol></div><div><h3>HIGHLIGHT ALERTS.</h3><p id="live-alert-note">Opt in for verified dunks, made threes, blocks and buzzer plays. Alerts work only while this page is open.</p><ol id="live-alert-feed"><li>Highlight watch is off until you enable it.</li></ol></div></div>
 </section>
- <section aria-labelledby="slate-heading"><div class="section-top"><div><div class="eyebrow">PREGAME FORECASTS · NOT LIVE SCORES</div><h2 id="slate-heading">LOCKED PREDICTIONS.</h2></div><a class="btn" href="./challenge/daily.html">ALL GAMES & PLAYER STATS ↗</a></div>
+ <section aria-labelledby="slate-heading"><div class="section-top"><div><div class="eyebrow">PREGAME FORECASTS · NOT LIVE SCORES</div><h2 id="slate-heading">ORIGINAL LOCKED PREDICTIONS.</h2></div><a class="btn" href="./challenge/daily.html">ALL GAMES & PLAYER STATS ↗</a></div>
  <p class="scoreboard-source" id="scoreboard-source" aria-live="polite">Fetching ESPN game scores…</p><div id="home-games" class="live-games" aria-live="polite"><p>Reading the last locked game slate…</p></div>
  <p class="small-note">Scores and game clocks are sourced separately from ESPN and refresh automatically where available. Pregame predictions remain locked and never change with live results. Times shown in Melbourne time.</p></section>
  

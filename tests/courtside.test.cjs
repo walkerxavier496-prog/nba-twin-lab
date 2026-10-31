@@ -7,6 +7,11 @@ const vm=require('node:vm');
 const crypto=require('node:crypto');
 const root=path.join(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const waitFor=async predicate=>{
+ const limit=Date.now()+3000;
+ while(Date.now()<limit){if(predicate())return;await new Promise(resolve=>setTimeout(resolve,10))}
+ assert.ok(predicate(),'Timed out waiting for byte-verified homepage data');
+};
 
 test('v12 screen-first sports app replaces old courtside skin and keeps verified data bindings',()=>{
  const css=read('assets/v12.css');
@@ -42,20 +47,20 @@ test('homepage sports desk uses the immutable original game predictions',async()
   return elements.get(id);
  };
  const document={getElementById:get};
- const fetch=async uri=>{
-  const data={
-   './data/audit-ledger.json':ledger,
-   './data/five-model-report.json':{common_evaluation:{games:3643}},
-   ['./'+ledger.entries[0].lock_path]:locked
-  };
-  return {ok:Object.hasOwn(data,uri),json:async()=>data[uri]};
+ const lockPath='./'+ledger.entries[0].lock_path;
+ const data={
+  './data/audit-ledger.json':ledger,
+  './data/five-model-report.json':{common_evaluation:{games:3643}},
+  [lockPath]:locked
  };
- vm.runInNewContext(read('assets/home.js'),{document,fetch,Date,Intl,Promise,console});
- await new Promise(resolve=>setImmediate(resolve));
+ const fetch=async uri=>({ok:Object.hasOwn(data,uri),json:async()=>data[uri],
+  text:async()=>uri===lockPath?read(ledger.entries[0].lock_path):JSON.stringify(data[uri])});
+ vm.runInNewContext(read('assets/home.js'),{window:{},document,fetch,Date,Intl,Promise,console,crypto:crypto.webcrypto,TextEncoder});
+ await waitFor(()=>((get('home-ticker').innerHTML.match(/court-ticker__item/g)||[]).length===10));
  assert.equal(get('home-locked').textContent,'1');
  assert.equal((get('home-ticker').innerHTML.match(/court-ticker__item/g)||[]).length,10);
  assert.equal((get('featured-game').innerHTML.match(/class="club-mark/g)||[]).length,2);
- assert.match(get('featured-game').innerHTML,/WIN PROBABILITY · HISTORICAL ELO/);
+ assert.match(get('featured-game').innerHTML,/WIN PROBABILITY · PRODUCTION ELO · ORIGINAL LOCK/);
  assert.doesNotMatch(get('featured-game').innerHTML,/LIVE SCORE/);
 });
 
