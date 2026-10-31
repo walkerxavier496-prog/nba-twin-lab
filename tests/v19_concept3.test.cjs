@@ -79,7 +79,7 @@ test('Immutable original pregame files remain available; V19 is styling only',()
  const sidecar=JSON.parse(read('audit/supplements/2026-10-31/challenge.lock.json'));
  assert.equal(original.scope.games,10);
  assert.equal(original.forecasts[0].primary_forecast.winner,'CHA');
- assert.equal(sidecar.scope.games,10);
+ assert.equal(sidecar.games.length,10);
  const css=read('assets/v19-concept3.css');
  assert.doesNotMatch(css,/fetch\(|XMLHttpRequest|localStorage|sessionStorage/);
 });
