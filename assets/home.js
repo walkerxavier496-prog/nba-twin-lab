@@ -55,6 +55,10 @@ function candidateGames(){
 function playerSpotlight(game){
  const items=(game.v9_player_projections||[]).filter(p=>p&&p.player_id&&p.projection_if_play&&Number.isFinite(p.projection_if_play.pts));
  const picks=[game.away.abbr,game.home.abbr].map(abbr=>items.filter(p=>p.team===abbr).sort((a,b)=>b.projection_if_play.pts-a.projection_if_play.pts)[0]).filter(Boolean);
+ // Hero portrait is decorative and belongs to the actual featured locked
+ // matchup; never pull an unrelated star photo into a current-game context.
+ const hero=$('v19-hero-athlete');
+ if(hero)hero.innerHTML=picks.length&&media?.playerImage?.(picks[0])?media.playerImage(picks[0]):'';
  if(!$('feature-players'))return;
  $('feature-players').innerHTML=picks.length?
   '<div class="feature-players__title">PLAYERS PROJECTED IN THIS MATCHUP <small>Conditional on playing</small></div><div class="feature-players__list">'+
@@ -117,6 +121,7 @@ function render(){
  showModelDisagreement(chosen);
  if(prediction)playerSpotlight(chosen);
  else if($('feature-players'))$('feature-players').innerHTML='<p class="small-note">No pregame player forecast is locked for this matchup.</p>';
+ if(!prediction&&$('v19-hero-athlete'))$('v19-hero-athlete').textContent='';
 }
 async function refresh(){
  if(!scores?.fetchDate||!scores?.usDate)return;
