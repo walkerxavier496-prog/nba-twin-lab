@@ -28,6 +28,15 @@ All mockup metrics are *illustrative only*. Live site values must be sourced fro
 - Fixed featured team name and city wrapping, reduced the exaggerated height of the right matchup card using disclosure for detailed insights, and normalized the live scoreboard's primary accent back to blue irrespective of favourite-team colour.
 - Added permanent regression checks to `tests/v19_concept3.test.cjs` and `tests/mobile_design.test.cjs` to stop the same route and blurry-hero regressions.
 
+## Owner feedback — hero photo, ticker marks, and team following (31 October 2026)
+
+- Replaced the previous artistic/composite hero image with a **genuine full-resolution basketball game photograph** of a contested layup by **Luke Miller**, licensed for use under the [Unsplash License](https://unsplash.com/license). [Original photograph](https://unsplash.com/photos/basketball-player-goes-for-a-layup-against-defenders-f2R6hmF2AdQ). It is not depicted as a specific NBA team's game or a confirmed current-season player.
+- `assets/home.js` builds all 10+ slate ticker items with verified existing **ESPN team-logo media components**, preserving winner/score provenance, accessibility, fixture links, and text fallback when a logo fails to load. No team identity is fabricated.
+- Removed the global **YOUR TEAM** colour-only selector, which occupied valuable header space without meaningful personalisation. The `TwinTeamPrefs` API and existing stored preference remain available to Team Intelligence and users' previously saved settings; the selector itself is no longer inserted on any page.
+- The homepage header now links to **My Watchlist**. The **Following** filter in the live scoreboard uses actual followed teams, falling back to a legacy favourite only if no teams are followed; it refreshes when followed teams change.
+- New fixed regression test `tests/concept3_home_fixes.test.cjs`, included in responsive-site GitHub Actions. The URL version `v19_3` refreshes changed CSS/JS for all main site pages.
+- No prediction models, data feeds or immutable forecast locks were altered. End-to-end browser image rendering and deployment verification remain separate checks.
+
 ## Remaining visual acceptance
 
 1. Visually compare Home and Game Predictor against the original nine-panel Concept 3 image (desktop widths 1440 and 1280 px, tablets, and mobile widths 390 and 375 px).
