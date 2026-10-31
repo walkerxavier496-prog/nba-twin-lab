@@ -6,7 +6,7 @@
  else root.TwinRosterIntegrity=api;
 })(typeof globalThis!=='undefined'?globalThis:this,function(){
 'use strict';
-const aliases={GS:'GSW',NY:'NYK',SA:'SAS',NO:'NOP',PHO:'PHX',BRK:'BKN',CHO:'CHA',WSH:'WAS'};
+const aliases={GS:'GSW',NY:'NYK',SA:'SAS',NO:'NOP',UTAH:'UTA',PHO:'PHX',BRK:'BKN',CHO:'CHA',WSH:'WAS'};
 const canonical=value=>aliases[String(value||'').toUpperCase()]||String(value||'').toUpperCase();
 const finite=value=>value===null||value===undefined||value===''?null:Number.isFinite(Number(value))?Number(value):null;
 const clamp=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));

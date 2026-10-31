@@ -64,6 +64,15 @@ test('stale roster player IDs excluded from projected leaders when official rost
  assert.equal(r.away.players.find(p=>p.player_id==='11').expected_minutes,0);
  assert.ok(r.issues.includes('inferred_player_not_on_verified_roster'));
 });
+test('UTAH ESPN abbreviation resolves to official UTA roster without false missing-team gate',()=>{
+ const g=game();g.home.abbr='UTAH';
+ const s=snapshot();s.teams[1].abbr='UTA';
+ const a=availability();a.games[0].teams.UTA=a.games[0].teams.WAS;delete a.games[0].teams.WAS;
+ const r=R.auditGame({game:g,snapshot:s,availability:a,now:asOf});
+ assert.equal(R.canonical('UTAH'),'UTA');
+ assert.equal(r.source_checks_passed,true);
+ assert.ok(!r.issues.includes('team_missing_from_snapshot'));
+});
 test('invalid duplicate injury designations fail closed',()=>{
  const a=availability();
  a.games[0].teams.CHA.injuries.push({player_id:'11',status:'Available'});
@@ -83,5 +92,12 @@ test('v18 frontend must display roster gate without rewriting original 31 Octobe
  assert.ok(nextTracker.includes('v18_roster_integrity: rosterIntegrity'));
  assert.ok(nextTracker.includes('RI.auditGame({game,snapshot,availability:officialAvailability,now})'));
  const feed=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/availability-current.json')));
- assert.equal(feed.status,'unavailable','Do not fabricate a verified official live injury feed');
+ assert.ok(['verified','unavailable'].includes(feed.status),'No fabricated availability state');
+ if(feed.status==='verified'){
+  assert.equal(feed.strict_no_future_data,true);
+  assert.equal(feed.source?.type,'official');
+  assert.match(feed.source?.url||'',/^https:\/\/ak-static\.cms\.nba\.com\/referee\/injury\/Injury-Report_/);
+  assert.ok(Date.parse(feed.published_at_utc)>0);
+  assert.ok(feed.games.every(g=>g.injury_report_verified===true));
+ }else assert.equal(feed.games.length,0);
 });
