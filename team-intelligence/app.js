@@ -57,7 +57,8 @@ function options(){
  $('my-team').innerHTML='<option value="">Choose your team</option>'+html;
  $('home').innerHTML='<option value=""></option>'+html;
  $('away').innerHTML='<option value=""></option>'+html;
- const saved=canonical(prefs?.get?.()||'');
+ const queryTeam=typeof location!=='undefined'?new URLSearchParams(location.search).get('team'):null;
+ const saved=canonical(queryTeam&&teams.has(canonical(queryTeam))?queryTeam:(prefs?.get?.()||''));
  $('my-team').value=teams.has(saved)?saved:'';
  opponentChoices();
  const upcoming=fixtureChoices();
