@@ -36,7 +36,7 @@ function gameTile(game){
  const teamAway=game.away,teamHome=game.home,p=isLocked?game.primary_forecast:null;
  const matchId=String(game.game_id||game.id);
  const href=isLocked?'./challenge/daily.html?game='+encodeURIComponent(matchId)+'#matchups':'./predict/';
- const when=fmt(game.tip_utc||game.date);
+ const when=fmt(game.tip_utc||game.date||meta.s?.date);
  const out=meta.actual?'<div class="home-game__result"><span>'+esc(teamAway.abbr)+' <b>'+meta.s.away.score+'</b></span><span>'+esc(teamHome.abbr)+' <b>'+meta.s.home.score+'</b></span></div>':'<div class="home-game__versus">VS</div>';
  return '<a class="home-game" href="'+href+'" aria-label="'+esc(teamAway.name)+' at '+esc(teamHome.name)+'">'+
   '<div class="home-game__top"><span>'+esc(when)+'</span><span class="game-status game-status--'+meta.state.kind+'">'+esc(meta.state.text)+'</span></div>'+
@@ -85,7 +85,7 @@ function showModelDisagreement(game){
 function render(){
  if(!archive&&!liveFeed)return;
  const games=candidateGames();
- const source=liveFeed?'ESPN game scores · refreshed '+fmt(liveFeed.fetched_at_utc):
+ const source=liveFeed?'ESPN game scores · checked '+fmt(liveFeed.fetched_at_utc||new Date()):
   'ESPN LIVE UNAVAILABLE · Showing archived locked forecasts only — not current results';
  show('scoreboard-source',source);
  if($('home-games'))$('home-games').innerHTML=games.length?games.map(gameTile).join(''):
@@ -124,7 +124,8 @@ async function refresh(){
    const feed=await scores.fetchDate(currentDate);
    if(!Array.isArray(feed.games)||feed.games.length===0)throw Error('No games returned');
    liveFeed=feed;
- }catch(error){liveFeed=null;}
+   window.NbaLiveDesk?.setFeed?.(feed);
+ }catch(error){liveFeed=null;window.NbaLiveDesk?.unavailable?.();}
  render();
 }
 async function init(){
