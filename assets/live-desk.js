@@ -66,10 +66,22 @@ let feed=null,selected=null,gameFilter='all',sortStat='pts',summaryCache=new Map
 const seen=new Map(),messages=[];
 function setMessage(str){const n=$('live-desk-status');if(n)n.textContent=str}
 function selectedGame(){return feed?.games?.find(g=>String(g.id)===String(selected))||null}
+const filteredGames=()=> (feed?.games||[]).filter(g=>gameFilter==='all'||gameFilter==='mine'&&favourite(g)||gameFilter==='live'&&g.phase==='live'||gameFilter==='final'&&g.phase==='final');
+function keepVisibleSelection(){
+ const visible=filteredGames();
+ if(!visible.some(g=>String(g.id)===String(selected))){
+  selected=visible[0]?.id||null;lastLoaded=null;request++;
+ }
+ if(!selected){
+  if($('desk-matchup'))$('desk-matchup').textContent='No games in this filter';
+  if($('live-stats-rows'))$('live-stats-rows').innerHTML='<tr><td colspan="6">Choose another game filter to see actual player statistics.</td></tr>';
+  if($('live-plays'))$('live-plays').innerHTML='<li>Nothing to show for this filter.</li>';
+ }
+}
 function showGames(){
  if(!$('live-game-list'))return;
  const all=feed?.games||[];
- const filtered=all.filter(g=>gameFilter==='all'||gameFilter==='mine'&&favourite(g)||gameFilter==='live'&&g.phase==='live'||gameFilter==='final'&&g.phase==='final');
+ const filtered=filteredGames();
  $('live-game-list').innerHTML=filtered.length?filtered.map(g=>{
   const s=g.phase==='live'?'LIVE':g.phase==='final'?'FINAL':'UPCOMING';
   const points=g.phase==='scheduled'?'<span class="desk-time">'+esc(fmtTime(g.date))+'</span>':
@@ -147,7 +159,7 @@ function setFeed(value){
  }
  const freshness=Number.isFinite(Date.parse(feed.fetched_at_utc))?fmtTime(feed.fetched_at_utc):'checked just now';
  if($('live-feed-freshness'))$('live-feed-freshness').textContent='ESPN scoreboard · checked '+freshness+' · automatic refresh';
- showGames();loadSelected();
+ keepVisibleSelection();showGames();loadSelected();
 }
 function unavailable(){
  feed=null;lastLoaded=null;request++;
@@ -159,7 +171,7 @@ function unavailable(){
 function init(){
  if(!mounted)return;
  for(const button of document.querySelectorAll('[data-desk-filter]'))
-  button.addEventListener('click',()=>{gameFilter=button.dataset.deskFilter;for(const b of document.querySelectorAll('[data-desk-filter]')){const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))}showGames()});
+  button.addEventListener('click',()=>{gameFilter=button.dataset.deskFilter;for(const b of document.querySelectorAll('[data-desk-filter]')){const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))}keepVisibleSelection();showGames();loadSelected()});
  if($('live-sort'))$('live-sort').addEventListener('change',e=>{sortStat=e.target.value;renderSummary()});
  const alertsButton=$('live-alerts-toggle');
  if(alertsButton)alertsButton.addEventListener('click',async()=>{
@@ -170,7 +182,7 @@ function init(){
   }else permission=typeof Notification!=='undefined'?Notification.permission:'unsupported';
   if($('live-alert-note'))$('live-alert-note').textContent=permission==='granted'?'Desktop notifications enabled for new highlighted plays in the selected game while this page is open.':'In-page alerts for the selected game are enabled; system notifications unavailable or not permitted.';
  });
- document.addEventListener('twinlab:teamchange',()=>showGames());
+ document.addEventListener('twinlab:teamchange',()=>{keepVisibleSelection();showGames();loadSelected()});
 }
 init();
 window.NbaLiveDesk=Object.freeze({setFeed,unavailable,selectGame,parseBoxscore,extractPlays,highlight,fetchSummary});
