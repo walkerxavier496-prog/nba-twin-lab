@@ -58,11 +58,11 @@ test('header team selector is removed while preference data and watchlist remain
  assert.match(desk,/twinlab:watchlistchange/);
  assert.match(read('assets/site-nav.js'),/MY WATCHLIST ★/);
 });
-test('hero uses attributed authentic basketball game photo, not generated or stretched headshot',()=>{
+test('hero is a sourced, Creative-Commons-licensed photograph of NBA LeBron chalk toss',()=>{
  const css=read('assets/v19-concept3.css'),html=read('index.html');
- assert.match(css,/photo-1752166672426-3bf676f61248/);
- assert.match(html,/Luke Miller \/ Unsplash/);
- assert.match(html,/unsplash.com\/photos\/basketball-player-goes-for-a-layup-against-defenders/);
+ assert.match(css,/LeBron_James%27_pregame_ritual.jpg/);
+ assert.match(html,/Photo by Keith Allison/);
+ assert.match(html,/creativecommons.org\/licenses\/by-sa\/2.0/);
  assert.doesNotMatch(html,/v19-hero-athlete/);
  assert.ok(html.includes('class="v19-hero-art"'));
  for(const file of ['index.html','challenge/daily.html'])assert.match(read(file),/>Following<\/button>/);
