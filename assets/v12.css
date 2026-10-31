@@ -418,3 +418,46 @@ body.v12.secondary-page :is(.results,.layout,.grid){min-width:0}
  .predict-team .team-logo--sm{height:36px;width:36px}
  .predict-team strong{font-size:19px}
 }
+
+/* Live NBA scoreboard cards. Real result from ESPN is visually separate from
+   locked pregame model probability, with no implied live win prediction. */
+.scoreboard-source{font-size:11px;color:#617785;background:#eaf0f6;border-left:3px solid #55739e;padding:10px 14px;border-radius:4px;margin:12px 0 17px}
+.home-game{gap:12px;transition:border-color .15s,transform .15s}
+.home-game__top{align-items:center;flex-wrap:wrap}
+.home-game__teams{min-height:74px;gap:10px;justify-content:space-around}
+.home-game__result{display:grid;grid-template-columns:1fr;gap:3px;flex:1;min-width:68px}
+.home-game__result>span{display:flex;align-items:center;justify-content:space-between;gap:9px;font-size:11px;font-weight:900;color:#647789}
+.home-game__result b{font:900 27px/1 var(--heading);color:#13222c}
+.home-game__versus{font:900 24px/1 var(--heading);color:#a8b6bd}
+.game-status{padding:4px 7px;border-radius:4px;background:#e9edf1;color:#536977;font:900 9px var(--body);letter-spacing:.055em;text-align:right}
+.game-status--live{background:#e22535;color:#fff;animation:live-pulse 1.6s ease-in-out infinite}
+.game-status--final{background:#172a35;color:#fff}
+.game-status--unavailable{background:#fff1dc;color:#8b6324}
+@keyframes live-pulse{50%{box-shadow:0 0 0 4px #ec344119}}
+.feature-players{border-top:1px solid #dce3eb;padding:12px 16px;background:#fff}
+.feature-players__title{display:flex;justify-content:space-between;gap:8px;align-items:center;font:900 11px var(--body);letter-spacing:.05em;color:#354858}
+.feature-players__title small{font-size:9px;letter-spacing:normal;color:#8495a2}
+.feature-players__list{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+.feature-player{flex:1;min-width:140px;display:flex;align-items:center;gap:8px;padding:6px;border-radius:6px;background:#f5f8fa;text-decoration:none}
+.feature-player b,.feature-player small{display:block}.feature-player b{font-size:11px}.feature-player small{font-size:9px;color:#657887;margin-top:3px}
+.feature-player .player-photo{height:48px;width:48px}
+.daily-hero-context{width:260px;flex:none;border:1px solid #dbe3ea;background:linear-gradient(125deg,#f7f9fa,#e9f0f8);padding:18px;border-radius:10px;align-self:stretch}
+.daily-hero-context .eyebrow{font-size:12px}.daily-hero-context p{font-size:12px;line-height:1.6}
+.daily-hero-context #slate-date{font:900 19px var(--heading);color:#244be9}
+.uncertainty-banner{background:#fff0e4;border:1px solid #f0c295;padding:13px 15px;border-radius:7px;margin:13px 0;color:#8b4916}
+.uncertainty-banner b{font:900 12px var(--body);letter-spacing:.045em}
+.uncertainty-banner p{margin:7px 0 0;color:#7a5030;font-size:11px;line-height:1.65}
+.uncertainty-banner--quiet{background:#f1f5f8;border-color:#d9e3e9;color:#50697b}
+.uncertainty-banner--quiet p{color:#647989}
+.daily #game-detail .sports-scorebug__bottom strong{color:#101b29}
+.daily #game-detail .sports-scorebug__bottom span{font-weight:850}
+@media(max-width:590px){
+ .home-game__teams{gap:4px}
+ .home-game__result>span{gap:3px;font-size:10px}
+ .home-game__result b{font-size:24px}
+ .game-status{font-size:8px;padding:4px 5px}
+ .feature-players__list{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+ .feature-player{min-width:0}
+ .daily-hero-context{width:100%;padding:13px}
+}
+@media(prefers-reduced-motion:reduce){.game-status--live{animation:none}}
