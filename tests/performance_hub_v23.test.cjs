@@ -71,6 +71,6 @@ test('completed 31 Oct slate renders frozen picks, actual finals and six-model v
  assert.match(markup.innerHTML,/SIX MACHINES/);
  assert.match(markup.innerHTML,/AUDIT PENDING|✓ HIT|✕ MISS/);
  assert.match(markup.innerHTML,/79 – 95/,'The real CHA–WSH final must be visible');
- assert.match(markup.innerHTML,/6 correct|5 correct|4 correct|3 correct|2 correct|1 correct|0 correct/);
+ assert.match(markup.innerHTML,/[0-6]\/6 correct/);
  assert.equal(lock.forecasts[0].primary_forecast.home_win_probability,0.20674107431349767);
 });
