@@ -1,0 +1,19 @@
+{
+  "workflow": "update-predictions",
+  "generation_observed_at_utc": "2026-10-31T16:20:29.748313+00:00",
+  "artifact_generation_timestamps": {
+    "data/games.json": {
+      "built_at_utc": "2026-10-31T16:20:21+00:00"
+    },
+    "research-reviews/chronology-v1/runs/41219174895-1/model-report.json": {
+      "generated_at_utc": "2026-10-31T16:20:28.302Z"
+    }
+  },
+  "source_revision": "0f58e4015e7a5c425ebcdb2049cdca1f61153000",
+  "run_id": "41219174895",
+  "run_attempt": "1",
+  "changed_artifacts": [
+    "data/games.json",
+    "research-reviews/chronology-v1/runs/41219174895-1/model-report.json"
+  ]
+}
