@@ -61,6 +61,27 @@ function playerSpotlight(game){
   (media?.playerImage?.(p)||'')+'<span><b>'+esc(p.name)+'</b><small>'+esc(p.team)+' · projected '+p.projection_if_play.pts.toFixed(1)+' PTS</small></span></a>').join('')+'</div>':
   '<p class="small-note">No verified conditional player projections are available for this matchup.</p>';
 }
+function showModelDisagreement(game){
+ const box=$('feature-confidence');
+ if(!box)return;
+ const p=game.primary_forecast;
+ if(!p){box.innerHTML='';return}
+ const supplement=archive?.sidecar?.games?.find(item=>String(item.game_id)===String(game.game_id||game.id));
+ const models=supplement?.predictions||game.challenge_predictions||{};
+ const chances=Object.entries(models).filter(([,m])=>m?.available===true&&Number.isFinite(m.home_win_probability));
+ if(chances.length<2){
+  box.innerHTML='<div class="feature-confidence__quiet">PREGAME ELO: '+pct(p.winner_probability)+' · historical rating baseline; verified injury and rotation inputs are missing.</div>';
+  return;
+ }
+ const awayChances=chances.map(([name,m])=>({id:name,prob:1-m.home_win_probability}));
+ const lo=awayChances.reduce((a,b)=>a.prob<b.prob?a:b),hi=awayChances.reduce((a,b)=>a.prob>b.prob?a:b);
+ const spread=(hi.prob-lo.prob)*100,warning=spread>=20;
+ const selectedName=p.winner;
+ box.innerHTML='<div class="feature-confidence__'+(warning?'warning':'quiet')+'"><b>'+
+  (warning?'⚠ MODELS DISAGREE · ':'MODEL SPREAD · ')+spread.toFixed(1)+' PERCENTAGE POINTS</b>'+
+  '<span>'+esc(game.away.abbr)+' win chance spans '+pct(lo.prob)+' ('+esc(lo.id)+') to '+pct(hi.prob)+' ('+esc(hi.id)+'). This is a range of model opinions, not a calibrated prediction interval.</span>'+
+  '<small>Original ELO '+esc(selectedName)+' '+pct(p.winner_probability)+' · not updated during the game · roster and official injury uncertainty remains.</small></div>';
+}
 function render(){
  if(!archive&&!liveFeed)return;
  const games=candidateGames();
@@ -92,6 +113,7 @@ function render(){
  show('feature-detail',detail);
  // Headshots must be from the exact game in the frozen forecast. No unrelated
  // old team photographs or NBA-cup/Team-USA visual claims.
+ showModelDisagreement(chosen);
  if(prediction)playerSpotlight(chosen);
  else if($('feature-players'))$('feature-players').innerHTML='<p class="small-note">No pregame player forecast is locked for this matchup.</p>';
 }
@@ -115,7 +137,14 @@ async function init(){
      show('home-date',entries[0].melbourne_date);
      try{
        const lock=await json('./'+entries[0].lock_path);
-       if(lock.scope?.melbourne_date===entries[0].melbourne_date&&Date.parse(lock.locked_at_utc)<Date.parse(lock.scope.first_tip_utc))archive={entry:entries[0],lock};
+       if(lock.scope?.melbourne_date===entries[0].melbourne_date&&Date.parse(lock.locked_at_utc)<Date.parse(lock.scope.first_tip_utc)){
+        archive={entry:entries[0],lock,sidecar:null};
+        try{
+          const dated=await json('./audit/supplements/'+entries[0].melbourne_date+'/challenge.lock.json');
+          if(dated.original_forecast_sha256===entries[0].lock_sha256&&Date.parse(dated.locked_at_utc)<Date.parse(lock.scope.first_tip_utc))
+            archive.sidecar=dated;
+        }catch(error){/* no sidecar => no fabricated comparison */}
+       }
      }catch(error){}
    }
  }
