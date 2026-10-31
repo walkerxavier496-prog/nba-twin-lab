@@ -66,7 +66,8 @@ function scan(root=document){
 function start(){
  scan();
  document.addEventListener('click',e=>{
-  const button=e.target.closest?.('.twin-sort-head');
+  // The whole header cell is the target (not only the label), which matters on touch screens.
+  const button=e.target.closest?.('.twin-sort-head')||e.target.closest?.('th')?.querySelector?.('.twin-sort-head');
   if(!button)return;
   const table=button.closest('table');if(table)sortColumn(table,Number(button.dataset.twinColumn));
  });

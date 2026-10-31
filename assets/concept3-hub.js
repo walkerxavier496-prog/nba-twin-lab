@@ -36,6 +36,8 @@ function selectedModel(g){
 // NBA / ESPN / research snapshots disagree on some legacy abbreviations.
 const TEAM_ALIASES={WSH:'WAS',GSW:'GS',NYK:'NY',SAS:'SA',NOP:'NO',PHX:'PHO',BKN:'BRK',UTA:'UTAH',CHA:'CHO'};
 const canonicalTeam=abbr=>TEAM_ALIASES[String(abbr||'').toUpperCase()]||String(abbr||'').toUpperCase();
+// Locked projections use NBA codes (WAS/NYK/GSW) while schedule rows use ESPN codes (WSH/NY/GS).
+const sameTeam=(a,b)=>canonicalTeam(a)===canonicalTeam(b);
 function reviewFor(g){return state.gameReviews[gameId(g)]||state.review?.games?.find(x=>gameId(x)===gameId(g))||null}
 function scoreFor(g){
  const review=reviewFor(g);
@@ -78,7 +80,7 @@ function dateStatus(){
  return state.entry?state.entry.melbourne_date+' · locked '+new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'numeric',minute:'2-digit',hour12:true}).format(new Date(state.lock.locked_at_utc))+' AEDT':'No verified lock';
 }
 function teamData(g,side){
- const players=(g.v9_player_projections||[]).filter(p=>p.team===g[side].abbr);
+ const players=(g.v9_player_projections||[]).filter(p=>sameTeam(p.team,g[side].abbr));
  const absent=players.filter(p=>String(p.official_injury_report?.status).toLowerCase()==='out');
  const available=players.filter(p=>String(p.official_injury_report?.status).toLowerCase()!=='out')
  .sort((a,b)=>(b.expected_minutes_if_play||0)-(a.expected_minutes_if_play||0));
@@ -288,7 +290,7 @@ function matchupPanel(g){
  }).join('');
  const players=[...teamData(g,'away').available.slice(0,2),...teamData(g,'home').available.slice(0,2)];
  const summary=players.map(p=>'<a class="c3-player-match" href="../team/?team='+encodeURIComponent(p.team)+'&player='+encodeURIComponent(p.player_id)+'#team-player-profile">'+
- (portrait(p)?'<img src="'+portrait(p)+'" alt="" loading="lazy">':'')+
+ (portrait(p)?'<img src="'+portrait(p)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'')+
  '<span><strong>'+esc(p.name)+' · '+esc(p.team)+'</strong><small>Conditional projection: '+num(p.projection_if_play?.pts)+' PTS / '+num(p.projection_if_play?.ast)+' AST</small></span></a>').join('');
  const factors=basketballFactors(g).slice(0,4);
  const insight=factors.length?'<div class="c3-evidence-notes">'+factors.map(x=>'<div class="c3-factor"><span class="c3-factor-icon">↗</span>'+
@@ -325,7 +327,7 @@ function matchupPanel(g){
 function playersPanel(g){
  const review=reviewFor(g),byPlayer=new Map((review?.player_results||[]).map(p=>[String(p.player_id),p]));
  const all=(g.v9_player_projections||[])
- .filter(p=>state.playerTeam==='all'||p.team===state.playerTeam)
+ .filter(p=>state.playerTeam==='all'||sameTeam(p.team,state.playerTeam))
  .filter(p=>state.showOut||String(p.official_injury_report?.status).toLowerCase()!=='out')
  .filter(p=>!state.search||String(p.name||'').toLowerCase().includes(state.search.toLowerCase()))
  .sort((a,b)=>(b.projection_if_play?.[state.playerSort]||0)-(a.projection_if_play?.[state.playerSort]||0));
@@ -350,7 +352,7 @@ function playersPanel(g){
   const official=p.official_injury_report?.status||'Unverified';
   const label=official==='Not listed'?'Not confirmed':official;
   return '<tr'+(out?' class="c3-out-player"':'')+'><td><a class="c3-player-name" href="../team/?team='+encodeURIComponent(p.team)+'&player='+encodeURIComponent(p.player_id)+'#team-player-profile">'+
-   (portrait(p)?'<img src="'+portrait(p)+'" alt="" loading="lazy">':'')+esc(p.name)+'</a></td>'+
+   (portrait(p)?'<img src="'+portrait(p)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'')+esc(p.name)+'</a></td>'+
    '<td>'+(out?'OUT · not active':num0(p.expected_minutes_if_play))+'</td>'+
    '<td>'+stat(p,state.playerSort)+'</td>'+
    (review?'<td>'+(played?num0(grade.actual?.[state.playerSort]):'DNP / ungraded')+'</td>'+
@@ -433,7 +435,7 @@ function slateLeaders(){
  .sort((a,b)=>b.projection_if_play.pts-a.projection_if_play.pts).slice(0,20);
  return '<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>PLAYER</th><th>GAME</th><th>PTS</th><th>REB</th><th>AST</th><th>3PM</th></tr></thead><tbody>'+
  top.map(p=>'<tr><td><a class="c3-player-name" href="../team/?team='+encodeURIComponent(p.team)+'&player='+encodeURIComponent(p.player_id)+'#team-player-profile">'+
- (portrait(p)?'<img src="'+portrait(p)+'" alt="" loading="lazy">':'')+esc(p.name)+'</a></td>'+
+ (portrait(p)?'<img src="'+portrait(p)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'')+esc(p.name)+'</a></td>'+
  '<td><a href="../predict/?game='+encodeURIComponent(gameId(p.game))+'">'+esc(p.game.away.abbr+' @ '+p.game.home.abbr)+'</a></td>'+
  ['pts','reb','ast','three_pm'].map(k=>'<td>'+num(p.projection_if_play[k])+'</td>').join('')+'</tr>').join('')+
  '</tbody></table></div><p class="c3-source-note">These projections are conditional on playing and omit players officially marked OUT in the saved injury report.</p>';

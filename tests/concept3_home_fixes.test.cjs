@@ -63,7 +63,7 @@ test('header team selector is removed while preference data and watchlist remain
  assert.match(desk,/TwinWatchlist\?\.state\?\.\(\)\.teams/);
  assert.match(desk,/twinlab:watchlistchange/);
  const nav=read('assets/site-nav.js');
- assert.match(nav,/link\('GAMES'/);
+ assert.match(nav,/link\('HOME'/);
  assert.match(nav,/MY WATCHLIST/);
 });
 test('hero is a sourced, Creative-Commons-licensed photograph of NBA LeBron chalk toss',()=>{

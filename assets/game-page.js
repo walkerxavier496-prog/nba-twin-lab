@@ -598,7 +598,9 @@ async function refresh(){
  }catch(e){
   if(request!==latestRequest)return;
   refreshError=String(e?.message||'request failed').slice(0,160);
-  if(!game){$('game-state').textContent='DATA UNAVAILABLE';$('game-score').textContent='— : —';$('game-box-groups').innerHTML=fallback;$('game-play-list').innerHTML=fallback;$('game-team-stats').innerHTML=fallback}
+  if(!game){$('game-state').textContent='DATA UNAVAILABLE';$('game-score').textContent='— : —';$('game-box-groups').innerHTML=fallback;$('game-play-list').innerHTML=fallback;$('game-team-stats').innerHTML=fallback;
+   // The original lock is matched to this game by its feed date, so an outage must be stated rather than left as a loader.
+   if($('game-forecast'))$('game-forecast').innerHTML='<p class="game-empty">Forecast and grading are unavailable until the game feed responds, because the original lock is matched to the game by its scheduled date. Nothing is recalculated; this page retries automatically.</p>'}
   renderSummaryStatus();scheduleRetry();
  }finally{
   if(requestTimeout!==null&&typeof clearTimeout==='function')clearTimeout(requestTimeout);
