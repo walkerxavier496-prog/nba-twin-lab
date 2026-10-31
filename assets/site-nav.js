@@ -17,8 +17,11 @@ function init(){
  const isScores=onHome&&['#live-games','#live-player-stats'].includes(location.hash);
  const isGame=/\/game\/$/.test(current);
  const isStats=/\/(player-stats|player)\/$/.test(current);
- const isLeague=/\/(league|team)\/$/.test(current);
- const isMachine=/\/(predict|challenge|audit|models)\//.test(current);
+ const isTeams=/\/(league|team|team-intelligence)\/$/.test(current);
+ const isPredict=/\/predict\/$/.test(current);
+ const isDaily=/\/challenge\/daily\.html$/.test(current);
+ const isAudit=/\/audit\/$/.test(current);
+ const isModels=/\/(models|challenge)\/$/.test(current);
  // Home already has a Live tab; use the header shortcut for real team/player
  // following instead of another redundant scoreboard button.
  const shortcut=document.querySelector('.app-header .header-action');
@@ -31,20 +34,20 @@ function init(){
   '" href="'+href(url)+'"'+(active?' aria-current="page"':'')+'>'+label+'</a>';
  nav.innerHTML=
   link('HOME','',onHome&&!isScores)+
-  link('LIVE','#live-games',isScores||isGame)+
-  link('PREDICTIONS','challenge/daily.html#matchups',isMachine)+
-  link('PLAYER STATS','player-stats/',isStats)+
-  link('LEAGUE','league/',isLeague)+
-  '<details class="nav-group nav-explore"><summary aria-label="Explore more NBA Twin Lab tools">EXPLORE <span aria-hidden="true">⌄</span></summary>'+
-  '<div class="nav-dropdown" role="group" aria-label="More NBA tools">'+
-  '<a href="'+href('predict/')+'">Game Predictor</a>'+
-  '<a href="'+href('challenge/')+'">THE MACHINE · Model Rankings</a>'+
-  '<a href="'+href('audit/')+'">Accuracy & Audit</a>'+
-  '<a href="'+href('#live-player-stats')+'">Live Box Scores (not projections)</a>'+
-  '<a href="'+href('team/')+'">Team Centre</a>'+
-  '<a href="'+href('team-intelligence/')+'">Team Intelligence</a>'+
-  '<a href="'+href('league/#cup')+'">NBA Cup</a>'+
+  link('PREDICT','predict/',isPredict)+
+  link('DAILY','challenge/daily.html',isDaily)+
+  link('PLAYERS','player-stats/',isStats)+
+  link('TEAMS','league/',isTeams)+
+  link('STATS','#live-player-stats',isScores||isGame)+
+  link('AUDIT','audit/',isAudit)+
+  link('MODELS','challenge/',isModels)+
+  '<details class="nav-group nav-explore"><summary aria-label="More NBA tools">MORE <span aria-hidden="true">⌄</span></summary>'+
+  '<div class="nav-dropdown" role="group" aria-label="More NBA Twin Lab tools">'+
   '<a href="'+href('watchlist/')+'">★ My Watchlist</a>'+
+  '<a href="'+href('#live-games')+'">Live Game Scores</a>'+
+  '<a href="'+href('team/')+'">Team Centre</a>'+
+  '<a href="'+href('team-intelligence/')+'">Team Comparison</a>'+
+  '<a href="'+href('league/#cup')+'">NBA Cup</a>'+
   '<a href="'+href('twins/')+'">Player Twins</a>'+
   '</div></details>';
  for(const menu of nav.querySelectorAll('details')){
@@ -59,13 +62,13 @@ function init(){
  nav.addEventListener('keydown',e=>{
   if(e.key==='Escape'){for(const menu of nav.querySelectorAll('details'))menu.open=false;nav.querySelector('summary')?.focus()}
  });
- // Live box scores are an independent subsection of Home, NOT Player Projections.
+ // Live-score hash links remain independent of the real player projection page.
  window.addEventListener('hashchange',()=>{
   if(location.pathname.replace(/index\.html$/,'')!==rootPath)return;
-  const live=['#live-games','#live-player-stats'].includes(location.hash);
+  const stats=['#live-games','#live-player-stats'].includes(location.hash);
   for(const a of nav.querySelectorAll('.nav-main-link')){
-   if(!['HOME','LIVE'].includes(a.textContent))continue;
-   const active=a.textContent==='LIVE'?live:!live;
+   if(!['HOME','STATS'].includes(a.textContent))continue;
+   const active=a.textContent==='STATS'?stats:!stats;
    a.classList.toggle('active',active);
    if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
   }
