@@ -143,11 +143,6 @@ function render(){
   teamImage(g.away,'small')+'<b>'+esc(g.away.abbr)+'</b><strong>'+esc(g.away.score)+' – '+esc(g.home.score)+'</strong><b>'+esc(g.home.abbr)+'</b>'+teamImage(g.home,'small')+'</a>'
  ).join(''):'<p class="c3-muted">No verified recent NBA finals are available.</p>';
 
- // Headshots must be from the exact game in the frozen forecast. No unrelated
- // old team photographs or NBA-cup/Team-USA visual claims.
- showModelDisagreement(chosen);
- if(prediction)playerSpotlight(chosen);
- else if($('feature-players'))$('feature-players').innerHTML='<p class="small-note">No pregame player forecast is locked for this matchup.</p>';
 }
 async function refresh(){
  if(!scores?.fetchDate||!scores?.usDate)return;
