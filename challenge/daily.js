@@ -14,7 +14,10 @@ async function json(location,optional=false){
 }
 let data=null,selected=null,matchupFilter='all';
 function matchName(g){return g.away.abbr+' @ '+g.home.abbr}
-const crest=(team,large=false)=>'<span class="club-mark'+(large?' club-mark--large':'')+'" data-team="'+esc(team.abbr)+'">'+esc(team.abbr)+'</span>';
+const media=typeof window!=='undefined'?window.NbaMedia:null;
+const crest=(team,large=false)=>media?.image?.(team.abbr,{size:large?'large':'small',label:team.abbr})||
+'<span class="club-mark'+(large?' club-mark--large':'')+'" data-team="'+esc(team.abbr)+'">'+esc(team.abbr)+'</span>';
+const portrait=player=>media?.playerImage?.(player)||'<span class="player-photo player-photo--fallback" aria-hidden="true">◉</span>';
 const fmtGameTip=g=>shortTime(g.tip_utc);
 function scoreFor(gameId){return data.review?.games?.find(game=>String(game.game_id)===String(gameId))||null}
 function modelsFor(game){
@@ -131,10 +134,10 @@ function drawPlayers(){
   const outcome=played?observed.actual:null;
   const note=observed?.disposition==='dnp_excluded'?' · DNP':observed?.disposition==='not_listed_excluded'?' · not listed':'';
   const fields=['pts','reb','ast','three_pm'];
-  rows.push('<tr><td>'+esc(player.name)+' <small class="muted">'+esc(player.team+note)+'</small></td>'+
+  rows.push('<tr><td><span class="player-name-wrap">'+portrait(player)+'<span>'+esc(player.name)+' <small class="muted">'+esc(player.team+note)+'</small></span></span></td>'+
    fields.map(k=>'<td>'+dec(predicted[k])+'</td>').join('')+
    fields.map(k=>'<td>'+dec(outcome?.[k],0)+'</td>').join('')+'</tr>');
-  cards.push('<article class="player-card"><div class="player-card__head"><b>'+esc(player.name)+'</b><small>'+esc(player.team+note)+'</small></div><div class="player-card__grid">'+
+  cards.push('<article class="player-card"><div class="player-card__head"><span class="player-name-wrap">'+portrait(player)+'<b>'+esc(player.name)+'</b></span><small>'+esc(player.team+note)+'</small></div><div class="player-card__grid">'+
     fields.map((k,i)=>'<div class="player-card__stat"><small>'+['PTS','REB','AST','3PM'][i]+'</small><strong>'+dec(predicted[k])+'</strong><em>'+(played?'Actual '+dec(outcome?.[k],0):'Predicted')+'</em></div>').join('')+'</div></article>');
  }
  body.innerHTML=rows.join('')||'<tr><td colspan="9">No players fit your filters</td></tr>';
