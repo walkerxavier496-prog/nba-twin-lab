@@ -51,16 +51,25 @@ test('weight fitter uses only supplied earlier rows and returns a simplex', () =
   assert.ok(Math.abs(fit.weights.reduce((sum, value) => sum + value, 0) - 1) < 1e-12);
 });
 
-test('future lock schema includes all challenge models while the original lock stays byte-identical', () => {
+test('the immutable pretip six-model sidecar and original lock remain verified after tipoff', () => {
   const file = path.join(ROOT, 'practice/2026-10-31-melbourne/forecast.lock.json');
+  const sidecarPath = path.join(ROOT, 'audit/supplements/2026-10-31/challenge.lock.json');
   const before = A.sha256(fs.readFileSync(file));
-  const lock = T.buildLock({ date: '2026-10-31', now: Date.parse('2026-10-30T21:49:42.885Z'), simulations: 100 });
-  assert.deepEqual(Object.keys(lock.forecasts[0].challenge_predictions), C.ALL_IDS);
-  assert.ok(C.ALL_IDS.every(id => typeof lock.forecasts[0].challenge_predictions[id].available === 'boolean'));
-  assert.equal(A.verifyIntegrity(lock), true);
-  assert.equal(A.sha256(fs.readFileSync(file)), before);
+  const original = JSON.parse(fs.readFileSync(file));
+  const challenge = JSON.parse(fs.readFileSync(sidecarPath));
+  assert.ok(A.verifyIntegrity(original));
+  assert.ok(A.verifyIntegrity(challenge));
+  assert.equal(challenge.original_forecast_sha256, before);
+  assert.ok(Date.parse(challenge.locked_at_utc) < Date.parse(original.scope.first_tip_utc));
+  assert.equal(challenge.games.length, original.forecasts.length);
+  for (const game of challenge.games) {
+    assert.deepEqual(Object.keys(game.predictions), C.ALL_IDS);
+    assert.ok(C.ALL_IDS.every(id => typeof game.predictions[id].available === 'boolean'));
+  }
+  assert.throws(() => T.buildLock({ date: '2026-10-31', now: Date.now(), simulations: 100 }),
+    /no longer pregame|Tipoff has begun|Outside lock window/);
+  assert.equal(A.sha256(fs.readFileSync(file)), before, 'No post-tip changes to original forecast');
 });
-
 test('review scoring recognizes generic challenge predictions and unavailable rows', () => {
   const forecast = {
     primary_forecast: { model_id: 'production_elo_v7', home_win_probability: 0.6, projected_score: { home: 110, away: 106 } },
