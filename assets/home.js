@@ -113,18 +113,36 @@ function render(){
  const chosen=(archive?.lock?.forecasts||[]).find(g=>g.primary_forecast)||
    games.find(g=>g.primary_forecast)||games[0];
  if(!chosen)return;
- const prediction=chosen.primary_forecast,meta=observedScore(chosen),detail=meta.actual?
-   meta.state.text+' · '+chosen.away.abbr+' '+meta.s.away.score+' – '+chosen.home.abbr+' '+meta.s.home.score+
-   ' · ESPN SCORE (NOT A PREDICTION)':
-   prediction?'LOCKED ELO FORECAST · '+prediction.winner+' '+pct(prediction.winner_probability)+' · '+fmt(chosen.tip_utc):
-    'No locked prediction for this matchup; score data is separate.';
- show('feature-tip',meta.state.text+' · '+fmt(chosen.tip_utc||chosen.date));
+
+ const prediction=chosen.primary_forecast,meta=observedScore(chosen);
+ const saved=archive?.sidecar?.games?.find(g=>String(g.game_id)===String(chosen.game_id||chosen.id));
+ const ensemble=saved?.predictions?.m6_ensemble?.available===true?saved.predictions.m6_ensemble.home_win_probability:chosen.challenge_predictions?.m6_ensemble?.home_win_probability;
+ const homeChance=Number.isFinite(ensemble)?ensemble:prediction?.home_win_probability;
+ const awayChance=Number.isFinite(homeChance)?1-homeChance:null;
+ const formatChance=v=>Number.isFinite(v)?Math.round(v*100)+'%':'—';
+ const evidence=Number.isFinite(ensemble)?'LOCKED ENSEMBLE M6':'HISTORICAL ELO';
+ show('feature-tip',fmt(chosen.tip_utc||chosen.date));
  if($('featured-game'))$('featured-game').innerHTML=
-  club(chosen.away)+
-  '<div class="sports-scorebug__vs">AT<div class="sports-pick"><small>'+(meta.actual?'ESPN '+(meta.s.phase==='final'?'FINAL':'LIVE SCORE'):prediction?'ELO PICK':'SCHEDULED')+'</small><strong>'+esc(meta.actual?meta.s.away.score+'–'+meta.s.home.score:prediction?prediction.winner:'VS')+'</strong><em>'+esc(meta.actual?meta.state.text:prediction?pct(prediction.winner_probability):'')+'</em></div></div>'+
-  club(chosen.home,true);
- show('feature-detail',detail);
- if($('feature-game-link'))$('feature-game-link').href=gameLink(chosen);
+   '<div class="c3-feature-match"><a href="./team/?team='+encodeURIComponent(chosen.away.abbr)+'" class="c3-feature-team">'+teamImage(chosen.away,'large')+'<strong>'+esc(chosen.away.abbr)+'</strong></a>'+
+   '<div class="c3-feature-versus">VS</div>'+
+   '<a href="./team/?team='+encodeURIComponent(chosen.home.abbr)+'" class="c3-feature-team">'+teamImage(chosen.home,'large')+'<strong>'+esc(chosen.home.abbr)+'</strong></a></div>'+
+   '<div class="c3-prob-label">WIN PROBABILITY · '+esc(evidence)+'</div>'+
+   '<div class="c3-prob-head"><strong>'+formatChance(awayChance)+'</strong><span>AWAY / HOME</span><strong>'+formatChance(homeChance)+'</strong></div>'+
+   (Number.isFinite(homeChance)?'<div class="c3-prob-track" role="img" aria-label="'+esc(chosen.away.name)+' '+formatChance(awayChance)+'; '+esc(chosen.home.name)+' '+formatChance(homeChance)+'">'+
+    '<div class="c3-prob-away" style="width:'+(100*awayChance).toFixed(2)+'%"></div><div class="c3-prob-home" style="width:'+(100*homeChance).toFixed(2)+'%"></div></div>':
+    '<p class="c3-muted">No verified locked probability available.</p>');
+ show('feature-detail',(meta.actual?'Archived pretip forecast':'Locked before tipoff')+' · '+evidence+' · '+fmt(chosen.tip_utc||chosen.date));
+ if($('feature-game-link'))$('feature-game-link').href='./predict/?game='+encodeURIComponent(String(chosen.game_id||chosen.id));
+ showModelDisagreement(chosen);
+ if(prediction)playerSpotlight(chosen);
+ else if($('feature-players'))$('feature-players').innerHTML='<p class="small-note">No locked player projection for this matchup.</p>';
+ const finals=(liveFeed?.games||[]).filter(g=>g.phase==='final'&&Number.isFinite(g.away.score)&&Number.isFinite(g.home.score))
+  .sort((x,y)=>Date.parse(y.date||0)-Date.parse(x.date||0)).slice(0,3);
+ if($('c3-latest-results'))$('c3-latest-results').innerHTML=finals.length?finals.map(g=>
+  '<a class="c3-result-row" href="./game/?id='+encodeURIComponent(String(g.id))+'" aria-label="'+esc(g.away.name+' '+g.away.score+' at '+g.home.name+' '+g.home.score)+'">'+
+  teamImage(g.away,'small')+'<b>'+esc(g.away.abbr)+'</b><strong>'+esc(g.away.score)+' – '+esc(g.home.score)+'</strong><b>'+esc(g.home.abbr)+'</b>'+teamImage(g.home,'small')+'</a>'
+ ).join(''):'<p class="c3-muted">No verified recent NBA finals are available.</p>';
+
  // Headshots must be from the exact game in the frozen forecast. No unrelated
  // old team photographs or NBA-cup/Team-USA visual claims.
  showModelDisagreement(chosen);
