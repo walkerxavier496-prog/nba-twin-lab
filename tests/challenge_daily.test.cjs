@@ -43,6 +43,8 @@ test('daily dashboard links same-day experimental snapshot and player projection
  assert.match(script,/No pregame six-model lock exists/);
  assert.match(script,/model-results/);
  assert.match(script,/drawDisagreements/);
+ assert.match(script,/drawRosterEvidence/);
+ assert.match(script,/did NOT change the Elo/);
  assert.match(script,/Brier/);
  assert.match(html,/id="disagreements"/);
 });
