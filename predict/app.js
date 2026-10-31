@@ -11,6 +11,11 @@ const round=x=>Number.isFinite(x)?Math.round(x):'—';
 const today=new Date();
 const seasonYear=today.getUTCFullYear()+(today.getUTCMonth()>=6?1:0);
 let games=[],selected=null,source='',loadedAt=null,hasHistory=false,context=null,profiles={},modelReport=null,scienceSnapshot=null,scienceReport=null,rosterPriors=null,rosterReport=null;
+let liveScoreFeed=null;
+const liveSource=window.NbaScores||null;
+const scoreFor=id=>liveScoreFeed?.games?.find(g=>String(g.id)===String(id))||null;
+const verifiedScore=s=>s&&['live','final'].includes(s.phase)&&Number.isFinite(s.home.score)&&Number.isFinite(s.away.score);
+const scoreState=s=>s?.phase==='live'?liveSource?.label?.(s)||'LIVE':s?.phase==='final'?'FINAL':'SCHEDULED';
 const simulationCache=new Map();
 const alias={GS:'GSW',NY:'NYK',SA:'SAS',NO:'NOP',UTAH:'UTA',WSH:'WAS',PHX:'PHO',BKN:'BRK',CHA:'CHO'};
 async function loadContext(){try{const r=await fetch('../data/context.json',{cache:'no-store'});if(!r.ok)return;const d=await r.json();if(d.schema!==1||!Array.isArray(d.teams))return;context=d;const prior=d.teams.filter(t=>t.season===seasonYear-1);for(const t of prior)profiles[t.abbr]=t;for(const [from,to] of Object.entries(alias))if(profiles[to])profiles[from]=profiles[to];}catch(e){console.warn('Team advanced context unavailable:',e)}}
@@ -163,14 +168,28 @@ function available(){
  if(term)list=list.filter(g=>[g.home.name,g.away.name,g.home.abbr,g.away.abbr].some(x=>String(x).toLowerCase().includes(term)));
  return range==='final'?list.reverse():list;
 }
+async function refreshLiveScores(){
+ if(!liveSource?.fetchDate||!liveSource?.usDate)return;
+ try{
+  const d=liveSource.usDate(new Date());
+  const source=await liveSource.fetchDate(d);
+  if(!Array.isArray(source.games)||!source.games.length)throw Error('No games returned');
+  liveScoreFeed=source;
+ }catch(err){liveScoreFeed=null;}
+ renderGames();
+}
 function renderGames(){
  const list=available();
  $('games').innerHTML=list.length?list.map(g=>{
-   const final=g.status==='final',score=final||g.status==='live';
+   const seen=scoreFor(g.id),live=verifiedScore(seen);
+   const final=seen?.phase==='final'||(!seen&&g.status==='final');
+   const score=live||(final&&Number.isFinite(g.awayScore)&&Number.isFinite(g.homeScore));
+   const awayScore=live?seen.away.score:g.awayScore,homeScore=live?seen.home.score:g.homeScore;
+   const gameState=live?scoreState(seen):final?'FINAL':g.status==='live'?'SCORE UNAVAILABLE':'PREGAME';
    return '<button type="button" class="game '+(g.id===selected?'active':'')+'" data-id="'+esc(g.id)+'" aria-label="'+esc(g.away.name)+' at '+esc(g.home.name)+'">'+
-   '<div class="game-top"><span>'+esc(fmt(g.date))+'</span><span>'+(final?'FINAL':g.status==='live'?'LIVE':'PREGAME')+'</span></div>'+
+   '<div class="game-top"><span>'+esc(fmt(g.date))+'</span><span>'+esc(gameState)+'</span></div>'+
    '<div class="teams-line"><span class="predict-team">'+imgTeam(g.away)+'<strong>'+esc(g.away.abbr||g.away.name)+'</strong></span><span class="versus">AT</span><span class="predict-team">'+imgTeam(g.home)+'<strong>'+esc(g.home.abbr||g.home.name)+'</strong></span></div>'+
-   '<div class="pills"><span class="pill">'+(score?esc(g.awayScore)+' – '+esc(g.homeScore):'Model forecast')+'</span><span class="pill gold">'+(final?'Result':g.status==='live'?'In progress':'Preview →')+'</span></div></button>';
+   '<div class="pills"><span class="pill">'+(score?esc(awayScore)+' – '+esc(homeScore):'Model forecast')+'</span><span class="pill gold">'+(live?'ESPN · refreshed':final?'Result':g.status==='live'?'Score unavailable':'Preview →')+'</span></div></button>';
  }).join(''):'<div class="empty">No games found for this range. Try “All scheduled” or a different team.</div>';
  if(!list.some(g=>g.id===selected))selected=list[0]?.id||null;
  $('games').querySelectorAll('button[data-id]').forEach(btn=>btn.onclick=()=>{selected=btn.dataset.id;renderGames();renderDetail()});
@@ -179,6 +198,9 @@ function renderGames(){
 function metric(name,val){return '<div class="metricrow"><span>'+esc(name)+'</span><b>'+esc(val)+'</b></div>'}
 function renderDetail(){
  const g=games.find(x=>x.id===selected);
+ const observed=g?scoreFor(g.id):null;
+ const verifiedObserved=verifiedScore(observed);
+ const liveBanner=verifiedObserved?'<div class="real-score-banner"><b>ESPN '+esc(scoreState(observed))+'</b><strong>'+esc(g.away.abbr)+' '+observed.away.score+' – '+esc(g.home.abbr)+' '+observed.home.score+'</strong><small>Real scoreboard · completely separate from the probabilities below</small></div>':'';
  if(!g){$('detail').innerHTML='<div class="placeholder"><div class="placeholder-icon">◎</div><h3>No game selected</h3><p>Choose an upcoming NBA matchup.</p></div>';return}
  if(!hasHistory){$('detail').innerHTML='<div class="placeholder"><h3>Insufficient verified history</h3><p>The model requires at least 800 completed games from the previous season. No probabilities will be shown until this data is available.</p></div>';return}
  const state=E.ratings(games,g.date),simulations=Number($('simulations').value),mode=$('model-choice').value,cacheKey=g.id+'|'+g.date+'|'+simulations;
@@ -205,7 +227,7 @@ function renderDetail(){
   '<a href="../challenge/daily.html?game='+encodeURIComponent(String(g.id))+'#matchups">See the frozen six-model challenge when available ↗</a></p></div>':'';
 
  $('detail').innerHTML=
- '<div class="headrow"><span class="eyebrow">'+esc(fmt(g.date))+'</span><span class="badge">'+tag+'</span></div>'+
+ '<div class="headrow"><span class="eyebrow">'+esc(fmt(g.date))+'</span><span class="badge">'+tag+'</span></div>'+liveBanner+
  '<h3>'+esc(g.away.name)+' <span class="muted">at</span> '+esc(g.home.name)+'</h3>'+
  caution+
  '<div class="odds"><div><div class="name">'+esc(g.away.abbr)+' · Away</div><div class="pct">'+pct(p.awayWin)+'</div></div>'+
@@ -240,5 +262,5 @@ $('range').addEventListener('change',renderGames);
 $('team-search').addEventListener('input',renderGames);
 $('simulations').addEventListener('change',()=>{simulationCache.clear();renderDetail()});
 $('model-choice').addEventListener('change',renderDetail);
-Promise.all([loadContext(),loadReport(),loadSciencePreview(),loadRosterResearch()]).then(load);
+Promise.all([loadContext(),loadReport(),loadSciencePreview(),loadRosterResearch()]).then(async()=>{await load();await refreshLiveScores();if(typeof setInterval==='function')setInterval(refreshLiveScores,60000)});
 })();
