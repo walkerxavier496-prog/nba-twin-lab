@@ -1,0 +1,177 @@
+/* NBA Twin Lab Live Desk — independent actual game data, not model projections.
+ * ESPN public unofficial summary provides player boxscores and play by play.
+ * Alerts are opt-in while page is open; no push/background delivery.
+ */
+(()=>{'use strict';
+const BASE='https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=';
+const $=id=>document.getElementById(id);
+const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const numeric=x=>x!==null&&x!==undefined&&String(x).trim()!==''&&Number.isFinite(Number(x))?Number(x):null;
+const valid=id=>/^\d{7,10}$/.test(String(id||''));
+const fmtTime=x=>{const d=new Date(x);return Number.isFinite(d.getTime())?new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}).format(d):'Time unavailable'};
+const logo=team=>window.NbaMedia?.image?.(team.abbr,{size:'small',label:team.abbr})||'<b>'+esc(team.abbr)+'</b>';
+const status=g=>g.phase==='live'?(window.NbaScores?.label?.(g)||'LIVE'):g.phase==='final'?'FINAL':'UPCOMING';
+const favourite=g=>{const t=window.TwinTeamPrefs?.get?.();return !!t&&(window.TwinTeamPrefs?.canonical?.(g.home.abbr)===t||window.TwinTeamPrefs?.canonical?.(g.away.abbr)===t)};
+function parseBoxscore(raw){
+ const groups=raw?.boxscore?.players;
+ if(!Array.isArray(groups))return [];
+ const players=[];
+ for(const group of groups){
+  const team=String(group.team?.abbreviation||group.team?.shortDisplayName||'');
+  for(const statGroup of group.statistics||[]){
+   const columns=statGroup.labels||statGroup.names||[],idx=k=>columns.findIndex(x=>String(x).toUpperCase()===k);
+   for(const entry of statGroup.athletes||[]){
+    const athlete=entry.athlete||{},stats=entry.stats||[],col=k=>{const i=idx(k);return i<0?null:stats[i]};
+    if(entry.didNotPlay===true||entry.dnp===true||entry.active===false&&entry.didNotPlay)continue;
+    const id=String(athlete.id||''),name=String(athlete.displayName||athlete.fullName||'');
+    if(!name)continue;
+    const pts=numeric(col('PTS')),reb=numeric(col('REB')),ast=numeric(col('AST')),min=col('MIN');
+    if(pts===null&&reb===null&&ast===null)continue;
+    const threes=col('3PT')??col('3PM-A')??col('3FG');
+    const three=numeric(String(threes??'').split('-')[0]);
+    players.push({id,name,team,pts,reb,ast,three,minutes:min==null?'—':String(min)});
+   }
+  }
+ }
+ return players.sort((a,b)=>(b.pts??-1)-(a.pts??-1));
+}
+function extractPlays(raw){
+ const plays=Array.isArray(raw?.plays)?raw.plays:
+  Array.isArray(raw?.scoringPlays)?raw.scoringPlays:[];
+ return plays.map((p,i)=>{
+  const desc=String(p.text||p.description||p.type?.text||'').trim();
+  const id=String(p.id||p.sequenceNumber||[p.period?.number||'',p.clock?.displayValue||'',desc,i].join(':'));
+  return {id,desc,period:p.period?.number||p.period,clock:String(p.clock?.displayValue||p.clock||''),
+   home:numeric(p.homeScore),away:numeric(p.awayScore),scoring:p.scoringPlay===true};
+ }).filter(p=>p.desc).slice(-120);
+}
+function highlight(p){
+ const s=p.desc.toLowerCase();
+ const matches=[['BUZZER BEATER',/buzzer.beat|buzzer.beater|at the buzzer/],['DUNK',/dunk/],['ALLEY-OOP',/alley.oop/],
+  ['THREE POINTER',/makes? (?:a )?(?:\d+-foot )?three.point|makes? 3.pt|makes? 3.pointer|hits? (?:a )?three/],
+  ['BLOCK',/blocks? (?:the )?.*shot|blocked shot/]];
+ for(const [label,re]of matches)if(re.test(s))return label;
+ return null;
+}
+async function fetchSummary(id,{fetchImpl=fetch}={}){
+ if(!valid(id))throw Error('Invalid game ID');
+ const response=await fetchImpl(BASE+encodeURIComponent(String(id)),{cache:'no-store',headers:{Accept:'application/json'}});
+ if(!response.ok)throw Error('ESPN box score not available (HTTP '+response.status+')');
+ const raw=await response.json();
+ if(!raw||(!raw.boxscore&&!raw.plays&&!raw.scoringPlays))throw Error('No verified box score or play data available');
+ return {players:parseBoxscore(raw),plays:extractPlays(raw),source:'ESPN game summary',checkedAt:new Date().toISOString()};
+}
+const mounted=!!$('live-game-list');
+let feed=null,selected=null,gameFilter='all',sortStat='pts',summaryCache=new Map(),lastLoaded=null,request=0,alerts=false,permission='default';
+const seen=new Map(),messages=[];
+function setMessage(str){const n=$('live-desk-status');if(n)n.textContent=str}
+function selectedGame(){return feed?.games?.find(g=>String(g.id)===String(selected))||null}
+function showGames(){
+ if(!$('live-game-list'))return;
+ const all=feed?.games||[];
+ const filtered=all.filter(g=>gameFilter==='all'||gameFilter==='mine'&&favourite(g)||gameFilter==='live'&&g.phase==='live'||gameFilter==='final'&&g.phase==='final');
+ $('live-game-list').innerHTML=filtered.length?filtered.map(g=>{
+  const s=g.phase==='live'?'LIVE':g.phase==='final'?'FINAL':'UPCOMING';
+  const points=g.phase==='scheduled'?'<span class="desk-time">'+esc(fmtTime(g.date))+'</span>':
+   '<span class="desk-points">'+(g.away.score??'—')+' : '+(g.home.score??'—')+'</span>';
+  return '<button type="button" class="desk-game '+(String(g.id)===String(selected)?'selected':'')+'" data-live-game="'+esc(g.id)+'" aria-pressed="'+(String(g.id)===String(selected))+'">'+
+  '<span class="desk-game-head"><span class="desk-status desk-status-'+(g.phase||'scheduled')+'">'+s+'</span><span>'+esc(status(g))+'</span></span>'+
+  '<span class="desk-game-teams">'+logo(g.away)+'<strong>'+esc(g.away.abbr)+'</strong>'+points+'<strong>'+esc(g.home.abbr)+'</strong>'+logo(g.home)+'</span></button>';
+ }).join(''):'<p class="desk-empty">No games match this filter.</p>';
+ for(const button of $('live-game-list').querySelectorAll('[data-live-game]'))
+  button.addEventListener('click',()=>selectGame(button.dataset.liveGame));
+ if($('desk-counts'))$('desk-counts').textContent=all.filter(g=>g.phase==='live').length+' LIVE · '+all.filter(g=>g.phase==='final').length+' FINAL · '+all.filter(g=>g.phase==='scheduled').length+' UPCOMING';
+}
+function renderSummary(){
+ const g=selectedGame(),content=$('live-stats-rows'),title=$('desk-matchup'),label=$('desk-game-source');
+ if(!g){if(content)content.innerHTML='<tr><td colspan="6">Select a game to see its real player statistics.</td></tr>';return}
+ if(title)title.textContent=g.away.abbr+' @ '+g.home.abbr+' · '+status(g);
+ if(label)label.textContent='ESPN official game box score feed (unofficial API), separate from model projections';
+ const rows=(lastLoaded?.id===String(g.id)?lastLoaded.players:[]).slice().sort((a,b)=>(b[sortStat]??-1)-(a[sortStat]??-1));
+ if(content)content.innerHTML=rows.length?rows.slice(0,30).map(p=>
+ '<tr><td><span class="desk-player">'+(p.id?'<img loading="lazy" decoding="async" src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(p.id)+'.png" alt="" onerror="this.style.display=\'none\'">':'')+'<span><b>'+esc(p.name)+'</b><small>'+esc(p.team)+'</small></span></span></td>'+
+ '<td>'+esc(p.pts??'—')+'</td><td>'+esc(p.reb??'—')+'</td><td>'+esc(p.ast??'—')+'</td><td>'+esc(p.three??'—')+'</td><td>'+esc(p.minutes)+'</td></tr>').join(''):
+ '<tr><td colspan="6">'+(g.phase==='scheduled'?'Pregame — live player box scores appear after tipoff.':'ESPN player box score not available yet.')+'</td></tr>';
+ if($('live-plays'))$('live-plays').innerHTML=lastLoaded?.id===String(g.id)&&lastLoaded.plays.length?
+  lastLoaded.plays.slice(-8).reverse().map(p=>'<li><small>'+esc(String(p.period||'?'))+'Q '+esc(p.clock)+'</small><span>'+esc(p.desc)+'</span></li>').join(''):
+  '<li>Verified play-by-play will appear when the provider publishes it.</li>';
+}
+function sendAlerts(game,plays){
+ const ids=new Set(plays.map(p=>p.id)),past=seen.get(String(game.id));
+ if(past&&alerts&&game.phase==='live'){
+  const fresh=plays.filter(p=>!past.has(p.id)&&highlight(p));
+  for(const p of fresh.slice(-2)){
+   const name=highlight(p),msg=name+': '+p.desc;
+   messages.unshift(msg);messages.splice(6);
+   if(typeof Notification!=='undefined'&&Notification.permission==='granted'){
+    try{new Notification(game.away.abbr+' @ '+game.home.abbr+' · '+name,{body:p.desc,tag:'twinlab-play-'+game.id+'-'+p.id})}catch(e){}
+   }
+  }
+ }
+ seen.set(String(game.id),ids);
+ if($('live-alert-feed'))$('live-alert-feed').innerHTML=messages.length?
+  messages.map(m=>'<li>'+esc(m)+'</li>').join(''):'<li>Watching for verified dunks, threes, blocks and buzzer plays while this page is open.</li>';
+}
+async function loadSelected(){
+ const g=selectedGame();if(!g)return;
+ renderSummary();
+ if(g.phase==='scheduled'){lastLoaded=null;renderSummary();setMessage('UPCOMING · no actual player stats before tipoff');return}
+ const token=++request;
+ setMessage('Loading actual player box score…');
+ try{
+  const result=await fetchSummary(g.id);
+  if(token!==request)return;
+  lastLoaded={id:String(g.id),...result};summaryCache.set(String(g.id),lastLoaded);
+  sendAlerts(g,result.plays);
+  setMessage('ESPN player box score · refreshed '+fmtTime(result.checkedAt));
+  renderSummary();
+ }catch(e){
+  if(token!==request)return;
+  lastLoaded=null;setMessage(e.message+' · no statistics invented');renderSummary();
+ }
+}
+function selectGame(id){
+ if(!feed?.games?.some(g=>String(g.id)===String(id)))return;
+ if(String(selected)!==String(id)){selected=String(id);lastLoaded=null;request++}
+ showGames();loadSelected();
+}
+function setFeed(value){
+ if(!value||!Array.isArray(value.games))return;
+ feed=value;
+ const current=selectedGame();
+ if(!current){
+  const fav=feed.games.filter(g=>favourite(g));
+  const prefer=feed.games.find(g=>g.phase==='live'&&favourite(g))||feed.games.find(g=>g.phase==='live')||
+  fav[0]||feed.games.find(g=>g.phase==='scheduled')||feed.games[0];
+  selected=prefer?.id||null;
+ }
+ const freshness=Number.isFinite(Date.parse(feed.fetched_at_utc))?fmtTime(feed.fetched_at_utc):'checked just now';
+ if($('live-feed-freshness'))$('live-feed-freshness').textContent='ESPN scoreboard · checked '+freshness+' · automatic refresh';
+ showGames();loadSelected();
+}
+function unavailable(){
+ feed=null;lastLoaded=null;request++;
+ if($('live-game-list'))$('live-game-list').innerHTML='<p class="desk-empty">ESPN live scoreboard unavailable. No scores or player stats are being guessed.</p>';
+ if($('live-feed-freshness'))$('live-feed-freshness').textContent='ESPN unavailable · no live claim';
+ if($('live-stats-rows'))$('live-stats-rows').innerHTML='<tr><td colspan="6">Live player data unavailable.</td></tr>';
+ setMessage('Live data currently unavailable');
+}
+function init(){
+ if(!mounted)return;
+ for(const button of document.querySelectorAll('[data-desk-filter]'))
+  button.addEventListener('click',()=>{gameFilter=button.dataset.deskFilter;for(const b of document.querySelectorAll('[data-desk-filter]')){const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))}showGames()});
+ if($('live-sort'))$('live-sort').addEventListener('change',e=>{sortStat=e.target.value;renderSummary()});
+ const alertsButton=$('live-alerts-toggle');
+ if(alertsButton)alertsButton.addEventListener('click',async()=>{
+  if(alerts){alerts=false;alertsButton.textContent='Enable highlight alerts';alertsButton.setAttribute('aria-pressed','false');return}
+  alerts=true;alertsButton.setAttribute('aria-pressed','true');alertsButton.textContent='Highlight alerts on';
+  if(typeof Notification!=='undefined'&&Notification.permission==='default'){
+   try{permission=await Notification.requestPermission()}catch(e){permission='denied'}
+  }else permission=typeof Notification!=='undefined'?Notification.permission:'unsupported';
+  if($('live-alert-note'))$('live-alert-note').textContent=permission==='granted'?'Desktop notifications enabled while this page is open.':'In-page highlight alerts enabled; system notifications unavailable or not permitted.';
+ });
+ document.addEventListener('twinlab:teamchange',()=>showGames());
+}
+init();
+window.NbaLiveDesk=Object.freeze({setFeed,unavailable,selectGame,parseBoxscore,extractPlays,highlight,fetchSummary});
+})();
