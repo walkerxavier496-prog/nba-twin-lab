@@ -109,9 +109,9 @@ function render(){
     '<small class="court-ticker__status">'+esc(label)+'</small>'+
     '<b class="court-ticker__score">'+result+'</b></a>';
  }).join('');
- // Prefer a genuine active NBA game, then an upcoming game, then a final.
- const chosen=games.find(g=>observed(g)?.phase==='live')||
-    games.find(g=>(new Date(g.tip_utc||g.date)).getTime()>Date.now())||games[0];
+ // Feature the latest immutable pretip prediction, NEVER use a live score as a pick.
+ const chosen=(archive?.lock?.forecasts||[]).find(g=>g.primary_forecast)||
+   games.find(g=>g.primary_forecast)||games[0];
  if(!chosen)return;
  const prediction=chosen.primary_forecast,meta=observedScore(chosen),detail=meta.actual?
    meta.state.text+' · '+chosen.away.abbr+' '+meta.s.away.score+' – '+chosen.home.abbr+' '+meta.s.home.score+
