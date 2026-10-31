@@ -33,6 +33,9 @@ on:
       - 'audit/index.html'
       - 'audit/styles.css'
       - 'predict/index.html'
+      - 'predict/roster-integrity.js'
+      - 'data/availability-current.json'
+      - 'tests/roster_integrity_v18.test.cjs'
       - 'predict/styles.css'
       - 'models/index.html'
       - 'twins/index.html'
@@ -87,5 +90,6 @@ jobs:
           node --check challenge/daily.js
           node --check challenge/app.js
           node --check predict/app.js
+          node --check predict/roster-integrity.js
       - name: Test responsive routes and original pregame data safeguards
-        run: node --test tests/mobile_design.test.cjs tests/site_navigation.test.cjs tests/challenge_daily.test.cjs tests/courtside.test.cjs tests/v12_remodel.test.cjs tests/media_assets.test.cjs tests/live_scoreboard.test.cjs tests/live_desk.test.cjs tests/boxscore_advanced.test.cjs tests/fan_team_dark.test.cjs tests/game_centre.test.cjs tests/league_v17.test.cjs tests/watchlist_v17.test.cjs
+        run: node --test tests/mobile_design.test.cjs tests/site_navigation.test.cjs tests/challenge_daily.test.cjs tests/courtside.test.cjs tests/v12_remodel.test.cjs tests/media_assets.test.cjs tests/live_scoreboard.test.cjs tests/live_desk.test.cjs tests/boxscore_advanced.test.cjs tests/fan_team_dark.test.cjs tests/game_centre.test.cjs tests/league_v17.test.cjs tests/watchlist_v17.test.cjs tests/roster_integrity_v18.test.cjs
