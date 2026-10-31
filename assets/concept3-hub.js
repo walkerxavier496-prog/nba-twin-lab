@@ -21,7 +21,7 @@ const MODELS=[
  ['m4_monte_carlo','Monte Carlo'],['m5_regularized_ml','Machine Learning'],['m6_ensemble','Ensemble']
 ];
 const state={entry:null,lock:null,sidecar:null,review:null,snapshot:null,results:null,gid:null,
- tab:'prediction',slateTab:'full',playerSort:'pts',playerTeam:'all',search:'',slateSearch:''};
+ tab:'prediction',slateTab:'full',playerSort:'pts',playerTeam:'all',showOut:false,search:'',slateSearch:''};
 function gameId(g){return String(g?.game_id||g?.id||'')}
 function byId(id){return state.lock?.forecasts?.find(g=>gameId(g)===String(id))||null}
 function models(g){
@@ -297,21 +297,45 @@ function matchupPanel(g){
  (!context.available?'<p class="c3-source-note">Both pregame team snapshots were not available at lock time. Missing statistics are intentionally blank.</p>':'');
 }
 function playersPanel(g){
- const all=(g.v9_player_projections||[]).filter(p=>state.playerTeam==='all'||p.team===state.playerTeam)
+ const review=reviewFor(g),byPlayer=new Map((review?.player_results||[]).map(p=>[String(p.player_id),p]));
+ const all=(g.v9_player_projections||[])
+ .filter(p=>state.playerTeam==='all'||p.team===state.playerTeam)
+ .filter(p=>state.showOut||String(p.official_injury_report?.status).toLowerCase()!=='out')
  .filter(p=>!state.search||String(p.name||'').toLowerCase().includes(state.search.toLowerCase()))
  .sort((a,b)=>(b.projection_if_play?.[state.playerSort]||0)-(a.projection_if_play?.[state.playerSort]||0));
+ const excluded=(g.v9_player_projections||[]).filter(p=>String(p.official_injury_report?.status).toLowerCase()==='out').length;
  const stat=(p,k)=>num(p.projection_if_play?.[k]);
+ const statName={pts:'Points',reb:'Rebounds',ast:'Assists',three_pm:'3PM'}[state.playerSort]||'Points';
  return '<div class="c3-panel"><div class="c3-controls"><select id="c3-player-team" aria-label="Filter player team">'+
  '<option value="all">Both teams</option>'+[g.away,g.home].map(t=>'<option value="'+esc(t.abbr)+'" '+(state.playerTeam===t.abbr?'selected':'')+'>'+esc(t.name)+'</option>').join('')+'</select>'+
- '<select id="c3-player-sort" aria-label="Sort by player stat">'+[
+ '<select id="c3-player-sort" aria-label="Select stat comparison">'+[
  ['pts','Points'],['reb','Rebounds'],['ast','Assists'],['three_pm','3PM']
- ].map(([k,n])=>'<option value="'+k+'" '+(state.playerSort===k?'selected':'')+'>Sort: '+n+'</option>').join('')+'</select>'+
- '<input id="c3-player-search" placeholder="Search players…" aria-label="Search player names" value="'+esc(state.search)+'"></div>'+
- '<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>PLAYER</th><th>MIN IF PLAYING</th><th>PTS</th><th>REB</th><th>AST</th><th>3PM</th><th>STATUS</th></tr></thead><tbody>'+
- all.map(p=>'<tr><td><a class="c3-player-name" href="../team/?team='+encodeURIComponent(p.team)+'&player='+encodeURIComponent(p.player_id)+'#team-player-profile">'+
- (portrait(p)?'<img src="'+portrait(p)+'" alt="" loading="lazy">':'')+esc(p.name)+'</a></td>'+
- '<td>'+num0(p.expected_minutes_if_play)+'</td><td>'+stat(p,'pts')+'</td><td>'+stat(p,'reb')+'</td><td>'+stat(p,'ast')+'</td><td>'+stat(p,'three_pm')+'</td><td><span class="c3-status '+toClass(p.official_injury_report?.status)+'">'+esc(p.official_injury_report?.status||'Unverified')+'</span></td></tr>').join('')+
- '</tbody></table></div><p class="c3-source-note">'+all.length+' players · all PTS/REB/AST/3PM projections assume the player plays. OUT players may still have historical conditional projections, but cannot contribute to a verified game-day active rotation.</p></div>';
+ ].map(([k,n])=>'<option value="'+k+'" '+(state.playerSort===k?'selected':'')+'>Stat: '+n+'</option>').join('')+'</select>'+
+ '<input id="c3-player-search" placeholder="Search players…" aria-label="Search player names" value="'+esc(state.search)+'">'+
+ '<button class="c3-btn c3-out-toggle" type="button" id="c3-show-out" aria-pressed="'+String(state.showOut)+'">'+
+ (state.showOut?'Hide':'Show')+' officially OUT ('+excluded+')</button></div>'+
+ '<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>PLAYER</th><th>MIN IF PLAYING</th>'+
+ '<th>'+esc(statName.toUpperCase())+' · PRETIP</th>'+
+ (review?'<th>ACTUAL</th><th>ABS ERROR</th>':'')+
+ '<th>PTS PROJ</th><th>REB PROJ</th><th>AST PROJ</th><th>3PM PROJ</th><th>AVAILABILITY</th></tr></thead><tbody>'+
+ all.map(p=>{
+  const grade=byPlayer.get(String(p.player_id)),played=grade?.disposition==='played_scored';
+  const out=String(p.official_injury_report?.status).toLowerCase()==='out';
+  const official=p.official_injury_report?.status||'Unverified';
+  const label=official==='Not listed'?'Not confirmed':official;
+  return '<tr'+(out?' class="c3-out-player"':'')+'><td><a class="c3-player-name" href="../team/?team='+encodeURIComponent(p.team)+'&player='+encodeURIComponent(p.player_id)+'#team-player-profile">'+
+   (portrait(p)?'<img src="'+portrait(p)+'" alt="" loading="lazy">':'')+esc(p.name)+'</a></td>'+
+   '<td>'+(out?'OUT · not active':num0(p.expected_minutes_if_play))+'</td>'+
+   '<td>'+stat(p,state.playerSort)+'</td>'+
+   (review?'<td>'+(played?num0(grade.actual?.[state.playerSort]):'DNP / ungraded')+'</td>'+
+   '<td>'+(played?num(grade.absolute_errors?.[state.playerSort]):'—')+'</td>':'')+
+   ['pts','reb','ast','three_pm'].map(k=>'<td>'+stat(p,k)+'</td>').join('')+
+   '<td><span class="c3-status '+toClass(official)+'">'+esc(label)+'</span></td></tr>';
+ }).join('')+
+ '</tbody></table></div><p class="c3-source-note">'+all.length+' shown · '+excluded+
+ ' officially OUT in the saved injury report · projections are conditional on playing. Players officially OUT are hidden by default, but the original frozen model values remain accessible for audit.'+
+ (review?' Actual performance and absolute errors shown only for participating players in the verified game review. No DNP is scored as zero.':' Pregame player grading will appear after a verified final and complete box score.')+
+ '</p></div>';
 }
 function renderLab(){
  const target=$('c3-lab');
@@ -337,6 +361,7 @@ function bindLab(){
  const post=$('c3-lab')?.querySelector?.('[data-c3-show-audit]');
  if(post)post.onclick=()=>{state.tab='prediction';renderLab();$('c3-postgame-audit')?.scrollIntoView?.({behavior:'smooth',block:'start'})};
  const sort=$('c3-player-sort'),team=$('c3-player-team'),search=$('c3-player-search');
+ const out=$('c3-show-out');if(out)out.onclick=()=>{state.showOut=!state.showOut;renderLab()};
  if(sort)sort.onchange=e=>{state.playerSort=e.target.value;renderLab()};
  if(team)team.onchange=e=>{state.playerTeam=e.target.value;renderLab()};
  if(search)search.oninput=e=>{state.search=e.target.value;const index=search.selectionStart;renderLab();$('c3-player-search')?.focus();$('c3-player-search')?.setSelectionRange(index,index)};
