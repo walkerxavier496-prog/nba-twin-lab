@@ -50,7 +50,7 @@ test('new homepage dynamically builds clickable slate cards from only original l
  vm.runInNewContext(read('assets/home.js'),{document,fetch,Date,Intl,Promise,console},{filename:'assets/home.js'});
  await new Promise(resolve=>setImmediate(resolve));
  assert.equal((get('home-games').innerHTML.match(/class="home-game"/g)||[]).length,10);
- assert.ok(get('home-games').innerHTML.includes('challenge/daily.html?game='));
+ assert.ok(get('home-games').innerHTML.includes('./game/?id='));
  assert.ok(get('home-games').innerHTML.includes('ELO PICK'));
  assert.equal(get('home-locked').textContent,'1');
  assert.ok(!get('home-games').innerHTML.includes('LIVE SCORE'));
