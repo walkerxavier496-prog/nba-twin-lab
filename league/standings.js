@@ -78,7 +78,7 @@ function render(target,items,filter=''){
  target.innerHTML=visible.map(t=>{
   const line=[
    val(t.rank,t.rank),
-   '<td data-sort-value="'+escape(t.name)+'"><div class="league-team-cell"><a class="league-team" href="../team-intelligence/?team='+encodeURIComponent(t.abbr)+'">'+logo(t.abbr)+'<span>'+escape(t.name)+'</span></a><button type="button" class="watch-team-btn" data-watch-team="'+escape(t.abbr)+'" aria-label="Follow '+escape(t.name)+'">☆</button></div></td>',
+   '<td data-sort-value="'+escape(t.name)+'"><div class="league-team-cell"><a class="league-team" href="../team/?team='+encodeURIComponent(t.abbr)+'">'+logo(t.abbr)+'<span>'+escape(t.name)+'</span></a><button type="button" class="watch-team-btn" data-watch-team="'+escape(t.abbr)+'" aria-label="Follow '+escape(t.name)+'">☆</button></div></td>',
    val(t.w,t.w),val(t.l,t.l),val(pct(t)===null?'—':pct(t).toFixed(3),pct(t)),
    val(t.gb===null?'—':t.gb.toFixed(1),t.gb),
    val(recordText(t.homeW,t.homeL),t.homeW),val(recordText(t.awayW,t.awayL),t.awayW),
