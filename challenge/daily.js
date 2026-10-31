@@ -71,6 +71,13 @@ function drawGameSelector(){
 function drawRosterEvidence(game){
  const audited=game.v18_roster_integrity;
  const strength=game.v18_roster_strength;
+ const evaluated=scoreFor(game.game_id)?.v18_roster_strength;
+ const evaluation=evaluated?.status==='scored'?
+  '<p><b>V18 postgame direction:</b> '+esc(evaluated.signal.toUpperCase())+' · '+
+   (evaluated.correct?'correct':'incorrect')+'. Evaluates uncalibrated player-strength direction only.</p>':
+  evaluated?.status==='inconclusive'?
+   '<p><b>V18 postgame direction:</b> inconclusive across availability scenarios; no directional pick or accuracy credit.</p>':
+   '';
  const research=strength?.available?
   '<p><b>V18 current-roster impact range:</b> '+dec(strength.home_minus_away_impact_range[0])+' to '+
    dec(strength.home_minus_away_impact_range[1])+' · home minus away; not a winner probability or predicted score.</p>':
@@ -89,7 +96,7 @@ function drawRosterEvidence(game){
    '</b> · This is saved pregame reasoning, not a modified game prediction. '+
    'No new roster-first win probability was generated.</p>'+
    '<p>'+esc((audited.issues||[]).join(' · ')||'All stated point-in-time checks passed')+'</p>'+
-   research+'<div class="split">'+makeTeam(audited.away)+makeTeam(audited.home)+'</div></div>';
+   research+evaluation+'<div class="split">'+makeTeam(audited.away)+makeTeam(audited.home)+'</div></div>';
  }
  const injuries=game.official_injury_sidecar;
  if(injuries){
