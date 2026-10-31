@@ -94,3 +94,8 @@ body.v12.home #live-games~.hero-grid .lead-story h1{font-size:clamp(50px,5vw,88p
  .desk-filters{gap:5px}
  .desk-filters button{padding:8px 10px}
 }
+
+/* Entire matchup card is now a navigable link into the full Game Centre. */
+.live-desk .desk-game{color:#f2f7fc;text-decoration:none}
+.live-desk .desk-game:hover{transform:translateY(-1px);box-shadow:0 8px 25px #0003}
+.live-desk .desk-game-open{display:block;margin-top:auto;font-size:9px;font-weight:950;letter-spacing:.07em;text-align:right;color:var(--fan-accent,#c9dafa)}
