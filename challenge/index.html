@@ -13,7 +13,17 @@
 <section class="panel scoreboard">
 <div class="section-top" style="margin:0 0 12px"><div><div class="eyebrow">01 / LEADERBOARD</div><h2>LET THE NUMBERS DECIDE.</h2></div></div>
 <p class="small-note" id="scope">Loading historical evaluation scope…</p>
-<div class="filters" id="filters" aria-label="Historical test window"><button class="selected" data-view="common" type="button">All common games</button><button data-view="early_season" type="button">Early season</button><button data-view="high_roster_change" type="button">Roster change</button><button data-view="2024" type="button">2023–24</button><button data-view="2025" type="button">2024–25</button><button data-view="2026" type="button">2025–26</button></div>
+<div class="filters" id="filters" aria-label="Historical test window"><button class="selected" data-view="common" type="button">All common games</button><button data-view="early_season" type="button">Early season</button><button data-view="high_roster_change" type="button">Roster change</button><button data-view="2024" type="button">2023–24</button><button data-view="2025" type="button">2024–25</button><button data-view="2026" type="button">2025–26</button></div><div class="model-sort-bar">
+<label for="model-sort">COMPARE MODELS BY <select id="model-sort" aria-label="Sort six models by metric">
+<option value="brier">Brier score · lowest is best</option>
+<option value="accuracy">Win accuracy · highest is best</option>
+<option value="logLoss">Log loss · lowest is best</option>
+<option value="ece">Calibration error · lowest is best</option>
+<option value="scoreMAE">Score MAE · lowest is best</option>
+<option value="games">Sample size · largest first</option>
+</select></label>
+<span>Sorting changes display order, not the historical forecasts or model rankings used for production.</span>
+</div>
 <div class="mobile-leaderboard" id="leaderboard-cards" aria-label="Six model accuracy cards"></div>
 <details class="stats-details"><summary>EXPAND FULL STATISTICS TABLE ↘</summary><div class="tablewrap"><table><thead><tr><th>#</th><th>Contender</th><th>Games</th><th>Win %</th><th>Brier ↓</th><th>95% CI</th><th>Log loss ↓</th><th>ECE ↓</th><th>Score MAE ↓</th></tr></thead><tbody id="leaderboard"><tr><td colspan="9">Waiting for the verified model report.</td></tr></tbody></table></div></details>
 <p class="fine">Model comparisons are observational, not guarantees. Score MAE is shown only where genuine pregame score forecasts exist.</p>
