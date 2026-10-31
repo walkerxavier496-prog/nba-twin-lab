@@ -1,0 +1,10 @@
+/* NBA Twin Lab local device watchlist actions. */
+.watch-team-btn,.watch-player-btn{border:1px solid #425d72;background:#193448;color:var(--fan-accent,#c6dbff);border-radius:6px;cursor:pointer;font-weight:900;white-space:nowrap}
+.watch-team-btn{padding:5px 9px;min-width:32px;min-height:32px;font-size:17px}
+.watch-player-btn{padding:6px 8px;min-height:28px;font-size:10px;letter-spacing:.02em;margin-left:8px}
+.watch-team-btn[aria-pressed=true],.watch-player-btn[aria-pressed=true]{background:color-mix(in srgb,var(--fan-accent,#c6dbff),#142432 84%);border-color:var(--fan-accent,#c6dbff)}
+.watch-team-btn:hover,.watch-player-btn:hover{border-color:var(--fan-accent,#c6dbff);background:#294d66}
+.watch-team-btn:focus-visible,.watch-player-btn:focus-visible{outline:2px solid var(--fan-accent,#c6dbff);outline-offset:2px}
+.league-team-cell{display:flex;align-items:center;justify-content:space-between;gap:9px;min-width:0}
+.watchlist-remove[aria-pressed=true]{border-color:var(--fan-accent,#c6dbff)}
+@media(max-width:550px){.watch-player-btn{margin-left:0;margin-top:5px;display:block;padding:6px 8px}}
