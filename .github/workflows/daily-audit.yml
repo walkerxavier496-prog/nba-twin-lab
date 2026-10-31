@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: '22'
       - name: Test lock, timezone and scoring rules
-        run: node --test tests/challenge_daily.test.cjs tests/daily_audit.test.cjs tests/prediction_engine.test.cjs tests/monte_carlo.test.cjs tests/site_navigation.test.cjs
+        run: node --test tests/challenge_daily.test.cjs tests/daily_audit.test.cjs tests/prediction_engine.test.cjs tests/monte_carlo.test.cjs tests/site_navigation.test.cjs tests/roster_integrity_v18.test.cjs
       - name: Lock eligible slate or ingest complete finals
         run: node scripts/daily_tracker.cjs run
       - name: Review separately locked 31 Oct six-model sidecar if final results exist
