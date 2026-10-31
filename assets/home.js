@@ -10,6 +10,7 @@ const fmt=v=>{const d=new Date(v);return Number.isFinite(d.getTime())?'Date unav
 const media=typeof window!=='undefined'?window.NbaMedia:null;
 const scores=typeof window!=='undefined'?window.NbaScores:null;
 const show=(id,value)=>{if($(id))$(id).textContent=value};
+const usableTime=(...options)=>options.find(v=>v&&Number.isFinite(Date.parse(v)))||null;
 const teamImage=(team,size='large')=>media?.image?.(team.abbr,{size,label:team.abbr})||
  '<span class="club-mark'+(size==='large'?' club-mark--large':'')+'" data-team="'+esc(team.abbr)+'">'+esc(team.abbr)+'</span>';
 const club=(team,isHome=false)=>'<div class="sports-club'+(isHome?' sports-club--home':'')+'">'+teamImage(team)+
@@ -36,7 +37,7 @@ function gameTile(game){
  const teamAway=game.away,teamHome=game.home,p=isLocked?game.primary_forecast:null;
  const matchId=String(game.game_id||game.id);
  const href=isLocked?'./challenge/daily.html?game='+encodeURIComponent(matchId)+'#matchups':'./predict/';
- const when=fmt(game.tip_utc||game.date||meta.s?.date);
+ const when=fmt(usableTime(game.tip_utc,game.date,meta.s?.date));
  const out='<div class="home-game__versus">AT</div>'; // Locked picks only; real results live above.
  return '<a class="home-game" href="'+href+'" aria-label="'+esc(teamAway.name)+' at '+esc(teamHome.name)+'">'+
   '<div class="home-game__top"><span>'+esc(when)+'</span><span class="game-status">PRETIP LOCK</span></div>'+
