@@ -99,3 +99,24 @@ body.v12.home #live-games~.hero-grid .lead-story h1{font-size:clamp(50px,5vw,88p
 .live-desk .desk-game{color:#f2f7fc;text-decoration:none}
 .live-desk .desk-game:hover{transform:translateY(-1px);box-shadow:0 8px 25px #0003}
 .live-desk .desk-game-open{display:block;margin-top:auto;font-size:9px;font-weight:950;letter-spacing:.07em;text-align:right;color:var(--fan-accent,#c9dafa)}
+
+/* V16 — All Games best performances and full sortable NBA box scores. */
+.desk-top-performers{margin:7px 18px 14px}
+.desk-top-title{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--fan-accent,#c6dbff);margin:8px 0 10px}
+.desk-top-title small{color:#a6becd}
+.desk-performance-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.desk-performance{display:flex;flex-direction:column;gap:4px;min-width:0;padding:11px;border:1px solid #39546a;border-radius:8px;background:#172c40;text-decoration:none!important;color:#f3f9fe!important}
+.desk-performance>b{font-size:10px;color:var(--fan-accent,#c6dbff)}
+.desk-performance strong{display:block;font-size:12px;line-height:1.2;overflow-wrap:anywhere}
+.desk-performance span small{display:block;font-size:9px;color:#9ab1c3;margin-top:4px}
+.desk-performance em{font-style:normal;font-size:17px;font-weight:900}
+.desk-hot-tag{font-size:9px;color:#f1d18a;font-weight:850}
+.desk-sort-help{padding:2px 18px 10px;font-size:10px;color:#a5bfd0!important}
+.desk-table{min-width:1140px}
+.desk-table th button{background:none;border:0;color:inherit;font:inherit;padding:8px 3px;cursor:pointer}
+.desk-table th button:hover,.desk-table th button:focus-visible{color:var(--fan-accent,#c6dbff);outline:1px solid var(--fan-accent,#c6dbff)}
+.desk-table .desk-fpts{font-weight:900;color:var(--fan-accent,#c6dbff)!important}
+.desk-table th:first-child,.desk-table td:first-child{min-width:175px}
+.desk-table :is(td,th){white-space:nowrap}
+@media(max-width:1000px){.desk-performance-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:590px){.desk-performance-list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:7px}.desk-performance{flex:0 0 150px;scroll-snap-align:start}.desk-top-performers{margin-inline:11px}}
