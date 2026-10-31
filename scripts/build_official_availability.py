@@ -220,9 +220,37 @@ def build(now):
     first_tip=min(datetime.fromisoformat(g["date"].replace("Z","+00:00")) for g in games)
     if not (timedelta(minutes=35)<=first_tip-now<=timedelta(hours=4)):
         raise ValueError("Outside pretip official roster/injury evidence window")
-    url=NBA_REPORT_PAGE
-    stamp,pdf_url=select_report(get(url).decode("utf-8","replace"),now,first_tip)
-    pdf=get(pdf_url)
+    # Explicit overrides are useful if the official index page is intermittently
+    # unavailable. Only exact official host/filename and pretip timestamps pass.
+    override=os.environ.get("NBA_INJURY_REPORT_URL")
+    if override:
+        stamp=source_time(override)
+        if (not override.startswith(NBA_REPORT_HOST) or stamp is None or
+            stamp>now or stamp>=first_tip or now-stamp>timedelta(hours=24)):
+            raise ValueError("Official report override violates source or cutoff policy")
+        pdf_url=override
+        pdf=get(pdf_url)
+    else:
+        try:
+            stamp,pdf_url=select_report(get(NBA_REPORT_PAGE).decode("utf-8","replace"),now,first_tip)
+            pdf=get(pdf_url)
+        except Exception:
+            # Official page can be temporarily inaccessible. Probe the genuine
+            # official CDN's deterministic 15-minute report filenames, newest
+            # first. Never invent status or bypass provider identity.
+            pdf=None
+            for i in range(12):
+                est=(now-timedelta(minutes=i*15)).astimezone(ZoneInfo("America/New_York"))
+                candidate=NBA_REPORT_HOST+"Injury-Report_"+est.strftime("%Y-%m-%d_%I_%M%p")+".pdf"
+                sample_time=source_time(candidate)
+                if sample_time is None or sample_time>=first_tip or sample_time>now:continue
+                try:
+                    pdf=get(candidate)
+                    stamp,pdf_url=sample_time,candidate
+                    break
+                except Exception:
+                    continue
+            if pdf is None:raise ValueError("Official injury index unavailable and no verified CDN PDF found")
     if not pdf.startswith(b"%PDF"):raise ValueError("Official report was not a PDF")
     parsed=injury_rows(pdf)
     teams={canonical(g[side]["abbr"]) for g in games for side in ("home","away")}
