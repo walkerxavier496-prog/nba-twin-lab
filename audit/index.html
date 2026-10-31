@@ -14,7 +14,7 @@
 <div class="audit-grid" aria-label="Accuracy ledger status">
 <article><small>LOCKED SLATES</small><strong id="slates">—</strong><span id="latest">Waiting for the latest slate</span></article>
 <article><small>GAMES REVIEWED</small><strong id="games">—</strong><span>Only verified completed games</span></article>
-<article><small>PRODUCTION FORECAST</small><strong class="policy">ELO</strong><span>Research models stay experimental</span></article></div>
+<article><small>MISSED LOCKS</small><strong id="gaps">—</strong><span id="gaps-note">Days with games but no pre-tip lock</span></article><article><small>PRODUCTION FORECAST</small><strong class="policy">ELO</strong><span>Research models stay experimental</span></article></div>
 <section class="panel"><div class="eyebrow">01 / FORECAST RECORD</div><h2>ACCURACY LEADERBOARD.</h2><p>Winner accuracy says how often a model picked the right team; Brier and log loss tell us whether its confidence was justified. Score MAE measures error per team.</p>
 <div class="tablewrap"><table><thead><tr><th>Model</th><th>Games</th><th>Win %</th><th>Brier ↓</th><th>Log loss ↓</th><th>Score MAE ↓</th><th>Margin MAE ↓</th><th>Confidence</th><th>Calibration evidence</th></tr></thead><tbody id="models"><tr><td colspan="9">Awaiting validated game results.</td></tr></tbody></table></div></section>
 <div class="secondary-grid"><section class="panel"><div class="eyebrow">02 / PLAYER PROJECTIONS</div><h2>BOX SCORE GRADES.</h2><p>Player-stat MAE includes only players who participated. DNPs and unlisted players are excluded rather than scored as zero. V9 remains research-only.</p><div class="player-stats" id="player-stats"><div class="stat"><small>PTS MAE</small><strong>—</strong></div><div class="stat"><small>REB MAE</small><strong>—</strong></div><div class="stat"><small>AST MAE</small><strong>—</strong></div><div class="stat"><small>3PM MAE</small><strong>—</strong></div></div></section>
@@ -25,4 +25,4 @@
 <div id="entries" class="entries"><p>Loading dated pregame locks…</p></div></section>
 </div></details>
 <footer class="site-footer"><span>NBA TWIN LAB · NO RESULT WITHOUT A VERIFIED SOURCE</span><span>Public ESPN data is unofficial. Missing feeds fail closed. This is research, not betting advice.</span></footer>
-</main><script src="./app.js?v21_2"></script></body></html>
+</main><script src="./app.js?v21_3"></script></body></html>
