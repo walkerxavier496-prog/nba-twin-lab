@@ -35,16 +35,16 @@ test('player images use NBA player IDs with accessible fallback and explicit pro
  assert.match(daily,/media\?\.image/);
  assert.match(read('challenge/daily.html'),/NBA\.com CDN/);
 });
-test('real basketball action images include required Creative Commons credits and no live-photo claims',()=>{
+test('irrelevant archival photos are removed; game photos match forecast players',()=>{
  const home=read('index.html'),daily=read('challenge/daily.html');
- assert.match(home,/Lakers_NBA_Cup_court_2024\.jpg/);
- assert.match(home,/Troutfarm27/);
- assert.match(home,/LeBron_James%2C_25_November_2023_01\.jpg/);
- assert.match(home,/Erik Drost/);
- assert.match(home,/creativecommons\.org\/licenses\/by\/2\.0/);
- assert.match(daily,/Curry_and_James%2C_Team_USA%2C_Olympic_Games_2024\.jpg/);
- assert.match(daily,/Clément Bardot/);
- assert.match(daily,/creativecommons\.org\/licenses\/by-sa\/4\.0/);
- assert.match(home,/Photo is illustrative, not from today's games/);
- assert.doesNotMatch(home,/2026 live game photo/i);
+ assert.doesNotMatch(home,/Lakers_NBA_Cup_court_2024|LeBron_James%2C_25_November_2023_01/);
+ assert.doesNotMatch(daily,/Curry_and_James%2C_Team_USA%2C_Olympic_Games_2024/);
+ assert.match(home,/id="feature-players"/);
+ assert.match(home,/id="home-games"/);
+ assert.match(home,/assets\/live-scoreboard\.js/);
+ assert.match(daily,/assets\/live-scoreboard\.js/);
+ assert.match(home,/id="scoreboard-source"/);
+ assert.match(daily,/id="daily-live-source"/);
+ assert.match(read('assets/home.js'),/v9_player_projections/);
+ assert.match(read('assets/home.js'),/Conditional on playing/);
 });
