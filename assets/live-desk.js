@@ -154,8 +154,8 @@ function renderPerformanceCentre(rows){
   ['three','3-pointers'],['stl','Steals'],['blk','Blocks'],['stocks','Steals + blocks']
  ];
  const selectedKey=performanceType==='all'?'fpts':performanceType;
- const activeKey=categories.some(([key])=>key===selectedKey)&&performanceList(rows,selectedKey,1).length?
-  selectedKey:'pts';
+ const activeKey=categories.some(([key])=>key===selectedKey)?
+  (performanceType==='all'&&!performanceList(rows,'fpts',1).length?'pts':selectedKey):'pts';
  const categoryName=categories.find(([key])=>key===activeKey)?.[1]||'Points';
  const verified=rows.filter(p=>performanceValue(p,activeKey)!==null).sort((a,b)=>{
   const av=performanceValue(a,activeKey),bv=performanceValue(b,activeKey);
