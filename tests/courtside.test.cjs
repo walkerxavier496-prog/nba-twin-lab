@@ -8,23 +8,26 @@ const crypto=require('node:crypto');
 const root=path.join(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 
-test('courtside design reaches main site routes without official NBA branding',()=>{
- const css=read('assets/courtside.css'),court=read('assets/court-lines.svg');
+test('v12 screen-first sports app replaces old courtside skin and keeps verified data bindings',()=>{
+ const css=read('assets/v12.css');
+ assert.match(css,/\.live-games/);
+ assert.match(css,/\.home-game/);
  assert.match(css,/\.club-mark/);
+ assert.match(css,/\.sports-scorebug/);
+ assert.match(css,/\.model-card/);
+ assert.match(css,/\.site-bottom-nav/);
  assert.match(css,/\[data-team="BOS"\]/);
  assert.match(css,/\[data-team="LAL"\]/);
- assert.match(css,/sports-scorebug/);
- assert.match(css,/court-ticker/);
- assert.match(css,/court-lines\.svg/);
- assert.match(court,/<svg/);
  for(const file of ['index.html','predict/index.html','challenge/index.html','challenge/daily.html','audit/index.html']){
   const html=read(file);
-  assert.match(html,/class="sports-theme sports-/);
-  assert.match(html,/assets\/courtside\.css/);
+  assert.match(html,/class="v12/);
+  assert.match(html,/assets\/v12\.css/);
   assert.match(html,/name="viewport"/);
+  assert.ok(!html.includes('assets/courtside.css'),'legacy theme retained in '+file);
  }
  assert.match(read('index.html'),/id="home-ticker"/);
  assert.match(read('index.html'),/id="featured-game"/);
+ assert.match(read('index.html'),/id="home-games"/);
  assert.match(read('challenge/daily.html'),/id="daily-ticker"/);
 });
 
