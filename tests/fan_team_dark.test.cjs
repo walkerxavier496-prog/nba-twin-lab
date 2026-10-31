@@ -66,3 +66,44 @@ test('team preference canonicalises abbreviations and has a neutral fallback',()
  assert.equal(win.TwinTeamPrefs.set('NOT-A-TEAM'),'');
  assert.equal(storage.v['nba-twin-lab:my-team:v1'],undefined);
 });
+
+test('favourite controls compare actual upcoming venue and arbitrary manual opponents',async()=>{
+ const snap=JSON.parse(read('data/v7-current.json'));
+ const el=new Map(),get=id=>{
+  if(!el.has(id))el.set(id,{id,value:'',innerHTML:'',textContent:'',disabled:false,handlers:{},attrs:{},
+   classList:{add(){}},addEventListener(k,cb){this.handlers[k]=cb},setAttribute(k,v){this.attrs[k]=v}});
+  return el.get(id);
+ };
+ const document={getElementById:get,addEventListener(){}};
+ let stored='LAL';
+ const window={
+  TwinTeamPrefs:{get:()=>stored,set:t=>{stored=t},names:{LAL:'Los Angeles Lakers',BOS:'Boston Celtics'}},
+  NbaMedia:{image:t=>'<i>'+t+'</i>'},
+  TwinScience:{blended:(t,k)=>t?.season?.[k]??t?.prior?.[k]??null,
+   net:()=>1,matchup:()=>({shooting:.54,threePointStyle:.12,turnovers:-.04,rebounding:.25,freeThrows:.15})}
+ };
+ const d=new Date(Date.now()+48*3600000).toISOString();
+ const games=[{id:'lakers',status:'scheduled',date:d,season:2027,home:{abbr:'GS'},away:{abbr:'LAL'}},
+  {id:'celtics',status:'scheduled',date:d,season:2027,home:{abbr:'BOS'},away:{abbr:'CHI'}}];
+ const fetch=async url=>({ok:true,json:async()=>url.includes('v7-current')?snap:{games}});
+ vm.runInNewContext(read('team-intelligence/app.js'),{window,document,fetch,Date,Intl,Promise,console});
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(get('my-team').value,'LAL');
+ assert.equal(get('opponent').value,'GSW');
+ assert.equal(get('fixture').value,'lakers');
+ assert.equal(get('home').value,'GSW');
+ assert.equal(get('away').value,'LAL');
+ assert.match(get('metrics').innerHTML,/Adjusted offensive rating/);
+ get('venue-home').handlers.click();
+ assert.equal(get('fixture').value,'');
+ assert.equal(get('home').value,'LAL');
+ assert.equal(get('away').value,'GSW');
+ get('venue-away').handlers.click();
+ assert.equal(get('home').value,'GSW');
+ assert.equal(get('away').value,'LAL');
+ get('my-team').value='BOS';get('my-team').handlers.change();
+ assert.equal(stored,'BOS');
+ assert.equal(get('fixture').value,'celtics');
+ assert.equal(get('home').value,'BOS');
+ assert.equal(get('away').value,'CHI');
+});
