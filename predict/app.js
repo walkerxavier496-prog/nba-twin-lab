@@ -195,9 +195,19 @@ function renderDetail(){
  const hWin=p.homeWin>=.5;
  const modelName=mode==='elo'?'ELO · HISTORICAL BASELINE':mode==='roster'?(roster.available?'ROSTER-AWARE · BETA':'ROSTER DATA UNAVAILABLE · ELO FALLBACK'):'V5 POSSESSION MONTE CARLO';
  const tag=(g.status==='final'?'ARCHIVED PREGAME':g.status==='live'?'PREGAME · LIVE GAME':'PREGAME')+' · '+modelName;
+ const combinedGames=h.games+a.games;
+ const oddsGap=Math.abs(simulation.homeWin-base.homeWin);
+ const baselineHigh=Math.max(base.homeWin,base.awayWin)>=.7;
+ const caution=(combinedGames<20&&baselineHigh)||oddsGap>=.15?
+  '<div class="uncertainty-banner" role="note"><b>MODEL UNCERTAINTY: DO NOT CONFUSE ELO CONFIDENCE WITH A VERIFIED CURRENT-ROSTER FORECAST</b>'+
+  '<p>'+esc(h.abbr)+' and '+esc(a.abbr)+' have only '+combinedGames+' combined team-games of current-season evidence before this matchup. Historical Elo is strongly informed by the prior season. '+
+  'Elo and possession simulation differ by '+(oddsGap*100).toFixed(1)+' probability points; their inputs and assumptions are different. Verified injuries and confirmed starters are not included. '+
+  '<a href="../challenge/daily.html?game='+encodeURIComponent(String(g.id))+'#matchups">See the frozen six-model challenge when available ↗</a></p></div>':'';
+
  $('detail').innerHTML=
  '<div class="headrow"><span class="eyebrow">'+esc(fmt(g.date))+'</span><span class="badge">'+tag+'</span></div>'+
  '<h3>'+esc(g.away.name)+' <span class="muted">at</span> '+esc(g.home.name)+'</h3>'+
+ caution+
  '<div class="odds"><div><div class="name">'+esc(g.away.abbr)+' · Away</div><div class="pct">'+pct(p.awayWin)+'</div></div>'+
  '<div><div class="name">'+esc(g.home.abbr)+' · Home</div><div class="pct">'+pct(p.homeWin)+'</div></div></div>'+
  '<div class="bar" role="img" aria-label="'+esc(g.away.abbr)+' '+pct(p.awayWin)+', '+esc(g.home.abbr)+' '+pct(p.homeWin)+'"><span style="width:'+100*p.awayWin+'%"></span></div>'+
