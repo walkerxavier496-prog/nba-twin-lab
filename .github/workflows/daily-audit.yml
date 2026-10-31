@@ -8,6 +8,12 @@ on:
     paths:
       - '.github/workflows/daily-audit.yml'
       - 'tests/home_rail_states.test.cjs'
+  # The game-data producer can finish after an audit starts. Re-run this
+  # audited lock pipeline on its successful completion, using fresh main.
+  workflow_run:
+    workflows:
+      - Validate and refresh NBA game predictions
+    types: [completed]
   workflow_dispatch:
     inputs:
       melbourne_date:
@@ -39,6 +45,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Reject failed or non-main source refresh
+        if: github.event_name == 'workflow_run'
+        env:
+          SOURCE_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          SOURCE_BRANCH: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          test "$SOURCE_CONCLUSION" = success
+          test "$SOURCE_BRANCH" = main
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
