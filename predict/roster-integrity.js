@@ -69,9 +69,10 @@ function teamAudit(team,feed){
   const status=statusMap.get(id)||'NOT_LISTED';
   const out=rosterMismatch||status==='OUT';
   const uncertain=status==='QUESTIONABLE'||status==='DOUBTFUL'||status==='PROBABLE';
-  const minMinutes=out?0:uncertain||!hasRoster?0:ifPlay;
+  // Even an official active-roster member may not play. Zero is the true lower bound.
+  const minMinutes=0;
   const maxMinutes=out?0:ifPlay;
-  const expectedMinutes=out?0:uncertain?null:hasRoster?ifPlay:inferred;
+  const expectedMinutes=out?0:uncertain?null:status==='AVAILABLE'?ifPlay:inferred;
   if(rosterMismatch)issues.push('inferred_player_not_on_verified_roster');
   if(uncertain)issues.push('availability_scenario_required');
   players.push({player_id:id,name:String(p.name||id),status:rosterMismatch?'NOT_ON_ROSTER':status,
