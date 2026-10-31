@@ -12,7 +12,16 @@ const fmtTime=x=>{const d=new Date(x);return Number.isFinite(d.getTime())?new In
 const logo=team=>window.NbaMedia?.image?.(team.abbr,{size:'small',label:team.abbr})||'<b>'+esc(team.abbr)+'</b>';
 const status=g=>g.phase==='live'?(window.NbaScores?.label?.(g)||'LIVE'):g.phase==='final'?'FINAL':'UPCOMING';
 const gameHref=id=>{const segment=String(window.location?.pathname||'').includes('/challenge/')?'../game/':'./game/';return segment+'?id='+encodeURIComponent(String(id))};
-const favourite=g=>{const t=window.TwinTeamPrefs?.get?.();return !!t&&(window.TwinTeamPrefs?.canonical?.(g.home.abbr)===t||window.TwinTeamPrefs?.canonical?.(g.away.abbr)===t)};
+// "My teams" uses the actual followed teams first. Retain a legacy saved
+// preferred team only when no clubs have been followed yet (no data loss).
+const followedTeams=()=>{const followed=window.TwinWatchlist?.state?.().teams||[];
+ const legacy=window.TwinTeamPrefs?.get?.();
+ return followed.length?followed:legacy?[legacy]:[];
+};
+const favourite=g=>{const teams=followedTeams();
+ const normal=code=>window.TwinTeamPrefs?.canonical?.(code)||code;
+ return teams.some(t=>normal(t)===normal(g.home.abbr)||normal(t)===normal(g.away.abbr));
+};
 function parseBoxscore(raw){
  const groups=raw?.boxscore?.players;
  if(!Array.isArray(groups))return [];
@@ -90,7 +99,9 @@ function showGames(){
   return '<a class="desk-game '+(String(g.id)===String(selected)?'selected':'')+'" href="'+esc(gameHref(g.id))+'" aria-label="Open game centre for '+esc(g.away.abbr)+' at '+esc(g.home.abbr)+'" data-live-game="'+esc(g.id)+'">'+
   '<span class="desk-game-head"><span class="desk-status desk-status-'+(g.phase||'scheduled')+'">'+s+'</span><span>'+esc(status(g))+'</span></span>'+
   '<span class="desk-game-teams">'+logo(g.away)+'<strong>'+esc(g.away.abbr)+'</strong>'+points+'<strong>'+esc(g.home.abbr)+'</strong>'+logo(g.home)+'</span><span class="desk-game-open">OPEN GAME CENTRE ↗</span></a>';
- }).join(''):'<p class="desk-empty">No games match this filter.</p>';
+ }).join(''):'<p class="desk-empty">'+(gameFilter==='mine'&&!followedTeams().length?
+    'No teams followed yet. <a href="'+(String(window.location?.pathname||'').includes('/challenge/')?'../':'./')+'watchlist/">Manage followed teams</a> to customise this filter.':
+    'No games match this filter.')+'</p>';
  // Game card links open the dedicated game centre; inline stats default to the selected game.
  if($('desk-counts'))$('desk-counts').textContent=all.filter(g=>g.phase==='live').length+' LIVE · '+all.filter(g=>g.phase==='final').length+' FINAL · '+all.filter(g=>g.phase==='scheduled').length+' UPCOMING';
 }
@@ -234,6 +245,7 @@ function init(){
   if($('live-alert-note'))$('live-alert-note').textContent=permission==='granted'?'Desktop notifications enabled for new highlighted plays in the selected game while this page is open.':'In-page alerts for the selected game are enabled; system notifications unavailable or not permitted.';
  });
  document.addEventListener('twinlab:teamchange',()=>{keepVisibleSelection();showGames();loadSelected();loadBatch()});
+ document.addEventListener('twinlab:watchlistchange',()=>{keepVisibleSelection();showGames();loadSelected();loadBatch()});
 }
 init();
 window.NbaLiveDesk=Object.freeze({setFeed,unavailable,selectGame,parseBoxscore,extractPlays,highlight,fetchSummary});
