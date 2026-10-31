@@ -73,7 +73,7 @@ test('invalid duplicate injury designations fail closed',()=>{
 test('v18 frontend must display roster gate without rewriting original 31 October forecast',()=>{
  const src=fs.readFileSync(path.join(__dirname,'../predict/index.html'),'utf8');
  const app=fs.readFileSync(path.join(__dirname,'../predict/app.js'),'utf8');
- assert.match(src,/roster-integrity\\.js/);
+ assert.ok(src.includes('roster-integrity.js'));
  assert.match(app,/rosterIntegrityPanel/);
  assert.match(app,/HISTORICAL TEAM PROBABILITY/);
  const locked=JSON.parse(fs.readFileSync(path.join(__dirname,'../practice/2026-10-31-melbourne/forecast.lock.json')));
