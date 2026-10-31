@@ -32,12 +32,14 @@ test('homepage matches approved hierarchy without dropping verified live desk or
   assert.ok(html.includes('id="'+id+'"'),id+' was lost');
  }
  assert.ok(html.includes('Smarter<br><em>NBA Predictions.</em>'));
- assert.ok(html.includes('id="v19-hero-athlete"'));
+ assert.ok(html.includes('class="v19-hero-art"'));
+ assert.ok(!html.includes('v19-hero-athlete'),'undersized portrait must not fill homepage');
  const js=read('assets/home.js');
  assert.match(js,/lock\.forecasts/);
  assert.match(js,/v9_player_projections/);
  assert.match(js,/home-projections/);
- assert.match(js,/media\.playerImage\(picks\[0\]\)/);
+ assert.doesNotMatch(js,/media\.playerImage\(picks\[0\]\)/);
+ assert.ok(js.includes('playerSpotlight'),'matchup-specific player projections remain');
  assert.doesNotMatch(html,/>82%[^<]*<\/strong>/,'Do not publish mockup metrics as fact');
 });
 test('Predictor keeps every engine, model selection and V18 provenance audit',()=>{
@@ -67,12 +69,28 @@ test('V19 CSS respects accessible mobile layouts and no motion preferences',()=>
  const css=read('assets/v19-concept3.css');
  for(const token of ['--v19-bg','--v19-blue','--v19-cyan','--v19-violet','--v19-panel','--v19-gradient'])
   assert.ok(css.includes(token),'missing '+token);
- for(const selector of ['.v19-hero-athlete','.v19-versus-panel','.v19-model-cards',
+ for(const selector of ['.v19-hero-art','.v19-versus-panel','.v19-model-cards',
    '.daily-stats','.live-desk','.game-scoreboard','.audit-grid'])
   assert.ok(css.includes(selector),'missing '+selector);
  assert.match(css,/@media\(max-width:650px\)/);
  assert.match(css,/prefers-reduced-motion:reduce/);
  assert.ok(css.includes(':focus-visible')||read('assets/site-shell.css').includes('focus-visible'));
+});
+test('Player Stats is a distinct route from live NBA box scores',()=>{
+ const desktop=read('assets/site-nav.js');
+ const mobile=read('assets/site-shell.js');
+ const player=read('player-stats/index.html');
+ const home=read('index.html');
+ assert.ok(desktop.includes("link('PLAYER STATS','player-stats/',isStats)"));
+ assert.ok(desktop.includes("link('LIVE','#live-games',"));
+ assert.ok(!desktop.includes("link('PLAYER STATS','#live-player-stats'"));
+ assert.ok(mobile.includes('"Players","player-stats/"'));
+ assert.ok(player.includes('Pregame Projections'));
+ assert.ok(player.includes('Live Box Scores'));
+ assert.ok(home.includes('LIVE GAMES <em>& BOX SCORES.</em>'));
+ const css=read('assets/v19-concept3.css');
+ assert.ok(css.includes('images.unsplash.com/photo-1783826352825-d2bf5a0e302a'));
+ assert.ok(!css.includes('.v19-hero-athlete'));
 });
 test('Immutable original pregame files remain available; V19 is styling only',()=>{
  const original=JSON.parse(read('practice/2026-10-31-melbourne/forecast.lock.json'));
