@@ -99,7 +99,10 @@ function auditGame({game,snapshot,availability=null,now=Date.now()}){
  const awayAudit=teamAudit(away,officialTeam(feed.row,game?.away?.abbr));
  const issues=[...new Set([...clock.issues,...feed.issues,...homeAudit.issues,...awayAudit.issues,
   ...(!home||!away?['team_missing_from_snapshot']:[])])];
- const blockers=issues.filter(issue=>issue!=='availability_scenario_required');
+ // Exclude any stale inferred player, but permit an official-roster-only
+ // strength experiment when enough verified current players still remain.
+ const informational=new Set(['availability_scenario_required','inferred_player_not_on_verified_roster']);
+ const blockers=issues.filter(issue=>!informational.has(issue));
  const sourceChecksPassed=blockers.length===0;
  return {schema:'nba-twin-lab-roster-integrity-result-v18',game_id:String(game?.id||''),
   source_checks_passed:sourceChecksPassed,usable_for_new_validated_forecast:false,
