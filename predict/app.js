@@ -268,6 +268,23 @@ function renderDetail(){
  const hp=profiles[g.home.abbr]||Object.values(profiles).find(t=>t.name===g.home.name),ap=profiles[g.away.abbr]||Object.values(profiles).find(t=>t.name===g.away.name);
  const style=t=>t?metric('Net rating',one(t.n_rtg))+metric('Offensive rating',one(t.o_rtg))+metric('Defensive rating',one(t.d_rtg))+metric('Pace',one(t.pace))+metric('3-point attempt rate',Number.isFinite(t.x3p_ar)?one(100*t.x3p_ar)+'%':'—')+metric('Effective FG%',Number.isFinite(t.e_fg_percent)?one(100*t.e_fg_percent)+'%':'—')+metric('Turnover rate',Number.isFinite(t.tov_percent)?one(t.tov_percent)+'%':'—')+metric('Offensive rebounding',Number.isFinite(t.orb_percent)?one(t.orb_percent)+'%':'—'):'Prior-year team stats unavailable';
  const hWin=p.homeWin>=.5;
+ const versusPanel='<div class="v19-versus-panel" aria-label="'+esc(g.away.name)+' versus '+esc(g.home.name)+'">'+
+  '<div class="v19-versus-team">'+imgTeam(g.away)+'<span><b>'+esc(g.away.name)+'</b><small>AWAY · '+a.wins+'–'+a.losses+'</small></span></div>'+
+  '<div class="v19-versus-middle"><span>VS</span><small>'+esc(fmt(g.date))+'</small></div>'+
+  '<div class="v19-versus-team v19-versus-home">'+imgTeam(g.home)+'<span><b>'+esc(g.home.name)+'</b><small>HOME · '+h.wins+'–'+h.losses+'</small></span></div>'+
+  '</div>';
+ const modelComparisons=[
+  {name:'Elo · Production',p:base.homeWin,desc:'Historical rating baseline',kind:'elo'},
+  {name:'Roster · Research',p:roster.available?roster.homeWin:null,desc:'Inferred rotation; not verified lineup',kind:'roster'},
+  {name:'Monte Carlo · Diagnostic',p:simulation.homeWin,desc:'Seeded possession simulations',kind:'mc'}
+ ];
+ const modelCards='<section class="v19-model-comparison" aria-label="Model probability comparison">'+
+  '<div class="v19-model-heading"><h4>MODEL BREAKDOWN</h4><a href="../challenge/daily.html?game='+encodeURIComponent(String(g.id))+'#matchups">VIEW LOCKED SIX-MODEL AUDIT ↗</a></div>'+
+  '<div class="v19-model-cards">'+modelComparisons.map(m=>'<article class="v19-model-card'+(mode===m.kind?' selected':'')+'">'+
+   '<small>'+esc(m.name)+'</small>'+
+   (m.p===null?'<strong>Unavailable</strong><p>'+esc(m.desc)+'</p>':
+    '<strong>'+pct(m.p)+'</strong><div class="v19-model-meter" role="img" aria-label="'+esc(g.home.abbr)+' win probability '+pct(m.p)+'"><i style="width:'+Math.max(0,Math.min(100,m.p*100))+'%"></i></div><p>'+esc(g.home.abbr)+' win chance · '+esc(m.desc)+'</p>')+
+   '</article>').join('')+'</div><p class="v19-model-note">The roster beta uses inferred player participation; V18 game-day official roster verification is displayed separately below. Model probabilities are not votes and should not be averaged without validation.</p></section>';
  const modelName=mode==='elo'?'ELO · HISTORICAL BASELINE':mode==='roster'?(roster.available?'ROSTER-AWARE · BETA':'ROSTER DATA UNAVAILABLE · ELO FALLBACK'):'V5 POSSESSION MONTE CARLO';
  const tag=(g.status==='final'?'ARCHIVED PREGAME':g.status==='live'?'PREGAME · LIVE GAME':'PREGAME')+' · '+modelName;
  const combinedGames=h.games+a.games;
@@ -283,11 +300,12 @@ function renderDetail(){
   '<div class="uncertainty-banner" role="note"><b>HISTORICAL TEAM PROBABILITY · GAME-DAY ROSTER NOT VERIFIED</b><p>This estimate still carries old team ratings. No verified roster-first model is active. Do not interpret the percentage as incorporating confirmed game-day injuries or starting lineups.</p></div>':'';
  $('detail').innerHTML=
  '<div class="headrow"><span class="eyebrow">'+esc(fmt(g.date))+'</span><span class="badge">'+tag+'</span></div>'+liveBanner+
- '<h3>'+esc(g.away.name)+' <span class="muted">at</span> '+esc(g.home.name)+'</h3>'+
+ versusPanel+
  caution+integrityFlag+
  '<div class="odds"><div><div class="name">'+esc(g.away.abbr)+' · Away</div><div class="pct">'+pct(p.awayWin)+'</div></div>'+
  '<div><div class="name">'+esc(g.home.abbr)+' · Home</div><div class="pct">'+pct(p.homeWin)+'</div></div></div>'+
  '<div class="bar" role="img" aria-label="'+esc(g.away.abbr)+' '+pct(p.awayWin)+', '+esc(g.home.abbr)+' '+pct(p.homeWin)+'"><span style="width:'+100*p.awayWin+'%"></span></div>'+
+ modelCards+
  '<div class="forecast"><div><strong>'+round(p.awayScore)+' – '+round(p.homeScore)+'</strong><small>'+(mode==='mc'?'Simulated mean':'Elo projected')+' score · Away–Home</small></div><div><strong>'+round(simulation.awayRange[0])+'–'+round(simulation.awayRange[1])+' / '+round(simulation.homeRange[0])+'–'+round(simulation.homeRange[1])+'</strong><small>Monte Carlo 80% ranges · A / H</small></div><div><strong>'+one(simulation.possessions)+'</strong><small>Simulated possessions/team</small></div><div><strong>'+simulations.toLocaleString()+'</strong><small>Diagnostic simulations</small></div></div>'+
  '<div class="split"><div><h4>'+esc(g.away.abbr)+' · Away</h4>'+
  metric('Elo',round(a.elo))+metric('Record',a.wins+'–'+a.losses)+metric('Points/game',a.games?one(a.points/a.games):'No games')+
