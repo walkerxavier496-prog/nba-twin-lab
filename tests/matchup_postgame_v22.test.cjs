@@ -15,7 +15,7 @@ function render(tab,opts={}){
  assert.ok(entry.lock_integrity_sha256,'Original lock integrity must be present');
  const map={
   '../data/audit-ledger.json':{...ledger,entries:[entry]},
-  '../'+entry.lock_path:lock,
+  ['../'+entry.lock_path]:lock,
   '../audit/supplements/2026-10-31/challenge.lock.json':supplement,
   '../data/v7-current.json':opts.futureSnapshot?{...snapshot,built_at_utc:'2026-11-02T00:00:00Z'}:snapshot,
   '../data/games.json':opts.noFinal?{...games,games:games.games.map(g=>String(g.id)===gameId?{...g,status:'scheduled',homeScore:null,awayScore:null}:g)}:games
@@ -42,7 +42,7 @@ test('Both teams load from a VERIFIED pretip snapshot despite WSH/WAS alias diff
  assert.match(html,/OPP 3PT ATTEMPT RATE %/);
  assert.match(html,/Three-point volume matchup/);
  assert.match(html,/Ball security and pressure/);
- assert.match(html,/Offensive Rebounds|Second-chance possessions/);
+ assert.match(html,/OFF\. REBOUND RATE %/);
  assert.match(html,/After the Buzzer/);
  assert.match(html,/12-56/,'Charlotte actual 3PT shots');
  assert.match(html,/10-30/,'Washington actual 3PT shots');
@@ -57,7 +57,7 @@ test('Each individual FINAL review grades six machines without waiting for the s
  assert.match(html,/BRIER/);
  assert.match(html,/LOG LOSS/);
  assert.match(html,/196|participating-player predictions:/);
- assert.match(html,/original locked/i);
+ assert.match(html,/Original predictions are preserved unchanged/i);
 });
 test('Model Breakdown shows true postgame verdicts instead of only pregame probabilities',async()=>{
  const html=await render('models').rendered();
