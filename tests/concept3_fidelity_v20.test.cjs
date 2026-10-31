@@ -2,8 +2,15 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
+const publishedLedger=JSON.parse(read('data/audit-ledger.json'));
+const originalEntry=publishedLedger.entries.find(entry=>entry.melbourne_date==='2026-10-31');
+if(!originalEntry)throw Error('Immutable 2026-10-31 test fixture is missing');
+// Freeze the original one-slate state so a future successful nightly audit
+// never makes these V20 UI regression tests fail as new slates arrive.
+const lockedLedger={...publishedLedger,entries:[{...originalEntry,status:'locked_awaiting_results',review_path:null}],
+ longitudinal:{models:{},player_stats:{pts:{count:0,mae:null},reb:{count:0,mae:null},ast:{count:0,mae:null},three_pm:{count:0,mae:null}}}};
 const fixture={
- '../data/audit-ledger.json':JSON.parse(read('data/audit-ledger.json')),
+ '../data/audit-ledger.json':lockedLedger,
  '../practice/2026-10-31-melbourne/forecast.lock.json':JSON.parse(read('practice/2026-10-31-melbourne/forecast.lock.json')),
  '../audit/supplements/2026-10-31/challenge.lock.json':JSON.parse(read('audit/supplements/2026-10-31/challenge.lock.json')),
  '../data/v7-current.json':JSON.parse(read('data/v7-current.json')),
