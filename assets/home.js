@@ -92,10 +92,21 @@ function render(){
  if($('home-games'))$('home-games').innerHTML=games.length?games.map(gameTile).join(''):
  '<p>NBA scoreboard is unavailable. The site will not invent game scores.</p>';
  if($('home-ticker'))$('home-ticker').innerHTML=games.map(game=>{
-  const meta=observedScore(game),p=game.primary_forecast,link=gameLink(game),q=meta.actual?
-    '<small>'+esc(meta.state.text)+'</small><b>'+meta.s.away.score+'–'+meta.s.home.score+'</b>':
-    p?'<small>ELO '+esc(p.winner)+' '+pct(p.winner_probability)+'</small>':'<small>'+esc(meta.state.text)+'</small>';
-  return '<a class="court-ticker__item" href="'+link+'"><b>'+esc(game.away.abbr)+'</b><small>AT</small><b>'+esc(game.home.abbr)+'</b>'+q+'</a>';
+  const meta=observedScore(game),p=game.primary_forecast,link=gameLink(game);
+  const label=meta.actual?meta.state.text:p?'LOCKED PRETIP':'SCHEDULED';
+  const result=meta.actual?meta.s.away.score+'–'+meta.s.home.score:
+    p?'ELO '+esc(p.winner)+' '+pct(p.winner_probability):'—';
+  // This is the exact same NBA team-logo source used in game cards.
+  // The accessible link announces full teams/status; logo failures show abbreviations.
+  const badge=team=>media?.image?.(team.abbr,{size:'small',label:team.abbr})||
+    '<span class="court-ticker__fallback">'+esc(team.abbr)+'</span>';
+  const aria=esc(game.away.name+' at '+game.home.name+', '+label+', '+(meta.actual?
+    meta.s.away.score+' to '+meta.s.home.score:result.replace(/&amp;/g,'&')));
+  return '<a class="court-ticker__item" href="'+link+'" aria-label="'+aria+'">'+
+    '<span class="court-ticker__matchup" aria-hidden="true">'+badge(game.away)+
+    '<small>AT</small>'+badge(game.home)+'</span>'+
+    '<small class="court-ticker__status">'+esc(label)+'</small>'+
+    '<b class="court-ticker__score">'+result+'</b></a>';
  }).join('');
  // Prefer a genuine active NBA game, then an upcoming game, then a final.
  const chosen=games.find(g=>observed(g)?.phase==='live')||
