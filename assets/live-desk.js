@@ -120,7 +120,7 @@ function renderSummary(){
  const active=filteredGames().filter(g=>g.phase!=='scheduled');
  const rows=sortable(active.flatMap(g=>(summaryCache.get(String(g.id))?.players||[]).map(p=>({...p,gameId:g.id,matchup:g.away.abbr+' @ '+g.home.abbr}))));
  const title=$('desk-matchup'),content=$('live-stats-rows');
- if(title)title.textContent=gameFilter==='all'?'ALL GAMES · TODAY’S STANDOUTS':gameFilter==='live'?'LIVE GAMES · PLAYER LEADERS':gameFilter==='final'?'FINAL GAMES · PLAYER LEADERS':gameFilter==='mine'?'MY TEAM · GAME LEADERS':'PLAYER STATS';
+ if(title)title.textContent=gameFilter==='all'?'ALL GAMES · TODAY’S STANDOUTS':gameFilter==='live'?'LIVE GAMES · PLAYER LEADERS':gameFilter==='final'?'FINAL GAMES · PLAYER LEADERS':gameFilter==='mine'?'FOLLOWED TEAMS · GAME LEADERS':'PLAYER STATS';
  if($('desk-game-source'))$('desk-game-source').textContent='ESPN public game summaries · '+summaryCache.size+' available box scores · FPTS ESPN default format';
  if($('desk-sort-help'))$('desk-sort-help').textContent='Sort: '+sortStat.toUpperCase()+(sortDescending?' ↓':' ↑')+' · '+active.length+' matchups · scroll horizontally on mobile';
  if(content)content.innerHTML=rows.length?rows.map(p=>{
