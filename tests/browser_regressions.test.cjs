@@ -28,9 +28,16 @@ test('lineup grid can shrink inside its container and the game page states provi
  assert.match(read('assets/game-page.js'),/Forecast and grading are unavailable until the game feed responds/);
 });
 test('edited assets carry a fresh cache-busting version on every page that loads them',()=>{
- for(const [asset,pages,version] of [['concept3-hub.js',['predict/index.html','challenge/daily.html'],'v27_1'],['game-page.js',['game/index.html'],'v27_1'],['home.js',['index.html'],'v27_1'],['concept3-fidelity.css',['predict/index.html','index.html'],'v27_2']])
+ for(const [asset,pages,version] of [['concept3-hub.js',['predict/index.html','challenge/daily.html'],'v28_0'],['game-page.js',['game/index.html'],'v27_1'],['home.js',['index.html'],'v27_1'],['concept3-fidelity.css',['predict/index.html','index.html'],'v27_2']])
   for(const page of pages)assert.match(read(page),new RegExp(asset.replace('.','\\.')+'\\?'+version),page+' '+asset);
 });
 test('lineup table overrides the global 690px table minimum so STATUS is never clipped',()=>{
  assert.match(read('assets/concept3-fidelity.css'),/\.c3-lineup-table\{width:100%;min-width:0;border-collapse:collapse;table-layout:fixed\}/);
+});
+
+test('headline predictions never silently fall back to Elo',()=>{
+ const hub=read('assets/concept3-hub.js');
+ assert.match(hub,/M5 · ML RESEARCH CHALLENGER/);
+ assert.doesNotMatch(hub,/ELO · PRODUCTION/);
+ assert.match(hub,/return numbers\(p\)\?\{home:p,label:'M5 · ML RESEARCH CHALLENGER'\}:null/);
 });

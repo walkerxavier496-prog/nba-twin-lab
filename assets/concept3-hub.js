@@ -29,9 +29,11 @@ function models(g){
  return q?.predictions||g?.challenge_predictions||{};
 }
 function selectedModel(g){
- const m=models(g),p=m.m6_ensemble?.available&&numbers(m.m6_ensemble.home_win_probability)?m.m6_ensemble.home_win_probability:null;
- return numbers(p)?{home:p,label:'M6 · LOCKED ENSEMBLE'}:
- numbers(g?.primary_forecast?.home_win_probability)?{home:g.primary_forecast.home_win_probability,label:'ELO · PRODUCTION'}:null;
+ // Research display policy: lowest common-sample Brier in the frozen five-model
+ // historical report (3,643 games), not a retroactive change to production locks.
+ // Do not substitute Elo or an unverified engine when M5 is unavailable.
+ const m=models(g),p=m.m5_regularized_ml?.available&&numbers(m.m5_regularized_ml.home_win_probability)?m.m5_regularized_ml.home_win_probability:null;
+ return numbers(p)?{home:p,label:'M5 · ML RESEARCH CHALLENGER'}:null;
 }
 // NBA / ESPN / research snapshots disagree on some legacy abbreviations.
 const TEAM_ALIASES={WSH:'WAS',GSW:'GS',NYK:'NY',SAS:'SA',NOP:'NO',PHX:'PHO',BKN:'BRK',UTA:'UTAH',CHA:'CHO'};
@@ -227,7 +229,7 @@ function predictionPanel(g){
  return '<div class="c3-main-grid"><section class="c3-panel"><div class="c3-panel-title"><h3>Win Probability</h3><span class="c3-muted">'+esc(selection?.label||'UNAVAILABLE')+'</span></div>'+
  '<div class="c3-prob-score"><div>'+logo(g.away,true)+'<strong>'+pct(away)+'</strong></div><div><strong>'+pct(p)+'</strong>'+logo(g.home,true)+'</div></div>'+
  track(away,p)+modelCards(g)+
- '<p class="c3-source-note">Projected score (Elo): '+esc(g.away.abbr)+' '+num0(scored?.away)+' – '+num0(scored?.home)+' '+esc(g.home.abbr)+'. Six engines are independent research forecasts, not a voting poll.</p>'+
+ '<p class="c3-source-note">Projected score (Elo): '+esc(g.away.abbr)+' '+num0(scored?.away)+' – '+num0(scored?.home)+' '+esc(g.home.abbr)+'. Six research engines share inputs and are not independent votes. Headline M5 is a historical challenger, not the production model.</p>'+
  '</section><section class="c3-panel"><div class="c3-panel-title"><h3>Key Factors</h3><span class="c3-muted">PREGAME EVIDENCE</span></div>'+injuryFactors(g)+'</section></div>'+fullPostgame(g);
 }
 function lineupPanel(g){
