@@ -11,7 +11,7 @@ function boot(){
 }
 test('favourite NBA teams and player IDs persist locally without duplicates',()=>{
  const {watch,data}=boot();
- assert.deepEqual(watch.state().teams,[]);
+ assert.deepEqual(Array.from(watch.state().teams),[]);
  assert.equal(watch.toggleTeam('LAL'),true);
  assert.equal(watch.toggleTeam('LAL'),false);
  assert.equal(watch.toggleTeam('GSW'),true);
@@ -20,7 +20,7 @@ test('favourite NBA teams and player IDs persist locally without duplicates',()=
  assert.equal(watch.togglePlayer({id:'2544',name:'LeBron James',team:'LAL'}),false);
  assert.equal(watch.togglePlayer({id:'not-an-id',name:'Made Up',team:'LAL'}),false);
  assert.equal(watch.state().players.length,0);
- assert.deepEqual(watch.state().teams,['GS']);
+ assert.deepEqual(Array.from(watch.state().teams),['GS']);
  assert.ok(data['nba-twin-lab:watchlist:v1']);
 });
 test('player follow buttons appear only for verified numeric identifiers',()=>{
