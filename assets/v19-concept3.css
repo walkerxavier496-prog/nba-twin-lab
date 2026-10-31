@@ -298,21 +298,65 @@ body.v12 .site-bottom-nav a{color:#96b3ce}
 }
 
 
-/* Featured-player portrait: sourced from the same immutable pretip matchup,
- * never used as an eligibility/injury fact. Fallback is the arena gradient. */
-body.v12.home .v19-hero-athlete{position:absolute;z-index:0;right:-4%;bottom:-8%;width:min(52%,440px);height:96%;pointer-events:none;opacity:.78;
- filter:drop-shadow(0 0 38px #1664ed77);mask-image:linear-gradient(90deg,transparent 0%,#000 28%,#000 75%,transparent 100%);
- -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 28%,#000 75%,transparent 100%);
+/* Concept 3 hero: credited, HD basketball-action photography, never a
+ * stretched 260x190 NBA player headshot or an implied verified game lineup.
+ * Source: Babarinde Tosin / Unsplash; photo E18f56l02Bs.
+ */
+body.v12.home .v19-hero-art{
+ position:absolute;z-index:0;right:0;top:0;bottom:0;width:65%;pointer-events:none;
+ background-image:
+  linear-gradient(90deg,#09193100 27%,#06112433 80%),
+  url("https://images.unsplash.com/photo-1783826352825-d2bf5a0e302a?auto=format&fit=crop&w=1800&q=85");
+ background-repeat:no-repeat;background-position:center,right center;background-size:cover,cover;
+ opacity:.86;filter:saturate(.85) contrast(1.06);
+ -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 22%,#000 89%,#000b 100%);
+ mask-image:linear-gradient(90deg,transparent 0%,#000 22%,#000 89%,#000b 100%);
 }
-body.v12.home .v19-hero-athlete .player-photo{display:block;width:100%;height:100%;border:0;background:none;overflow:visible}
-body.v12.home .v19-hero-athlete .player-photo>img{position:absolute;bottom:0;right:0;display:block;width:100%;height:95%;object-fit:contain;object-position:center bottom;
- filter:contrast(1.12) saturate(.86) drop-shadow(0 0 18px #679dff66)}
-body.v12.home .v19-hero-athlete .player-photo__fallback{display:none!important}
-body.v12.home .lead-story>.eyebrow,body.v12.home .lead-story>div:not(.v19-hero-athlete){position:relative;z-index:2}
-@media(max-width:950px){body.v12.home .v19-hero-athlete{right:0;width:min(48%,400px);opacity:.56}}
-@media(max-width:650px){body.v12.home .v19-hero-athlete{width:60%;right:-12%;opacity:.32}
- body.v12.home .lead-story>div:not(.v19-hero-athlete) p{max-width:310px}}
-
+body.v12.home .lead-story>.eyebrow,body.v12.home .lead-story>div:not(.v19-hero-art){
+ position:relative;z-index:2
+}
+body.v12.home .lead-story:before{z-index:1;opacity:.45}
+body.v12.home .lead-story h1{max-width:530px}
+body.v12.home .lead-story p{max-width:390px}
+body.v12.home .featured-box .feature-score .sports-club{
+ min-width:0;width:100%;gap:9px
+}
+body.v12.home .featured-box .feature-score .sports-club>span{
+ display:flex;flex-direction:column;align-items:center;gap:4px;
+ min-width:0;max-width:100%;overflow-wrap:anywhere
+}
+body.v12.home .featured-box .feature-score .sports-club__name{
+ display:block;font-family:var(--v19-heading);font-size:clamp(20px,2vw,26px);
+ letter-spacing:-.03em;line-height:1.1
+}
+body.v12.home .featured-box .feature-score .sports-club__city{
+ display:block;max-width:160px;font-size:10px;line-height:1.35;
+ color:#9bb6cf;white-space:normal
+}
+body.v12.home .feature-score .sports-feature__match{
+ grid-template-columns:minmax(0,1fr) minmax(85px,100px) minmax(0,1fr);
+ gap:8px
+}
+body.v12.home .feature-score .sports-scorebug__vs{min-width:0}
+body.v12.home .feature-score .sports-pick{min-width:0;width:100%;padding:10px 6px}
+body.v12.home .feature-score .sports-pick strong{
+ font-size:clamp(26px,2.8vw,36px);overflow-wrap:anywhere
+}
+body.v12.home .feature-confidence,body.v12.home .feature-players{
+ color:#bed6ef
+}
+body.v12.home .feature-confidence small,body.v12.home .feature-players small{
+ color:#a9c4dc
+}
+@media(max-width:950px){
+ body.v12.home .v19-hero-art{width:62%;opacity:.7}
+}
+@media(max-width:650px){
+ body.v12.home .v19-hero-art{width:90%;right:-12%;opacity:.4}
+ body.v12.home .lead-story>div:not(.v19-hero-art) p{max-width:330px}
+ body.v12.home .feature-score .sports-feature__match{grid-template-columns:minmax(0,1fr) minmax(72px,85px) minmax(0,1fr)}
+ body.v12.home .featured-box .feature-score .sports-club__city{font-size:9px}
+}
 
 /* Head-to-head identity and actual selected-engine breakout. */
 body.v12.predictor .v19-versus-panel{
