@@ -186,14 +186,40 @@ async function showMachine(){
    const lock=await response.json();
    const snapshot=lock.forecasts?.find(g=>String(g.game_id)===String(id));
    if(!snapshot||!lock.locked_at_utc||!(Date.parse(lock.locked_at_utc)<Date.parse(snapshot.tip_utc)))continue;
+   // Each final is independently graded and published. Never wait for the
+   // entire slate review, and never bind a review to the wrong pretip lock.
+   const originalHash=lock.integrity?.canonical_payload_without_integrity;
+   if(!entry.lock_integrity_sha256||originalHash!==entry.lock_integrity_sha256)continue;
    let reviewGame=null;
-   if(entry.review_path){try{const reviewResponse=await fetch('../'+entry.review_path,{cache:'no-store'});if(reviewResponse.ok){const review=await reviewResponse.json();reviewGame=(review.games||[]).find(item=>String(item.game_id)===String(id))||null}}catch(e){}}
+   const validReview=x=>x?.source_lock_integrity_sha256===originalHash&&
+     x.melbourne_date===date&&Array.isArray(x.games);
+   if(entry.review_path){
+    try{
+     const response=await fetch('../'+entry.review_path,{cache:'no-store'});
+     if(response.ok){const review=await response.json();
+      if(review.schema==='nba-twin-lab-daily-review-v3'&&validReview(review))
+       reviewGame=review.games.find(item=>String(item.game_id)===String(id))||null;
+     }
+    }catch(e){}
+   }
+   if(!reviewGame){
+    try{
+     const url='../audit/reviews/'+encodeURIComponent(date)+'/games/'+encodeURIComponent(id)+'.review.json';
+     const response=await fetch(url,{cache:'no-store'});
+     if(response.ok){const single=await response.json();
+      if(single.schema==='nba-twin-lab-game-review-v1'&&String(single.game_id)===String(id)&&
+       validReview(single)&&single.games.length===1&&String(single.games[0]?.game_id)===String(id)&&
+       safeNum(single.games[0]?.home?.score)!==null&&safeNum(single.games[0]?.away?.score)!==null)
+       reviewGame=single.games[0];
+     }
+    }catch(e){}
+   }
    let frozen={};
    try{const side=await fetch('../audit/supplements/'+encodeURIComponent(date)+'/challenge.lock.json',{cache:'no-store'});if(side.ok){const value=await side.json();frozen=(value.games||[]).find(item=>String(item.game_id)===String(id))?.predictions||{}}}catch(e){}
-   const p=snapshot.primary_forecast,final=!!reviewGame;
-   root.innerHTML='<div class="game-lock"><div class="eyebrow">IMMUTABLE FORECAST · '+(final?'MACHINES VS REALITY':'BEFORE TIPOFF')+'</div>'+
+   const p=snapshot.primary_forecast,final=!!reviewGame,finalPending=game.phase==='final'&&!final;
+   root.innerHTML='<div class="game-lock"><div class="eyebrow">IMMUTABLE FORECAST · '+(final?'MACHINES VS REALITY':finalPending?'FINAL · AUDIT PENDING':'BEFORE TIPOFF')+'</div>'+
     '<div class="game-lock-score">'+esc(p?.winner||'—')+' <strong>'+((p?.winner_probability??0)*100).toFixed(1)+'%</strong></div>'+
-    '<p>Original production forecast locked '+esc(fmt(lock.locked_at_utc))+'. '+(final?'The rows below grade the separately frozen six-engine experiment against this verified final.':'No live score is used to recalculate these predictions.')+'</p></div>'+
+    '<p>Original production forecast locked '+esc(fmt(lock.locked_at_utc))+'. '+(final?'The rows below grade the separately frozen six-engine experiment against this verified final.':finalPending?'The verified scoreboard is final. Grading will appear once its independently checked player box score is published.':'No live score is used to recalculate these predictions.')+'</p></div>'+
     '<section class="machine-section"><h3>'+ (final?'SIX ENGINES VS REALITY':'SIX FROZEN ENGINES') +'</h3>'+machineRows(final?reviewGame.models:frozen,final)+'</section>'+
     (final?'<section class="machine-section"><h3>PLAYER FORECASTS VS ACTUALS</h3>'+playerGrades(reviewGame)+'</section><section class="machine-section"><h3>POSTGAME INTELLIGENCE · OBSERVED EVIDENCE</h3>'+postgameEvidence(reviewGame)+'</section>':'<p class="game-disclaimer">Automatic grading appears after this individual game is final and both player tables are complete. It does not wait for the full slate.</p>')+
     '<a class="btn primary" href="../audit/">FULL MODEL LEADERBOARD ↗</a>';return;
