@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(practice/**)",
+      "Write(practice/**)",
+      "Edit(audit/snapshots/**)",
+      "Write(audit/snapshots/**)",
+      "Edit(audit/supplements/**)",
+      "Write(audit/supplements/**)",
+      "Edit(audit/reviews/**)",
+      "Write(audit/reviews/**)",
+      "Bash(git push:*)",
+      "Bash(rm -rf:*)"
+    ],
+    "allow": [
+      "Bash(python -m pytest:*)",
+      "Bash(node --test:*)",
+      "Bash(node scripts/daily_tracker.cjs verify)",
+      "Bash(node scripts/challenge_supplement.cjs verify)",
+      "Bash(bash scripts/validate_release.sh)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ]
+  }
+}
