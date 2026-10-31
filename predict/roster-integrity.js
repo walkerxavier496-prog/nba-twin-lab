@@ -73,11 +73,13 @@ function teamAudit(team,feed){
   const minMinutes=0;
   const maxMinutes=out?0:ifPlay;
   const expectedMinutes=out?0:uncertain?null:status==='AVAILABLE'?ifPlay:inferred;
+  const impactProxy=finite(p.impact_proxy);
   if(rosterMismatch)issues.push('inferred_player_not_on_verified_roster');
   if(uncertain)issues.push('availability_scenario_required');
   players.push({player_id:id,name:String(p.name||id),status:rosterMismatch?'NOT_ON_ROSTER':status,
    roster_verified:hasRoster,minutes_if_play:ifPlay,inferred_minutes:inferred,
    min_minutes:minMinutes,max_minutes:maxMinutes,expected_minutes:expectedMinutes,
+   impact_proxy:impactProxy,
    excluded:out,reason:rosterMismatch?'Player absent from verified roster':status==='OUT'?'Officially OUT':null});
  }
  if(!players.length)issues.push('rotation_missing');
@@ -97,11 +99,12 @@ function auditGame({game,snapshot,availability=null,now=Date.now()}){
  const awayAudit=teamAudit(away,officialTeam(feed.row,game?.away?.abbr));
  const issues=[...new Set([...clock.issues,...feed.issues,...homeAudit.issues,...awayAudit.issues,
   ...(!home||!away?['team_missing_from_snapshot']:[])])];
- const sourceChecksPassed=issues.length===0;
+ const blockers=issues.filter(issue=>issue!=='availability_scenario_required');
+ const sourceChecksPassed=blockers.length===0;
  return {schema:'nba-twin-lab-roster-integrity-result-v18',game_id:String(game?.id||''),
   source_checks_passed:sourceChecksPassed,usable_for_new_validated_forecast:false,
   reason:'No V18 roster-first probability model has yet passed prospective validation',
-  issues,team_snapshot_utc:snapshot?.built_at_utc||null,
+  issues,blocking_issues:blockers,team_snapshot_utc:snapshot?.built_at_utc||null,
   injury_report_utc:feed.row?availability.published_at_utc:null,
   home:homeAudit,away:awayAudit};
 }
