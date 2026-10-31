@@ -468,3 +468,11 @@ body.v12.secondary-page :is(.results,.layout,.grid){min-width:0}
 .feature-confidence__warning b{display:block;font-size:10px;letter-spacing:.04em}
 .feature-confidence__warning span,.feature-confidence__warning small{display:block;font-size:10px;margin-top:5px;line-height:1.55}
 .feature-confidence__warning small{color:#966039}
+
+/* Predictor: real refreshed scoreboard sits ABOVE and outside immutable forecast. */
+.real-score-banner{display:flex;align-items:center;flex-wrap:wrap;gap:10px 18px;margin:11px 0 15px;background:#142332;color:#fff;padding:14px 16px;border-radius:7px}
+.real-score-banner b{font-size:10px;letter-spacing:.075em;color:#d9ff7e}
+.real-score-banner strong{font:900 30px var(--heading);letter-spacing:.02em}
+.real-score-banner small{font-size:10px;color:#c7d2d9}
+.predictor .game-top span:last-child{font-weight:900;color:#284dda}
+.predictor .game .pills{font-variant-numeric:tabular-nums}
