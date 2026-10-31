@@ -52,7 +52,7 @@ function calculate(games){
   const home=tables[group].find(t=>t.team===canonical(g.home.abbr)),away=tables[group].find(t=>t.team===canonical(g.away.abbr));
   if(!home||!away)continue;
   home.w+=(g.homeScore>g.awayScore?1:0);home.l+=(g.homeScore<g.awayScore?1:0);
-  away.w+=(g.homeScore>g.awayScore?1:0);away.l+=(g.homeScore<g.awayScore?1:0);
+  away.w+=(g.awayScore>g.homeScore?1:0);away.l+=(g.awayScore<g.homeScore?1:0);
   for(const [row,pf,pa] of [[home,g.homeScore,g.awayScore],[away,g.awayScore,g.homeScore]]){
    row.played++;row.remaining=Math.max(0,4-row.played);row.rawPf+=Number(pf);row.rawPa+=Number(pa);row.rawPd+=Number(pf)-Number(pa);
   }
