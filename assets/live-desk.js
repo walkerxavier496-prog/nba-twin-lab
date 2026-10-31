@@ -165,6 +165,28 @@ async function loadSelected(){
   lastLoaded=null;setMessage(e.message+' · no statistics invented');renderSummary();
  }
 }
+async function loadBatch(){
+ const current=++batchRequest,eligible=filteredGames().filter(g=>g.phase!=='scheduled');
+ if(!eligible.length){renderSummary();return}
+ let next=0,ok=0,failed=0;
+ async function worker(){
+  while(next<eligible.length&&current===batchRequest){
+   const game=eligible[next++],key=String(game.id),cached=summaryCache.get(key);
+   if(cached&&Date.now()-Date.parse(cached.checkedAt)<45000){ok++;continue}
+   try{
+    const fresh=await fetchSummary(key);
+    if(current!==batchRequest)return;
+    summaryCache.set(key,{id:key,...fresh});
+    ok++;
+   }catch(e){failed++;summaryCache.delete(key)}
+   if(current===batchRequest)renderSummary();
+  }
+ }
+ await Promise.all(Array.from({length:Math.min(3,eligible.length)},worker));
+ if(current!==batchRequest)return;
+ renderSummary();
+ setMessage('ESPN actual box scores: '+ok+'/'+eligible.length+' games checked'+(failed?' · '+failed+' unavailable':'')+'.');
+}
 function selectGame(id){
  if(!feed?.games?.some(g=>String(g.id)===String(id)))return;
  if(String(selected)!==String(id)){selected=String(id);lastLoaded=null;request++}
@@ -185,19 +207,20 @@ function setFeed(value){
  }
  const freshness=Number.isFinite(Date.parse(feed.fetched_at_utc))?fmtTime(feed.fetched_at_utc):'checked just now';
  if($('live-feed-freshness'))$('live-feed-freshness').textContent='ESPN scoreboard · checked '+freshness+' · automatic refresh';
- keepVisibleSelection();showGames();loadSelected();
+ keepVisibleSelection();showGames();loadSelected();loadBatch();loadBatch();
 }
 function unavailable(){
- feed=null;lastLoaded=null;request++;
+ feed=null;lastLoaded=null;request++;batchRequest++;summaryCache.clear();
  if($('live-game-list'))$('live-game-list').innerHTML='<p class="desk-empty">ESPN live scoreboard unavailable. No scores or player stats are being guessed.</p>';
  if($('live-feed-freshness'))$('live-feed-freshness').textContent='ESPN unavailable · no live claim';
  if($('live-stats-rows'))$('live-stats-rows').innerHTML='<tr><td colspan="6">Live player data unavailable.</td></tr>';
+ if($('desk-top-performers'))$('desk-top-performers').innerHTML='<p>Verified player data unavailable.</p>';
  setMessage('Live data currently unavailable');
 }
 function init(){
  if(!mounted)return;
  for(const button of document.querySelectorAll('[data-desk-filter]'))
-  button.addEventListener('click',()=>{gameFilter=button.dataset.deskFilter;for(const b of document.querySelectorAll('[data-desk-filter]')){const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))}keepVisibleSelection();showGames();loadSelected()});
+  button.addEventListener('click',()=>{gameFilter=button.dataset.deskFilter;for(const b of document.querySelectorAll('[data-desk-filter]')){const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))}keepVisibleSelection();showGames();loadSelected();loadBatch()});
  if($('live-sort'))$('live-sort').addEventListener('change',e=>{sortStat=e.target.value;sortDescending=true;renderSummary()});
  for(const b of document.querySelectorAll('[data-stat-sort]'))b.addEventListener('click',()=>{const key=b.dataset.statSort;sortDescending=sortStat===key?!sortDescending:true;sortStat=key;if($('live-sort'))$('live-sort').value=key;renderSummary()});
  const alertsButton=$('live-alerts-toggle');
@@ -209,7 +232,7 @@ function init(){
   }else permission=typeof Notification!=='undefined'?Notification.permission:'unsupported';
   if($('live-alert-note'))$('live-alert-note').textContent=permission==='granted'?'Desktop notifications enabled for new highlighted plays in the selected game while this page is open.':'In-page alerts for the selected game are enabled; system notifications unavailable or not permitted.';
  });
- document.addEventListener('twinlab:teamchange',()=>{keepVisibleSelection();showGames();loadSelected()});
+ document.addEventListener('twinlab:teamchange',()=>{keepVisibleSelection();showGames();loadSelected();loadBatch()});
 }
 init();
 window.NbaLiveDesk=Object.freeze({setFeed,unavailable,selectGame,parseBoxscore,extractPlays,highlight,fetchSummary});
