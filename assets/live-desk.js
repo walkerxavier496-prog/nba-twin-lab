@@ -11,6 +11,7 @@ const valid=id=>/^\d{7,10}$/.test(String(id||''));
 const fmtTime=x=>{const d=new Date(x);return Number.isFinite(d.getTime())?new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}).format(d):'Time unavailable'};
 const logo=team=>window.NbaMedia?.image?.(team.abbr,{size:'small',label:team.abbr})||'<b>'+esc(team.abbr)+'</b>';
 const status=g=>g.phase==='live'?(window.NbaScores?.label?.(g)||'LIVE'):g.phase==='final'?'FINAL':'UPCOMING';
+const gameHref=id=>{const segment=location.pathname.includes('/challenge/')?'../game/':'./game/';return segment+'?id='+encodeURIComponent(String(id))};
 const favourite=g=>{const t=window.TwinTeamPrefs?.get?.();return !!t&&(window.TwinTeamPrefs?.canonical?.(g.home.abbr)===t||window.TwinTeamPrefs?.canonical?.(g.away.abbr)===t)};
 function parseBoxscore(raw){
  const groups=raw?.boxscore?.players;
@@ -86,12 +87,11 @@ function showGames(){
   const s=g.phase==='live'?'LIVE':g.phase==='final'?'FINAL':'UPCOMING';
   const points=g.phase==='scheduled'?'<span class="desk-time">'+esc(fmtTime(g.date))+'</span>':
    '<span class="desk-points">'+(g.away.score??'—')+' : '+(g.home.score??'—')+'</span>';
-  return '<button type="button" class="desk-game '+(String(g.id)===String(selected)?'selected':'')+'" data-live-game="'+esc(g.id)+'" aria-pressed="'+(String(g.id)===String(selected))+'">'+
+  return '<a class="desk-game '+(String(g.id)===String(selected)?'selected':'')+'" href="'+esc(gameHref(g.id))+'" aria-label="Open game centre for '+esc(g.away.abbr)+' at '+esc(g.home.abbr)+'" data-live-game="'+esc(g.id)+'">'+
   '<span class="desk-game-head"><span class="desk-status desk-status-'+(g.phase||'scheduled')+'">'+s+'</span><span>'+esc(status(g))+'</span></span>'+
-  '<span class="desk-game-teams">'+logo(g.away)+'<strong>'+esc(g.away.abbr)+'</strong>'+points+'<strong>'+esc(g.home.abbr)+'</strong>'+logo(g.home)+'</span></button>';
+  '<span class="desk-game-teams">'+logo(g.away)+'<strong>'+esc(g.away.abbr)+'</strong>'+points+'<strong>'+esc(g.home.abbr)+'</strong>'+logo(g.home)+'</span><span class="desk-game-open">OPEN GAME CENTRE ↗</span></a>';
  }).join(''):'<p class="desk-empty">No games match this filter.</p>';
- for(const button of $('live-game-list').querySelectorAll('[data-live-game]'))
-  button.addEventListener('click',()=>selectGame(button.dataset.liveGame));
+ // Game card links open the dedicated game centre; inline stats default to the selected game.
  if($('desk-counts'))$('desk-counts').textContent=all.filter(g=>g.phase==='live').length+' LIVE · '+all.filter(g=>g.phase==='final').length+' FINAL · '+all.filter(g=>g.phase==='scheduled').length+' UPCOMING';
 }
 function renderSummary(){
