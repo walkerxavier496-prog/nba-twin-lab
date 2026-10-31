@@ -19,9 +19,9 @@ function kpis(d){
  ].map(([label,value,note])=>'<div><small>'+esc(label)+'</small><strong>'+esc(value)+'</strong><small>'+esc(note)+'</small></div>').join('')+'</div>';
 }
 function trend(d){
- const entries=(d.entries||[]).filter(e=>e.status==='reviewed'&&typeof e.summary?.production_elo_v7?.accuracy==='number');
+ const entries=(d.entries||[]).filter(e=>e.status==='reviewed'&&typeof e.summary?.models?.production_elo_v7?.accuracy==='number');
  if(entries.length<2)return '<div class="c3-trend-frame"><h3>Game Winner Accuracy Trend</h3><p>At least two reviewed slates are required for a genuine accuracy trend. No sample chart will be substituted.</p></div>';
- const values=entries.map(e=>e.summary.production_elo_v7.accuracy);
+ const values=entries.map(e=>e.summary.models.production_elo_v7.accuracy);
  const max=Math.max(.75,...values),min=Math.min(.35,...values);
  const points=values.map((v,i)=>(30+i*640/(values.length-1)).toFixed(1)+','+(160-(v-min)/(max-min||1)*125).toFixed(1)).join(' ');
  return '<div class="c3-trend-frame"><h3>Game Winner Accuracy Trend · Verified Slates</h3>'+
