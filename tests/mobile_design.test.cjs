@@ -40,15 +40,16 @@ function renderNavigation(pathname){
  assert.ok(nav,'mobile nav not created');
  return nav;
 }
-test('mobile bottom navigation has 4 clear grouped destinations and the correct active route',()=>{
+test('mobile navigation has five independent destinations including true player projections',()=>{
  const scenarios=[
-  ['/nba-twin-lab/','Live'],
-  ['/nba-twin-lab/challenge/','Machine'],
+  ['/nba-twin-lab/','Home'],
+  ['/nba-twin-lab/challenge/','Predict'],
+  ['/nba-twin-lab/player-stats/','Players'],
   ['/nba-twin-lab/league/','League']
  ];
  for(const [route,active]of scenarios){
   const nav=renderNavigation(route);
-  assert.equal(nav.children.length,4);
+  assert.equal(nav.children.length,5);
   assert.equal(nav.attributes['aria-label'],'Mobile navigation');
   const selected=nav.children.filter(a=>a.attributes['aria-current']==='page');
   assert.deepEqual(selected.map(a=>a.attributes['aria-label']),[active],route);
