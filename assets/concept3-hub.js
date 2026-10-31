@@ -162,6 +162,49 @@ function injuryFactors(g){
  ', '+esc(g.home.abbr)+' '+(state.snapshot?.teams?.find(t=>canonicalTeam(t.abbr)===canonicalTeam(g.home.abbr))?.season?.games||'—')+
  ' games. Descriptive observations only; no proven causal contribution to this locked probability.</p>';
 }
+function postgameBar(g){
+ const final=scoreFor(g),review=reviewFor(g);
+ if(!final)return '';
+ const winning=final.home>final.away?g.home.abbr:g.away.abbr;
+ const machine=selectedModel(g),pick=machine?machine.home>=.5?g.home.abbr:g.away.abbr:null;
+ const verdict=pick?(pick===winning?'CORRECT PICK':'MISSED PICK'):'NO LOCKED PICK';
+ return '<section class="c3-postgame-bar" aria-label="Verified final game result">'+
+ '<div><span class="c3-postgame-label">FINAL · '+esc(final.kind)+'</span><strong>'+esc(g.away.abbr)+' '+final.away+' – '+final.home+' '+esc(g.home.abbr)+'</strong></div>'+
+ '<div><span class="c3-postgame-label">LOCKED '+esc(machine?.label||'MODEL')+'</span>'+
+ '<strong class="'+(pick===winning?'c3-correct':'c3-incorrect')+'">'+esc(pick||'—')+' · '+verdict+'</strong></div>'+
+ '<a href="#c3-postgame-audit" class="c3-btn">MACHINES VS REALITY ↓</a></section>';
+}
+function fullPostgame(g){
+ const final=scoreFor(g),review=reviewFor(g);
+ if(!final)return '';
+ const actual=final.home>final.away?g.home.abbr:g.away.abbr;
+ const original=g.primary_forecast?.projected_score;
+ const rows=MODELS.map(([id,title])=>{
+  const forecast=models(g)[id],grade=review?.models?.[id];
+  const hp=forecast?.available&&numbers(forecast.home_win_probability)?forecast.home_win_probability:null;
+  const pick=numbers(hp)?hp>=.5?g.home.abbr:g.away.abbr:null;
+  const verdict=grade?grade.correct?'✓ CORRECT':'✕ WRONG':'NOT GRADED';
+  return '<tr><td>'+esc(title)+'</td><td>'+esc(pick||'—')+' '+pct(numbers(hp)?Math.max(hp,1-hp):null)+'</td>'+
+   '<td><span class="'+(grade?.correct?'c3-correct':'c3-incorrect')+'">'+verdict+'</span></td>'+
+   '<td>'+num(grade?.brier,3)+'</td><td>'+num(grade?.log_loss,3)+'</td>'+
+   '<td>'+num(grade?.score_mae_per_team,1)+'</td></tr>';
+ }).join('');
+ const scored=review?.player_results?.filter(p=>p.disposition==='played_scored')||[];
+ const metrics=['pts','reb','ast','three_pm'].map(key=>{
+  const errors=scored.map(p=>p.absolute_errors?.[key]).filter(numbers);
+  return key.toUpperCase()+' MAE '+(errors.length?(errors.reduce((a,b)=>a+b,0)/errors.length).toFixed(2):'—');
+ }).join(' · ');
+ return '<section class="c3-postgame-detail" id="c3-postgame-audit">'+
+ '<div class="c3-panel-title"><h3>Machines vs Reality</h3><span class="c3-status c3-final">INDEPENDENTLY VERIFIED FINAL</span></div>'+
+ '<p>Actual: <strong>'+esc(actual)+' won '+final.home+'–'+final.away+'</strong> ('+
+ esc(g.away.abbr)+' '+final.away+', '+esc(g.home.abbr)+' '+final.home+'). Original locked Elo projected '+
+ esc(g.away.abbr)+' '+num0(original?.away)+' – '+num0(original?.home)+' '+esc(g.home.abbr)+
+ '. Original predictions are preserved unchanged.</p>'+
+ '<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>ENGINE</th><th>LOCKED PICK</th><th>RESULT</th><th>BRIER ↓</th><th>LOG LOSS ↓</th><th>SCORE MAE ↓</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+ '<p class="c3-source-note">'+(review?
+ 'Audited against original pretip records. Score MAE shown only for engines with locked score predictions. '+scored.length+' participating-player predictions: '+metrics+'.':
+ 'This game has a final score, but detailed audited per-engine/player grading is still pending.')+'</p></section>';
+}
 function predictionPanel(g){
  const selection=selectedModel(g),p=selection?.home,away=numbers(p)?1-p:null;
  const scored=g.primary_forecast?.projected_score;
@@ -169,7 +212,7 @@ function predictionPanel(g){
  '<div class="c3-prob-score"><div>'+logo(g.away,true)+'<strong>'+pct(away)+'</strong></div><div><strong>'+pct(p)+'</strong>'+logo(g.home,true)+'</div></div>'+
  track(away,p)+modelCards(g)+
  '<p class="c3-source-note">Projected score (Elo): '+esc(g.away.abbr)+' '+num0(scored?.away)+' – '+num0(scored?.home)+' '+esc(g.home.abbr)+'. Six engines are independent research forecasts, not a voting poll.</p>'+
- '</section><section class="c3-panel"><div class="c3-panel-title"><h3>Key Factors</h3><span class="c3-muted">PREGAME EVIDENCE</span></div>'+injuryFactors(g)+'</section></div>';
+ '</section>'+fullPostgame(g)+'<section class="c3-panel"><div class="c3-panel-title"><h3>Key Factors</h3><span class="c3-muted">PREGAME EVIDENCE</span></div>'+injuryFactors(g)+'</section></div>';
 }
 function lineupPanel(g){
  const team=side=>{
