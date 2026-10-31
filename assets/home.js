@@ -37,9 +37,9 @@ function gameTile(game){
  const matchId=String(game.game_id||game.id);
  const href=isLocked?'./challenge/daily.html?game='+encodeURIComponent(matchId)+'#matchups':'./predict/';
  const when=fmt(game.tip_utc||game.date||meta.s?.date);
- const out=meta.actual?'<div class="home-game__result"><span>'+esc(teamAway.abbr)+' <b>'+meta.s.away.score+'</b></span><span>'+esc(teamHome.abbr)+' <b>'+meta.s.home.score+'</b></span></div>':'<div class="home-game__versus">VS</div>';
+ const out='<div class="home-game__versus">AT</div>'; // Locked picks only; real results live above.
  return '<a class="home-game" href="'+href+'" aria-label="'+esc(teamAway.name)+' at '+esc(teamHome.name)+'">'+
-  '<div class="home-game__top"><span>'+esc(when)+'</span><span class="game-status game-status--'+meta.state.kind+'">'+esc(meta.state.text)+'</span></div>'+
+  '<div class="home-game__top"><span>'+esc(when)+'</span><span class="game-status">PRETIP LOCK</span></div>'+
   '<div class="home-game__teams">'+teamImage(teamAway,'small')+out+teamImage(teamHome,'small')+'</div>'+
   '<div class="home-game__foot">'+(p?'<span>ELO PICK <strong>'+esc(p.winner)+'</strong></span><strong>'+pct(p.winner_probability)+'</strong>':'<span>NO VERIFIED PREGAME LOCK</span>')+'</div></a>';
 }
@@ -85,8 +85,7 @@ function showModelDisagreement(game){
 function render(){
  if(!archive&&!liveFeed)return;
  const games=candidateGames();
- const source=liveFeed?'ESPN game scores · checked '+fmt(liveFeed.fetched_at_utc||new Date()):
-  'ESPN LIVE UNAVAILABLE · Showing archived locked forecasts only — not current results';
+ const source='ARCHIVED PREGAME FORECASTS · Actual live NBA scores and player box scores appear in the game centre above.';
  show('scoreboard-source',source);
  if($('home-games'))$('home-games').innerHTML=games.length?games.map(gameTile).join(''):
  '<p>NBA scoreboard is unavailable. The site will not invent game scores.</p>';
