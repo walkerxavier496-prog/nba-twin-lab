@@ -6,7 +6,10 @@
 function init(){
  const nav=document.querySelector('.app-header nav[aria-label="Main navigation"]');
  if(!nav)return;
- const base=new URL('../',document.currentScript?.src||location.href);
+ // DOMContentLoaded handlers have no document.currentScript: anchor to the
+ // repository's existing home-brand href, never the domain root.
+ const src=document.currentScript?.src;
+ const base=src?new URL('../',src):new URL(document.querySelector('.app-header .brand')?.href||location.href);
  const href=p=>new URL(p,base).href;
  const current=location.pathname.replace(/index\.html$/,'');
  const rootPath=base.pathname;
