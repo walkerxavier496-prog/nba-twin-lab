@@ -17,35 +17,28 @@ function init(){
  const isScores=onHome&&['#live-games','#live-player-stats'].includes(location.hash);
  const isGame=/\/game\/$/.test(current);
  const isStats=/\/(player-stats|player)\/$/.test(current);
- const isTeams=/\/(league|team|team-intelligence)\/$/.test(current);
- const isPredict=/\/predict\/$/.test(current);
- const isDaily=/\/challenge\/daily\.html$/.test(current);
- const isAudit=/\/audit\/$/.test(current);
- const isModels=/\/(models|challenge)\/$/.test(current);
- // Keep live scores one click away above the fold. Watchlist remains in More.
+ const isLeague=/\/(league|team|team-intelligence)\/$/.test(current);
+ const isMachine=/\/(predict|models|challenge|audit)\/$/.test(current)||/\/challenge\/daily\.html$/.test(current);
  const shortcut=document.querySelector('.app-header .header-action');
  if(shortcut){
-  shortcut.href=href('#live-games');
-  shortcut.textContent='LIVE GAMES ↗';
-  shortcut.setAttribute('aria-label','Open live NBA games, finals and box scores');
+  shortcut.href=href('watchlist/');
+  shortcut.textContent='MY WATCHLIST';
+  shortcut.setAttribute('aria-label','Manage followed NBA teams and players');
  }
  const link=(label,url,active)=>'<a class="nav-main-link'+(active?' active':'')+
   '" href="'+href(url)+'"'+(active?' aria-current="page"':'')+'>'+label+'</a>';
  nav.innerHTML=
-  link('HOME','',onHome&&!isScores)+
-  link('LIVE','#live-games',isScores||isGame)+
-  link('PREDICT','predict/',isPredict)+
-  link('DAILY','challenge/daily.html',isDaily)+
+  link('LIVE','#live-games',onHome||isGame)+
+  link('THE MACHINE','predict/',isMachine)+
   link('PLAYERS','player-stats/',isStats)+
-  link('TEAMS','league/',isTeams)+
-  link('AUDIT','audit/',isAudit)+
-  link('MODELS','challenge/',isModels)+
-  '<details class="nav-group nav-explore"><summary aria-label="More NBA tools">MORE <span aria-hidden="true">⌄</span></summary>'+
+  link('LEAGUE','league/',isLeague)+
+  '<details class="nav-group nav-explore"><summary aria-label="Open more NBA Twin Lab sections">MORE <span aria-hidden="true">⌄</span></summary>'+
   '<div class="nav-dropdown" role="group" aria-label="More NBA Twin Lab tools">'+
-  '<a href="'+href('watchlist/')+'">★ My Watchlist</a>'+
-  '<a href="'+href('#live-games')+'">Live Game Scores</a>'+
-  '<a href="'+href('team/')+'">Team Centre</a>'+
-  '<a href="'+href('team-intelligence/')+'">Team Comparison</a>'+
+  '<a href="'+href('challenge/daily.html')+'">Daily Predictions</a>'+
+  '<a href="'+href('challenge/')+'">Six Model Rankings</a>'+
+  '<a href="'+href('audit/')+'">Accuracy Ledger</a>'+
+  '<a href="'+href('watchlist/')+'">My Teams & Players</a>'+
+  '<a href="'+href('team-intelligence/')+'">Team Matchups</a>'+
   '<a href="'+href('league/#cup')+'">NBA Cup</a>'+
   '<a href="'+href('twins/')+'">Player Twins</a>'+
   '</div></details>';
@@ -61,16 +54,14 @@ function init(){
  nav.addEventListener('keydown',e=>{
   if(e.key==='Escape'){for(const menu of nav.querySelectorAll('details'))menu.open=false;nav.querySelector('summary')?.focus()}
  });
- // Live-score hash links remain independent of the real player projection page.
+ // LIVE is the landing destination; hash changes must not introduce duplicate active links.
  window.addEventListener('hashchange',()=>{
   if(location.pathname.replace(/index\.html$/,'')!==rootPath)return;
-  const stats=['#live-games','#live-player-stats'].includes(location.hash);
-  for(const a of nav.querySelectorAll('.nav-main-link')){
-   if(!['HOME','LIVE'].includes(a.textContent))continue;
-   const active=a.textContent==='LIVE'?stats:!stats;
+  nav.querySelectorAll('.nav-main-link').forEach(a=>{
+   const active=a.textContent==='LIVE';
    a.classList.toggle('active',active);
    if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
-  }
+  });
  });
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
