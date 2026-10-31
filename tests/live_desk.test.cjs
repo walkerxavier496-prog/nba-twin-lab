@@ -20,8 +20,9 @@ test('Live Games and Player Stats are the first section on desktop and phone',()
  }
  const nav=read('assets/site-shell.js');
  assert.match(nav,/\["Live","#live-games"/);
- assert.match(nav,/\["Players","#live-player-stats"/);
+ assert.match(nav,/\["Stats","#live-player-stats"/);
  assert.match(read('assets/live-desk.css'),/@media\(max-width:590px\)/);
+ assert.match(read('assets/live-desk.js'),/OPEN GAME CENTRE/);
 });
 test('ESPN boxscore maps genuine NBA game statistics instead of player predictions',()=>{
  const desk=build();
