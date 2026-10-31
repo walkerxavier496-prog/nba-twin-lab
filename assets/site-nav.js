@@ -16,18 +16,16 @@ function init(){
  const onHome=current===rootPath;
  const isScores=onHome&&['#live-games','#live-player-stats'].includes(location.hash);
  const isGame=/\/game\/$/.test(current);
- const isStats=/\/player-stats\/$/.test(current);
- const isLeague=/\/league\/$/.test(current);
+ const isStats=/\/(player-stats|player)\/$/.test(current);
+ const isLeague=/\/(league|team)\/$/.test(current);
  const isMachine=/\/(predict|challenge|audit|models)\//.test(current);
  // Home already has a Live tab; use the header shortcut for real team/player
  // following instead of another redundant scoreboard button.
- if(onHome){
-  const shortcut=document.querySelector('.app-header .header-action');
-  if(shortcut){
-   shortcut.href=href('watchlist/');
-   shortcut.textContent='MY WATCHLIST ★';
-   shortcut.setAttribute('aria-label','Manage followed NBA teams and players');
-  }
+ const shortcut=document.querySelector('.app-header .header-action');
+ if(shortcut){
+  shortcut.href=href('watchlist/');
+  shortcut.textContent='MY WATCHLIST ★';
+  shortcut.setAttribute('aria-label','Manage your followed NBA teams and players');
  }
  const link=(label,url,active)=>'<a class="nav-main-link'+(active?' active':'')+
   '" href="'+href(url)+'"'+(active?' aria-current="page"':'')+'>'+label+'</a>';
@@ -43,7 +41,7 @@ function init(){
   '<a href="'+href('challenge/')+'">THE MACHINE · Model Rankings</a>'+
   '<a href="'+href('audit/')+'">Accuracy & Audit</a>'+
   '<a href="'+href('#live-player-stats')+'">Live Box Scores (not projections)</a>'+
-  '<a href="'+href('team-intelligence/')+'">Team Intelligence</a>'+
+  '<a href="'+href('team/')+'">Team Centre</a>'+\n  '<a href="'+href('team-intelligence/')+'">Team Intelligence</a>'+
   '<a href="'+href('league/#cup')+'">NBA Cup</a>'+
   '<a href="'+href('watchlist/')+'">★ My Watchlist</a>'+
   '<a href="'+href('twins/')+'">Player Twins</a>'+
