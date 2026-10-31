@@ -298,17 +298,17 @@ body.v12 .site-bottom-nav a{color:#96b3ce}
 }
 
 
-/* Concept 3 hero: credited, HD basketball-action photography, never a
- * stretched 260x190 NBA player headshot or an implied verified game lineup.
- * Source: Babarinde Tosin / Unsplash; photo E18f56l02Bs.
+/* Concept 3 hero: genuine basketball game photograph from a packed arena,
+ * not an illustration/composite, fabricated player, or current-game lineup.
+ * Photo: Luke Miller / Unsplash, f2R6hmF2AdQ (Unsplash License).
  */
 body.v12.home .v19-hero-art{
  position:absolute;z-index:0;right:0;top:0;bottom:0;width:65%;pointer-events:none;
  background-image:
-  linear-gradient(90deg,#09193100 27%,#06112433 80%),
-  url("https://images.unsplash.com/photo-1783826352825-d2bf5a0e302a?auto=format&fit=crop&w=1800&q=85");
- background-repeat:no-repeat;background-position:center,right center;background-size:cover,cover;
- opacity:.86;filter:saturate(.85) contrast(1.06);
+  linear-gradient(90deg,#07172d 0%,#091b357c 20%,#07172d00 57%,#07172d10 100%),
+  url("https://images.unsplash.com/photo-1752166672426-3bf676f61248?auto=format&fit=crop&w=1900&q=88");
+ background-repeat:no-repeat;background-position:center,right 43%;background-size:cover,cover;
+ opacity:.94;filter:saturate(.88) contrast(1.08);
  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 22%,#000 89%,#000b 100%);
  mask-image:linear-gradient(90deg,transparent 0%,#000 22%,#000 89%,#000b 100%);
 }
@@ -576,3 +576,47 @@ body.v12 .live-desk .desk-game{background:#10243a!important;border-color:#274764
  body.v12.home .feature-score .sports-club .team-logo{width:54px;height:54px}
  body.v12.home .v19-feature-insights summary{font-size:9px}
 }
+
+
+/* Logo-only slate ticker: real team marks at 28px, fallback abbreviations
+ * only if the CDN cannot serve an image. Preserve full game names via aria-label. */
+body.v12 .ribbon .court-ticker__item{
+ display:inline-flex;align-items:center;gap:11px;min-height:51px;
+ padding:7px 16px;border-right:1px solid #1c3c5c;
+ text-decoration:none;white-space:nowrap
+}
+body.v12 .ribbon .court-ticker__matchup{
+ display:inline-flex;align-items:center;gap:7px;min-width:75px
+}
+body.v12 .ribbon .court-ticker__matchup .team-logo{
+ position:relative;display:inline-grid;place-items:center;flex:none;
+ width:30px!important;height:30px!important;
+ border-radius:50%;background:#0a1e36
+}
+body.v12 .ribbon .court-ticker__matchup .team-logo img{
+ position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+ filter:drop-shadow(0 1px 3px #0008)
+}
+body.v12 .ribbon .court-ticker__matchup .team-logo__fallback,
+body.v12 .ribbon .court-ticker__fallback{
+ font-size:9px;font-weight:900;color:#a8c6e7
+}
+body.v12 .ribbon .court-ticker__matchup>small{
+ font-size:9px;font-weight:800;color:#6584a4
+}
+body.v12 .ribbon .court-ticker__status{
+ color:#82a7c7;font-size:9px;font-weight:850;letter-spacing:.035em
+}
+body.v12 .ribbon .court-ticker__score{
+ color:#f0f6ff;font:850 15px/1.1 var(--v19-heading);
+ font-variant-numeric:tabular-nums
+}
+body.v12 .ribbon .court-ticker__item:hover{background:#123050}
+@media(max-width:650px){
+ body.v12 .ribbon .court-ticker__item{gap:8px;padding:7px 12px}
+ body.v12 .ribbon .court-ticker__matchup .team-logo{width:26px!important;height:26px!important}
+ body.v12 .ribbon .court-ticker__status{font-size:8px}
+}
+/* Follow your NBA teams in My Watchlist, not a decorative global colour-picker. */
+body.v12 .app-header .header-action{background:#102845!important;border:1px solid #315988!important;color:#cce8ff!important;box-shadow:none}
+body.v12 .app-header .header-action:hover{background:#174074!important}
