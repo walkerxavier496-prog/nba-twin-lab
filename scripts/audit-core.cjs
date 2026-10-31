@@ -274,6 +274,27 @@ function scorePlayers(forecast, actual) {
   return rows;
 }
 
+function gradeRosterStrengthSignal(forecast,actual){
+ const research=forecast?.v18_roster_strength;
+ if(research?.available!==true)return {status:'unavailable',reason:research?.reason||'Not locked with a verified V18 roster signal'};
+ const range=research.home_minus_away_impact_range;
+ if(!Array.isArray(range)||range.length!==2||range.some(value=>finite(value)===null)||range[0]>range[1])
+  return {status:'unavailable',reason:'Malformed pretip V18 impact range'};
+ const signal=range[0]>0?'home':range[1]<0?'away':'inconclusive';
+ const actualSide=actual.home.score>actual.away.score?'home':'away';
+ return {status:signal==='inconclusive'?'inconclusive':'scored',
+  signal,actual_winner:actualSide,correct:signal==='inconclusive'?null:signal===actualSide,
+  impact_proxy_range:[...range],not_a_probability:true};
+}
+function rosterSignalSummary(rows){
+ const available=rows.filter(row=>row?.status==='scored'||row?.status==='inconclusive');
+ const decisive=rows.filter(row=>row?.status==='scored');
+ return {available:available.length,decisive:decisive.length,
+  correct:decisive.filter(row=>row.correct).length,
+  directional_accuracy:decisive.length?decisive.filter(row=>row.correct).length/decisive.length:null,
+  decisive_coverage:available.length?decisive.length/available.length:null,
+  label:'Uncalibrated impact-signal direction only; no win probability or Brier'};
+}
 function scoreReview(lock, actuals, retrievedAt) {
   if (!verifyIntegrity(lock)) throw new Error('Forecast lock integrity check failed');
   const games = [];
@@ -290,6 +311,7 @@ function scoreReview(lock, actuals, retrievedAt) {
       home: actual.home, away: actual.away,
       models: Object.fromEntries(modelRows.map(row => [row.model_id, row])),
       player_results: playerRows,
+      v18_roster_strength: gradeRosterStrengthSignal(forecast,actual),
       player_counts: {
         projected: playerRows.length,
         played_scored: playerRows.filter(row => row.disposition === 'played_scored').length,
@@ -325,14 +347,16 @@ function scoreReview(lock, actuals, retrievedAt) {
         retrieved_at_utc: new Date(retrievedAt).toISOString(),
       },
     },
-    games, summary: { models, player_stats: playerStats },
+    games, summary: { models, player_stats: playerStats,
+      v18_roster_strength: rosterSignalSummary(games.map(game=>game.v18_roster_strength)) },
   });
 }
 
 function aggregateReviews(records, generatedAt) {
-  const modelRows = {}, playerErrors = Object.fromEntries(STAT_KEYS.map(stat => [stat, []]));
+  const modelRows = {}, playerErrors = Object.fromEntries(STAT_KEYS.map(stat => [stat, []])), strengthRows=[];
   for (const record of records) {
     for (const game of record.review?.games || []) {
+      if(game.v18_roster_strength)strengthRows.push(game.v18_roster_strength);
       for (const [modelId, row] of Object.entries(game.models || {})) (modelRows[modelId] ||= []).push(row);
       for (const player of game.player_results || []) for (const stat of STAT_KEYS) {
         if (Number.isFinite(player.absolute_errors?.[stat])) playerErrors[stat].push(player.absolute_errors[stat]);
@@ -350,6 +374,7 @@ function aggregateReviews(records, generatedAt) {
         label: rows[0]?.label || id, ...probabilityMetrics(rows), calibration: calibration(rows),
       }])),
       player_stats: Object.fromEntries(STAT_KEYS.map(stat => [stat, { count: playerErrors[stat].length, mae: mean(playerErrors[stat]) }])),
+      v18_roster_strength: rosterSignalSummary(strengthRows),
     },
   };
 }
@@ -358,5 +383,5 @@ module.exports = {
   STAT_KEYS, MODEL_LABELS, stableStringify, sha256, withIntegrity, verifyIntegrity,
   zoneParts, melbourneDate, melbourneHour, melbourneDisplay, normalizeName, canonicalTeam,
   parseMinutes, parseEspnSummary, probabilityMetrics, calibration, modelRowsForGame,
-  scorePlayers, scoreReview, aggregateReviews,
+  scorePlayers, scoreReview, aggregateReviews, gradeRosterStrengthSignal, rosterSignalSummary,
 };
