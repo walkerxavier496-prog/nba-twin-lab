@@ -48,7 +48,12 @@ test('Missing official inputs and unmatched current-roster players fail closed',
  f.games[0].teams.CHA.injuries=f.games[0].teams.CHA.injuries.filter(item=>item.player_id!=='100');
  const bad=I.auditGame({game:game(),snapshot:snapshot(),availability:f,now});
  assert.ok(bad.issues.includes('inferred_player_not_on_verified_roster'));
- assert.equal(S.matchup(bad).available,false);
+ assert.equal(bad.away.players.find(p=>p.player_id==='100').excluded,true);
+ // A stale historic player is EXCLUDED, not allowed to sabotage a current-
+ // roster strength estimate built entirely from other valid official players.
+ const cleaned=S.matchup(bad);
+ assert.equal(cleaned.available,true);
+ assert.ok(cleaned.away.rotation.every(p=>p.player_id!=='100'));
 });
 test('Insufficient healthy rotation coverage fails rather than inventing replacement stars',()=>{
  const f=official();f.games[0].teams.CHA.injuries=names(100).slice(0,7).map(p=>({player_id:p.player_id,status:'OUT'}));
@@ -63,4 +68,21 @@ test('Removing player impact data does not silently substitute zero',()=>{
  const integrity=I.auditGame({game:game(),snapshot:bad,availability:official(),now});
  assert.equal(S.matchup(integrity).available,false);
  assert.match(S.matchup(integrity).reason,/missing strictly pregame player impact/);
+});
+
+test('Postgame V18 grades are directional diagnostics, never probability scores',()=>{
+ const A=require('../scripts/audit-core.cjs');
+ const forecast={v18_roster_strength:{available:true,home_minus_away_impact_range:[1,3]}};
+ const actual={home:{score:102},away:{score:98}};
+ const graded=A.gradeRosterStrengthSignal(forecast,actual);
+ assert.equal(graded.status,'scored');
+ assert.equal(graded.correct,true);
+ assert.equal(graded.not_a_probability,true);
+ assert.equal(graded.p,undefined);
+ assert.equal(graded.brier,undefined);
+ const ambiguous=A.gradeRosterStrengthSignal({v18_roster_strength:{available:true,
+  home_minus_away_impact_range:[-2,3]}},actual);
+ assert.equal(ambiguous.status,'inconclusive');
+ assert.equal(ambiguous.correct,null);
+ assert.equal(A.rosterSignalSummary([graded,ambiguous]).decisive_coverage,.5);
 });
