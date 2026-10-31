@@ -1,0 +1,83 @@
+/* NBA Twin Lab Live Desk, V14: scoring-first dashboard across desktop + phone.
+   Actual stats use ESPN summaries, never prediction forecasts. */
+.live-desk{scroll-margin-top:90px;margin:5px 0 36px;border:1px solid #33475c;border-radius:16px;padding:clamp(16px,2.4vw,29px);background:linear-gradient(146deg,#101e2f,#0b1521 64%);box-shadow:0 12px 36px #0003;color:#eaf3fb}
+.live-desk *{box-sizing:border-box}.live-desk .eyebrow{font-size:11px;color:var(--fan-accent,#dbef90)!important}
+.live-desk p{color:#a9bece;line-height:1.5}
+.desk-pulse{display:inline-block;vertical-align:middle;background:#ff5265;width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 4px #ff526526;margin-right:8px}
+.desk-section-top{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:17px}
+.desk-section-top h1{font-size:clamp(35px,4.6vw,72px);line-height:.96;letter-spacing:.01em;margin:7px 0}
+.desk-section-top h1 em{font-style:normal;color:var(--fan-accent,#d4f66a)}
+.desk-section-top p{font-size:13px;margin:4px 0 0}
+.desk-head-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex:none}
+.desk-head-actions a,.desk-head-actions button{font-size:11px;white-space:nowrap}
+.desk-source{border:1px solid #3b5368;border-radius:9px;background:#0a1625;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;gap:10px;flex-wrap:wrap;font-size:11px;margin:10px 0}
+.desk-source strong{color:#f0f7fc;font-weight:900;letter-spacing:.04em}.desk-source span{color:#9db6c7}
+.desk-filters{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
+.desk-filters button{border:1px solid #374e61;background:#162a3c;padding:10px 16px;color:#b9cde0;font-size:11px;font-weight:900;letter-spacing:.025em;border-radius:7px;min-height:42px}
+.desk-filters button.active{color:#071320;background:var(--fan-accent,#ddf983);border-color:var(--fan-accent,#ddf983)}
+.desk-game-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-bottom:20px}
+.desk-game{display:flex;flex-direction:column;gap:11px;min-height:116px;border:1px solid #365167!important;background:#142638!important;color:#f3f9fc!important;border-radius:9px;padding:12px;cursor:pointer;text-align:left}
+.desk-game:hover,.desk-game.selected{border-color:var(--fan-accent,#e6f8bc)!important;background:#1d3548!important}
+.desk-game.selected{box-shadow:inset 0 -3px 0 var(--fan-accent,#e6f8bc)}
+.desk-game-head{display:flex;justify-content:space-between;align-items:center;gap:5px;color:#9db4c4;font-size:10px;font-weight:800;white-space:nowrap}
+.desk-status{border-radius:5px;background:#2c4055;color:#c4d3e0;font-size:9px;font-weight:950;padding:4px 6px;letter-spacing:.05em}
+.desk-status-live{background:#e63950;color:#fff}.desk-status-final{background:#405168;color:#fff}
+.desk-game-teams{display:flex;justify-content:center;align-items:center;gap:5px;min-width:0}
+.desk-game-teams .team-logo,.desk-game-teams .team-logo--sm{width:34px!important;height:34px!important}
+.desk-game-teams strong{font:900 17px/1 'Barlow Condensed',Impact,sans-serif;color:#f2f7fb;letter-spacing:.03em}
+.desk-points{font:900 23px/1 'Barlow Condensed',Impact,sans-serif;color:#fff;letter-spacing:.025em;white-space:nowrap;margin:0 3px}
+.desk-time{font-size:9px;line-height:1.3;color:#b0c1cd;text-align:center;min-width:60px}
+.desk-empty{grid-column:1/-1;padding:22px;margin:0;color:#b5cad9}
+.desk-stats{scroll-margin-top:90px;border:1px solid #3b5268;border-radius:11px;background:#0e1b2b;overflow:hidden}
+.desk-stats-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 21px 8px}
+.desk-stats h2{font-size:clamp(32px,3.2vw,47px);margin:4px 0}
+.desk-stats-head p{font-size:12px;margin:5px 0}
+.desk-sort{display:flex;gap:8px;align-items:center;font-size:11px;color:#c2d2dd;font-weight:850}
+body.v12 .desk-sort select{background:#14283b!important;border:1px solid #3c556c!important;color:#f4f8fb!important;border-radius:7px;padding:9px;min-height:41px}
+.desk-mini-status{font-size:11px;color:#b0c6d5;margin:5px 20px 12px}
+.desk-table-scroll{width:100%;overflow:auto}
+.desk-table{border-collapse:collapse;width:100%;min-width:460px}
+.desk-table th{font-size:10px;color:#a9c5d7!important;background:#1b3043!important;text-transform:uppercase;letter-spacing:.07em;padding:10px 13px;text-align:right}
+.desk-table td{font-size:13px;color:#eaf3f9!important;background:transparent;border-top:1px solid #24394a;padding:10px 13px;text-align:right;font-variant-numeric:tabular-nums}
+.desk-table th:first-child,.desk-table td:first-child{text-align:left;width:44%}
+.desk-table tbody tr:nth-child(2n){background:#132538}
+.desk-player{display:flex;gap:10px;align-items:center;text-align:left}
+.desk-player img{width:42px;height:43px;flex:none;object-fit:cover;object-position:center 14%;border-radius:7px;background:#263c50}
+.desk-player b{display:block;font-size:12px;color:#f1f8fa}
+.desk-player small{display:block;font-size:10px;color:#9db8c8;margin-top:3px}
+.desk-attribution{display:block;padding:10px 20px;color:#8ba3b5;font-size:10px}
+.desk-footer{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:13px}
+.desk-footer>div{background:#0e1c2a;border:1px solid #314b60;border-radius:9px;padding:17px}
+.desk-footer h3{font-size:22px;color:#eff8fd;margin-bottom:10px}
+.desk-footer p{font-size:11px}
+.desk-footer ol{list-style:none;display:grid;gap:7px;padding:0;margin:0;max-height:240px;overflow-y:auto}
+.desk-footer li{display:flex;gap:10px;border-top:1px solid #293c4f;padding:8px 0;font-size:11px;line-height:1.45;color:#b5c9d8}
+.desk-footer li small{flex:none;color:var(--fan-accent,#ddf983);font-size:10px;font-weight:850}
+body.v12 .live-desk button#live-alerts-toggle{background:#20344a;border-color:#456076;color:#e9f3fb}
+body.v12 .live-desk button#live-alerts-toggle[aria-pressed=true]{background:#29523e;border-color:#73c78b;color:#d9f4db}
+body.v12.home .hero-grid{margin-top:24px}
+body.v12.home #live-games~.hero-grid .lead-story{min-height:310px}
+body.v12.home #live-games~.hero-grid .lead-story h1{font-size:clamp(50px,5vw,88px)}
+@media(max-width:1180px){.desk-game-list{grid-template-columns:repeat(4,minmax(0,1fr))}.desk-section-top{align-items:start}}
+@media(max-width:870px){.desk-game-list{grid-template-columns:repeat(2,minmax(0,1fr))}.desk-section-top{flex-direction:column;align-items:stretch}.desk-footer{grid-template-columns:1fr}}
+@media(max-width:590px){
+ .live-desk{padding:12px;border-radius:10px;margin-bottom:20px}
+ .desk-section-top h1{font-size:43px}
+ .desk-head-actions{display:flex;width:100%}
+ .desk-head-actions>*{flex:1;padding-inline:8px;text-align:center}
+ .desk-game-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .desk-game{min-height:116px;padding:8px}
+ .desk-game-teams{gap:3px}
+ .desk-game-teams .team-logo,.desk-game-teams .team-logo--sm{width:28px!important;height:28px!important}
+ .desk-game-teams strong{font-size:15px}
+ .desk-points{font-size:20px;margin:0}
+ .desk-time{font-size:8px;min-width:40px}
+ .desk-status{font-size:8px}
+ .desk-game-head{font-size:9px}
+ .desk-source{padding:10px;font-size:10px}
+ .desk-filters button{padding:8px 12px;font-size:10px;min-height:38px}
+ .desk-stats-head{padding:15px}
+ .desk-table th,.desk-table td{padding:10px 8px}
+ .desk-player img{width:34px;height:36px}
+ .desk-footer>div{padding:12px}
+}
