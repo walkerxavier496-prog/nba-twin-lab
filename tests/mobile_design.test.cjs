@@ -14,6 +14,7 @@ test('responsive shell loads on all primary website routes and scripts parse',()
   assert.match(text,/assets\/site-shell\.css/,p+' missing shared phone styles');
   assert.match(text,/assets\/site-shell\.js/,p+' missing mobile navigation');
   assert.match(text,/name="viewport"/,p+' missing viewport');
+  if(['index.html','predict/index.html','challenge/index.html','challenge/daily.html','audit/index.html'].includes(p)) assert.match(text,/assets\/v12\.css/,p+' missing V12 sports UI');
  }
  for(const p of ['assets/site-shell.js','assets/home.js','challenge/daily.js','challenge/app.js']){
   assert.doesNotThrow(()=>new vm.Script(file(p),{filename:p}),p+' fails parse');
@@ -69,7 +70,8 @@ test('mobile daily forecast has real, wired search/sort and accessible responsiv
  assert.match(js,/player-sort/);
  assert.match(js,/model-card__bar/);
  assert.match(js,/aria-pressed/);
- assert.match(html,/max-width:620px/);
+ assert.match(file('assets/v12.css'),/max-width:590px/);
+ assert.match(html,/assets\/v12\.css/);
  assert.match(file('assets/site-shell.css'),/safe-area-inset-bottom/);
 });
 
