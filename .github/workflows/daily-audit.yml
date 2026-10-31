@@ -54,6 +54,17 @@ jobs:
         run: node scripts/challenge_supplement.cjs verify
       - name: Verify immutable artifacts and derived ledger
         run: node scripts/daily_tracker.cjs verify
+      # Anchoring must never block locking or publication, so these steps are
+      # non-fatal. Missing/failed timestamps are retried on the next 15-minute run.
+      - name: Record lock anchors (hash of each pre-tip lock)
+        continue-on-error: true
+        run: node scripts/anchor_locks.cjs run
+      - name: Install OpenTimestamps client
+        continue-on-error: true
+        run: python -m pip install --disable-pip-version-check opentimestamps-client
+      - name: Stamp and upgrade independent OpenTimestamps proofs
+        continue-on-error: true
+        run: node scripts/anchor_locks.cjs ots-sync
       - name: Publish validated data and deployment receipt
         uses: ./.github/actions/publish-data
         with:
