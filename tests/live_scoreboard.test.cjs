@@ -42,6 +42,8 @@ test('homepage shows genuine sourced score separately from frozen pregame predic
  assert.ok(entry);
  ledger.entries=[entry];
  const original=JSON.parse(read(entry.lock_path));
+ const sidecar=JSON.parse(read('audit/supplements/2026-10-31/challenge.lock.json'));
+ assert.equal(sidecar.original_forecast_sha256,entry.lock_sha256);
  const elements=new Map(),get=id=>{
   if(!elements.has(id))elements.set(id,{textContent:'',innerHTML:''});
   return elements.get(id);
@@ -50,7 +52,8 @@ test('homepage shows genuine sourced score separately from frozen pregame predic
  const window={NbaScores:{...scores,fetchDate:async()=>({date:'20261030',games:scores.parse(sample('live')),fetched_at_utc:'2026-10-31T00:02:00Z'})}};
  const payloads={'./data/audit-ledger.json':ledger,
   './data/five-model-report.json':{common_evaluation:{games:3643}},
-  ['./'+entry.lock_path]:original};
+  ['./'+entry.lock_path]:original,
+  './audit/supplements/2026-10-31/challenge.lock.json':sidecar};
  const fetch=async url=>({ok:!!payloads[url],json:async()=>payloads[url]});
  vm.runInNewContext(read('assets/home.js'),{window,document,fetch,Date,Intl,Promise,console,encodeURIComponent});
  await new Promise(resolve=>setImmediate(resolve));
@@ -60,6 +63,8 @@ test('homepage shows genuine sourced score separately from frozen pregame predic
  assert.match(card,/ELO PICK/);
  assert.match(get('scoreboard-source').textContent,/ESPN game scores/);
  assert.match(get('feature-detail').textContent,/NOT A PREDICTION/);
+ assert.match(get('feature-confidence').innerHTML,/MODELS DISAGREE/);
+ assert.match(get('feature-confidence').innerHTML,/25\.1 PERCENTAGE POINTS/);
  const untouched=original.forecasts.find(g=>g.game_id==='401909277');
  assert.ok(untouched);
  assert.equal(untouched.primary_forecast.winner_probability,0.7932589256865024);
