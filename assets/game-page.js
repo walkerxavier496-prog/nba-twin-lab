@@ -9,7 +9,7 @@ const fmt=d=>{const n=new Date(d);return Number.isFinite(n.getTime())?new Intl.D
 const abbr=t=>String(t?.abbreviation||t?.abbr||t?.shortDisplayName||'').toUpperCase();
 const logo=t=>window.NbaMedia?.image?.(t?.abbr,{size:'large',label:t?.abbr})||'<span>'+esc(t?.abbr||'NBA')+'</span>';
 const id=new URLSearchParams(location.search).get('id');
-let selectedTab='box',game=null,raw=null,players=[],plays=[],pending=false,lastLoaded=null;
+let selectedTab='box',game=null,raw=null,players=[],plays=[],pending=false,lastLoaded=null,boxSort='pts',boxDescending=true;
 const fallback='<p class="game-empty">No verified data is available from ESPN for this game yet.</p>';
 const statusName=g=>g.phase==='live'?(g.period>4?'OT'+(g.period>5?g.period-4:''):'Q'+(g.period||'?'))+(g.clock?' · '+g.clock:'')+' · LIVE':g.phase==='final'?'FINAL':g.phase==='scheduled'?'UPCOMING':'STATUS UNAVAILABLE';
 function parseSummary(data){
@@ -80,17 +80,34 @@ function leaderCard(team){
 function showLeaders(){
  $('game-leaders').innerHTML=game?(leaderCard(game.away)+leaderCard(game.home)):'';
 }
+const boxCols=[['name','PLAYER'],['minutes','MIN'],['pts','PTS'],['reb','REB'],['ast','AST'],['three','3PM'],['stl','STL'],['blk','BLK'],['tov','TO'],['fgPct','FG%'],['ftPct','FT%'],['plusMinus','+/-'],['fpts','FPTS']];
+function orderPlayers(group){
+ return group.slice().sort((a,b)=>{
+  if(boxSort==='name')return (boxDescending?-1:1)*a.name.localeCompare(b.name);
+  const av=Number.isFinite(a[boxSort])?a[boxSort]:null,bv=Number.isFinite(b[boxSort])?b[boxSort]:null;
+  if(av===null)return bv===null?a.name.localeCompare(b.name):1;
+  if(bv===null)return -1;
+  return (boxDescending?-1:1)*(av-bv)||a.name.localeCompare(b.name);
+ });
+}
+function formatNumber(v,suffix=''){return Number.isFinite(v)?String(v)+suffix:'—'}
 function showBox(){
  if(!game){$('game-box-groups').innerHTML=fallback;return}
  $('game-box-groups').innerHTML=[game.away,game.home].map(team=>{
-  const list=players.filter(p=>p.team===team.abbr);
-  const rows=list.length?list.map(p=>'<tr>'+
-    '<td><b>'+esc(p.name)+'</b></td><td>'+esc(p.minutes??'—')+'</td><td><b>'+esc(p.pts??'—')+'</b></td>'+
-    '<td>'+esc(p.reb??'—')+'</td><td>'+esc(p.ast??'—')+'</td><td>'+esc(p.three??'—')+'</td></tr>').join(''):
-    '<tr><td colspan="6">No actual player box score published yet.</td></tr>';
+  const list=orderPlayers(players.filter(p=>p.team===team.abbr));
+  const rows=list.length?list.map(p=>{
+   const vals=[esc(p.name),esc(p.minutes??'—'),formatNumber(p.pts),formatNumber(p.reb),formatNumber(p.ast),formatNumber(p.three),
+   formatNumber(p.stl),formatNumber(p.blk),formatNumber(p.tov),formatNumber(p.fgPct,'%'),formatNumber(p.ftPct,'%'),
+   formatNumber(p.plusMinus),formatNumber(p.fpts)];
+   return '<tr>'+vals.map((v,i)=>'<td'+(i===12?' class="game-fpts"':'')+'>'+(i===0?'<b>'+v+'</b>':v)+'</td>').join('')+'</tr>';
+  }).join(''):'<tr><td colspan="13">No published actual player statistics for this team yet.</td></tr>';
+  const headings=boxCols.map(([key,label])=>'<th><button type="button" data-game-sort="'+key+'" aria-label="Sort by '+label+'">'+label+(boxSort===key?(boxDescending?' ↓':' ↑'):'')+'</button></th>').join('');
   return '<div class="game-box-team"><div class="game-box-team-title">'+logo(team)+'<h3>'+esc(team.name)+'</h3></div>'+
-   '<div class="game-table-scroll"><table><thead><tr><th>PLAYER</th><th>MIN</th><th>PTS</th><th>REB</th><th>AST</th><th>3PM</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+   '<div class="game-table-scroll"><table><thead><tr>'+headings+'</tr></thead><tbody>'+rows+'</tbody></table></div></div>';
  }).join('');
+ for(const button of $('game-box-groups').querySelectorAll?.('[data-game-sort]')||[])button.addEventListener('click',()=>{
+  const key=button.dataset.gameSort;boxDescending=key===boxSort?!boxDescending:true;boxSort=key;showBox();
+ });
 }
 function showPlays(){
  const root=$('game-play-list');
@@ -169,7 +186,7 @@ async function refresh(){
   const next=parseSummary(data);
   if(!next)throw Error('ESPN has not supplied the matchup information');
   raw=data;game=next;
-  players=window.NbaLiveDesk?.parseBoxscore?.(data)||[];
+  players=window.TwinBoxscorePlus?.parseBoxscore?.(data)||window.NbaLiveDesk?.parseBoxscore?.(data)||[];
   plays=window.NbaLiveDesk?.extractPlays?.(data)||[];
   showHeader();showLeaders();showBox();showPlays();showTeam();
   lastLoaded=new Date().toISOString();
