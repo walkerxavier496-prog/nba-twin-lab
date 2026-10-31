@@ -55,6 +55,23 @@ jobs:
           git add data/v7-current.json data/v9-player-report.json
           if ! git diff --cached --quiet; then
             git commit -m 'Refresh verified V9 player projections and historical audit'
-            git pull --rebase origin main
-            git push origin HEAD:main
+            # The builder may update additional tracked research artifacts that
+            # this workflow deliberately does not publish. On a disposable runner,
+            # discard only those unstaged changes so git rebase can run safely.
+            git restore --worktree .
+            for attempt in 1 2 3 4 5; do
+              git fetch origin main
+              if ! git rebase origin/main; then
+                git rebase --abort || true
+                echo 'V9 publication needs review: concurrent changes conflict with generated data' >&2
+                exit 1
+              fi
+              if git push origin HEAD:main; then
+                echo 'Published validated V9 player data' >> "$GITHUB_STEP_SUMMARY"
+                exit 0
+              fi
+              sleep 3
+            done
+            echo 'V9 publication was not accepted after 5 non-destructive retries' >&2
+            exit 1
           fi
