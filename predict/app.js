@@ -12,6 +12,7 @@ const today=new Date();
 const seasonYear=today.getUTCFullYear()+(today.getUTCMonth()>=6?1:0);
 let games=[],selected=null,source='',loadedAt=null,hasHistory=false,context=null,profiles={},modelReport=null,scienceSnapshot=null,scienceReport=null,rosterPriors=null,rosterReport=null;
 let liveScoreFeed=null;
+let officialAvailability=null;
 const liveSource=window.NbaScores||null;
 const scoreFor=id=>liveScoreFeed?.games?.find(g=>String(g.id)===String(id))||null;
 const verifiedScore=s=>s&&['live','final'].includes(s.phase)&&Number.isFinite(s.home.score)&&Number.isFinite(s.away.score);
@@ -46,6 +47,43 @@ async function loadRosterResearch(){
     rosterPriors=priors;rosterReport=report;
   }
  }catch(e){console.warn('Roster research unavailable:',e)}
+}
+async function loadOfficialAvailability(){
+ try{
+  const response=await fetch('../data/availability-current.json',{cache:'no-store'});
+  if(!response.ok)return;
+  const data=await response.json();
+  if(data?.schema==='nba-twin-lab-availability-v18'&&data.strict_no_future_data===true)officialAvailability=data;
+ }catch(error){console.warn('Official lineup status unavailable; historical model only:',error)}
+}
+function rosterIntegrityPanel(audit){
+ if(!audit)return '<div class="context"><p>V18 roster audit unavailable. Treat probabilities as historical team estimates.</p></div>';
+ const pretty={official_availability_missing:'No connected official injury feed',invalid_injury_cutoff:'No verified pre-tip injury timestamp',
+  game_injury_report_unverified:'No verified injury report for this game',official_roster_unverified:'Current active roster not independently verified',
+  stale_team_snapshot:'Team rotation snapshot is stale',invalid_snapshot_cutoff:'Missing pre-tip team data',
+  season_mismatch:'Team snapshot belongs to another season',team_missing_from_snapshot:'Team rotation missing',
+  availability_scenario_required:'Questionable / doubtful / probable player requires scenarios',
+  inferred_player_not_on_verified_roster:'Inferred player is absent from the verified roster',
+  rotation_missing:'No trustworthy estimated rotation'};
+ const describe=team=>{
+  const heading='<h4>'+esc(team.team)+' · EXPECTED ROTATION (NOT CONFIRMED STARTERS)</h4>';
+  const rows=team.players.slice(0,10).map(p=>{
+   const label=p.name+(p.status==='NOT_LISTED'?'': ' · '+p.status);
+   const minutes=p.excluded?'0m · EXCLUDED':p.expected_minutes===null?
+    '0–'+round(p.max_minutes)+'m · uncertain':round(p.expected_minutes)+'m · '+(team.official_roster_verified?'estimated':'inferred');
+   return metric(label,minutes);
+  }).join('');
+  return '<div>'+heading+(rows||'<p>No pregame rotation available</p>')+'</div>';
+ };
+ const issues=[...new Set(audit.issues)].map(code=>pretty[code]||code.replaceAll('_',' '));
+ return '<div class="context v18-roster-integrity" role="note">'+
+  '<h4>V18 · ROSTER & INJURY INTEGRITY AUDIT</h4>'+
+  '<p><b>'+(audit.source_checks_passed?'SOURCE CHECKS PASSED · RESEARCH ONLY':'INPUTS NOT VERIFIED · HISTORICAL MODEL ONLY')+
+  '</b>. These are expected rotations, never confirmed starters. The main probability above is historical Elo and is <b>not</b> recalculated using verified game-day availability.</p>'+
+  '<p>Checks: '+esc(issues.length?issues.join(' · '):'Timestamped roster and injury inputs checked')+
+  '. A roster-first probability model still requires independent historical and prospective validation.</p>'+
+  '<div class="split">'+describe(audit.away)+describe(audit.home)+'</div>'+
+  '<p class="disclaimer">OUT means 0 estimated minutes when an official matching injury designation is available; questionable players receive a range. When the official feed is unavailable all minutes are inferred and must not be treated as confirmed participation.</p></div>';
 }
 function rosterPreview(game,baseline){
  if(!window.TwinRoster||!scienceSnapshot||!rosterPriors||!rosterReport)return {available:false,reason:'Verified roster research data is not yet published'};
@@ -207,6 +245,8 @@ function renderDetail(){
  if(!simulationCache.has(cacheKey))simulationCache.set(cacheKey,E.monteCarlo(g,state,profiles,{simulations}));
  const simulation=simulationCache.get(cacheKey),base=simulation.baseline;
  const roster=rosterPreview(g,base);
+ const integrity=window.TwinRosterIntegrity?.auditGame({
+  game:g,snapshot:scienceSnapshot,availability:officialAvailability,now:Date.now()})||null;
  const p=mode==='roster'&&roster.available?
    {...simulation,homeWin:roster.homeWin,awayWin:roster.awayWin,homeScore:base.homeScore,awayScore:base.awayScore,total:base.total,margin:base.margin}:
    mode==='mc'?simulation:{...simulation,homeWin:base.homeWin,awayWin:base.awayWin,homeScore:base.homeScore,awayScore:base.awayScore,total:base.total,margin:base.margin};
@@ -226,10 +266,12 @@ function renderDetail(){
   'Elo and possession simulation differ by '+(oddsGap*100).toFixed(1)+' probability points; their inputs and assumptions are different. Verified injuries and confirmed starters are not included. '+
   '<a href="../challenge/daily.html?game='+encodeURIComponent(String(g.id))+'#matchups">See the frozen six-model challenge when available ↗</a></p></div>':'';
 
+ const integrityFlag=g.status==='scheduled'&&!integrity?.source_checks_passed?
+  '<div class="uncertainty-banner" role="note"><b>HISTORICAL TEAM PROBABILITY · GAME-DAY ROSTER NOT VERIFIED</b><p>This estimate still carries old team ratings. No verified roster-first model is active. Do not interpret the percentage as incorporating confirmed game-day injuries or starting lineups.</p></div>':'';
  $('detail').innerHTML=
  '<div class="headrow"><span class="eyebrow">'+esc(fmt(g.date))+'</span><span class="badge">'+tag+'</span></div>'+liveBanner+
  '<h3>'+esc(g.away.name)+' <span class="muted">at</span> '+esc(g.home.name)+'</h3>'+
- caution+
+ caution+integrityFlag+
  '<div class="odds"><div><div class="name">'+esc(g.away.abbr)+' · Away</div><div class="pct">'+pct(p.awayWin)+'</div></div>'+
  '<div><div class="name">'+esc(g.home.abbr)+' · Home</div><div class="pct">'+pct(p.homeWin)+'</div></div></div>'+
  '<div class="bar" role="img" aria-label="'+esc(g.away.abbr)+' '+pct(p.awayWin)+', '+esc(g.home.abbr)+' '+pct(p.homeWin)+'"><span style="width:'+100*p.awayWin+'%"></span></div>'+
@@ -247,6 +289,7 @@ function renderDetail(){
  '<p><b>'+esc(hWin?g.home.name:g.away.name)+'</b> has a '+pct(hWin?p.homeWin:p.awayWin)+' '+(mode==='elo'?'Elo win estimate. Elo is the default because it beat standalone V5 Monte Carlo on the untouched five-season audit.':'win rate across '+simulations.toLocaleString()+' seeded possession simulations.')+' The matchup expectation is '+one(Math.abs(base.eloEdge))+' rating points; Monte Carlo separately plays turnovers, free throws, 2s, 3s, misses and offensive rebounds using validated historical team rates.</p>'+
  '<p>Last '+h2h.length+' head-to-head meeting'+(h2h.length===1?'':'s')+': '+(h2h.length?h2h.map(x=>esc(x.away.abbr)+' '+x.awayScore+'–'+x.homeScore+' '+esc(x.home.abbr)).join(' · '):'No verified recent meetings')+'. Head-to-head history is context only, not a separate predictive weight.</p></div>'+
  rosterPanel(g,base,roster)+
+ rosterIntegrityPanel(integrity)+
  sciencePanel(g,base)+
  (g.status==='final'?'<p class="context"><b>Actual final:</b> '+esc(g.away.abbr)+' '+g.awayScore+' – '+g.homeScore+' '+esc(g.home.abbr)+'. This forecast was recomputed using only games before tip-off.</p>':'')+
  '<p class="disclaimer">'+esc(base.confidence)+'. Selected model: '+modelName+'. Seeded Monte Carlo diagnostics reproduce with identical inputs. Legacy Elo has no trade, injury, confirmed-lineup, travel or betting-market input. The roster experiment uses inferred rotation changes, not verified player availability; prior-season style can miss offseason changes; a probability is never a guarantee. This is not betting advice.</p>';
@@ -262,5 +305,5 @@ $('range').addEventListener('change',renderGames);
 $('team-search').addEventListener('input',renderGames);
 $('simulations').addEventListener('change',()=>{simulationCache.clear();renderDetail()});
 $('model-choice').addEventListener('change',renderDetail);
-Promise.all([loadContext(),loadReport(),loadSciencePreview(),loadRosterResearch()]).then(async()=>{await load();await refreshLiveScores();if(typeof setInterval==='function')setInterval(refreshLiveScores,60000)});
+Promise.all([loadContext(),loadReport(),loadSciencePreview(),loadRosterResearch(),loadOfficialAvailability()]).then(async()=>{await load();await refreshLiveScores();if(typeof setInterval==='function')setInterval(refreshLiveScores,60000)});
 })();
