@@ -34,7 +34,17 @@ TEAM_IDS={
  "POR":1610612757,"SAC":1610612758,"SAS":1610612759,"TOR":1610612761,
  "UTA":1610612762,"WAS":1610612764
 }
-ALIASES={"GS":"GSW","WSH":"WAS","NY":"NYK","SA":"SAS","NO":"NOP","PHO":"PHX","BRK":"BKN","CHO":"CHA"}
+ALIASES={"GS":"GSW","WSH":"WAS","NY":"NYK","SA":"SAS","NO":"NOP","PHO":"PHX","BRK":"BKN","CHO":"CHA","UTAH":"UTA"}
+TEAM_LABELS={
+ "ATL":"Atlanta Hawks","BOS":"Boston Celtics","BKN":"Brooklyn Nets","CHA":"Charlotte Hornets",
+ "CHI":"Chicago Bulls","CLE":"Cleveland Cavaliers","DAL":"Dallas Mavericks","DEN":"Denver Nuggets",
+ "DET":"Detroit Pistons","GSW":"Golden State Warriors","HOU":"Houston Rockets","IND":"Indiana Pacers",
+ "LAC":"LA Clippers","LAL":"Los Angeles Lakers","MEM":"Memphis Grizzlies","MIA":"Miami Heat",
+ "MIL":"Milwaukee Bucks","MIN":"Minnesota Timberwolves","NOP":"New Orleans Pelicans","NYK":"New York Knicks",
+ "OKC":"Oklahoma City Thunder","ORL":"Orlando Magic","PHI":"Philadelphia 76ers","PHX":"Phoenix Suns",
+ "POR":"Portland Trail Blazers","SAC":"Sacramento Kings","SAS":"San Antonio Spurs","TOR":"Toronto Raptors",
+ "UTA":"Utah Jazz","WAS":"Washington Wizards"
+}
 STATUS={"OUT","DOUBTFUL","QUESTIONABLE","PROBABLE","AVAILABLE"}
 PDF_REGEX=re.compile(r"Injury-Report_(\d{4}-\d{2}-\d{2})_(\d{2})_(\d{2})(AM|PM)\.pdf",re.I)
 MATCHUP_REGEX=re.compile(r"\b([A-Z]{2,3})@([A-Z]{2,3})\b")
@@ -117,9 +127,16 @@ class NbaRosterParser(HTMLParser):
                 self.names.append(" ".join(" ".join(self.text).split()))
             self.in_row=False
 
+def roster_table(html):
+    # NBA team pages include Hall of Fame and historical records tables with
+    # player links. Only the current roster's FIRST table is eligible.
+    match=re.search(r"<table\b[^>]*>.*?</table>",html,re.I|re.S)
+    if not match:raise ValueError("No official NBA roster table")
+    return match.group(0)
+
 def extract_roster(html,team):
     parser=NbaRosterParser()
-    parser.feed(html)
+    parser.feed(roster_table(html))
     ids=parser.player_ids
     if not 10<=len(ids)<=25 or len(ids)!=len(set(ids)):
         raise ValueError(f"Official {team} roster incomplete or ambiguous: {len(ids)} rows")
@@ -163,18 +180,28 @@ def injury_rows(pdf_bytes):
             if not current_matchup:continue
             game=parsed[current_matchup]
             team=cols[3]
+            # NBA PDF page footers can land in the team column when text is
+            # extracted without spacing (e.g. Page1of4). They are not clubs.
+            if re.fullmatch(r"Page\s*\d+\s*of\s*\d+",team,re.I):
+                continue
             if team and not any(w in team.lower() for w in ("injury report","game time","matchup")):
                 # NBA PDF prints away club then home club. Both are explicitly
                 # part of the matchup; third distinct team means parsing failure.
                 away,home=current_matchup.split("@")
-                if team not in game["seen"]:
-                    if len(game["seen"])>=2:raise ValueError("Unexpected third team in official injury PDF")
-                    game["seen"].append(team)
-                side=game["seen"].index(team)
-                current_team=(away,home)[side]
+                matched=next((code for code in (away,home) if namekey(team)==namekey(TEAM_LABELS[code])),None)
+                if matched is None:
+                    # An NBA PDF page can begin with a different game whose
+                    # matchup label was on the previous page. Never assign that
+                    # third team's injuries to the previous game.
+                    game["invalid"]=True
+                    current_matchup=None
+                    current_team=None
+                    continue
+                current_team=matched
+                if matched not in game["seen"]:game["seen"].append(matched)
                 game["teams"].setdefault(current_team,{"injuries":[],"submitted":True})
             if not current_team:continue
-            if "NOT YET SUBMITTED" in text.upper():
+            if "NOTYETSUBMITTED" in re.sub(r"[^A-Z]","",text.upper()):
                 game["teams"][current_team]["submitted"]=False
             name,status=cols[4].strip(),cols[5].strip().upper()
             if "," in name and status in STATUS:
@@ -186,7 +213,7 @@ def report_for_game(row,parsed,rosters):
     home=canonical(row["home"]["abbr"])
     matchup=f"{away}@{home}"
     report=parsed.get(matchup)
-    if not report or set(report["teams"])!={away,home}:return None
+    if not report or report.get("invalid") or set(report["teams"])!={away,home}:return None
     teams={}
     for code in (away,home):
         source=report["teams"][code]
@@ -261,7 +288,7 @@ def build(now):
         ids=extract_roster(html,code)
         # Names are derived exclusively from exact NBA.com player-id links in
         # the official roster table, not ESPN IDs or old rotation IDs.
-        p=NbaRosterParser();p.feed(html)
+        p=NbaRosterParser();p.feed(roster_table(html))
         names={}
         for id,full in zip(p.player_ids,p.names):
             # HTML roster row includes position/number. Extract name from

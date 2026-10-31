@@ -30,6 +30,9 @@ class OfficialAvailabilityTests(unittest.TestCase):
         ids=o.extract_roster(table,"CHA")
         self.assertEqual(ids[0],"1600000")
         self.assertEqual(len(ids),16)
+        # Historical team tables must never add retired players to the active roster.
+        historic='<table><tr><td><a href="/player/777777/retired">Retired Player</a></td></tr></table>'
+        self.assertEqual(o.extract_roster(table+historic,"CHA"),ids)
         with self.assertRaises(ValueError):
             o.extract_roster("<table><tr><td>No players</td></tr></table>","CHA")
     def test_strict_injury_identity_and_unknown_names(self):
@@ -55,6 +58,7 @@ class OfficialAvailabilityTests(unittest.TestCase):
             return [dict(top=top,x0=x,text=value) for x,value in entries]
         words=(line(144,[(250,"CHA@WAS"),(335,"Charlotte"),(399,"Hornets"),(525,"Knueppel,"),
                     (605,"Kon"),(710,"Out")])+
+               line(153,[(335,"Page1of4")])+
                line(166,[(335,"Washington"),(404,"Wizards"),(525,"Davis,"),
                     (596,"Anthony"),(710,"Probable")]))
         page=types.SimpleNamespace(height=600,width=1000,extract_words=lambda **_kw:words)
@@ -63,6 +67,30 @@ class OfficialAvailabilityTests(unittest.TestCase):
             rows=o.injury_rows(b"%PDF synthetic fixture")
         self.assertEqual(rows["CHA@WAS"]["teams"]["CHA"]["injuries"][0]["name"],"Kon Knueppel")
         self.assertEqual(rows["CHA@WAS"]["teams"]["WAS"]["injuries"][0]["status"],"PROBABLE")
+    def test_pdf_unlabelled_next_matchup_cannot_contaminate_previous_game(self):
+        def line(top,entries):return [dict(top=top,x0=x,text=v) for x,v in entries]
+        words=(line(144,[(250,"ATL@NOP"),(335,"AtlantaHawks"),(525,"Dennis,"),(595,"RayJ"),(710,"Doubtful")])+
+               line(166,[(335,"Page1of4")])+line(188,[(335,"NewOrleansPelicans")])+
+               line(210,[(335,"GoldenStateWarriors"),(525,"Curry,"),(595,"Stephen"),(710,"Out")]))
+        page=types.SimpleNamespace(height=600,width=1000,extract_words=lambda **_kw:words)
+        fake=types.SimpleNamespace(open=lambda _stream:types.SimpleNamespace(pages=[page]))
+        with patch.dict(sys.modules,{"pdfplumber":fake}):parsed=o.injury_rows(b"%PDF synthetic fixture")
+        self.assertTrue(parsed["ATL@NOP"].get("invalid"))
+        self.assertNotIn("GSW",parsed["ATL@NOP"]["teams"])
+        self.assertIsNone(o.report_for_game({"id":"1","away":{"abbr":"ATL"},"home":{"abbr":"NOP"}},parsed,{}))
+
+    def test_pdf_compact_not_yet_submitted_is_not_verified(self):
+        def line(top,entries):return [dict(top=top,x0=x,text=v) for x,v in entries]
+        words=(line(144,[(250,"PHI@CHA"),(335,"Philadelphia76ers"),(810,"NOTYETSUBMITTED")])+
+               line(166,[(335,"CharlotteHornets"),(810,"NOTYETSUBMITTED")]))
+        page=types.SimpleNamespace(height=600,width=1000,extract_words=lambda **_kw:words)
+        fake=types.SimpleNamespace(open=lambda _stream:types.SimpleNamespace(pages=[page]))
+        with patch.dict(sys.modules,{"pdfplumber":fake}):
+            parsed=o.injury_rows(b"%PDF synthetic fixture")
+        self.assertFalse(parsed["PHI@CHA"]["teams"]["PHI"]["submitted"])
+        self.assertFalse(parsed["PHI@CHA"]["teams"]["CHA"]["submitted"])
+        self.assertIsNone(o.report_for_game({"id":"1","away":{"abbr":"PHI"},"home":{"abbr":"CHA"}},parsed,{}))
+
     def test_empty_or_partial_sources_publish_unavailable_not_fabricated_status(self):
         r=o.unavailable("Bad PDF")
         self.assertEqual(r["status"],"unavailable")
