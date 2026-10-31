@@ -171,3 +171,6 @@ body.v12.secondary-page .gap b{color:#6fe1c7}
  .twin-versus{font-size:14px}
  .twin-rank-photo{width:46px;height:46px}
 }
+
+/* A supporter always sees which column represents their side, even away. */
+body.v12.secondary-page th[data-favourite="true"]{color:var(--fan-accent)!important;background:color-mix(in srgb,var(--fan-accent),#152536 91%)!important;box-shadow:inset 0 -3px 0 var(--fan-accent)}
