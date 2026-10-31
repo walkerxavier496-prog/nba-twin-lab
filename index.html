@@ -1,95 +1,47 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#081420"><meta name="description" content="NBA Twin Lab: evidence-led basketball game predictions, matchup intelligence, historical model audits and statistical player twins."><title>NBA Twin Lab · Basketball Intelligence</title>
-<style>
-:root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#081420;color:#eaf3f9}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 5%,#1b4153 0,transparent 42%),radial-gradient(ellipse at 8% 45%,#162639 0,transparent 45%),#081420}a{color:#8eddfc}header{padding:21px max(18px,calc((100vw - 1150px)/2));display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;border-bottom:1px solid #30465a}.brand{font-size:18px;font-weight:900;letter-spacing:-.02em;color:#eaf3f9;text-decoration:none}.brand span{color:#7de0c8}nav{display:flex;gap:18px;flex-wrap:wrap}nav a{font-size:13px;color:#b6ccda;text-decoration:none}nav a:hover{color:#fff}main{max-width:1150px;margin:auto;padding:65px 18px 85px}.eyebrow{font-size:12px;letter-spacing:.17em;color:#8ce7d1;font-weight:900}h1{font-size:clamp(44px,7vw,88px);line-height:1.02;letter-spacing:-.065em;margin:18px 0 25px}h1 em{font-style:normal;color:#90d5fb}h2{font-size:26px;letter-spacing:-.03em;margin:10px 0}p{line-height:1.7;color:#b9ccda;max-width:820px}.lead{font-size:19px;max-width:790px}.buttons{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 35px}.button{display:inline-flex;align-items:center;justify-content:center;border-radius:11px;padding:14px 20px;font-weight:800;text-decoration:none;border:1px solid #496d80;color:#e9f7ff}.button.primary{background:#85e4c9;color:#0c292b;border-color:#85e4c9}.status{display:inline-block;color:#bad6e3;background:#102b3a;border:1px solid #35586b;border-radius:30px;padding:9px 14px;font-size:13px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:45px 0}.card{display:flex;flex-direction:column;min-height:235px;padding:25px;border-radius:16px;border:1px solid #315065;background:linear-gradient(150deg,#142b3b,#0b1c2b)}.card small{color:#86e2cb;font-size:12px;letter-spacing:.12em;font-weight:800}.card p{font-size:14px;margin-bottom:auto}.card a{margin-top:18px;font-weight:800;text-decoration:none}.line{border-top:1px solid #2b4657;margin:35px 0;padding-top:25px}.muted{font-size:13px;color:#8eaebf}footer{font-size:12px;color:#8baabb;padding-top:25px;border-top:1px solid #294558}@media(max-width:800px){main{padding:45px 16px 70px}.grid{grid-template-columns:1fr}.card{min-height:175px}}
-
-/* V11 homepage launchpad */
-body{background:radial-gradient(ellipse 80% 50% at 70% -5%,rgba(41,107,139,.28),transparent 60%),radial-gradient(ellipse 50% 60% at 0% 35%,rgba(22,90,89,.11),transparent 70%),#07141f}
-header{position:sticky;top:0;z-index:25;background:rgba(7,19,31,.93);backdrop-filter:blur(17px);-webkit-backdrop-filter:blur(17px);border-color:rgba(137,181,212,.21)}
-main{max-width:1240px;padding-top:62px}.home-hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(305px,.7fr);align-items:center;gap:40px;padding:16px 0 60px}
-.hero-copy h1{font-size:clamp(49px,6.5vw,88px);margin:19px 0 24px;max-width:900px}.hero-copy h1 em{background:linear-gradient(110deg,#88ebca,#8dccfd);background-clip:text;-webkit-background-clip:text;color:transparent}
-.hero-copy .lead{font-size:18px;line-height:1.65;color:#c0d5e0;max-width:710px}
-.signal-dot,.terminal-orbit{display:inline-block;width:8px;height:8px;margin-right:8px;background:#86e9c8;border-radius:100%;box-shadow:0 0 0 5px rgba(134,233,200,.08)}
-.button{min-height:47px;gap:15px;transition:transform .17s,background .17s,border-color .17s}.button:hover{transform:translateY(-2px);border-color:#89dcca}.button.primary{background:linear-gradient(120deg,#92f0ce,#75c9e0)}
-.hero-disclosure{font-size:12px;color:#9fb9c9;max-width:510px}.hero-disclosure span{color:#91e7c9;margin-right:7px}
-.hero-terminal{border:1px solid rgba(134,193,215,.27);padding:22px;border-radius:22px;background:linear-gradient(155deg,rgba(22,53,71,.94),rgba(8,23,37,.98));box-shadow:0 30px 70px rgba(0,0,0,.22);min-width:0}
-.terminal-top{display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:10px;letter-spacing:.11em;font-weight:850;color:#bedbe9}
-.terminal-active{color:#8be8ca;background:rgba(55,127,102,.16);border:1px solid rgba(126,225,185,.24);border-radius:99px;padding:6px 8px;letter-spacing:.04em}
-.terminal-metric{margin:30px 0 15px}.terminal-metric small{display:block;color:#93b8c9;margin-bottom:5px}.terminal-metric strong{font-size:68px;letter-spacing:-.085em;line-height:1}.terminal-metric strong span{font-size:15px;letter-spacing:0;color:#9ab7c5;margin-left:12px;font-weight:600}
-.terminal-bars{height:80px;display:flex;align-items:end;gap:7px;border-bottom:1px solid #385c6d;padding:0 4px 0 0;margin-bottom:12px}
-.terminal-bars span{display:block;flex:1;height:var(--h);border-radius:5px 5px 0 0;background:linear-gradient(180deg,#91e5ce,#2d697f);opacity:.75}
-.terminal-data{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid rgba(157,205,228,.1);padding:12px 0;color:#9dbeca;font-size:12px}
-.terminal-data b{color:#effbff;font-size:14px}
-.terminal-link{margin-top:19px;display:flex;justify-content:space-between;color:#9cf1d8;text-decoration:none;font-size:12px;font-weight:850}
-.home-quick{display:grid;grid-template-columns:minmax(200px,.7fr) minmax(0,2fr);align-items:center;gap:30px;border-block:1px solid rgba(120,179,202,.22);padding:24px 0;margin-bottom:55px}
-.home-quick h2{font-size:24px}.quick-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-.quick-links a{min-height:92px;border:1px solid #315467;border-radius:13px;display:flex;gap:12px;align-items:center;padding:13px;text-decoration:none;background:#10283a;color:#eefaff}
-.quick-links a:hover{border-color:#75e2c7;background:#17384a}.quick-links a>span:nth-child(2){flex:1;min-width:0}.quick-links b,.quick-links small{display:block}.quick-links b{font-size:12px}.quick-links small{font-size:10px;margin-top:3px;color:#9cbbcb}
-.quick-symbol{width:32px;height:32px;display:grid;place-items:center;background:#1d4a53;border-radius:10px;color:#8aedd0;flex:none}
-.section-header{display:flex;justify-content:space-between;align-items:end;gap:30px}.section-header h2{font-size:clamp(26px,4vw,40px)}.section-header p{font-size:13px;max-width:420px}
-.home-products .grid{margin-top:24px;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
-.card{min-height:220px;transition:transform .17s,border-color .17s;border-radius:17px;background:linear-gradient(140deg,#112d40,#0a1e2e);padding:24px}
-.card:hover{transform:translateY(-3px);border-color:#6fbdaa}.card small{font-size:10px}.card h2{font-size:21px;margin:17px 0 8px}.card a{color:#96ebd2}.card-feature{background:linear-gradient(140deg,#184450,#10293b);border-color:#468778}
-.home-evidence{display:flex;align-items:center;justify-content:space-between;gap:30px;padding:30px;border:1px solid #315365;background:#0c2736;border-radius:18px;margin:30px 0 55px}
-.home-evidence h2{font-size:clamp(23px,3vw,33px)}.home-evidence p{font-size:13px;max-width:735px}.home-evidence .button{flex:none}
-footer{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
-@media(max-width:1060px){.home-hero{grid-template-columns:1fr}.hero-terminal{max-width:520px}.home-quick{grid-template-columns:1fr;gap:12px}.home-products .grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:700px){main{padding-top:28px}.home-hero{gap:23px;padding-bottom:32px}.hero-copy h1{font-size:clamp(43px,10vw,64px)}.hero-copy .lead{font-size:15px}.buttons{margin:24px 0;gap:9px}.button{padding:12px 15px;font-size:13px}.hero-terminal{padding:18px;border-radius:18px}.terminal-metric strong{font-size:59px}.terminal-bars{height:55px}
-.quick-links{grid-template-columns:1fr}.quick-links a{min-height:69px}.home-quick{margin-bottom:35px}.home-products .grid{grid-template-columns:1fr}.section-header{display:block}.section-header p{font-size:13px}.card{min-height:175px;padding:21px}.home-evidence{display:block;padding:23px}.home-evidence .button{margin-top:12px}footer{display:block}}
-@media(max-width:420px){.hero-copy h1{font-size:41px}.buttons .button{width:100%}.terminal-top{font-size:9px}}
-</style><link rel="stylesheet" href="./assets/site-shell.css"><script defer src="./assets/site-shell.js"></script><script defer src="./assets/home.js"></script><link rel="stylesheet" href="./assets/courtside.css"></head><body class="sports-theme sports-home">
-<header><a class="brand" href="./">TL<span>✦</span> NBA TWIN LAB</a><nav aria-label="Main navigation"><a href="./predict/">Game Predictor</a><a href="./team-intelligence/">Team Intelligence</a><a href="./challenge/">Five Model Challenge</a><a href="./challenge/daily.html">Daily Predictions</a><a href="./audit/">Accuracy Ledger</a><a href="./twins/">Player Twins</a></nav></header>
-<div class="court-ticker" aria-label="Latest locked NBA pregame forecasts">
-<span class="court-ticker__label">🏀 GAME DAY</span><div class="court-ticker__content" id="home-ticker" aria-label="Locked game predictions"><span class="court-ticker__item">Loading the latest verified slate…</span></div><a class="court-ticker__link" href="./challenge/daily.html">ALL GAMES ↗</a>
-</div>
-<main id="site-main">
-<section class="home-hero" aria-label="NBA Twin Lab introduction">
- <div class="hero-copy">
-  <div class="eyebrow"><span class="signal-dot" aria-hidden="true"></span> THE NBA, THROUGH THE NUMBERS</div>
-  <h1>GAME NIGHT.<br><em>MEETS GAME SCIENCE.</em></h1>
-  <p class="lead">Six forecasting approaches. One fair test. Real game data, timestamped predictions, and honest accuracy reports. See why a model favours a team—and whether it was right.</p>
-  <div class="buttons">
-   <a class="button primary" href="./challenge/daily.html">Explore today's predictions <span aria-hidden="true">↗</span></a>
-   <a class="button" href="./predict/">Open game predictor</a>
-  </div>
-  <p class="hero-disclosure"><span aria-hidden="true">●</span> Validated Elo is the production baseline; all challenger models remain experimental.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f3f5f3"><meta name="description" content="NBA Twin Lab — today's NBA predictions, team matchups, six-model power rankings, player projections and verified accuracy.">
+<title>NBA Twin Lab · Game Day</title>
+<link rel="stylesheet" href="./assets/site-shell.css"><link rel="stylesheet" href="./assets/v12.css">
+<script defer src="./assets/site-shell.js"></script><script defer src="./assets/home.js"></script></head>
+<body class="v12 home">
+<a class="site-skip" href="#site-main">Skip to content</a>
+<header class="app-header"><div class="header-inner">
+ <a href="./" class="brand" aria-label="NBA Twin Lab home"><span class="brand-icon">TL</span><span class="wordmark">TWIN <span>LAB</span><small>BASKETBALL INTELLIGENCE</small></span></a>
+ <nav aria-label="Main navigation"><a class="active" href="./" aria-current="page">Home</a><a href="./predict/">Game Predictor</a><a href="./team-intelligence/">Team Intelligence</a><a href="./challenge/daily.html">Daily Predictions</a><a href="./challenge/">Model Rankings</a><a href="./audit/">Accuracy Ledger</a><a href="./twins/">Player Twins</a></nav>
+ <a class="header-action" href="./challenge/daily.html">OPEN GAME DAY <span aria-hidden="true">↗</span></a>
+</div></header>
+<div class="ribbon"><div class="ribbon-inner"><span class="ribbon-label">THE SLATE</span><div class="ribbon-track" id="home-ticker" aria-label="Verified pregame prediction ticker">Loading latest locked games…</div><a class="ribbon-link" href="./challenge/daily.html">VIEW ALL ↗</a></div></div>
+<main id="site-main" class="main-body">
+ <div class="hero-grid">
+  <section class="lead-story" aria-label="NBA Twin Lab game day">
+   <div class="eyebrow"><span class="signal-dot"></span> THE SCIENCE BEHIND THE GAME</div>
+   <div><h1>MORE THAN<br>A <em>BOX SCORE.</em></h1>
+    <p>Six competing prediction models. Every matchup tracked. Every forecast locked before tipoff. Real basketball analysis that proves itself against the final buzzer.</p>
+   </div>
+   <div><div class="lead-actions"><a class="btn lime" href="./challenge/daily.html">TODAY'S PREDICTIONS <span aria-hidden="true">↗</span></a><a class="btn dark" href="./predict/">MATCHUP LAB</a></div><p class="hero-stamp">NO HINDSIGHT PICKS. NO FAKE CERTAINTY.</p></div>
+  </section>
+  <section class="featured-box" aria-label="Featured locked NBA forecast">
+   <div class="feature-head"><span>GAME DAY / FEATURED MATCHUP</span><b id="feature-tip">Loading pregame slate…</b></div>
+   <div class="feature-score"><div id="featured-game" class="sports-feature__match"><p>Loading a verified, locked game forecast…</p></div></div>
+   <div class="feature-bottom" id="feature-detail">Production Elo model · pretip forecast, not a live score</div>
+  </section>
  </div>
- <aside class="hero-terminal" aria-label="NBA Twin Lab model coverage">
-  <div class="terminal-top"><div><span class="terminal-orbit" aria-hidden="true"></span> MODEL OPERATIONS</div><span class="terminal-active">RESEARCH MODE</span></div>
-  <div class="terminal-metric"><small>Models under evaluation</small><strong>06<span>models</span></strong></div>
-  <div class="terminal-bars" aria-hidden="true"><span style="--h:44%"></span><span style="--h:62%"></span><span style="--h:83%"></span><span style="--h:54%"></span><span style="--h:95%"></span><span style="--h:71%"></span><span style="--h:100%"></span><span style="--h:78%"></span><span style="--h:60%"></span><span style="--h:85%"></span><span style="--h:70%"></span><span style="--h:90%"></span></div>
-  <div class="terminal-data"><span>Historical common-game audit</span><b id="home-backtest">—</b></div>
-  <div class="terminal-data"><span>Locked daily slates</span><b id="home-locked">—</b></div>
-  <div class="terminal-data"><span>Latest Melbourne-date slate</span><b id="home-date">—</b></div>
-  <a href="./challenge/" class="terminal-link">See the six-model leaderboard <span aria-hidden="true">↗</span></a>
- </aside>
-</section>
-<section class="sports-feature" aria-label="Featured NBA pregame forecast">
-  <div class="sports-feature__top"><b>◉ COURTSIDE / FEATURED LOCKED PREDICTION</b><small id="feature-tip">Verified snapshot</small></div>
-  <div id="featured-game" class="sports-feature__match"><p>Loading the latest saved pregame matchup…</p></div>
-  <div class="sports-feature__bottom"><span id="feature-detail">Production Elo forecast · no live results implied</span><strong>ALL PICKS RECORDED BEFORE TIPOFF</strong></div>
-</section>
-
-<section class="home-quick" aria-label="Frequently used tools">
- <div class="quick-copy"><div class="eyebrow">YOUR SHORTCUTS</div><h2>Pick up where the action is.</h2></div>
- <div class="quick-links">
-  <a href="./challenge/daily.html"><span class="quick-symbol" aria-hidden="true">◉</span><span><b>Daily slate</b><small>Game & player projections</small></span><span aria-hidden="true">↗</span></a>
-  <a href="./audit/"><span class="quick-symbol" aria-hidden="true">✓</span><span><b>Accuracy ledger</b><small>Locked picks vs finals</small></span><span aria-hidden="true">↗</span></a>
-  <a href="./challenge/"><span class="quick-symbol" aria-hidden="true">≋</span><span><b>Model challenge</b><small>Compare all six techniques</small></span><span aria-hidden="true">↗</span></a>
+ <div class="metric-strip" aria-label="NBA Twin Lab model coverage">
+  <div><small>MODEL CONTENDERS</small><strong>06</strong><span>Five techniques + ensemble</span></div>
+  <div><small>HISTORICAL TEST</small><strong id="home-backtest">—</strong><span>Common-game rolling evaluation</span></div>
+  <div><small>LOCKED SLATES</small><strong id="home-locked">—</strong><span>Latest: <span id="home-date">not yet loaded</span></span></div>
  </div>
-</section>
-
-<section class="home-products" aria-labelledby="tools-heading">
- <div class="section-header"><div><div class="eyebrow">EXPLORE THE LAB</div><h2 id="tools-heading">Built to be tested.</h2></div><p>From matchup predictions to player trends, every tool separates observed facts from model estimates.</p></div>
- <div class="grid">
-  <article class="card card-feature"><small>01 / FORECAST</small><h2>Game predictor</h2><p>Pregame win probabilities, projected scores and seeded possession simulations. Trace the Elo baseline and optional research comparisons.</p><a href="./predict/">Explore matchups <span aria-hidden="true">↗</span></a></article>
-  <article class="card"><small>02 / DAILY EXPERIMENT</small><h2>Daily challenge</h2><p>Six pregame prediction methods on the same games, plus conditional player points, rebounds, assists and threes.</p><a href="./challenge/daily.html">Review today's slate <span aria-hidden="true">↗</span></a></article>
-  <article class="card"><small>03 / MODEL EVIDENCE</small><h2>Five Model Challenge</h2><p>Common-game historical accuracy, Brier scores, calibration and an ensemble trained on earlier seasons.</p><a href="./challenge/">Explore the leaderboard <span aria-hidden="true">↗</span></a></article>
-  <article class="card"><small>04 / MATCHUP SCIENCE</small><h2>Team Intelligence</h2><p>Opponent-adjusted strength, efficiency trends, pace, turnover patterns, Four Factors and playing styles.</p><a href="./team-intelligence/">Analyse team tendencies <span aria-hidden="true">↗</span></a></article>
-  <article class="card"><small>05 / ACCOUNTABILITY</small><h2>Accuracy Ledger</h2><p>Original locked forecasts, verified final scores, player stat errors and transparent audit metadata.</p><a href="./audit/">Open the audit ledger <span aria-hidden="true">↗</span></a></article>
-  <article class="card"><small>06 / DISCOVERY</small><h2>Player Twins</h2><p>Find statistical player comparisons across seasons, adjusted to account for different eras of basketball.</p><a href="./twins/">Find player twins <span aria-hidden="true">↗</span></a></article>
- </div>
-</section>
-<section class="home-evidence"><div><div class="eyebrow">EVIDENCE, NOT HYPE</div><h2>Every prediction earns its confidence.</h2><p>We test on chronologically separated data, preserve the original pregame values, and measure probability quality—not just which team was picked. Missing player availability stays marked unknown. No promises of guaranteed results.</p></div><a class="button" href="./models/">Read the model research <span aria-hidden="true">↗</span></a></section>
-<footer><span>NBA Twin Lab · Independent basketball research</span><span>Not affiliated with the NBA. Not betting advice. <a href="https://github.com/walkerxavier496-prog/nba-twin-lab">Source code</a></span></footer>
+ <section aria-labelledby="slate-heading"><div class="section-top"><div><div class="eyebrow">PRE-GAME DESK / VERIFIED PICKS</div><h2 id="slate-heading">THE LATEST SLATE.</h2></div><a class="btn" href="./challenge/daily.html">ALL GAMES & PLAYER STATS ↗</a></div>
+ <div id="home-games" class="live-games" aria-live="polite"><p>Reading the last locked game slate…</p></div>
+ <p class="small-note">These are timestamped model predictions, not live results. All times shown in Melbourne time.</p></section>
+ <section aria-labelledby="explore-heading"><div class="section-top"><div><div class="eyebrow">INSIDE THE LAB</div><h2 id="explore-heading">GO DEEPER.</h2></div><p>Make a matchup your own research project. Find what predicts outcomes, where our models disagree, and what they got wrong.</p></div>
+ <div class="action-grid">
+  <a class="action-tile" href="./predict/"><span class="kicker">01 / MATCHUP INTELLIGENCE</span><h3>GAME PREDICTOR</h3><p>Team strength, matchup context, probabilities and score projections from the validated production model.</p><b>EXPLORE GAMES ↗</b></a>
+  <a class="action-tile" href="./challenge/"><span class="kicker">02 / SIX-MODEL EXPERIMENT</span><h3>MODEL RANKINGS</h3><p>Elo, basketball science, player impact, Monte Carlo, ML and their separately evaluated ensemble.</p><b>SEE THE LEADERBOARD ↗</b></a>
+  <a class="action-tile" href="./audit/"><span class="kicker">03 / FINAL BUZZER</span><h3>ACCURACY TRACKER</h3><p>Immutable forecasts matched against final results. Winner accuracy, probability quality and player-stat error.</p><b>CHECK THE RECEIPTS ↗</b></a>
+  <a class="action-tile" href="./team-intelligence/"><span class="kicker">04 / PLAYING STYLES</span><h3>TEAM INTELLIGENCE</h3><p>Explore Four Factors, pace, recent performance and the matchup tendencies behind the numbers.</p><b>ANALYSE THE MATCHUP ↗</b></a>
+  <a class="action-tile" href="./player-stats/"><span class="kicker">05 / THE PLAYER LAB</span><h3>PLAYER PROJECTIONS</h3><p>Research-level points, rebounds, assists and three-point forecasts. Availability remains explicitly uncertain.</p><b>EXPLORE PLAYER STATS ↗</b></a>
+  <a class="action-tile" href="./twins/"><span class="kicker">06 / LEAGUE HISTORY</span><h3>PLAYER TWINS</h3><p>Explore statistical similarity and the evolution of basketball players across historical seasons.</p><b>FIND A PLAYER TWIN ↗</b></a>
+ </div></section>
+ <footer class="site-footer"><span>© NBA TWIN LAB · INDEPENDENT BASKETBALL RESEARCH</span><span>Not affiliated with the NBA. No guaranteed outcomes. <a href="https://github.com/walkerxavier496-prog/nba-twin-lab">SOURCE CODE ↗</a></span></footer>
 </main></body></html>
