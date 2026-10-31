@@ -46,8 +46,8 @@ jobs:
         run: node --test --test-name-pattern='integrity detects' tests/daily_audit.test.cjs
       - name: Test results and DNP scoring
         run: node --test --test-name-pattern='ESPN result|review metrics' tests/daily_audit.test.cjs
-      - name: Test locked forecast reproduction
-        run: node --test --test-name-pattern='daily builder reproduces' tests/daily_audit.test.cjs
+      - name: Test immutable pretip forecast and post-tip rejection
+        run: node --test --test-name-pattern='historical pretip forecast' tests/daily_audit.test.cjs
       - name: Test challenge site routes
         run: node --test tests/site_navigation.test.cjs
       - name: Rebuild common-game challenge
