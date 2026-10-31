@@ -15,7 +15,7 @@ test('homepage ticker renders real team-mark components, scores and accessible m
   './data/audit-ledger.json':ledger,
   './data/five-model-report.json':{common_evaluation:{games:3643}},
   ['./'+entry.lock_path]:lock,
-  './audit/supplements/'+date+'/challenge.lock.json':sidecar
+  ['./audit/supplements/'+date+'/challenge.lock.json']:sidecar
  };
  const elements=new Map();
  const get=id=>{
