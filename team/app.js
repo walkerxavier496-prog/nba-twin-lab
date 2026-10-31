@@ -132,6 +132,8 @@ function showPlayer(id){
  const stats=selected.stats_if_play||{},panel=$('team-player-profile');
  const src=photo(selected.player_id);
  panel.hidden=false;
+ if(location.hash==='#team-player-profile'&&typeof requestAnimationFrame==='function')
+  requestAnimationFrame(()=>panel.scrollIntoView?.({block:'start'}));
  panel.innerHTML='<a class="team-profile-close" href="?team='+encodeURIComponent(abbr)+'#roster">CLOSE ✕</a>'+
   '<div class="player-detail-top">'+(src?'<img src="'+esc(src)+'" alt="Portrait of '+esc(selected.name)+'">':'')+
   '<div><div class="team-kicker">PLAYER BREAKDOWN · ESTIMATED</div><h3>'+esc(selected.name)+'</h3>'+
