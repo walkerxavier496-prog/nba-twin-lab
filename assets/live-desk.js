@@ -74,7 +74,7 @@ async function fetchSummary(id,{fetchImpl=fetch}={}){
 }
 const mounted=!!$('live-game-list');
 let feed=null,selected=null,gameFilter='all',sortStat='pts',summaryCache=new Map(),lastLoaded=null,request=0,batchRequest=0,alerts=false,permission='default',sortDescending=true;
-let performanceGame='all',performanceTeam='all',performanceType='all',history=null;
+let performanceGame='all',performanceTeam='all',performanceType='all',performanceDirection='desc',performanceShowAll=false,history=null;
 const seen=new Map(),messages=[];
 function setMessage(str){const n=$('live-desk-status');if(n)n.textContent=str}
 function selectedGame(){return feed?.games?.find(g=>String(g.id)===String(selected))||null}
@@ -128,7 +128,7 @@ function sortable(rows){
 function fmt(v,suffix=''){return typeof v==='number'&&Number.isFinite(v)?String(v)+suffix:'—'}
 const profileHref=p=>(String(window.location?.pathname||'').includes('/challenge/')?'../':'./')+'player/?id='+
  encodeURIComponent(String(p.id||''))+'&name='+encodeURIComponent(p.name)+'&team='+encodeURIComponent(p.team);
-const performanceValue=(p,key)=>key==='stocks'?(numeric(p.stl)||0)+(numeric(p.blk)||0):numeric(p[key]);
+const performanceValue=(p,key)=>{if(key!=='stocks')return numeric(p[key]);const steals=numeric(p.stl),blocks=numeric(p.blk);return steals===null||blocks===null?null:steals+blocks;};
 function performanceList(rows,key,count=5){return rows.filter(p=>performanceValue(p,key)!==null).slice().sort((a,b)=>(performanceValue(b,key)??-1)-(performanceValue(a,key)??-1)).slice(0,count)}
 function performanceCard(p,key,rank){
  const image=p.id&&/^\d+$/.test(p.id)?'<img src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(p.id)+'.png" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'';
@@ -145,22 +145,64 @@ function historyPanel(rows){
 }
 function renderPerformanceCentre(rows){
  const target=$('desk-top-performers');if(!target)return;
- if(!rows.length){target.innerHTML='<p>No verified player performances are available for these filters yet. Live and incomplete boxes remain pending; no statistics are invented.</p>';return}
+ if(!rows.length){
+  target.innerHTML='<div class="performance-leaderboard performance-empty" role="status"><b>NO VERIFIED PLAYER BOX SCORES YET</b><p>Stats appear after ESPN publishes an actual game box score. Missing or incomplete values will not be estimated.</p></div>';
+  return;
+ }
+ const categories=[
+  ['fpts','Fantasy points'],['pts','Points'],['reb','Rebounds'],['ast','Assists'],
+  ['three','3-pointers'],['stl','Steals'],['blk','Blocks'],['stocks','Steals + blocks']
+ ];
+ const selectedKey=performanceType==='all'?'fpts':performanceType;
+ const activeKey=categories.some(([key])=>key===selectedKey)?
+  (performanceType==='all'&&!performanceList(rows,'fpts',1).length?'pts':selectedKey):'pts';
+ const categoryName=categories.find(([key])=>key===activeKey)?.[1]||'Points';
+ const verified=rows.filter(p=>performanceValue(p,activeKey)!==null).sort((a,b)=>{
+  const av=performanceValue(a,activeKey),bv=performanceValue(b,activeKey);
+  return (performanceDirection==='asc'?1:-1)*(av-bv)||a.name.localeCompare(b.name);
+ });
+ const visible=performanceShowAll?verified:verified.slice(0,10);
  const featured=performanceList(rows,'fpts',1)[0]||performanceList(rows,'pts',1)[0];
+ if(!featured){target.textContent='Waiting for complete player box scores.';return}
  const featuredTag=window.TwinBoxscorePlus?.performanceTag?.(featured)||'GAME STANDOUT';
- const categories={pts:'TOP SCORERS',fpts:'FANTASY KINGS',reb:'GLASS CLEANERS',ast:'PLAYMAKERS',three:'SNIPERS',stocks:'DEFENSIVE MONSTERS'};
- const selected=performanceType==='all'?Object.keys(categories):[performanceType];
- const milestones=rows.filter(p=>p.tripleDouble||p.doubleDouble||p.pts>=40||p.reb>=20||p.ast>=15||p.three>=7||(performanceValue(p,'stocks')||0)>=5).slice().sort((a,b)=>(b.fpts??b.pts??0)-(a.fpts??a.pts??0));
- const portrait=featured.id&&/^\d+$/.test(featured.id)?'<img src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(featured.id)+'.png" alt="" onerror="this.style.display=\'none\'">':'';
- target.innerHTML='<div class="performance-board-title"><span><b>PLAYER PERFORMANCE CENTRE</b><small>Actual ESPN box scores · refreshes as each game updates</small></span><span>FPTS: ESPN DEFAULT</span></div>'+
- '<a class="performance-night" href="'+esc(profileHref(featured))+'"><span class="performance-night-copy"><small>PERFORMANCE OF THE NIGHT</small><strong>'+esc(featured.name)+'</strong><span>'+esc(featured.team)+' · '+esc(featured.matchup)+'</span><em>'+esc(featuredTag)+'</em></span>'+portrait+
+ const milestones=rows.filter(p=>p.tripleDouble||p.doubleDouble||p.pts>=40||p.reb>=20||p.ast>=15||p.three>=7||(performanceValue(p,'stocks')??0)>=5)
+  .slice().sort((a,b)=>(b.fpts??b.pts??0)-(a.fpts??a.pts??0));
+ const portrait=featured.id&&/^\d+$/.test(featured.id)?
+  '<img src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(featured.id)+'.png" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'';
+ const headline=filteredGames().some(g=>g.phase==='live')?'LIVE GAME-DAY STANDOUT':'PERFORMANCE OF THE NIGHT';
+ const headers=[['pts','PTS'],['reb','REB'],['ast','AST'],['three','3PM'],['stl','STL'],['blk','BLK'],['stocks','STL+BLK'],['fpts','FPTS']];
+ const th=([key,label])=>'<th scope="col"'+(activeKey===key?' aria-sort="'+(performanceDirection==='asc'?'ascending':'descending')+'"':'')+'>'+
+  '<button type="button" class="performance-column-sort'+(activeKey===key?' is-active':'')+'" data-performance-sort="'+key+'" aria-label="Sort performers by '+esc(categories.find(c=>c[0]===key)?.[1]||label)+'">'+label+(activeKey===key?(performanceDirection==='asc'?' ↑':' ↓'):'')+'</button></th>';
+ const row=p=>{
+  const photo=p.id&&/^\d+$/.test(p.id)?'<img src="https://a.espncdn.com/i/headshots/nba/players/full/'+encodeURIComponent(p.id)+'.png" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'';
+  return '<tr><td class="performance-rank-number">'+(verified.indexOf(p)+1)+'</td>'+
+   '<td><a class="performance-leader-player" href="'+esc(profileHref(p))+'">'+photo+
+   '<span><strong>'+esc(p.name)+'</strong><small>'+esc(p.team)+' · '+esc(p.matchup)+'</small></span></a></td>'+
+   headers.map(([key])=>'<td class="'+(key===activeKey?'performance-stat-active':'')+'">'+fmt(performanceValue(p,key))+'</td>').join('')+'</tr>';
+ };
+ target.innerHTML='<div class="performance-board-title"><span><b>PLAYER PERFORMANCE HUB</b><small>Verified ESPN game boxes · selected Melbourne slate · single-game statistics</small></span><span>ACTUALS, NOT PROJECTIONS</span></div>'+
+ '<a class="performance-night" href="'+esc(profileHref(featured))+'"><span class="performance-night-copy"><small>'+headline+'</small><strong>'+esc(featured.name)+'</strong><span>'+esc(featured.team)+' · '+esc(featured.matchup)+'</span><em>'+esc(featuredTag)+'</em></span>'+portrait+
  '<span class="performance-night-stats">'+[['PTS',featured.pts],['REB',featured.reb],['AST',featured.ast],['3PM',featured.three],['FPTS',featured.fpts]].map(([label,value])=>'<b><small>'+label+'</small>'+fmt(value)+'</b>').join('')+'</span></a>'+
- '<div class="performance-category-grid">'+selected.map(key=>'<section><div class="performance-board-title"><b>'+categories[key]+'</b><small>Top '+Math.min(5,performanceList(rows,key).length)+'</small></div>'+performanceList(rows,key).map((p,i)=>performanceCard(p,key,i+1)).join('')+'</section>').join('')+'</div>'+
- '<div class="performance-milestones"><div class="performance-board-title"><b>MILESTONES & ACHIEVEMENTS</b><small>Thresholds from this game only</small></div>'+(milestones.length?milestones.slice(0,8).map(p=>'<a href="'+esc(profileHref(p))+'"><strong>'+esc(p.name)+'</strong><span>'+esc(window.TwinBoxscorePlus?.performanceTag?.(p)||((performanceValue(p,'stocks')||0)+' STOCKS'))+'</span></a>').join(''):'<p>No verified threshold achievement in the loaded boxes.</p>')+'</div>'+historyPanel(rows);
+ '<section class="performance-leaderboard" aria-label="Sortable game day player leaderboard">'+
+ '<div class="performance-leaderboard-head"><div><small>GAME-DAY LEADERS</small><h3>'+esc(categoryName)+'</h3></div><span>'+verified.length+' verified players</span></div>'+
+ '<div class="performance-tabs" role="group" aria-label="Rank players by statistic">'+
+ categories.map(([key,label])=>'<button type="button" data-performance-sort="'+key+'" aria-pressed="'+String(activeKey===key)+'" class="performance-tab'+(activeKey===key?' is-active':'')+'">'+esc(label)+'</button>').join('')+'</div>'+
+ '<div class="performance-table-scroll"><table class="performance-table"><thead><tr><th scope="col">#</th><th scope="col">PLAYER / GAME</th>'+
+ headers.map(th).join('')+'</tr></thead><tbody>'+
+ (visible.length?visible.map(row).join(''):'<tr><td colspan="10" class="performance-no-value">No complete verified '+esc(categoryName.toLowerCase())+' data for this slate.</td></tr>')+
+ '</tbody></table></div>'+
+ (verified.length>10?'<button type="button" id="performance-show-all" class="performance-more" aria-expanded="'+String(performanceShowAll)+'">'+
+ (performanceShowAll?'SHOW TOP 10':'VIEW ALL '+verified.length+' PLAYERS')+'</button>':'')+
+ '<div class="performance-definitions"><span><b>STL+BLK</b> (stocks) means steals + blocks. Both must be available to show a total.</span>'+
+ '<details><summary>How are fantasy points calculated?</summary><p>ESPN default points-league formula used here: PTS + 3PM + 2×FGM − FGA + FTM − FTA + REB + 2×AST + 4×STL + 4×BLK − 2×TOV. This is a site-calculated score, not your custom league settings. If any required statistic is missing, FPTS is unavailable.</p></details></div>'+
+ '</section>'+
+ '<div class="performance-milestones"><div class="performance-board-title"><b>MILESTONES & ACHIEVEMENTS</b><small>Verified single-game thresholds · not season streaks</small></div>'+
+ (milestones.length?milestones.slice(0,8).map(p=>'<a href="'+esc(profileHref(p))+'"><strong>'+esc(p.name)+'</strong><span>'+esc(window.TwinBoxscorePlus?.performanceTag?.(p)||('STL '+fmt(p.stl)+' · BLK '+fmt(p.blk)))+'</span></a>').join(''):
+ '<p>No verified threshold achievement in the loaded boxes.</p>')+'</div>'+historyPanel(rows);
 }
 function renderSummary(){
  const active=filteredGames().filter(g=>g.phase!=='scheduled');
- const allRows=active.flatMap(g=>(summaryCache.get(String(g.id))?.players||[]).map(p=>({...p,stocks:(numeric(p.stl)||0)+(numeric(p.blk)||0),gameId:g.id,matchup:g.away.abbr+' @ '+g.home.abbr})));
+ const allRows=active.flatMap(g=>(summaryCache.get(String(g.id))?.players||[]).map(p=>({...p,stocks:performanceValue(p,'stocks'),gameId:g.id,matchup:g.away.abbr+' @ '+g.home.abbr})));
  const rows=sortable(allRows.filter(p=>(performanceGame==='all'||String(p.gameId)===performanceGame)&&(performanceTeam==='all'||p.team===performanceTeam)));
  const title=$('desk-matchup'),content=$('live-stats-rows');
  if(title)title.textContent=gameFilter==='all'?'GAME DAY · STANDOUTS':gameFilter==='live'?'LIVE GAMES · PLAYER LEADERS':gameFilter==='final'?'FINAL GAMES · PLAYER LEADERS':gameFilter==='mine'?'FOLLOWED TEAMS · GAME LEADERS':'PLAYER STATS';
@@ -303,7 +345,12 @@ function init(){
  if($('live-sort'))$('live-sort').addEventListener('change',e=>{sortStat=e.target.value;sortDescending=true;renderSummary()});
  if($('performance-game'))$('performance-game').addEventListener('change',e=>{performanceGame=e.target.value;renderSummary()});
  if($('performance-team'))$('performance-team').addEventListener('change',e=>{performanceTeam=e.target.value;renderSummary()});
- if($('performance-type'))$('performance-type').addEventListener('change',e=>{performanceType=e.target.value;renderSummary()});
+ if($('performance-type'))$('performance-type').addEventListener('change',e=>{performanceType=e.target.value;performanceDirection='desc';performanceShowAll=false;renderSummary()});
+ if($('desk-top-performers'))$('desk-top-performers').addEventListener('click',e=>{
+  const stat=e.target.closest?.('[data-performance-sort]');
+  if(stat){const next=stat.dataset.performanceSort;performanceDirection=performanceType===next?(performanceDirection==='desc'?'asc':'desc'):'desc';performanceType=next;performanceShowAll=false;if($('performance-type'))$('performance-type').value=next;renderSummary();return}
+  if(e.target.closest?.('#performance-show-all')){performanceShowAll=!performanceShowAll;renderSummary()}
+ });
  for(const b of document.querySelectorAll('[data-stat-sort]'))b.addEventListener('click',()=>{const key=b.dataset.statSort;sortDescending=sortStat===key?!sortDescending:true;sortStat=key;if($('live-sort'))$('live-sort').value=key;renderSummary()});
  const alertsButton=$('live-alerts-toggle');
  if(alertsButton)alertsButton.addEventListener('click',async()=>{

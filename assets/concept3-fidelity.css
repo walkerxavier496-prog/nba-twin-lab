@@ -287,3 +287,26 @@ body.v12 .c3-compare-grid .c3-panel{min-width:0}
  body.v12 .c3-postgame-evidence .c3-stats-real{grid-template-columns:1fr}
  body.v12 .c3-postgame-detail{padding:12px}
 }
+
+
+/* V22 navigation polish: clean typographic identity, four primary destinations. */
+body.v12 .app-header{height:auto;min-height:66px}
+body.v12 .app-header .header-inner{min-height:66px!important;gap:clamp(14px,2vw,30px)}
+body.v12 .brand-icon{
+  width:34px;height:34px;border-radius:9px!important;border:1px solid #2a7ea8!important;
+  background:linear-gradient(155deg,#123752,#091a2d)!important;
+  color:#a5edff!important;font:900 12px/1 Inter,system-ui,sans-serif!important;
+  letter-spacing:-.08em;box-shadow:inset 0 1px #ffffff16!important
+}
+body.v12 .brand-icon:before{content:none!important;display:none!important}
+body.v12 .app-header nav[aria-label="Main navigation"]{justify-content:flex-end;gap:5px}
+body.v12 .app-header nav .nav-main-link,body.v12 .app-header nav .nav-group>summary{
+  font-size:11px;padding:11px clamp(10px,1.1vw,17px);letter-spacing:.055em
+}
+body.v12 .app-header .header-action{font-size:10px;letter-spacing:.055em;box-shadow:none!important}
+body.v12 .app-header nav .nav-dropdown{left:auto;right:0;min-width:235px}
+body.v12 .app-header nav .nav-dropdown a{white-space:normal;line-height:1.3}
+@media(max-width:900px){
+ body.v12 .app-header .header-inner{min-height:60px!important}
+ body.v12 .app-header .header-action{display:none!important}
+}

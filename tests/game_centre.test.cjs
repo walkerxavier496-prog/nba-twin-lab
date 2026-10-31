@@ -12,7 +12,7 @@ test('grouped header, live game links and four game centre tabs exist',()=>{
   assert.match(html,/assets\/nav-v15\.css/);
  }
  const nav=read('assets/site-nav.js');
- for(const name of ["link('LIVE'","link('PREDICT'","link('PLAYERS'","link('TEAMS'"])assert.ok(nav.includes(name));
+ for(const name of ["link('LIVE'","link('THE MACHINE'","link('PLAYERS'","link('LEAGUE'"])assert.ok(nav.includes(name));
  assert.match(read('assets/live-desk.js'),/OPEN GAME CENTRE/);
  assert.match(read('assets/home.js'),/\.\/game\/\?id=/);
  const html=read('game/index.html');

@@ -40,8 +40,8 @@ test('Both teams load from a VERIFIED pretip snapshot despite WSH/WAS alias diff
  assert.match(html,/102\.2/,'Charlotte offensive rating');
  assert.match(html,/112\.9/,'Washington offensive rating');
  assert.match(html,/OPP 3PT ATTEMPT RATE %/);
- assert.match(html,/Three-point volume matchup/);
- assert.match(html,/Ball security and pressure/);
+ assert.match(html,/Three-point shot-profile mismatch/);
+ assert.match(html,/Turnover pressure vs opposing ball security/);
  assert.match(html,/OFF\. REBOUND RATE %/);
  assert.match(html,/After the Buzzer/);
  assert.match(html,/12-56/,'Charlotte actual 3PT shots');
