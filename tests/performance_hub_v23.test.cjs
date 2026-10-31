@@ -8,7 +8,7 @@ const read=name=>fs.readFileSync(path.join(__dirname,'..',name),'utf8');
 
 test('five-destination desktop and mobile navigation preserves contextual research routes',()=>{
  const desktop=read('assets/site-nav.js'),mobile=read('assets/site-shell.js');
- for(const route of ['GAMES','#live-games','PREDICTIONS','predict/','PLAYERS','player-stats/','LEAGUE','league/','MODEL LAB','challenge/'])
+ for(const route of ['HOME','PREDICT','predict/','DAILY','PLAYERS','player-stats/','TEAMS','league/','STATS','#live-player-stats','AUDIT','audit/','MODELS','challenge/','#live-games'])
   assert.ok(desktop.includes(route),route+' missing');
  for(const route of ['challenge/daily.html','audit/','challenge/','team-intelligence/','twins/'])
   assert.ok(read('index.html').includes(route),route+' missing from contextual navigation');

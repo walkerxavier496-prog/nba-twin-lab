@@ -43,7 +43,7 @@ test('grouped header, live game links and four focused game centre tabs exist',(
   assert.match(html,/assets\/nav-v15\.css/);
  }
  const nav=read('assets/site-nav.js');
- for(const name of ["link('GAMES'","link('PREDICTIONS'","link('PLAYERS'","link('LEAGUE'","link('MODEL LAB'"])assert.ok(nav.includes(name));
+ for(const name of ["link('HOME'","link('PREDICT'","link('DAILY'","link('PLAYERS'","link('TEAMS'","link('STATS'","link('AUDIT'","link('MODELS'"])assert.ok(nav.includes(name));
  assert.match(read('assets/live-desk.js'),/OPEN GAME CENTRE/);
  assert.match(read('assets/home.js'),/\.\/game\/\?id=/);
  const html=read('game/index.html');

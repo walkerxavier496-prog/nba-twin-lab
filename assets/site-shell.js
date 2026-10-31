@@ -22,7 +22,7 @@
     const isRoot=current===canonical(root.pathname);
     const active=label==='Games'?(isRoot||current.includes('/game/')):
       label==='Predictions'?/\/predict\//.test(current)||/\/challenge\/daily\.html$/.test(current):
-      label==='Model Lab'?/\/(challenge|models|audit)\//.test(current):
+      label==='Model Lab'?/\/(challenge|models|audit)\//.test(current)&&!/\/challenge\/daily\.html$/.test(current):
       label==='Players'?/\/(player-stats|player)\//.test(current):
       /\/(league|team|team-intelligence)\//.test(current);
     if(active)a.setAttribute('aria-current','page');

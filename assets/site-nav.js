@@ -14,12 +14,14 @@ function init(){
  const current=location.pathname.replace(/index\.html$/,'');
  const rootPath=base.pathname;
  const onHome=current===rootPath;
- const isScores=onHome&&['#live-games','#live-player-stats'].includes(location.hash);
+ const isScores=onHome&&location.hash==='#live-player-stats';
  const isGame=/\/game\/$/.test(current);
  const isStats=/\/(player-stats|player)\/$/.test(current);
- const isLeague=/\/(league|team|team-intelligence)\/$/.test(current);
- const isPredictions=/\/predict\/$/.test(current)||/\/challenge\/daily\.html$/.test(current);
- const isModelLab=/\/(models|challenge|audit)\/$/.test(current);
+ const isTeams=/\/(league|team|team-intelligence)\/$/.test(current);
+ const isPredict=/\/predict\/$/.test(current);
+ const isDaily=/\/challenge\/daily\.html$/.test(current);
+ const isAudit=/\/audit\/$/.test(current);
+ const isModels=/\/(models|challenge)\/$/.test(current);
  const shortcut=document.querySelector('.app-header .header-action');
  if(shortcut){
   shortcut.href=href('watchlist/');
@@ -29,11 +31,23 @@ function init(){
  const link=(label,url,active)=>'<a class="nav-main-link'+(active?' active':'')+
   '" href="'+href(url)+'"'+(active?' aria-current="page"':'')+'>'+label+'</a>';
  nav.innerHTML=
-  link('GAMES','#live-games',onHome||isGame)+
-  link('PREDICTIONS','predict/',isPredictions)+
-  link('LEAGUE','league/',isLeague)+
+  link('HOME','',onHome&&!isScores)+
+  link('PREDICT','predict/',isPredict)+
+  link('DAILY','challenge/daily.html',isDaily)+
   link('PLAYERS','player-stats/',isStats)+
-  link('MODEL LAB','challenge/',isModelLab);
+  link('TEAMS','league/',isTeams)+
+  link('STATS','#live-player-stats',isScores||isGame)+
+  link('AUDIT','audit/',isAudit)+
+  link('MODELS','challenge/',isModels)+
+  '<details class="nav-group nav-explore"><summary aria-label="More NBA tools">MORE <span aria-hidden="true">⌄</span></summary>'+
+  '<div class="nav-dropdown" role="group" aria-label="More NBA Twin Lab tools">'+
+  '<a href="'+href('#live-games')+'">Games Command Centre</a>'+
+  '<a href="'+href('watchlist/')+'">★ My Watchlist</a>'+
+  '<a href="'+href('team/')+'">Team Centre</a>'+
+  '<a href="'+href('team-intelligence/')+'">Team Comparison</a>'+
+  '<a href="'+href('league/#cup')+'">NBA Cup</a>'+
+  '<a href="'+href('twins/')+'">Player Twins</a>'+
+  '</div></details>';
  for(const menu of nav.querySelectorAll('details')){
   menu.addEventListener('toggle',()=>{
    if(menu.open)for(const other of nav.querySelectorAll('details'))if(other!==menu)other.open=false;
@@ -46,14 +60,16 @@ function init(){
  nav.addEventListener('keydown',e=>{
   if(e.key==='Escape'){for(const menu of nav.querySelectorAll('details'))menu.open=false;nav.querySelector('summary')?.focus()}
  });
- // LIVE is the landing destination; hash changes must not introduce duplicate active links.
+ // Hash links stay on the home page; only HOME and STATS swap active state.
  window.addEventListener('hashchange',()=>{
   if(location.pathname.replace(/index\.html$/,'')!==rootPath)return;
-  nav.querySelectorAll('.nav-main-link').forEach(a=>{
-   const active=a.textContent==='GAMES';
+  const stats=location.hash==='#live-player-stats';
+  for(const a of nav.querySelectorAll('.nav-main-link')){
+   if(!['HOME','STATS'].includes(a.textContent))continue;
+   const active=a.textContent==='STATS'?stats:!stats;
    a.classList.toggle('active',active);
    if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
-  });
+  }
  });
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();

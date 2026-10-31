@@ -21,13 +21,13 @@ test('V19 approved Concept 3 stylesheet loads AFTER each existing dark styleshee
  const design=read('docs/approved-design-concept-3.md');
  assert.match(design,/APPROVED WEBSITE DESIGN: CONCEPT 3/);
 });
-test('homepage leads with the Games Command Centre without dropping the hero or sortable stats',()=>{
+test('homepage leads with the hero and keeps the Games Command Centre and sortable stats below it',()=>{
  const html=read('index.html');
  const order=['class="hero-grid"','class="metric-strip"','id="live-games"','id="home-games"'];
  const index=order.map(x=>html.indexOf(x));
  assert.ok(index.every(n=>n>0),JSON.stringify(index));
  assert.deepEqual([...index].sort((a,b)=>a-b),index,'Hero, live desk and locked slate remain in source order');
- assert.match(read('assets/v19-concept3.css'),/body\.v12\.home #live-games\{order:-1/,'Live scoreboard must visually lead the page');
+ assert.doesNotMatch(read('assets/v19-concept3.css'),/body\.v12\.home #live-games\{[^}]*order:-1/,'Hero leads; the live desk follows it');
  for(const id of ['featured-game','feature-tip','feature-confidence','feature-players','home-backtest','home-locked','home-projections',
   'live-player-stats','live-stats-rows','live-game-list','desk-top-performers','live-alerts-toggle']){
   assert.ok(html.includes('id="'+id+'"'),id+' was lost');
@@ -85,7 +85,7 @@ test('Player Stats is a distinct route from live NBA box scores',()=>{
  const player=read('player-stats/index.html');
  const home=read('index.html');
  assert.ok(desktop.includes("link('PLAYERS','player-stats/',isStats)"));
- assert.ok(desktop.includes("link('GAMES','#live-games',"));
+ assert.ok(desktop.includes("link('HOME',''"));
  assert.ok(desktop.includes("link('PLAYERS','player-stats/',"));
  assert.ok(!desktop.includes("link('PLAYERS','#live-player-stats'"));
  assert.ok(mobile.includes('"Players","player-stats/"'));

@@ -25,7 +25,7 @@ test('Live Games and Player Stats keep clear above-fold navigation without displ
  assert.match(nav,/\["Players","player-stats\/"/);
  assert.match(read('assets/live-desk.css'),/@media\(max-width:590px\)/);
  assert.match(read('assets/live-desk.js'),/OPEN GAME CENTRE/);
- assert.match(read('assets/site-nav.js'),/link\('GAMES','#live-games'/);
+ assert.match(read('assets/site-nav.js'),/Games Command Centre/);
  assert.match(read('index.html'),/id="hero-live-status"[^>]+href="#live-games"/);
 });
 test('ESPN boxscore maps genuine NBA game statistics instead of player predictions',()=>{

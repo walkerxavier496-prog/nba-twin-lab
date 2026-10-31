@@ -102,10 +102,57 @@ function showModelDisagreement(game){
   '<span>'+esc(game.away.abbr)+' win chance spans '+pct(lo.prob)+' ('+esc(lo.id)+') to '+pct(hi.prob)+' ('+esc(hi.id)+'). This is a range of model opinions, not a calibrated prediction interval.</span>'+
   '<small>Original ELO '+esc(selectedName)+' '+pct(p.winner_probability)+' · not updated during the game · roster and official injury uncertainty remains.</small></div>';
 }
+function renderFeatured(chosen,note=''){
+ const prediction=chosen.primary_forecast,meta=observedScore(chosen);
+ const homeChance=prediction?.home_win_probability;
+ const awayChance=Number.isFinite(homeChance)?1-homeChance:null;
+ const formatChance=v=>Number.isFinite(v)?Math.round(v*100)+'%':'—';
+ const evidence='PRODUCTION ELO · ORIGINAL LOCK';
+ show('feature-tip',fmt(chosen.tip_utc||chosen.date));
+ if($('featured-game'))$('featured-game').innerHTML=
+   '<div class="c3-feature-match"><a href="./team/?team='+encodeURIComponent(chosen.away.abbr)+'" class="c3-feature-team">'+teamImage(chosen.away,'large')+'<strong>'+esc(chosen.away.abbr)+'</strong></a>'+
+   '<div class="c3-feature-versus">VS</div>'+
+   '<a href="./team/?team='+encodeURIComponent(chosen.home.abbr)+'" class="c3-feature-team">'+teamImage(chosen.home,'large')+'<strong>'+esc(chosen.home.abbr)+'</strong></a></div>'+
+   '<div class="c3-prob-label">WIN PROBABILITY · '+esc(evidence)+'</div>'+
+   '<div class="c3-prob-head"><strong>'+formatChance(awayChance)+'</strong><span>AWAY / HOME</span><strong>'+formatChance(homeChance)+'</strong></div>'+
+   (Number.isFinite(homeChance)?'<div class="c3-prob-track" role="img" aria-label="'+esc(chosen.away.name)+' '+formatChance(awayChance)+'; '+esc(chosen.home.name)+' '+formatChance(homeChance)+'">'+
+    '<div class="c3-prob-away" style="width:'+(100*awayChance).toFixed(2)+'%"></div><div class="c3-prob-home" style="width:'+(100*homeChance).toFixed(2)+'%"></div></div>':
+    '<p class="c3-muted">No verified locked probability available.</p>');
+ show('feature-detail',(meta.actual?'Archived pretip forecast':'Locked before tipoff')+' · '+evidence+(note?' · '+note:'')+' · '+fmt(chosen.tip_utc||chosen.date));
+ if($('feature-game-link'))$('feature-game-link').href=gameLink(chosen);
+ showModelDisagreement(chosen);
+ if(prediction)playerSpotlight(chosen);
+ else if($('feature-players'))$('feature-players').innerHTML='<p class="small-note">No locked player projection for this matchup.</p>';
+}
+function renderFinalsRail(){
+ const live=(liveFeed?.games||[]).filter(g=>g.phase==='final'&&Number.isFinite(g.away.score)&&Number.isFinite(g.home.score))
+  .sort((x,y)=>Date.parse(y.date||0)-Date.parse(x.date||0)).slice(0,3);
+ // Without a fresh scoreboard, fall back to the published verified-finals snapshot (data/games.json), labelled as such.
+ const snapshot=live.length?[]:(historySnapshot?.games||[]).filter(g=>g.status==='final'&&Number.isFinite(g.homeScore)&&Number.isFinite(g.awayScore)&&Date.parse(g.date)<=Date.now())
+  .sort((x,y)=>Date.parse(y.date||0)-Date.parse(x.date||0)).slice(0,3)
+  .map(g=>({id:g.id,away:{...g.away,score:g.awayScore},home:{...g.home,score:g.homeScore}}));
+ const finals=live.length?live:snapshot;
+ if($('c3-latest-results'))$('c3-latest-results').innerHTML=finals.length?finals.map(g=>
+  '<a class="c3-result-row" href="./game/?id='+encodeURIComponent(String(g.id))+'" aria-label="'+esc(g.away.name+' '+g.away.score+' at '+g.home.name+' '+g.home.score)+'">'+
+  teamImage(g.away,'small')+'<b>'+esc(g.away.abbr)+'</b><strong>'+esc(g.away.score)+' – '+esc(g.home.score)+'</strong><b>'+esc(g.home.abbr)+'</b>'+teamImage(g.home,'small')+'</a>'
+ ).join('')+(live.length?'':'<p class="c3-muted">Published verified finals snapshot · live scoreboard unavailable.</p>'):'<p class="c3-muted">No verified recent NBA finals are available.</p>';
+}
+// No game for the selected date: show the latest verified lock and finals, or an explicit unavailable state — never a stuck loader.
+function renderRailFallback(){
+ const latest=archiveCache.get(ledgerEntries[0]?.melbourne_date);
+ const forecast=(latest?.lock?.forecasts||[]).find(g=>g.primary_forecast);
+ if(forecast)renderFeatured(forecast,'Latest locked slate '+latest.entry.melbourne_date);
+ else{
+  show('feature-tip','Unavailable');
+  if($('featured-game'))$('featured-game').innerHTML='<p class="c3-muted">No verified locked game forecast is available yet.</p>';
+  show('feature-detail','Forecasts appear only after an original lock is verified.');
+ }
+ renderFinalsRail();
+}
 function render(){
  if(!archive&&!liveFeed){
   show('scoreboard-source','Live scoreboard unavailable · '+archiveStatus);
-  renderMachineScorecard();renderTeamTrends(historySnapshot);renderPlayerTrends(playerTrendSnapshot,Date.now(),playerTrendStatus);return;
+  renderRailFallback();renderMachineScorecard();renderTeamTrends(historySnapshot);renderPlayerTrends(playerTrendSnapshot,Date.now(),playerTrendStatus);return;
  }
  const games=candidateGames();
  const source='ARCHIVED PREGAME FORECASTS · Actual live NBA scores and player box scores appear in the game centre above.';
@@ -132,34 +179,10 @@ function render(){
  // Feature the latest immutable pretip prediction, NEVER use a live score as a pick.
  const chosen=(archive?.lock?.forecasts||[]).find(g=>g.primary_forecast)||
    games.find(g=>g.primary_forecast)||games[0];
- if(!chosen){renderMachineScorecard();renderTeamTrends(historySnapshot);renderPlayerTrends(playerTrendSnapshot,Date.now(),playerTrendStatus);return}
+ if(!chosen){renderRailFallback();renderMachineScorecard();renderTeamTrends(historySnapshot);renderPlayerTrends(playerTrendSnapshot,Date.now(),playerTrendStatus);return}
 
- const prediction=chosen.primary_forecast,meta=observedScore(chosen);
- const homeChance=prediction?.home_win_probability;
- const awayChance=Number.isFinite(homeChance)?1-homeChance:null;
- const formatChance=v=>Number.isFinite(v)?Math.round(v*100)+'%':'—';
- const evidence='PRODUCTION ELO · ORIGINAL LOCK';
- show('feature-tip',fmt(chosen.tip_utc||chosen.date));
- if($('featured-game'))$('featured-game').innerHTML=
-   '<div class="c3-feature-match"><a href="./team/?team='+encodeURIComponent(chosen.away.abbr)+'" class="c3-feature-team">'+teamImage(chosen.away,'large')+'<strong>'+esc(chosen.away.abbr)+'</strong></a>'+
-   '<div class="c3-feature-versus">VS</div>'+
-   '<a href="./team/?team='+encodeURIComponent(chosen.home.abbr)+'" class="c3-feature-team">'+teamImage(chosen.home,'large')+'<strong>'+esc(chosen.home.abbr)+'</strong></a></div>'+
-   '<div class="c3-prob-label">WIN PROBABILITY · '+esc(evidence)+'</div>'+
-   '<div class="c3-prob-head"><strong>'+formatChance(awayChance)+'</strong><span>AWAY / HOME</span><strong>'+formatChance(homeChance)+'</strong></div>'+
-   (Number.isFinite(homeChance)?'<div class="c3-prob-track" role="img" aria-label="'+esc(chosen.away.name)+' '+formatChance(awayChance)+'; '+esc(chosen.home.name)+' '+formatChance(homeChance)+'">'+
-    '<div class="c3-prob-away" style="width:'+(100*awayChance).toFixed(2)+'%"></div><div class="c3-prob-home" style="width:'+(100*homeChance).toFixed(2)+'%"></div></div>':
-    '<p class="c3-muted">No verified locked probability available.</p>');
- show('feature-detail',(meta.actual?'Archived pretip forecast':'Locked before tipoff')+' · '+evidence+' · '+fmt(chosen.tip_utc||chosen.date));
- if($('feature-game-link'))$('feature-game-link').href=gameLink(chosen);
- showModelDisagreement(chosen);
- if(prediction)playerSpotlight(chosen);
- else if($('feature-players'))$('feature-players').innerHTML='<p class="small-note">No locked player projection for this matchup.</p>';
- const finals=(liveFeed?.games||[]).filter(g=>g.phase==='final'&&Number.isFinite(g.away.score)&&Number.isFinite(g.home.score))
-  .sort((x,y)=>Date.parse(y.date||0)-Date.parse(x.date||0)).slice(0,3);
- if($('c3-latest-results'))$('c3-latest-results').innerHTML=finals.length?finals.map(g=>
-  '<a class="c3-result-row" href="./game/?id='+encodeURIComponent(String(g.id))+'" aria-label="'+esc(g.away.name+' '+g.away.score+' at '+g.home.name+' '+g.home.score)+'">'+
-  teamImage(g.away,'small')+'<b>'+esc(g.away.abbr)+'</b><strong>'+esc(g.away.score)+' – '+esc(g.home.score)+'</strong><b>'+esc(g.home.abbr)+'</b>'+teamImage(g.home,'small')+'</a>'
- ).join(''):'<p class="c3-muted">No verified recent NBA finals are available.</p>';
+ renderFeatured(chosen);
+ renderFinalsRail();
  renderMachineScorecard();
  renderTeamTrends(historySnapshot);
  renderPlayerTrends(playerTrendSnapshot,Date.now(),playerTrendStatus);
@@ -295,10 +318,15 @@ function renderPlayerTrends(snapshot,now=Date.now(),unavailableReason=''){
   '<p class="home-trend-source">'+esc(snapshot.methodology?.source||'ESPN public summary (unofficial)')+' · as of '+esc(snapshot.as_of_utc)+
   ' · '+esc(snapshot.methodology?.window_days??30)+'-day window · minimum '+esc(snapshot.methodology?.minimum_games??5)+' appearances. Missing stats and DNPs are excluded, not treated as zero.</p>';
 }
+function latestProjectionCount(){
+ const latest=archiveCache.get(ledgerEntries[0]?.melbourne_date);
+ const count=(latest?.lock?.forecasts||[]).reduce((total,game)=>total+(Array.isArray(game.v9_player_projections)?game.v9_player_projections.length:0),0);
+ return count?count.toLocaleString('en-AU'):'—';
+}
 async function loadDailyArchive(date){
  const entry=ledgerEntries.find(item=>item.melbourne_date===date&&item.lock_path);
  if(!entry){
-  archive=null;archiveStatus='no archived pregame lock for this date';reviewStatus='No lock-bound review exists';sidecarStatus='No research sidecar exists';show('home-projections','—');window.NbaLiveDesk?.setLockedForecasts?.([]);return;
+  archive=null;archiveStatus='no archived pregame lock for this date';reviewStatus='No lock-bound review exists';sidecarStatus='No research sidecar exists';show('home-projections',latestProjectionCount());window.NbaLiveDesk?.setLockedForecasts?.([]);return;
  }
  if(archiveCache.has(date)){
   if(isoMelbourneDate(selectedMelbourneDate)===date){
