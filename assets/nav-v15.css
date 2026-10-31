@@ -1,0 +1,27 @@
+/* V15: concise, keyboard-accessible grouped primary navigation */
+body.v12 .app-header .header-inner{min-height:72px;flex-wrap:nowrap;align-items:center;gap:clamp(12px,1.8vw,26px)}
+body.v12 .app-header nav[aria-label="Main navigation"]{display:flex;align-items:center;gap:6px;overflow:visible;flex:1;margin-left:auto;justify-content:center;white-space:nowrap;max-width:none}
+body.v12 .app-header nav .nav-main-link,body.v12 .app-header nav .nav-group>summary{
+  font-size:12px;font-weight:900;letter-spacing:.025em;text-decoration:none;padding:12px 15px;min-height:44px;
+  color:#c3d2e1;background:transparent;border:1px solid transparent;border-radius:9px;list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px
+}
+body.v12 .app-header nav .nav-group>summary::-webkit-details-marker{display:none}
+body.v12 .app-header nav .nav-main-link.active,body.v12 .app-header nav .nav-group.active>summary{
+ color:var(--fan-accent,#c6dbff);background:#1c2e43;border-color:#334961
+}
+body.v12 .app-header nav .nav-main-link:hover,body.v12 .app-header nav .nav-group>summary:hover{color:#fff;background:#21384d}
+body.v12 .app-header nav .nav-group{position:relative;flex:none}
+body.v12 .app-header nav .nav-group[open]>summary{color:var(--fan-accent,#c6dbff);background:#1a3043}
+body.v12 .app-header nav .nav-group>summary span{font-size:16px;color:#93a9bb}
+body.v12 .app-header nav .nav-dropdown{
+ position:absolute;z-index:150;top:calc(100% + 8px);left:0;min-width:232px;max-width:calc(100vw - 20px);
+ display:grid;gap:3px;padding:9px;border:1px solid #3c5268;background:#111f30;border-radius:12px;box-shadow:0 20px 48px #0008
+}
+body.v12 .app-header nav .nav-dropdown a{padding:13px 14px;border-radius:7px;background:transparent!important;color:#dce7ee!important;font-size:12px;text-decoration:none;font-weight:750}
+body.v12 .app-header nav .nav-dropdown a:hover,body.v12 .app-header nav .nav-dropdown a:focus-visible{background:#27425a!important;color:var(--fan-accent,#c6dbff)!important}
+body.v12 .app-header .fan-picker{margin-left:0}
+body.v12 .app-header nav .nav-group:focus-within{z-index:155}
+@media(max-width:1100px){body.v12 .app-header nav[aria-label="Main navigation"]{gap:0}
+body.v12 .app-header nav .nav-main-link,body.v12 .app-header nav .nav-group>summary{padding:11px 9px;font-size:11px}}
+@media(max-width:900px){body.v12 .app-header nav[aria-label="Main navigation"]{display:none}
+body.v12 .app-header .header-inner{flex-wrap:nowrap}}
