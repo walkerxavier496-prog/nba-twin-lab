@@ -68,7 +68,11 @@ test('player-form panel displays verified sample windows, missing metrics and ES
 
 test('player-form panel clearly labels stale or insufficient coverage without inventing trends', () => {
   const page = harness();
-  page.window.NbaHome.renderPlayerTrends(JSON.parse(read('data/player-game-history/trends.json')));
+  page.window.NbaHome.renderPlayerTrends({
+    schema: 'nba-twin-lab-player-trends-v1',
+    status: 'not_collected',
+    players: [],
+  });
   assert.match(page.element('home-player-trends').innerHTML, /collection has not run yet/);
 
   page.window.NbaHome.renderPlayerTrends(snapshot, Date.parse(snapshot.generated_at_utc) + 49 * 60 * 60 * 1000);
