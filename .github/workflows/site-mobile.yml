@@ -23,6 +23,8 @@ on:
       - 'assets/v12.css'
       - 'assets/dark-v13.css'
       - 'assets/team-prefs.js'
+      - 'assets/sortable-tables.js'
+      - 'assets/sortable-v17.css'
       - 'assets/current-players.js'
       - 'challenge/**'
       - 'audit/index.html'
@@ -43,6 +45,7 @@ on:
       - 'tests/live_desk.test.cjs'
       - 'tests/boxscore_advanced.test.cjs'
       - 'tests/game_centre.test.cjs'
+      - 'tests/league_v17.test.cjs'
       - 'tests/fan_team_dark.test.cjs'
       - 'tests/site_navigation.test.cjs'
       - 'tests/challenge_daily.test.cjs'
@@ -70,6 +73,8 @@ jobs:
           node --check assets/site-nav.js
           node --check assets/game-page.js
           node --check league/standings.js
+          node --check league/cup-2026.js
+          node --check assets/sortable-tables.js
           node --check assets/team-prefs.js
           node --check assets/current-players.js
           node --check team-intelligence/app.js
@@ -77,4 +82,4 @@ jobs:
           node --check challenge/app.js
           node --check predict/app.js
       - name: Test responsive routes and original pregame data safeguards
-        run: node --test tests/mobile_design.test.cjs tests/site_navigation.test.cjs tests/challenge_daily.test.cjs tests/courtside.test.cjs tests/v12_remodel.test.cjs tests/media_assets.test.cjs tests/live_scoreboard.test.cjs tests/live_desk.test.cjs tests/boxscore_advanced.test.cjs tests/fan_team_dark.test.cjs tests/game_centre.test.cjs
+        run: node --test tests/mobile_design.test.cjs tests/site_navigation.test.cjs tests/challenge_daily.test.cjs tests/courtside.test.cjs tests/v12_remodel.test.cjs tests/media_assets.test.cjs tests/live_scoreboard.test.cjs tests/live_desk.test.cjs tests/boxscore_advanced.test.cjs tests/fan_team_dark.test.cjs tests/game_centre.test.cjs tests/league_v17.test.cjs
