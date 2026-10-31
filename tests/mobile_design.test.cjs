@@ -42,11 +42,10 @@ function renderNavigation(pathname){
 }
 test('mobile bottom navigation has 5 valid links and the correct active route',()=>{
  const scenarios=[
-  ['/nba-twin-lab/','Home'],
-  ['/nba-twin-lab/predict/','Games'],
-  ['/nba-twin-lab/challenge/daily.html','Daily'],
+  ['/nba-twin-lab/','Live'],
+  ['/nba-twin-lab/predict/','Predict'],
   ['/nba-twin-lab/challenge/','Models'],
-  ['/nba-twin-lab/audit/','Audit']
+  ['/nba-twin-lab/team-intelligence/','My Team']
  ];
  for(const [route,active]of scenarios){
   const nav=renderNavigation(route);
