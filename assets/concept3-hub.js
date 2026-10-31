@@ -400,19 +400,25 @@ function slateBody(g){
  const spread=modelArray.length>1?Math.max(...modelArray)-Math.min(...modelArray):null;
  const grade=!numbers(p)?'missing':spread>=.20?'split':'';
  const source=!numbers(p)?'No lock':spread>=.20?'Disagreement':'Model range';
- const score=scoreFor(g);
+ const score=scoreFor(g),review=reviewFor(g),locked=selectedModel(g);
+ const picked=numbers(locked?.home)?(locked.home>=.5?g.home.abbr:g.away.abbr):null;
+ const actual=score?(score.home>score.away?g.home.abbr:g.away.abbr):null;
+ const verdict=review&&picked?(picked===actual?'✓ HIT':'✕ MISS'):'AUDIT PENDING';
+ const graded=MODELS.map(([id])=>review?.models?.[id]).filter(x=>typeof x?.correct==='boolean');
+ const successes=graded.filter(x=>x.correct).length;
+ const machineResult=graded.length?successes+'/'+graded.length+' correct':'—';
  return '<tr><td>'+esc(fmt(g.tip_utc))+'</td><td><a class="c3-player-name" href="../predict/?game='+encodeURIComponent(gameId(g))+'">'+
  logo(g.away)+'<strong>'+esc(g.away.abbr)+' @ '+esc(g.home.abbr)+'</strong>'+logo(g.home)+'</a></td>'+
  '<td><div class="c3-prob-inline"><span>'+pct(away)+'</span><div class="c3-inline-track"><i style="width:'+(numbers(away)?away*100:0)+'%"></i><i style="width:'+(numbers(p)?p*100:0)+'%"></i></div><span>'+pct(p)+'</span></div></td>'+
  '<td>'+num0(sc?.away)+' – '+num0(sc?.home)+'</td><td><span class="c3-confidence '+grade+'" title="Across saved research engines; not a calibrated confidence grade">'+esc(source)+'</span>'+
  (numbers(spread)?'<small class="c3-muted"> '+(spread*100).toFixed(1)+'pp</small>':'')+'</td>'+
- (state.slateTab==='results'?'<td>'+esc(score?score.away+' – '+score.home:'Awaiting final')+'</td>':'')+'</tr>';
+ (state.slateTab==='results'?'<td>'+esc(score?score.away+' – '+score.home:'Awaiting final')+'</td><td>'+esc(picked||'—')+'</td><td class="'+(review?(picked===actual?'c3-correct':'c3-incorrect'):'c3-muted')+'">'+esc(verdict)+'</td><td>'+esc(machineResult)+'</td>':'')+'</tr>';
 }
 function slateFull(){
  const games=(state.lock.forecasts||[]).filter(g=>[g.away.name,g.home.name,g.away.abbr,g.home.abbr].some(s=>s.toLowerCase().includes(state.slateSearch.toLowerCase())));
  return '<div class="c3-controls"><input id="c3-slate-search" type="search" aria-label="Filter NBA teams" placeholder="Search a team…" value="'+esc(state.slateSearch)+'"></div>'+
  '<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>TIME · MELBOURNE</th><th>MATCHUP</th><th>WIN PROBABILITY</th><th>PREDICTED SCORE</th><th>MODEL AGREEMENT</th>'+
- (state.slateTab==='results'?'<th>ACTUAL FINAL</th>':'')+'</tr></thead><tbody>'+games.map(slateBody).join('')+'</tbody></table></div>'+
+ (state.slateTab==='results'?'<th>ACTUAL FINAL</th><th>LOCKED PICK</th><th>PICK VS FINAL</th><th>SIX MACHINES</th>':'')+'</tr></thead><tbody>'+games.map(slateBody).join('')+'</tbody></table></div>'+
  '<p class="c3-source-note">All probabilities and projected scores come from the saved pretip lock. Confidence badges are replaced by measured model disagreement; no unsupported high/medium certainty claims. '+esc(dateStatus())+'.</p>';
 }
 function slateComparison(){
@@ -457,20 +463,49 @@ async function load(){
    get(prefix+'data/v7-current.json',true),get(prefix+'data/games.json',true)
   ]);
   if(!lock.forecasts?.length||!lock.locked_at_utc)throw Error('Immutable forecast lock is incomplete');
-  state.entry=entry;state.lock=lock;state.sidecar=sidecar;state.review=review;state.snapshot=snapshot;state.results=results;
+  const verifiedReview=review?.schema==='nba-twin-lab-daily-review-v3'&&
+    review.source_lock_integrity_sha256===entry.lock_integrity_sha256&&
+    review.melbourne_date===entry.melbourne_date&&Array.isArray(review.games)?review:null;
+  state.entry=entry;state.lock=lock;state.sidecar=sidecar;state.review=verifiedReview;state.snapshot=snapshot;state.results=results;
   state.gid=new URLSearchParams(location.search).get('game')||gameId(lock.forecasts[0]);
   if($('c3-lab'))await loadGameReview(state.gid);
   if($('c3-lab'))renderLab();
   else renderSlate();
  }catch(err){parent.innerHTML='<div class="c3-panel"><h2>Verified forecast unavailable</h2><p>'+esc(err.message)+'. No replacement probabilities are generated.</p></div>'}
 }
-// GitHub Pages is static: Actions publish game reviews after verified final.
-// While a Predictor page is open, check for its single-game review periodically.
-if(typeof window.setInterval==='function')window.setInterval(async()=>{
- if(!$('c3-lab')||!state.entry||document.visibilityState==='hidden')return;
- const id=state.gid,g=byId(id);
- if(!g||reviewFor(g))return;
- if(await loadGameReview(id) && state.gid===id)renderLab();
-},120000);
+// GitHub Pages publishes immutable per-game reviews and an aggregated audit ledger.
+// Poll the aggregate while the page is open, without ever rewriting a pretip lock.
+let refreshRunning=false;
+async function refreshPostgame(){
+ if(refreshRunning||!state.entry||!state.lock||document.visibilityState==='hidden')return;
+ refreshRunning=true;
+ try{
+  const latest=await get('../data/audit-ledger.json?refresh='+Date.now(),true);
+  const entry=latest?.entries?.find(e=>e.melbourne_date===state.entry.melbourne_date&&
+    e.lock_integrity_sha256===state.entry.lock_integrity_sha256);
+  if(!entry)return;
+  const prior=Number(state.entry.reviewed_game_count||0);
+  const next=Number(entry.reviewed_game_count||0);
+  if(entry.review_path&&(next!==prior||!state.review)){
+   const review=await get('../'+entry.review_path+'?refresh='+Date.now(),true);
+   if(review?.schema==='nba-twin-lab-daily-review-v3'&&
+     review.source_lock_integrity_sha256===state.entry.lock_integrity_sha256&&
+     review.melbourne_date===state.entry.melbourne_date&&Array.isArray(review.games)){
+    const changed=review.generated_at_utc!==state.review?.generated_at_utc;
+    state.review=review;state.entry=entry;
+    if(changed){if($('c3-lab'))renderLab();else renderSlate()}
+   }
+  }
+  if($('c3-lab')&&!reviewFor(byId(state.gid))){
+   const id=state.gid;
+   if(await loadGameReview(id)&&state.gid===id)renderLab();
+  }
+ }catch(error){console.warn('Verified postgame refresh deferred:',error)}
+ finally{refreshRunning=false}
+}
+if(typeof window.setInterval==='function')window.setInterval(refreshPostgame,45000);
+if(typeof document!=='undefined')document.addEventListener('visibilitychange',()=>{
+ if(document.visibilityState==='visible')refreshPostgame();
+});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});else load();
 })();
