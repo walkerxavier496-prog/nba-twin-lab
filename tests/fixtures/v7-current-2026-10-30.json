@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "built_at_utc": "2026-10-30T16:15:22+00:00",
+  "strict_no_future_data": true,
+  "source": "Frozen two-team pre-tip fixture from data/v7-current.json at 9e6ebcb56b506cc8a1a249e748955225a59d7d55",
+  "teams": [
+    {
+      "abbr": "CHA",
+      "season": {
+        "games": 5,
+        "ortg": 102.19441,
+        "drtg": 109.66993,
+        "adj_ortg": 98.42983,
+        "adj_drtg": 107.97075,
+        "pace": 98.7,
+        "efg": 0.49365,
+        "opp_efg": 0.5398,
+        "three_rate": 0.4972,
+        "opp_three_rate": 0.40636,
+        "tov_rate": 0.20449,
+        "opp_tov_rate": 0.154,
+        "orb_rate": 0.37622,
+        "drb_rate": 0.74449,
+        "three_pct": 0.31017
+      }
+    },
+    {
+      "abbr": "WAS",
+      "season": {
+        "games": 5,
+        "ortg": 112.85503,
+        "drtg": 114.49071,
+        "adj_ortg": 109.31983,
+        "adj_drtg": 111.56294,
+        "pace": 101.1,
+        "efg": 0.53187,
+        "opp_efg": 0.50844,
+        "three_rate": 0.37199,
+        "opp_three_rate": 0.41384,
+        "tov_rate": 0.14564,
+        "opp_tov_rate": 0.13785,
+        "orb_rate": 0.26702,
+        "drb_rate": 0.63007,
+        "three_pct": 0.28261
+      }
+    }
+  ]
+}
