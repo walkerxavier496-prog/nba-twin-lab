@@ -78,7 +78,7 @@ function render(target,items,filter=''){
  target.innerHTML=visible.map(t=>{
   const line=[
    val(t.rank,t.rank),
-   '<td data-sort-value="'+escape(t.name)+'"><a class="league-team" href="../team-intelligence/?team='+encodeURIComponent(t.abbr)+'">'+logo(t.abbr)+'<span>'+escape(t.name)+'</span></a></td>',
+   '<td data-sort-value="'+escape(t.name)+'"><div class="league-team-cell"><a class="league-team" href="../team-intelligence/?team='+encodeURIComponent(t.abbr)+'">'+logo(t.abbr)+'<span>'+escape(t.name)+'</span></a><button type="button" class="watch-team-btn" data-watch-team="'+escape(t.abbr)+'" aria-label="Follow '+escape(t.name)+'">☆</button></div></td>',
    val(t.w,t.w),val(t.l,t.l),val(pct(t)===null?'—':pct(t).toFixed(3),pct(t)),
    val(t.gb===null?'—':t.gb.toFixed(1),t.gb),
    val(recordText(t.homeW,t.homeL),t.homeW),val(recordText(t.awayW,t.awayL),t.awayW),
@@ -95,6 +95,7 @@ function showStandings(){
  if(!snapshot)return;
  const filter=String($('league-team-search')?.value||'').trim().toLowerCase();
  render($('league-east'),snapshot.east,filter);render($('league-west'),snapshot.west,filter);
+ window.TwinWatchlist?.sync?.();
  window.TwinSort?.scan?.();
 }
 function renderCupGroup(group,rows,fixtures){
@@ -120,6 +121,7 @@ function renderCup(){
    candidates.slice(0,5).map(t=>'<div class="cup-runner"><span>'+logo(t.team)+escape(t.team)+' <small>'+escape(t.group)+'</small></span><strong>'+t.w+'-'+t.l+'</strong></div>').join('')+'</article>';
  }).join('');
  $('cup-wildcard-panels').innerHTML=html;
+ window.TwinWatchlist?.sync?.();
  window.TwinSort?.scan?.();
 }
 function activate(tab){
