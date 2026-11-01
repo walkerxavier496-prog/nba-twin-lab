@@ -210,3 +210,31 @@ test('official game grades remain bound to the exact original lock and frozen pr
   assert.throws(() => T.verifyReviewProbabilities(forecast, challengeGame, changedChallengeGrade),
     /differs from immutable lock.*m6_ensemble/);
 });
+
+test('new daily locks verify embedded challenger probabilities without a legacy sidecar', () => {
+  const lock = JSON.parse(fs.readFileSync(path.join(ROOT, 'audit/snapshots/2026-11-01/forecast.lock.json')));
+  const forecast = lock.forecasts[0];
+  const models = {};
+  const add = (id, p) => { if (p !== null && p !== undefined && Number.isFinite(Number(p))) models[id] = { p: Number(p) }; };
+  add(forecast.primary_forecast.model_id, forecast.primary_forecast.home_win_probability);
+  add(forecast.diagnostics.monte_carlo.model_id, forecast.diagnostics.monte_carlo.home_win_probability);
+  const roster = forecast.diagnostics.roster_aware_beta;
+  if (roster) add(roster.model_id, roster.home_win_probability);
+  if (forecast.research_score_machine?.available === true) {
+    add('joint_score_margin_v1', forecast.research_score_machine.home_win_probability);
+  }
+  for (const [id, prediction] of Object.entries(forecast.challenge_predictions || {})) {
+    if (prediction.available === true) add(id, prediction.home_win_probability);
+  }
+  const review = { game_id: forecast.game_id, models };
+  assert.ok(models.m1_elo, 'modern lock must have an embedded challenge model');
+  assert.doesNotThrow(() => T.verifyReviewProbabilities(forecast, null, review));
+  const tampered = structuredClone(review);
+  tampered.models.m1_elo.p += 0.001;
+  assert.throws(() => T.verifyReviewProbabilities(forecast, null, tampered),
+    /differs from immutable lock.*m1_elo/);
+  const missing = structuredClone(forecast);
+  delete missing.challenge_predictions.m1_elo;
+  assert.throws(() => T.verifyReviewProbabilities(missing, null, review),
+    /Unexpected graded challenge model.*m1_elo/);
+});
