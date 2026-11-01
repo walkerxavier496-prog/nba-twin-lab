@@ -595,7 +595,7 @@ function verifyReviewProbabilities(forecast, challengeGame, reviewGame) {
   verifyLockedProbability(reviewGame, roster?.model_id || 'roster_beta_v1',
     roster?.home_win_probability, gameId);
   for (const modelId of C.ALL_IDS) {
-    const prediction = challengeGame?.predictions?.[modelId];
+    const prediction = challengeGame ? challengeGame.predictions?.[modelId] : forecast.challenge_predictions?.[modelId];
     if (!prediction) {
       if (reviewGame.models?.[modelId]) throw new Error(`Unexpected graded challenge model for ${gameId}/${modelId}`);
       continue;
