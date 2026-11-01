@@ -15,6 +15,7 @@ on:
   workflow_run:
     workflows:
       - Validate and refresh NBA game predictions
+      - V9 player stat projections and audit
     types: [completed]
   workflow_dispatch:
     inputs:
