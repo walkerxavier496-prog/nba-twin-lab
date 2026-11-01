@@ -8,6 +8,8 @@ on:
     paths:
       - '.github/workflows/daily-audit.yml'
       - 'tests/home_rail_states.test.cjs'
+      - 'scripts/daily_tracker.cjs'
+      - 'tests/daily_audit.test.cjs'
   # The game-data producer can finish after an audit starts. Re-run this
   # audited lock pipeline on its successful completion, using fresh main.
   workflow_run:
