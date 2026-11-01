@@ -9,6 +9,7 @@ const RI = require('../predict/roster-integrity.js');
 const RS = require('../predict/roster-strength.js');
 const A = require('./audit-core.cjs');
 const C = require('./five_model_challenge.cjs');
+const SM = require('../predict/score-machine.js');
 
 const ROOT = path.join(__dirname, '..');
 const DATA = path.join(ROOT, 'data');
@@ -139,6 +140,23 @@ function contextProfiles(context, season) {
   return profiles;
 }
 
+// Score Machine V1 trains only on earlier seasons' verified-chronology
+// pregame snapshots. No existing lock is ever rebuilt or changed.
+function trainedScoreMachine(season) {
+  const file=path.join(DATA,'v7-intelligence.json'),dataset=readJson(file);
+  if(!dataset.strict_no_future_data||!Array.isArray(dataset.games)||dataset.coverage?.evaluated_games<6000)
+    throw Error('Score-machine pretip historical provenance missing');
+  const training=dataset.games.filter(g=>Number(g.season)<Number(season)).map(g=>{
+    if(!/^20\d\d-\d\d-\d\d$/.test(g.date)||g.pregame?.home?.as_of!==g.date||g.pregame?.away?.as_of!==g.date)
+      throw Error('Score-machine training snapshot not pretip');
+    const x=SM.vector(g.pregame.home,g.pregame.away);
+    if(!x||!Number.isFinite(g.home_score)||!Number.isFinite(g.away_score)||g.home_score===g.away_score)
+      throw Error('Score-machine historical row incomplete');
+    return {x,margin:g.home_score-g.away_score,total:g.home_score+g.away_score};
+  });
+  return {fit:SM.train(training),source_sha256:A.sha256(fs.readFileSync(file))};
+}
+
 function playerTeams(snapshot) {
   return new Map((snapshot.teams || []).map(team => [A.canonicalTeam(team.abbr), team]));
 }
@@ -237,6 +255,8 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
   const season = Number(games[0].season);
   if (games.some(game => Number(game.season) !== season) || Number(snapshot.coverage?.season) !== season) throw new Error('Season mismatch in lock inputs');
   const profiles = contextProfiles(context, season), teams = playerTeams(snapshot);
+  const scoreFit = trainedScoreMachine(season);
+  const scoreTeamIndex = new Map(snapshot.teams.map(t=>[R.canonical(t.abbr),t]));
   const forecasts = [];
   for (const game of games) {
     const state = E.ratings(gameData.games, new Date(Math.min(now, Date.parse(game.date))).toISOString());
@@ -248,6 +268,8 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
       report: challengeReport, gameData, simulations });
     const rosterIntegrity = RI.auditGame({game,snapshot,availability:officialAvailability,now});
     const rosterStrength = RS.matchup(rosterIntegrity);
+    const scoreForecast=SM.predict(scoreFit.fit,
+      scoreTeamIndex.get(R.canonical(game.home.abbr)),scoreTeamIndex.get(R.canonical(game.away.abbr)));
     forecasts.push({
       game_id: String(game.id), tip_utc: new Date(game.date).toISOString(), tip_melbourne: A.melbourneDisplay(game.date),
       away: { id: String(game.away.id), name: game.away.name, abbr: game.away.abbr },
@@ -280,6 +302,19 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
         weights_training_seasons: prediction.weights_training_seasons,
         availability: prediction.availability, roster_uncertainty: prediction.roster_uncertainty,
       } : { model_id: modelId, model_version: challengeReport.version, version_status: 'unavailable', available: false, reason: prediction.reason }])),
+      research_score_machine: scoreForecast.available ? {
+        model_id:'joint_score_margin_v1',version_status:'research_only_not_promoted',available:true,
+        home_win_probability:scoreForecast.home_win_probability,
+        away_win_probability:1-scoreForecast.home_win_probability,
+        projected_score:{home:scoreForecast.projected_home_score,away:scoreForecast.projected_away_score},
+        display_score:{home:scoreForecast.rounded_home_score,away:scoreForecast.rounded_away_score},
+        projected_home_margin:scoreForecast.projected_home_margin,
+        margin_range_80:scoreForecast.margin_range_80,explanation:scoreForecast.explanation,
+        training_games:scoreFit.fit.training_games,training_source_sha256:scoreFit.source_sha256,
+        trained_on_seasons_before:season,team_snapshot_utc:snapshot.built_at_utc,
+        official_game_day_availability_used:false,
+        validation_status:'historical_walk_forward_only_prospective_unproven'
+      } : {model_id:'joint_score_margin_v1',available:false,reason:scoreForecast.reason},
       v18_roster_integrity: rosterIntegrity,
       v18_roster_strength: rosterStrength,
       v9_player_projections: v9Projections(game, teams),
@@ -550,6 +585,9 @@ function verifyReviewProbabilities(forecast, challengeGame, reviewGame) {
   if (String(reviewGame.game_id) !== gameId) throw new Error(`Reviewed game does not match lock for ${gameId}`);
   verifyLockedProbability(reviewGame, forecast.primary_forecast?.model_id || 'production_elo_v7',
     forecast.primary_forecast?.home_win_probability, gameId, true);
+  const scoreMachine=forecast.research_score_machine;
+  verifyLockedProbability(reviewGame,'joint_score_margin_v1',
+    scoreMachine?.available===true?scoreMachine.home_win_probability:null,gameId);
   const monteCarlo = forecast.diagnostics?.monte_carlo;
   verifyLockedProbability(reviewGame, monteCarlo?.model_id || 'possession_monte_carlo_v5',
     monteCarlo?.home_win_probability, gameId);
@@ -702,6 +740,6 @@ if (require.main === module) main().catch(error => { console.error(error.stack |
 
 module.exports = {
   buildLock, buildReview, buildLedger, buildPerformanceCentre, processFinalGames, derivedReviewForDate,
-  verifyAll, verifyChallengeLink, verifyReviewProbabilities, reviewWindowOpen, v9Projections, contextProfiles, gameReviewFile,
+  verifyAll, verifyChallengeLink, verifyReviewProbabilities, reviewWindowOpen, v9Projections, contextProfiles, trainedScoreMachine, gameReviewFile,
   LOCK_MINUTES_BEFORE_TIP, LOCK_MAX_MINUTES_BEFORE_TIP,
 };

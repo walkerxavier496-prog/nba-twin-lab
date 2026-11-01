@@ -1,0 +1,44 @@
+{
+ "schema": "nba-twin-lab-player-box-corpus-v1",
+ "source": "ESPN public NBA game summary (unofficial), postgame box score only",
+ "note": "Research input. Postgame availability is governed by the engine, never by this file.",
+ "seasons": {
+  "2021": {
+   "games": 1080,
+   "file": "2021.json.gz",
+   "sha256": "98a34f5a487cbe9ac0ee5aef8db3832dd6889eb9f2aaf692e9dda861e9e627ad"
+  },
+  "2022": {
+   "games": 1230,
+   "file": "2022.json.gz",
+   "sha256": "10ded183c4e572accc8fca489fdc3945a7f92f37b5cb9416b7e5b2011c0e1368"
+  },
+  "2023": {
+   "games": 1230,
+   "file": "2023.json.gz",
+   "sha256": "d481f167031b3bbef3b41a576a3bf7b1108a526a4cb803174653493763375ac5"
+  },
+  "2024": {
+   "games": 1230,
+   "file": "2024.json.gz",
+   "sha256": "d5090a316563457a3e4393917e662c01d1fd8b1c4cf3aa9cab4cfcd9b1707fff"
+  },
+  "2025": {
+   "games": 1230,
+   "file": "2025.json.gz",
+   "sha256": "ef05ec5644849d06992e7f211743da905ce66ae10c36670a3975cc5e10fc78cb"
+  },
+  "2026": {
+   "games": 1230,
+   "file": "2026.json.gz",
+   "sha256": "c42834fcb38ffb7da0e17acfd2ca495e76342e1ea6367142a8a125c8a4f4e4fa"
+  },
+  "2027": {
+   "games": 80,
+   "file": "2027-to-20261031.json.gz",
+   "sha256": "dc4bcbdeecdc484a0c1074d0ef4e442af22efefdd4eeae9351847e10d3cee56c",
+   "through": "2026-10-31T02:00Z"
+  }
+ },
+ "missing_game_ids": []
+}

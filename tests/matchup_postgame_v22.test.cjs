@@ -89,7 +89,7 @@ test('No fabricated final grading before an independently verified outcome',asyn
  const html=await render('prediction',{noReview:true,noFinal:true}).rendered();
  assert.doesNotMatch(html,/Machines vs Reality/);
  assert.doesNotMatch(html,/MISSED PICK/);
- assert.match(html,/LOCKED ENSEMBLE/);
+ assert.match(html,/ML RESEARCH CHALLENGER/);
 });
 test('Immutable pregame locks retain the same snapshots after postgame display',()=>{
  assert.equal(lock.forecasts[0].primary_forecast.winner,'CHA');

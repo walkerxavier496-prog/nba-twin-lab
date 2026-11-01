@@ -1,0 +1,34 @@
+{
+ "schema": "nba-twin-lab-player-engine-tuning-v1",
+ "tuned_on": "seasons 2021 warm-up, 2022 calibration, 2023 validation; no test-season data",
+ "objective": "validation min MAE + points MAE + team-score MAE + margin MAE (inactive variant)",
+ "params": {
+  "decay": 0.97,
+  "seasonCarry": 0.4,
+  "kRate": 150,
+  "kShoot": 100,
+  "minDecay": 0.8,
+  "minExponent": 1.4,
+  "minCap": 36,
+  "usageExponent": 1.2,
+  "usageTradeoff": 0.3,
+  "defLambda": 0.5,
+  "kDef": 25,
+  "teamDecay": 0.98,
+  "rosterWindow": 25,
+  "pairKappa": 6,
+  "pairWeight": 0.3,
+  "pairUsageWeight": 0.3,
+  "keyMinutes": 16,
+  "astPool": 0.5,
+  "kRes": 4,
+  "resCarry": 0.8
+ },
+ "score": {
+  "J": 29.007191499375836,
+  "min": 5.346455278211083,
+  "pts": 4.52846509957665,
+  "team": 9.093014799811098,
+  "margin": 10.039256321777003
+ }
+}
