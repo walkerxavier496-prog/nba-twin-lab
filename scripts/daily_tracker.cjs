@@ -157,6 +157,13 @@ function trainedScoreMachine(season) {
   return {fit:SM.train(training),source_sha256:A.sha256(fs.readFileSync(file))};
 }
 
+// The score machine is research-only. If its provenance or training data is
+// unavailable it must degrade to "unavailable", never block the production lock.
+function scoreMachineOrUnavailable(season, loader = trainedScoreMachine) {
+  try { return loader(season); }
+  catch (error) { return { fit: null, unavailable_reason: error.message }; }
+}
+
 function playerTeams(snapshot) {
   return new Map((snapshot.teams || []).map(team => [A.canonicalTeam(team.abbr), team]));
 }
@@ -255,7 +262,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
   const season = Number(games[0].season);
   if (games.some(game => Number(game.season) !== season) || Number(snapshot.coverage?.season) !== season) throw new Error('Season mismatch in lock inputs');
   const profiles = contextProfiles(context, season), teams = playerTeams(snapshot);
-  const scoreFit = trainedScoreMachine(season);
+  const scoreFit = scoreMachineOrUnavailable(season);
   const scoreTeamIndex = new Map(snapshot.teams.map(t=>[R.canonical(t.abbr),t]));
   const forecasts = [];
   for (const game of games) {
@@ -268,8 +275,9 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
       report: challengeReport, gameData, simulations });
     const rosterIntegrity = RI.auditGame({game,snapshot,availability:officialAvailability,now});
     const rosterStrength = RS.matchup(rosterIntegrity);
-    const scoreForecast=SM.predict(scoreFit.fit,
-      scoreTeamIndex.get(R.canonical(game.home.abbr)),scoreTeamIndex.get(R.canonical(game.away.abbr)));
+    const scoreForecast=scoreFit.fit?SM.predict(scoreFit.fit,
+      scoreTeamIndex.get(R.canonical(game.home.abbr)),scoreTeamIndex.get(R.canonical(game.away.abbr)))
+      :{available:false,reason:'Research score machine unavailable: '+scoreFit.unavailable_reason};
     forecasts.push({
       game_id: String(game.id), tip_utc: new Date(game.date).toISOString(), tip_melbourne: A.melbourneDisplay(game.date),
       away: { id: String(game.away.id), name: game.away.name, abbr: game.away.abbr },
@@ -740,6 +748,6 @@ if (require.main === module) main().catch(error => { console.error(error.stack |
 
 module.exports = {
   buildLock, buildReview, buildLedger, buildPerformanceCentre, processFinalGames, derivedReviewForDate,
-  verifyAll, verifyChallengeLink, verifyReviewProbabilities, reviewWindowOpen, v9Projections, contextProfiles, trainedScoreMachine, gameReviewFile,
+  verifyAll, verifyChallengeLink, verifyReviewProbabilities, reviewWindowOpen, v9Projections, contextProfiles, trainedScoreMachine, scoreMachineOrUnavailable, gameReviewFile,
   LOCK_MINUTES_BEFORE_TIP, LOCK_MAX_MINUTES_BEFORE_TIP,
 };
