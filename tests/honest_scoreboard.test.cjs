@@ -5,6 +5,8 @@ const A = require('../scripts/audit-core.cjs');
 const root = path.join(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const near = (actual, expected, tolerance = 1e-6) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
+// Number assertions use a frozen 10-game ledger so the daily bot's growing data/audit-ledger.json cannot break them.
+// Only the first test below reads the live ledger, and only for structure.
 const BANNER = 'Too early to rank models. Differences at this sample size are noise.';
 
 const row = (id, p, actual) => ({ model_id: id, label: id, p, actual, correct: (p >= 0.5) === (actual === 1), brier: (p - actual) ** 2 });
@@ -126,7 +128,7 @@ function runConceptPage(ledger) {
 }
 
 test('audit page shows the intervals, ± standard error, paired column and banner; rows keep ledger order', async () => {
-  const ledger = JSON.parse(read('data/audit-ledger.json'));
+  const ledger = JSON.parse(read('tests/fixtures/audit-ledger-10-games.json'));
   const page = runAuditPage(ledger);
   await page.ready();
   const models = page.get('models').innerHTML, banner = page.get('sample-banner');
@@ -142,7 +144,7 @@ test('audit page shows the intervals, ± standard error, paired column and banne
 });
 
 test('banner fails closed for a ledger without sample_policy and clears only when every model has 300 games', async () => {
-  const ledger = JSON.parse(read('data/audit-ledger.json'));
+  const ledger = JSON.parse(read('tests/fixtures/audit-ledger-10-games.json'));
   const legacy = structuredClone(ledger); delete legacy.longitudinal.sample_policy;
   let page = runAuditPage(legacy); await page.ready();
   assert.equal(page.get('sample-banner').hidden, false);
@@ -154,7 +156,7 @@ test('banner fails closed for a ledger without sample_policy and clears only whe
 });
 
 test('Concept 3 audit workspace shows the same honest numbers and banner on both tabs', async () => {
-  const ledger = JSON.parse(read('data/audit-ledger.json'));
+  const ledger = JSON.parse(read('tests/fixtures/audit-ledger-10-games.json'));
   const page = runConceptPage(ledger);
   await page.ready();
   const overview = page.el.innerHTML;
