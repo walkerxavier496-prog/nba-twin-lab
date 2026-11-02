@@ -122,7 +122,12 @@ def main():
     parser.add_argument("workflow")
     parser.add_argument("--receipt", required=True, type=Path)
     args = parser.parse_args()
-    publish(args.workflow, args.receipt, ["bash", "scripts/validate_release.sh"])
+    # Daily pretip locks cannot be lost to unrelated homepage/UI tests. The
+    # daily-specific gate still checks forecast math, immutable provenance,
+    # locked-to-graded consistency and tracked source syntax.
+    validation = ("scripts/validate_daily_publication.sh" if args.workflow == "daily-audit"
+                  else "scripts/validate_release.sh")
+    publish(args.workflow, args.receipt, ["bash", validation])
 
 
 if __name__ == "__main__":
