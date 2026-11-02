@@ -34,9 +34,11 @@ async function loadHome({withLedger=true,withGames=true}={}){
  // Cryptographic SHA-256 verification is asynchronous and may need more than a
  // fixed 400 ms on a shared CI runner, particularly after adding a new slate.
  for(let attempt=0;attempt<60;attempt++){
-  const featureDone=!get('featured-game').innerHTML.includes('Loading');
+  const featured=get('featured-game').innerHTML;
+  const featureDone=withLedger?/c3-feature-match/.test(featured):/No verified locked game forecast/.test(featured);
+  const resultsDone=get('c3-latest-results').innerHTML.length>0;
   const projectionDone=!withLedger||/^\d/.test(get('home-projections').textContent);
-  if(featureDone&&projectionDone)break;
+  if(featureDone&&resultsDone&&projectionDone)break;
   await wait(50);
  }
  return get;
