@@ -31,7 +31,14 @@ async function loadHome({withLedger=true,withGames=true}={}){
  const window={NbaScores:scores};
  vm.runInNewContext(read('assets/home.js'),{window,document:{getElementById:get,addEventListener(){}},fetch,Date,Intl,Promise,console,
   crypto:crypto.webcrypto,TextEncoder,setInterval:()=>0,encodeURIComponent},{filename:'home.js'});
- await wait(400);
+ // Cryptographic SHA-256 verification is asynchronous and may need more than a
+ // fixed 400 ms on a shared CI runner, particularly after adding a new slate.
+ for(let attempt=0;attempt<60;attempt++){
+  const featureDone=!get('featured-game').innerHTML.includes('Loading');
+  const projectionDone=!withLedger||/^\d/.test(get('home-projections').textContent);
+  if(featureDone&&projectionDone)break;
+  await wait(50);
+ }
  return get;
 }
 test('offline scoreboard: rail shows latest verified lock (current or archived) and published finals',async()=>{
