@@ -8,11 +8,22 @@ async function loadHome({withLedger=true,withGames=true}={}){
  const ledger=JSON.parse(read('data/audit-ledger.json')),entry=ledger.entries.filter(e=>e.lock_path).at(-1);
  const els=new Map(),get=id=>{if(!els.has(id))els.set(id,{innerHTML:'',textContent:'',href:''});return els.get(id)};
  const sources={'./data/five-model-report.json':{common_evaluation:{games:3643}}};
- if(withLedger){sources['./data/audit-ledger.json']=ledger;sources['./'+entry.lock_path]=null;}
+ if(withLedger){
+  sources['./data/audit-ledger.json']=ledger;
+  // The mocked provider must serve every published lock: changing days from the
+  // latest lock to an older date is normal homepage behaviour.
+  for(const row of ledger.entries.filter(item=>item.lock_path)){
+   sources['./'+row.lock_path]=read(row.lock_path);
+  }
+ }
  if(withGames)sources['./data/games.json']=JSON.parse(read('data/games.json'));
- const fetch=async url=>({ok:Object.hasOwn(sources,url)||url==='./'+entry?.lock_path&&withLedger,status:200,
-  json:async()=>url==='./'+entry.lock_path?JSON.parse(read(entry.lock_path)):sources[url],
-  text:async()=>url==='./'+entry.lock_path?read(entry.lock_path):JSON.stringify(sources[url])});
+ const fetch=async url=>{
+  const available=Object.hasOwn(sources,url);
+  const value=sources[url];
+  return {ok:available,status:available?200:404,
+   json:async()=>typeof value==='string'?JSON.parse(value):value,
+   text:async()=>typeof value==='string'?value:JSON.stringify(value)};
+ };
  const scores={melbourneDate:()=>'20261101',usDate:()=>'20261031',fetchDate:async()=>{throw Error('offline')},fetchMelbourneDate:async()=>{throw Error('offline')}};
  const window={NbaScores:scores};
  vm.runInNewContext(read('assets/home.js'),{window,document:{getElementById:get,addEventListener(){}},fetch,Date,Intl,Promise,console,
