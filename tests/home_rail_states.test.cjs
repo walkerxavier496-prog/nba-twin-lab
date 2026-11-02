@@ -24,7 +24,10 @@ async function loadHome({withLedger=true,withGames=true}={}){
    json:async()=>typeof value==='string'?JSON.parse(value):value,
    text:async()=>typeof value==='string'?value:JSON.stringify(value)};
  };
- const scores={melbourneDate:()=>'20261101',usDate:()=>'20261031',fetchDate:async()=>{throw Error('offline')},fetchMelbourneDate:async()=>{throw Error('offline')}};
+ // Keep the mocked selected date aligned with the actual newest archived slate.
+ // A static date becomes inconsistent as soon as a new immutable lock lands.
+ const latestDay=(entry?.melbourne_date||'2026-11-01').replaceAll('-','');
+ const scores={melbourneDate:()=>latestDay,usDate:()=>'20261031',fetchDate:async()=>{throw Error('offline')},fetchMelbourneDate:async()=>{throw Error('offline')}};
  const window={NbaScores:scores};
  vm.runInNewContext(read('assets/home.js'),{window,document:{getElementById:get,addEventListener(){}},fetch,Date,Intl,Promise,console,
   crypto:crypto.webcrypto,TextEncoder,setInterval:()=>0,encodeURIComponent},{filename:'home.js'});
