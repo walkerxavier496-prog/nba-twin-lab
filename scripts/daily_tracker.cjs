@@ -15,8 +15,10 @@ const ROOT = path.join(__dirname, '..');
 const DATA = path.join(ROOT, 'data');
 const AUDIT = path.join(ROOT, 'audit');
 const SUMMARY_ENDPOINT = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary';
-const LOCK_MINUTES_BEFORE_TIP = 45;
-const LOCK_MAX_MINUTES_BEFORE_TIP = 180;
+// Github scheduled jobs can arrive late or be skipped; use a wider but strictly
+// pre-tip lock window. Source freshness and first-tip checks remain mandatory.
+const LOCK_MINUTES_BEFORE_TIP = 20;
+const LOCK_MAX_MINUTES_BEFORE_TIP = 240;
 const MAX_GAME_FEED_AGE_HOURS = 18;
 const MAX_PLAYER_FEED_AGE_HOURS = 18;
 const DEFAULT_SIMULATIONS = 20000;
