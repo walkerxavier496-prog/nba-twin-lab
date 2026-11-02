@@ -74,6 +74,29 @@ jobs:
         run: node --test tests/challenge_daily.test.cjs tests/daily_audit.test.cjs tests/prediction_engine.test.cjs tests/monte_carlo.test.cjs tests/site_navigation.test.cjs tests/roster_integrity_v18.test.cjs
       - name: Lock eligible slate or ingest each complete final independently
         run: node scripts/daily_tracker.cjs run
+      # New locks exist only on this runner until Git publication succeeds.
+      # Save them NOW so an unrelated validation or upstream race cannot erase
+      # an authentic pre-tip artifact. Never modify historical lock files.
+      - name: Stage new pretip forecast locks for recovery
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/pretip-lock-backup"
+          for file in audit/snapshots/*/forecast.lock.json; do
+            [ -f "$file" ] || continue
+            if git ls-files --error-unmatch "$file" >/dev/null 2>&1; then continue; fi
+            target="$RUNNER_TEMP/pretip-lock-backup/$file"
+            mkdir -p "$(dirname "$target")"
+            cp -- "$file" "$target"
+          done
+      - name: Upload pretip evidence before any publication gate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pretip-lock-backup-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/pretip-lock-backup/
+          if-no-files-found: ignore
+          retention-days: 90
       - name: Verify separately locked 31 Oct six-model sidecar
         run: node scripts/challenge_supplement.cjs verify
       - name: Verify immutable artifacts and derived ledger
