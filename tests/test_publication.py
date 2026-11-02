@@ -24,6 +24,19 @@ pub = load("publish_data")
 deploy = load("deployment")
 
 
+def test_daily_publication_isolated_from_unrelated_website_tests():
+    assert pub.validation_command("daily-audit") == ["bash", "scripts/validate_daily_publication.sh"]
+    assert pub.validation_command("v9-player-stats") == ["bash", "scripts/validate_release.sh"]
+    gate = (ROOT / "scripts/validate_daily_publication.sh").read_text()
+    for command in ("node scripts/daily_tracker.cjs verify",
+                    "node scripts/challenge_supplement.cjs verify",
+                    "node scripts/anchor_locks.cjs verify",
+                    "python scripts/validate_release.py"):
+        assert command in gate
+    assert "tests/daily_audit.test.cjs" in gate
+    assert "scripts/validate_release.sh" not in gate
+
+
 def git(cwd, *args):
     return subprocess.check_output(["git", "-C", str(cwd), *args], text=True).strip()
 
