@@ -24,11 +24,21 @@ async function loadHome({withLedger=true,withGames=true}={}){
    json:async()=>typeof value==='string'?JSON.parse(value):value,
    text:async()=>typeof value==='string'?value:JSON.stringify(value)};
  };
- const scores={melbourneDate:()=>'20261101',usDate:()=>'20261031',fetchDate:async()=>{throw Error('offline')},fetchMelbourneDate:async()=>{throw Error('offline')}};
+ // Keep the mocked selected date aligned with the actual newest archived slate.
+ // A static date becomes inconsistent as soon as a new immutable lock lands.
+ const latestDay=(entry?.melbourne_date||'2026-11-01').replaceAll('-','');
+ const scores={melbourneDate:()=>latestDay,usDate:()=>'20261031',fetchDate:async()=>{throw Error('offline')},fetchMelbourneDate:async()=>{throw Error('offline')}};
  const window={NbaScores:scores};
  vm.runInNewContext(read('assets/home.js'),{window,document:{getElementById:get,addEventListener(){}},fetch,Date,Intl,Promise,console,
   crypto:crypto.webcrypto,TextEncoder,setInterval:()=>0,encodeURIComponent},{filename:'home.js'});
- await wait(400);
+ // Cryptographic SHA-256 verification is asynchronous and may need more than a
+ // fixed 400 ms on a shared CI runner, particularly after adding a new slate.
+ for(let attempt=0;attempt<60;attempt++){
+  const featureDone=!get('featured-game').innerHTML.includes('Loading');
+  const projectionDone=!withLedger||/^\d/.test(get('home-projections').textContent);
+  if(featureDone&&projectionDone)break;
+  await wait(50);
+ }
  return get;
 }
 test('offline scoreboard: rail shows latest verified lock (current or archived) and published finals',async()=>{

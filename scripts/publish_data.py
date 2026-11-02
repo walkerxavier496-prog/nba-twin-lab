@@ -117,12 +117,20 @@ def publish(workflow, receipt, validate):
     raise RuntimeError("Publication push failed after five non-destructive attempts")
 
 
+def validation_command(workflow):
+    # Lock publication is gated by the complete forecast/audit integrity suite.
+    # Unrelated homepage/browser presentation tests gate Pages separately.
+    script = ("scripts/validate_daily_publication.sh" if workflow == "daily-audit"
+              else "scripts/validate_release.sh")
+    return ["bash", script]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("workflow")
     parser.add_argument("--receipt", required=True, type=Path)
     args = parser.parse_args()
-    publish(args.workflow, args.receipt, ["bash", "scripts/validate_release.sh"])
+    publish(args.workflow, args.receipt, validation_command(args.workflow))
 
 
 if __name__ == "__main__":
