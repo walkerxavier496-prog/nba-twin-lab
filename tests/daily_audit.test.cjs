@@ -9,6 +9,13 @@ const T = require('../scripts/daily_tracker.cjs');
 
 const ROOT = path.join(__dirname, '..');
 
+test('lock scheduler tolerates delayed GitHub Actions while still locking strictly before tipoff', () => {
+  assert.equal(T.LOCK_MINUTES_BEFORE_TIP, 20);
+  assert.equal(T.LOCK_MAX_MINUTES_BEFORE_TIP, 240);
+  assert.ok(T.LOCK_MINUTES_BEFORE_TIP > 0);
+  assert.ok(T.LOCK_MAX_MINUTES_BEFORE_TIP < 24 * 60);
+});
+
 test('Melbourne date discovery follows AEST and AEDT instead of a fixed UTC offset', () => {
   assert.equal(A.melbourneDate('2026-06-01T14:30:00Z'), '2026-06-02');
   assert.equal(A.melbourneDate('2026-10-30T13:30:00Z'), '2026-10-31');
