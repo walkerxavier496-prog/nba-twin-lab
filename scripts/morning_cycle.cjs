@@ -53,6 +53,23 @@ function critique(snapshot, games, phase) {
     status:seen.size===expected.size?'complete':'partial',expected_games:expected.size,reviewed_games:seen.size,pending_games:expected.size-seen.size,
     models:Object.fromEntries(Object.entries(rows).sort().map(([id,values])=>[id,{...A.probabilityMetrics(values),calibration:A.calibration(values)}])),
     player_stats:A.summarizeGames(games).player_stats,
+    findings:games.map(game=>{
+      const production=game.models?.production_elo_v7;
+      const original=snapshot.forecasts.find(f=>String(f.game_id)===String(game.game_id));
+      if(!production||typeof production.p!=='number'||typeof production.actual!=='number')return null;
+      return {
+        game_id:String(game.game_id),
+        matchup:original?.away?.abbr&&original?.home?.abbr?original.away.abbr+' @ '+original.home.abbr:null,
+        correct:production.correct===true,
+        home_win_probability:production.p,
+        brier:production.brier,
+        score_mae_per_team:production.score_mae_per_team,
+        confidence:Math.max(production.p,1-production.p),
+        observation:production.correct===false?
+          'Production forecast selected the losing team; investigate pregame evidence without assigning an unverified cause.':
+          'Production winner selection matched the verified result; probability and score errors still matter.'
+      };
+    }).filter(Boolean).sort((a,b)=>(b.brier??-1)-(a.brier??-1)).slice(0,5),
     notes:['Descriptive self-critique only; no model parameters or production selection change.',
       'Daily samples are small. Confidence gaps and calibration bins are descriptive evidence, not proof of model superiority.',
       seen.size<expected.size?'Pending games are excluded, never zero-filled.':'All forecast games have verified complete results.',
@@ -117,7 +134,17 @@ async function run({now,build,dryRun=false,root=ROOT,lockedRecords=[],fetcher,cl
     if(!dryRun)derived(path.join(path.dirname(file),'critique.json'),report);
     days.push({date:snapshot.scope.melbourne_date,published_at_utc:snapshot.published_at_utc,
       snapshot_path:relative(root,file),report_path:relative(root,path.join(path.dirname(file),'critique.json')),report,pending,
-      forecasts:snapshot.forecasts.map(g=>({game_id:g.game_id,tip_utc:g.tip_utc,home:g.home.abbr,away:g.away.abbr,home_win_probability:g.primary_forecast.home_win_probability,
+      forecasts:snapshot.forecasts.map(g=>({game_id:g.game_id,tip_utc:g.tip_utc,home:g.home.abbr,away:g.away.abbr,
+        home_win_probability:g.primary_forecast.home_win_probability,
+        away_win_probability:g.primary_forecast.away_win_probability,
+        winner:g.primary_forecast.winner,
+        model_id:g.primary_forecast.model_id,
+        projected_score:g.primary_forecast.projected_score||null,
+        model_comparisons:[
+          {id:g.primary_forecast.model_id||'production_elo_v7',label:'Production Elo',home_win_probability:g.primary_forecast.home_win_probability,status:'production'},
+          ...(typeof g.diagnostics?.monte_carlo?.home_win_probability==='number'?[{id:'possession_monte_carlo_v5',label:'Possession Monte Carlo',home_win_probability:g.diagnostics.monte_carlo.home_win_probability,status:'diagnostic'}]:[]),
+          ...Object.entries(g.challenge_predictions||{}).filter(([,m])=>m.available===true&&typeof m.home_win_probability==='number').map(([id,m])=>({id,label:id,home_win_probability:m.home_win_probability,status:'research'}))
+        ],
         result:(()=>{const row=games.find(row=>String(row.game_id)===String(g.game_id));return row?{home:row.home.score,away:row.away.score,status:'verified_final'}:null;})()}))});
   }
   const locked=[];
