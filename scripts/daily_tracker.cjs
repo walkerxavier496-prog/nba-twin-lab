@@ -231,7 +231,7 @@ function assertFresh(label, source, now, maxHours, firstTip, field = 'built_at_u
   return new Date(timestamp).toISOString();
 }
 
-function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
+function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS, morningPreview = false }) {
   const gameData = readJson(path.join(DATA, 'games.json'));
   const snapshot = readJson(path.join(DATA, 'v7-current.json'));
   const context = readJson(path.join(DATA, 'context.json'));
@@ -246,7 +246,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
   const lastTip = Math.max(...games.map(game => Date.parse(game.date)));
   if (!Number.isFinite(firstTip) || now >= firstTip) throw new Error('Tipoff has begun; lock refused');
   const minutesBefore = (firstTip - now) / 60000;
-  if (minutesBefore < LOCK_MINUTES_BEFORE_TIP || minutesBefore > LOCK_MAX_MINUTES_BEFORE_TIP) {
+  if (minutesBefore < LOCK_MINUTES_BEFORE_TIP || (!morningPreview && minutesBefore > LOCK_MAX_MINUTES_BEFORE_TIP)) {
     const error = new Error(`Outside lock window (${minutesBefore.toFixed(1)} minutes before first tip)`);
     error.code = 'OUTSIDE_WINDOW';
     throw error;
