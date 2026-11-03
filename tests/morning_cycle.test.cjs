@@ -30,7 +30,7 @@ test('critique is deterministic, separate by phase, reports pending coverage and
  assert.deepEqual(report,M.critique(snap,[game],'initial')); assert.equal(report.status,'complete');
  assert.equal(report.models.production_elo_v7.count,1); assert.ok(Math.abs(report.models.production_elo_v7.brier-.09)<1e-12);
  assert.equal(report.models.production_elo_v7.calibration[0].count,1);
- assert.match(report.notes.join(' '),/sample/i); assert.equal(M.critique(snap,[],'initial').pending_games,1);
+ assert.match(report.notes.join(' '),/sample/i); assert.equal(report.findings.length,1); assert.equal(report.findings[0].matchup,'NYK @ BOS'); assert.equal(M.critique(snap,[],'initial').pending_games,1);
  assert.throws(()=>M.critique(snap,[game,game],'initial'),/duplicate/i);
 });
 
