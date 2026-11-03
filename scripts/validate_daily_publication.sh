@@ -5,6 +5,7 @@ set -euo pipefail
 export PYTHONDONTWRITEBYTECODE=1
 
 node --test \
+  tests/morning_cycle.test.cjs \
   tests/challenge_daily.test.cjs \
   tests/daily_audit.test.cjs \
   tests/prediction_engine.test.cjs \

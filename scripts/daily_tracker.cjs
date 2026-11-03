@@ -246,7 +246,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS, morningPrevie
   const lastTip = Math.max(...games.map(game => Date.parse(game.date)));
   if (!Number.isFinite(firstTip) || now >= firstTip) throw new Error('Tipoff has begun; lock refused');
   const minutesBefore = (firstTip - now) / 60000;
-  if (minutesBefore < LOCK_MINUTES_BEFORE_TIP || (!morningPreview && minutesBefore > LOCK_MAX_MINUTES_BEFORE_TIP)) {
+  if (!morningPreview && (minutesBefore < LOCK_MINUTES_BEFORE_TIP || minutesBefore > LOCK_MAX_MINUTES_BEFORE_TIP)) {
     const error = new Error(`Outside lock window (${minutesBefore.toFixed(1)} minutes before first tip)`);
     error.code = 'OUTSIDE_WINDOW';
     throw error;
@@ -609,6 +609,7 @@ function verifyReviewProbabilities(forecast, challengeGame, reviewGame) {
 }
 
 function verifyAll() {
+  require('./morning_cycle.cjs').verify(ROOT);
   const lockRecords = new Map();
   for (const file of lockFiles()) {
     const value = readJson(file);
@@ -724,6 +725,8 @@ async function run(options) {
     } catch (error) { console.log(`Per-game review deferred safely: ${error.message}`); }
   }
   if (!options.dryRun) { buildLedger(now); buildPerformanceCentre(now); }
+  await require('./morning_cycle.cjs').run({ now, build: buildLock,
+    dryRun: options.dryRun, lockedRecords: recordsForLedger(), clock: Date.now });
 }
 
 async function main() {

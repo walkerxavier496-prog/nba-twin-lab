@@ -1,0 +1,12 @@
+/* Uses the existing Concept 3 palette and typography. */
+.daily-cycle{margin:24px auto;padding:24px;max-width:1220px;border:1px solid #274664;border-radius:14px;background:#0e1b2b;color:#d9e6f2;line-height:1.6}
+.daily-cycle h2{margin:8px 0 16px;color:#fff;font:inherit;font-size:clamp(1.5rem,4vw,2rem);font-weight:800}
+.daily-cycle a{color:#91d9ff;text-decoration:underline;text-underline-offset:3px}
+.daily-cycle details{border-top:1px solid #274664;padding:14px 0}
+.daily-cycle summary{cursor:pointer;color:#fff;font-weight:700;padding:4px 0}
+.daily-cycle :focus-visible{outline:2px solid #91d9ff;outline-offset:4px}
+.daily-cycle .cycle-status{border-left:3px solid #91d9ff;padding-left:14px}
+.cycle-games,.cycle-models{list-style:none;padding:0;margin:12px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}
+.cycle-games li,.cycle-models li{padding:14px;background:#13263b;border-radius:8px;overflow-wrap:anywhere}
+.cycle-games span,.cycle-models span{display:block;margin-top:5px}
+@media(max-width:600px){.daily-cycle{padding:16px;margin:18px 12px}.daily-cycle summary{min-height:44px}}

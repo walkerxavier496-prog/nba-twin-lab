@@ -308,8 +308,16 @@ def test_every_publisher_uses_shared_action_and_nonrecursive_pages_handoff():
         path = ROOT / ".github/workflows" / f"{name}.yml"
         spec = workflow(path)
         assert spec["name"] in triggers
-        job = next(iter(spec["jobs"].values()))
-        assert job["if"] == "github.ref == 'refs/heads/main'"
+        publishers = [job for job in spec["jobs"].values()
+                      if job["steps"][-1].get("uses") == "./.github/actions/publish-data"]
+        assert len(publishers) == 1
+        job = publishers[0]
+        if name == "update-predictions":
+            assert job["needs"] == "clock"
+            assert job["if"] == "github.ref == 'refs/heads/main' && needs.clock.outputs.proceed == 'true'"
+            assert spec["jobs"]["clock"]["if"] == "github.ref == 'refs/heads/main'"
+        else:
+            assert job["if"] == "github.ref == 'refs/heads/main'"
         assert job["steps"][0]["with"]["fetch-depth"] == "0"
         action = job["steps"][-1]
         assert action["uses"] == "./.github/actions/publish-data"
@@ -344,6 +352,14 @@ def test_player_history_observations_are_immutable_while_indexes_are_derived():
         "data/player-game-history/trends.json",
         "data/player-game-history/observations/*.json",
     }
+
+
+def test_morning_publications_and_results_are_immutable_but_reports_are_derived():
+    assert pub.immutable("audit/morning/2026-11-04/initial.json")
+    assert pub.immutable("audit/morning/2026-11-04/games/123.review.json")
+    assert not pub.immutable("audit/morning/2026-11-04/critique.json")
+    assert not pub.immutable("audit/critiques/2026-11-04/locked.json")
+    assert "data/daily-cycle.json" in json.loads((ROOT / "scripts/publication.json").read_text())["daily-audit"]
 
 
 def test_v7_and_v9_declare_all_builder_outputs():
