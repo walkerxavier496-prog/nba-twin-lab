@@ -45,11 +45,11 @@ async function main(){
     await page.evaluate(()=>window.scrollTo(0,0));
     await page.screenshot({path:path.join(OUT,label+'-full-page-'+width+'.png'),fullPage:true});
     assert.match(await panel.innerText(),/SYNTHETIC TEST DATA/);
+    assert.equal(await panel.locator('#cycle-date').inputValue(),date);
+    assert.match(await panel.innerText(),/Model performance|Production Elo|production_elo_v7/);
     await panel.locator('#cycle-date').selectOption('2020-01-01');
     assert.match(await panel.innerText(),/Archived morning snapshot from 2020-01-01/);
     await panel.screenshot({path:path.join(OUT,label+'-archive-'+width+'.png')});
-    assert.equal(await panel.locator('#cycle-date').inputValue(),date);
-    assert.match(await panel.innerText(),/Model performance|Production Elo|production_elo_v7/);
     await page.unroute('**/data/daily-cycle.json');
 
    }
