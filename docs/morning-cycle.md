@@ -27,3 +27,12 @@ An independent reviewer identified possible publication backdating if historical
 Windows verification required restoring checkout line endings to exact committed bytes, using UTF-8 Python and installing timezone data in the isolated test environment. The publication path comparison now uses POSIX paths, matching Git on both Windows and Linux; existing publication integration tests exercise this.
 
 The existing responsive PR workflow now runs the full release gate on Linux, replacing its smaller Node test subset. It remains read-only and never publishes or deploys. No additional pipeline was introduced.
+
+## Owner-requested UX follow-up (4 November 2026)
+
+- The morning panel now renders a full initial game card for each available matchup: predicted winner, home/away probabilities, projected score when present, tip time, model comparison and separately verified final.
+- The main homepage Concept 3 hero remains first; the morning game centre follows it rather than replacing the hero.
+- A Melbourne-date selector exposes archived initial forecasts, their verified outcomes and phase-specific critique reports. Missing dates are not fabricated.
+- Deterministic critique now includes the five largest production Brier errors with actual matchup identifiers and explicit observational language; it does not claim unverified causal explanations.
+- Existing locked slate UI remains labelled as the latest locked slate, never silently converted into an initial snapshot. Production and research model statuses remain distinct.
+- Browser screenshots of populated data, user visual approval, actual 06:00 hosted publication, live results and deployment are still required before release. Keep this PR draft until approved.
