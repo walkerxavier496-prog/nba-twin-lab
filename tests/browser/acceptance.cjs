@@ -229,7 +229,7 @@ async function check(vp, name, fn) {
 
     // ---------- Daily predictions ----------
     await check(width, 'daily: slate rows, tabs, search and sorting match the lock', async () => {
-      const page = await open('/challenge/daily.html', '#c3-slate .c3-data-table tbody tr');
+      const page = await open('/challenge/daily.html?date='+LOCK.scope.melbourne_date, '#c3-slate .c3-data-table tbody tr');
       const matchups = async () => (await page.locator('#c3-slate .c3-data-table tbody tr td:nth-child(2)').allInnerTexts()).map(s => s.replace(/\s+/g, ' ').trim());
       const rows = await matchups();
       assert.equal(rows.length, LOCK.forecasts.length);
@@ -294,7 +294,9 @@ async function check(vp, name, fn) {
       assert.ok(body.includes((100 * prod.accuracy).toFixed(1) + '%'), 'ledger accuracy');
       assert.ok(body.includes(prod.brier.toFixed(3)), 'ledger Brier');
       for (const mock of ['67.3%', '0.189', '0.612']) assert.ok(!body.includes(mock), 'mock-up number ' + mock);
-      assert.match(body, /At least two reviewed slates/);
+      const reviewed=LEDGER.entries.filter(e=>e.status==='reviewed'&&typeof e.summary?.models?.production_elo_v7?.accuracy==='number');
+      if(reviewed.length<2)assert.match(body, /At least two reviewed slates/);
+      else assert.equal(await page.locator('svg[aria-label="Actual reviewed accuracy trend"]').count(),1);
       assert.equal(await page.locator('.c3-audit-kpis > div').count(), 4);
       const tabs = await page.locator('.c3-tab').allInnerTexts();
       assert.equal(tabs.length, 5);

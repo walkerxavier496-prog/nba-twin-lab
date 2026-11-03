@@ -125,7 +125,9 @@ function normalizeSummary(game, responseBody, retrievedAtUtc, scoreboardSnapshot
   const homeAbbr = aliasAbbr(game?.home?.abbr);
   const awayAbbr = aliasAbbr(game?.away?.abbr);
   validatePlayerTables(payload, game);
-  const parsed = A.parseEspnSummary(payload, gameId);
+  // History preserves missing statistics as null; prediction grading uses the
+  // parser's stricter complete-player requirement instead.
+  const parsed = A.parseEspnSummary(payload, gameId, {requireCompletePlayers:false});
   if (parsed.home.abbr !== homeAbbr || parsed.away.abbr !== awayAbbr) {
     throw new Error(`ESPN summary teams do not match scoreboard game ${gameId}`);
   }
@@ -211,7 +213,7 @@ function validateObservation(observation) {
     home: observation.home,
     away: observation.away,
   });
-  const parsed = A.parseEspnSummary(sourcePayload, observation.game_id);
+  const parsed = A.parseEspnSummary(sourcePayload, observation.game_id, {requireCompletePlayers:false});
   if (parsed.home.abbr !== observation.home.abbr || parsed.away.abbr !== observation.away.abbr ||
       parsed.home.score !== observation.home.score || parsed.away.score !== observation.away.score) {
     throw new Error(`Player-game observation ${observation.game_id} does not match its stored ESPN source extract`);

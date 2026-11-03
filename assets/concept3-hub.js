@@ -464,10 +464,21 @@ async function load(){
  try{
   const ledger=await get(prefix+'data/audit-ledger.json');
   if(!Array.isArray(ledger.entries)||!ledger.entries.length)throw Error('No immutable pretip slate is available');
-  const entry=ledger.entries.at(-1);
+  const query=new URLSearchParams(location.search),requestedGame=query.get('game'),requestedDate=query.get('date');
+  if(requestedGame&&!/^\d{6,12}$/.test(requestedGame))throw Error('Invalid archived game ID');
+  if(requestedDate&&!/^\d{4}-\d{2}-\d{2}$/.test(requestedDate))throw Error('Invalid Melbourne archive date');
+  const entries=[...ledger.entries].reverse().filter(e=>!requestedDate||e.melbourne_date===requestedDate);
+  let entry=null,selectedLock=null;
+  for(const candidate of entries){
+   const value=await get(prefix+candidate.lock_path,true);
+   if(!value?.forecasts?.length||value.scope?.melbourne_date!==candidate.melbourne_date)continue;
+   if(requestedGame&&!value.forecasts.some(g=>gameId(g)===requestedGame))continue;
+   entry=candidate;selectedLock=value;break;
+  }
+  if(!entry)throw Error('Requested saved forecast unavailable');
   const date=entry.melbourne_date;
   const [lock,sidecar,review,snapshot,results]=await Promise.all([
-   get(prefix+entry.lock_path),
+   Promise.resolve(selectedLock),
    get(prefix+'audit/supplements/'+date+'/challenge.lock.json',true),
    entry.review_path?get(prefix+entry.review_path,true):Promise.resolve(null),
    get(prefix+'data/v7-current.json',true),get(prefix+'data/games.json',true)
@@ -477,7 +488,7 @@ async function load(){
     review.source_lock_integrity_sha256===entry.lock_integrity_sha256&&
     review.melbourne_date===entry.melbourne_date&&Array.isArray(review.games)?review:null;
   state.entry=entry;state.lock=lock;state.sidecar=sidecar;state.review=verifiedReview;state.snapshot=snapshot;state.results=results;
-  state.gid=new URLSearchParams(location.search).get('game')||gameId(lock.forecasts[0]);
+  state.gid=requestedGame||gameId(lock.forecasts[0]);
   if($('c3-lab'))await loadGameReview(state.gid);
   if($('c3-lab'))renderLab();
   else renderSlate();

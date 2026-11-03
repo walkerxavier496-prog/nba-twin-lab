@@ -41,3 +41,18 @@
 
 .daily-cycle{scroll-margin-top:90px}
 .cycle-preview-warning{border:1px solid #eab308;background:#3b2b10;color:#fff1b8;border-radius:8px;padding:10px 14px;font-size:.85rem;font-weight:800;letter-spacing:.03em}
+.cycle-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}
+.cycle-actions [role=group]{display:flex;gap:4px;padding:4px;background:#071225;border-radius:10px}
+.daily-cycle button{padding:10px 14px;border-radius:7px;border:1px solid #365675;background:#142a43;color:#d9e6f2;font:inherit;font-size:.85rem;cursor:pointer;min-height:44px}
+.daily-cycle button:hover{border-color:#20caff}.daily-cycle button[aria-pressed=true]{background:#1879ff;color:#fff;border-color:#1879ff}
+.cycle-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;border:1px solid #274664;background:#274664;border-radius:10px;overflow:hidden;margin:20px 0}
+.cycle-kpis div{padding:16px;background:#071225}.cycle-kpis small{display:block;color:#9eb8d0;font-size:.65rem;letter-spacing:.05em}.cycle-kpis strong{display:block;color:#f4f8ff;font-size:1.55rem;font-variant-numeric:tabular-nums;margin-top:8px}
+.cycle-game{border-top:3px solid var(--cycle-team,#20caff);box-shadow:0 8px 28px #03091540}
+.cycle-game-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:16px;color:#8ba7c2;font-size:.65rem;letter-spacing:.05em;font-weight:700}
+.cycle-badge{padding:4px 7px;border:1px solid #365675;border-radius:4px;color:#b8d8f7}.cycle-badge.final{color:#70e2b5;background:#0c302a;border-color:#1b6652}
+.cycle-game-head strong{display:flex;align-items:center;gap:6px}.cycle-game-head .team-logo{width:26px;height:26px;min-width:26px}
+.cycle-projections{list-style:none;margin:8px 0;padding:0;max-height:340px;overflow:auto;scrollbar-width:thin}
+.cycle-projections li{padding:9px 0;border-bottom:1px solid #274664;font-size:.8rem}.cycle-projections span{display:block;color:#9eb8d0;margin-top:3px}
+.cycle-models li p{font-size:.8rem;color:#a8c1d8}.cycle-models li summary{font-size:.8rem}
+.home .daily-cycle .cycle-reports,.home .daily-cycle .cycle-recurring{display:none}
+@media(max-width:700px){.cycle-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.cycle-kpis div{padding:12px}.cycle-actions{gap:8px}.cycle-actions a{font-size:.8rem}.cycle-game-head{display:block}.cycle-game-head>span{display:block;margin-top:8px}.cycle-game-meta{font-size:.58rem}}

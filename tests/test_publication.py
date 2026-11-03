@@ -362,6 +362,17 @@ def test_morning_publications_and_results_are_immutable_but_reports_are_derived(
     assert "data/daily-cycle.json" in json.loads((ROOT / "scripts/publication.json").read_text())["daily-audit"]
 
 
+def test_morning_scheduling_reuses_existing_producers_and_pr_checks_are_read_only():
+    refresh = workflow(ROOT / ".github/workflows/update-predictions.yml")
+    assert {row["cron"] for row in refresh["on"]["schedule"]} == {"45 11 * * *", "05 17 * * *", "0 19,20 * * *"}
+    assert "TZ=Australia/Melbourne date +%H" in refresh["jobs"]["clock"]["steps"][0]["run"]
+    audit = workflow(ROOT / ".github/workflows/daily-audit.yml")
+    assert audit["on"]["schedule"] == [{"cron": "*/15 * * * *"}]
+    assert audit["concurrency"]["cancel-in-progress"] == "false"
+    assert refresh["jobs"]["clock"]["permissions"] == {"contents": "read"}
+    assert workflow(ROOT / ".github/workflows/site-mobile.yml")["permissions"] == {"contents": "read"}
+
+
 def test_v7_and_v9_declare_all_builder_outputs():
     config = json.loads((ROOT / "scripts/publication.json").read_text())
     expected = {"data/v7-current.json", "research-reviews/**/*.json"}

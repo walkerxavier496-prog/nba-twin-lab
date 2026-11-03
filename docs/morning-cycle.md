@@ -28,6 +28,10 @@ Windows verification required restoring checkout line endings to exact committed
 
 The existing responsive PR workflow now runs the full release gate on Linux, replacing its smaller Node test subset. It remains read-only and never publishes or deploys. No additional pipeline was introduced.
 
+## Final engineering pass
+
+See [release candidate and safe deployment steps](courthesis-release.md). The final pass adds strict forecast/result defenses, source-derived display verification, model-specific and recurring critique, archive selection, conditional player details and preview isolation. Morning publication now selects only games that remain pregame; earlier games are listed without predictions. The unchanged official pretip lock path retains its full-slate policy. Snapshot capture and actual validated publication timestamps are labelled separately.
+
 ## Owner-requested UX follow-up (4 November 2026)
 
 - The morning panel now renders a full initial game card for each available matchup: predicted winner, home/away probabilities, projected score when present, tip time, model comparison and separately verified final.
