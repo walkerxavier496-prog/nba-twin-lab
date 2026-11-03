@@ -373,6 +373,14 @@ def test_morning_scheduling_reuses_existing_producers_and_pr_checks_are_read_onl
     assert workflow(ROOT / ".github/workflows/site-mobile.yml")["permissions"] == {"contents": "read"}
 
 
+def test_release_yaml_validation_rejects_duplicate_keys(tmp_path):
+    validator = load("validate_release")
+    path = tmp_path / "workflow.yml"
+    path.write_text("permissions:\n  contents: read\npermissions:\n  contents: write\n")
+    with pytest.raises(ValueError, match="Duplicate YAML key"):
+        validator.validate_yaml(path)
+
+
 def test_v7_and_v9_declare_all_builder_outputs():
     config = json.loads((ROOT / "scripts/publication.json").read_text())
     expected = {"data/v7-current.json", "research-reviews/**/*.json"}
