@@ -121,3 +121,19 @@ jobs:
           node --check predict/roster-strength.js
       - name: Test responsive routes and original pregame data safeguards
         run: bash scripts/validate_release.sh
+      - name: Capture unavailable and populated browser acceptance screenshots
+        if: github.event_name == 'pull_request'
+        run: |
+          npm install --no-save --no-package-lock playwright-core@1.56.1
+          export CHROME="$(command -v google-chrome || command -v chromium)"
+          test -n "$CHROME"
+          export ACCEPTANCE_OUT="$RUNNER_TEMP/cycle-preview"
+          node tests/browser/daily_cycle.cjs
+      - name: Upload Courthesis acceptance screenshots
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: courthesis-cycle-preview
+          path: ${{ runner.temp }}/cycle-preview/*.png
+          if-no-files-found: warn
+          retention-days: 14
