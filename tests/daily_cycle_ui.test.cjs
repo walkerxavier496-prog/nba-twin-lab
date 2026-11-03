@@ -18,12 +18,15 @@ test('current initial probabilities, verified scores and critiques stay distinct
  const date=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Melbourne',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
  const report={reviewed_games:1,expected_games:1,status:'complete',models:{'<script>':{count:1,accuracy:1,brier:.09,log_loss:.36,confidence_assessment:'insufficient_sample'}}};
  const day={date,published_at_utc:new Date().toISOString(),snapshot_path:`audit/morning/${date}/initial.json`,report_path:`audit/morning/${date}/critique.json`,report,
- forecasts:[{home:'BOS',away:'<img>',tip_utc:new Date().toISOString(),home_win_probability:.7,result:{home:110,away:100}}]};
+ forecasts:[{home:'BOS',away:'<img>',tip_utc:new Date().toISOString(),home_win_probability:.7,projected_score:{home:112.2,away:106.7},model_comparisons:[{id:'production_elo_v7',label:'Production Elo',home_win_probability:.7,status:'production'}],result:{home:110,away:100}}]};
  const html=await render({schema:'courthesis-daily-cycle-v1',date,checked_at_utc:new Date().toISOString(),publication:{status:'published'},days:[day],locked:[{date,report,report_path:`audit/critiques/${date}/locked.json`}]});
- assert.match(html,/Initial BOS win probability 70.0%/);assert.match(html,/Verified final/);assert.match(html,/Initial forecast critique/);assert.match(html,/Locked pretip forecast critique/);assert.match(html,/insufficient_sample/);
+ assert.match(html,/Initial BOS win probability 70.0%/);
+ assert.match(html,/Projected score: &lt;img&gt; 107 – BOS 112/);assert.match(html,/Model comparison \(1\)/);assert.match(html,/Browse Melbourne date/);assert.match(html,/Verified final/);assert.match(html,/Initial forecast critique/);assert.match(html,/Locked pretip forecast critique/);assert.match(html,/insufficient_sample/);
  assert.doesNotMatch(html,/<img>|<script>/);assert.match(html,/&lt;img&gt;/);
 });
 test('an archived initial publication never becomes today’s forecast',async()=>{
  const html=await render({schema:'courthesis-daily-cycle-v1',date:'2020-01-01',checked_at_utc:'2020-01-01T00:00:00Z',publication:{status:'published'},days:[{date:'2020-01-01',snapshot_path:'audit/morning/2020-01-01/initial.json',report:{reviewed_games:0}}],locked:[]});
  assert.match(html,/Today’s initial forecast is unavailable/);assert.match(html,/Previous-day data/);assert.match(html,/Latest archived/);assert.doesNotMatch(html,/Initial morning forecasts ·/);
 });
+
+test('home hero retains Concept 3 priority above morning cards',()=>{const s=fs.readFileSync(path.join(root,'index.html'),'utf8');assert.ok(s.indexOf('class="hero-grid"')<s.indexOf('id="daily-cycle"'));});
