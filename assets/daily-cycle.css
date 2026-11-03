@@ -38,3 +38,6 @@
 .cycle-findings li{padding:8px 0}
 .cycle-findings p{margin:4px 0;color:#a8c1d8;font-size:.84rem}
 @media(max-width:700px){.daily-cycle{padding:16px;margin:18px 12px}.cycle-top{flex-direction:column}.cycle-date-label{width:100%}.daily-cycle summary{min-height:44px}.cycle-game-head{flex-wrap:wrap}}
+
+.daily-cycle{scroll-margin-top:90px}
+.cycle-preview-warning{border:1px solid #eab308;background:#3b2b10;color:#fff1b8;border-radius:8px;padding:10px 14px;font-size:.85rem;font-weight:800;letter-spacing:.03em}
