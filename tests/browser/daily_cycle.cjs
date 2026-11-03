@@ -37,6 +37,7 @@ async function main(){
     await page.route('**/data/daily-cycle.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(payload)}));
     await page.goto(origin+url,{waitUntil:'networkidle'});
     await panel.getByText('Initial predicted winner').waitFor();
+    await panel.locator('.cycle-report').first().evaluate(el=>{el.open=true;});
     assert.match(await panel.innerText(),/Projected score: NYK 108 – BOS 113/);
     assert.match(await panel.innerText(),/Verified final: NYK 108 – BOS 113/);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,label+' populated overflow at '+width);
