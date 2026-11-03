@@ -1,18 +1,86 @@
 {
   "workflow": "daily-audit",
-  "generation_observed_at_utc": "2026-11-03T02:10:34.624972+00:00",
+  "generation_observed_at_utc": "2026-11-03T09:30:26.551447+00:00",
   "artifact_generation_timestamps": {
-    "data/availability-current.json": {
-      "built_at_utc": "2026-11-03T02:10:20.873088Z"
+    "audit/reviews/2026-11-03/games/401909907.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909908.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909909.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909910.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909911.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909912.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909913.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909914.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909915.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909916.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909917.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909918.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909919.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909920.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/games/401909921.review.json": {
+      "reviewed_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "audit/reviews/2026-11-03/review.json": {
+      "generated_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "data/audit-ledger.json": {
+      "generated_at_utc": "2026-11-03T09:30:17.238Z"
+    },
+    "data/performance-centre.json": {
+      "generated_at_utc": "2026-11-03T09:30:17.238Z"
     }
   },
-  "source_revision": "fec223475d33610930f19304ce8a5de7f82474c3",
-  "run_id": "41564410025",
+  "source_revision": "bf46ac7a0688e131d5eba6e6611fc5e6df6db290",
+  "run_id": "41611507361",
   "run_attempt": "1",
   "changed_artifacts": [
     "audit/anchors/2026-10-31.json",
     "audit/anchors/2026-11-01.json",
     "audit/anchors/2026-11-03.json",
-    "data/availability-current.json"
+    "audit/reviews/2026-11-03/games/401909907.review.json",
+    "audit/reviews/2026-11-03/games/401909908.review.json",
+    "audit/reviews/2026-11-03/games/401909909.review.json",
+    "audit/reviews/2026-11-03/games/401909910.review.json",
+    "audit/reviews/2026-11-03/games/401909911.review.json",
+    "audit/reviews/2026-11-03/games/401909912.review.json",
+    "audit/reviews/2026-11-03/games/401909913.review.json",
+    "audit/reviews/2026-11-03/games/401909914.review.json",
+    "audit/reviews/2026-11-03/games/401909915.review.json",
+    "audit/reviews/2026-11-03/games/401909916.review.json",
+    "audit/reviews/2026-11-03/games/401909917.review.json",
+    "audit/reviews/2026-11-03/games/401909918.review.json",
+    "audit/reviews/2026-11-03/games/401909919.review.json",
+    "audit/reviews/2026-11-03/games/401909920.review.json",
+    "audit/reviews/2026-11-03/games/401909921.review.json",
+    "audit/reviews/2026-11-03/review.json",
+    "data/audit-ledger.json",
+    "data/performance-centre.json"
   ]
 }
