@@ -40,6 +40,9 @@ async function main(){
     assert.match(await panel.innerText(),/Verified final: NYK 108 – BOS 113/);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,label+' populated overflow at '+width);
     await panel.screenshot({path:path.join(OUT,label+'-populated-'+width+'.png')});
+    await page.screenshot({path:path.join(OUT,label+'-full-page-'+width+'.png'),fullPage:true});
+    assert.equal(await panel.locator('#cycle-date').inputValue(),date);
+    assert.match(await panel.innerText(),/Model performance|Production Elo|production_elo_v7/);
     await page.unroute('**/data/daily-cycle.json');
 
    }
