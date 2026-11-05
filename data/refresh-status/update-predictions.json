@@ -1,19 +1,15 @@
 {
   "workflow": "update-predictions",
-  "generation_observed_at_utc": "2026-11-05T19:01:53.432846+00:00",
+  "generation_observed_at_utc": "2026-11-05T22:39:01.031308+00:00",
   "artifact_generation_timestamps": {
-    "data/games.json": {
-      "built_at_utc": "2026-11-05T19:01:45+00:00"
-    },
-    "research-reviews/chronology-v1/runs/42089882104-1/model-report.json": {
-      "generated_at_utc": "2026-11-05T19:01:52.200Z"
+    "research-reviews/chronology-v1/runs/42123218504-1/model-report.json": {
+      "generated_at_utc": "2026-11-05T22:38:59.859Z"
     }
   },
-  "source_revision": "482d1bd7a055c60f59acb94c55fc9c349d5fca1e",
-  "run_id": "42089882104",
+  "source_revision": "e095615cfc027b365e94f438c05afda2c27722b6",
+  "run_id": "42123218504",
   "run_attempt": "1",
   "changed_artifacts": [
-    "data/games.json",
-    "research-reviews/chronology-v1/runs/42089882104-1/model-report.json"
+    "research-reviews/chronology-v1/runs/42123218504-1/model-report.json"
   ]
 }
