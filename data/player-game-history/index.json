@@ -1,6 +1,6 @@
 {
   "schema": "nba-twin-lab-player-game-history-index-v1",
-  "generated_at_utc": "2026-11-05T20:49:01.607Z",
+  "generated_at_utc": "2026-11-06T20:04:14.872Z",
   "coverage_start_utc": "2026-10-01T17:54:52.841Z",
   "source": {
     "name": "ESPN public NBA summary (unofficial)",
@@ -9,12 +9,12 @@
     "player_identity": "ESPN athlete ID; name-only matching is never used for trends.",
     "immutability": "Each new game version is written once. A corrected summary creates a new content-versioned observation; previous files are never replaced."
   },
-  "observation_count": 131,
-  "verified_final_game_count": 121,
-  "latest_observation_utc": "2026-11-05T20:49:01.607Z",
-  "attempted_game_count": 53,
-  "appended_observation_count": 14,
-  "unchanged_game_count": 39,
+  "observation_count": 141,
+  "verified_final_game_count": 123,
+  "latest_observation_utc": "2026-11-06T20:04:14.872Z",
+  "attempted_game_count": 52,
+  "appended_observation_count": 10,
+  "unchanged_game_count": 42,
   "unavailable_games": [],
   "observations": [
     {
@@ -114,6 +114,15 @@
       "event_at_utc": "2026-10-30T23:00:00.000Z",
       "retrieved_at_utc": "2026-11-01T18:32:20.645Z",
       "normalized_sha256": "370311ca78ddea9dadee73b88d53f3790e4bd5ce2c4dd608ab944730e5585727",
+      "player_count": 26
+    },
+    {
+      "path": "data/player-game-history/observations/401909277-20261106T200414872-ea6abffac94ba9733b4b800bad68b2b5e51d23a80f56368a7e9182bce27ea50f.json",
+      "sha256": "0859f8e359fc768675ad2d0a717b735d1d316876fba39d95051706ded6495f93",
+      "game_id": "401909277",
+      "event_at_utc": "2026-10-30T23:00:00.000Z",
+      "retrieved_at_utc": "2026-11-06T20:04:14.872Z",
+      "normalized_sha256": "ea6abffac94ba9733b4b800bad68b2b5e51d23a80f56368a7e9182bce27ea50f",
       "player_count": 26
     },
     {
@@ -1080,6 +1089,15 @@
       "player_count": 26
     },
     {
+      "path": "data/player-game-history/observations/401909922-20261106T200414872-254411d8dbf8d8c78b678d92c435c8bcb67596a7bf3e525ecd7a8551edef3eb5.json",
+      "sha256": "54ec89f2f569740e5bb45dee88c9140516286edafe1a598f3a93065f0e1c26bc",
+      "game_id": "401909922",
+      "event_at_utc": "2026-11-05T00:00:00.000Z",
+      "retrieved_at_utc": "2026-11-06T20:04:14.872Z",
+      "normalized_sha256": "254411d8dbf8d8c78b678d92c435c8bcb67596a7bf3e525ecd7a8551edef3eb5",
+      "player_count": 26
+    },
+    {
       "path": "data/player-game-history/observations/401909923-20261105T204901607-29e4dc5383b341a7f3c3cac077354a553426e3b6ef95d4668d9cc5c3693ea59e.json",
       "sha256": "a1d836ff7653c8bfa757ea73d226ce22f59b8f5416280f976d780f2608a16ca0",
       "game_id": "401909923",
@@ -1125,12 +1143,30 @@
       "player_count": 28
     },
     {
+      "path": "data/player-game-history/observations/401909927-20261106T200414872-8df3641fcf95274ed44ccf2cfb08e3bb3f2bf761bde1e362250ff84bc28e3e56.json",
+      "sha256": "b4f2b7e7946ea1ac861015b867e1fd064289825d38a9076463ccb80fd2faac37",
+      "game_id": "401909927",
+      "event_at_utc": "2026-11-05T01:00:00.000Z",
+      "retrieved_at_utc": "2026-11-06T20:04:14.872Z",
+      "normalized_sha256": "8df3641fcf95274ed44ccf2cfb08e3bb3f2bf761bde1e362250ff84bc28e3e56",
+      "player_count": 28
+    },
+    {
       "path": "data/player-game-history/observations/401909928-20261105T204901607-c33144c322723468597453f3d28aee62ac3220892bd46d6161d784d5ac0fc49f.json",
       "sha256": "876e0f3f6e294eefebffff1d580ac66f06afb51988e00eebb5b845f97836ec69",
       "game_id": "401909928",
       "event_at_utc": "2026-11-05T01:00:00.000Z",
       "retrieved_at_utc": "2026-11-05T20:49:01.607Z",
       "normalized_sha256": "c33144c322723468597453f3d28aee62ac3220892bd46d6161d784d5ac0fc49f",
+      "player_count": 28
+    },
+    {
+      "path": "data/player-game-history/observations/401909928-20261106T200414872-bf4ad04adc141c573d1825b64da36b02ad3f1248f833e2b962fcce62e4efe71b.json",
+      "sha256": "78c5411a454bab47747361da342899a485432864d2babdcfb91166fd1838e987",
+      "game_id": "401909928",
+      "event_at_utc": "2026-11-05T01:00:00.000Z",
+      "retrieved_at_utc": "2026-11-06T20:04:14.872Z",
+      "normalized_sha256": "bf4ad04adc141c573d1825b64da36b02ad3f1248f833e2b962fcce62e4efe71b",
       "player_count": 28
     },
     {
@@ -1143,12 +1179,30 @@
       "player_count": 24
     },
     {
+      "path": "data/player-game-history/observations/401909929-20261106T200414872-3066058f1b2ef7d480e10de7f82d5630d0dc0b49343d99b02112f875235b5288.json",
+      "sha256": "679ef2f088a1511e0bee6a06a39984c62de0f12d4d58f479157d33c369329fba",
+      "game_id": "401909929",
+      "event_at_utc": "2026-11-05T01:00:00.000Z",
+      "retrieved_at_utc": "2026-11-06T20:04:14.872Z",
+      "normalized_sha256": "3066058f1b2ef7d480e10de7f82d5630d0dc0b49343d99b02112f875235b5288",
+      "player_count": 24
+    },
+    {
       "path": "data/player-game-history/observations/401909930-20261105T204901607-58627e3aba35acd512af8334389458fc276aefd9b050ade3218380992da77bbe.json",
       "sha256": "0220849b3fa21cd95306302d1f8aed24ea427564db4a46a585eb998147656ec5",
       "game_id": "401909930",
       "event_at_utc": "2026-11-05T01:30:00.000Z",
       "retrieved_at_utc": "2026-11-05T20:49:01.607Z",
       "normalized_sha256": "58627e3aba35acd512af8334389458fc276aefd9b050ade3218380992da77bbe",
+      "player_count": 28
+    },
+    {
+      "path": "data/player-game-history/observations/401909930-20261106T200414872-f2bb466b0a8cc43cf8d05d2cf0fcbdbcc0836639b185e29e17a2cb53ca6aeaff.json",
+      "sha256": "d5830b9893647ce8cebb516c6f69b1977d1356528341f4ad41db883712617b26",
+      "game_id": "401909930",
+      "event_at_utc": "2026-11-05T01:30:00.000Z",
+      "retrieved_at_utc": "2026-11-06T20:04:14.872Z",
+      "normalized_sha256": "f2bb466b0a8cc43cf8d05d2cf0fcbdbcc0836639b185e29e17a2cb53ca6aeaff",
       "player_count": 28
     },
     {
@@ -1161,12 +1215,30 @@
       "player_count": 27
     },
     {
+      "path": "data/player-game-history/observations/401909931-20261106T200414872-f2328ba4f96ed68b25e0c61b3d3ce23a279766e10cce6c59efc6f1c8aa3610c4.json",
+      "sha256": "e5db9c16dddd63d8a96b70c0b946507f5b233cdaa12eaa37cfc735281dc54d87",
+      "game_id": "401909931",
+      "event_at_utc": "2026-11-05T02:00:00.000Z",
+      "retrieved_at_utc": "2026-11-06T20:04:14.872Z",
+      "normalized_sha256": "f2328ba4f96ed68b25e0c61b3d3ce23a279766e10cce6c59efc6f1c8aa3610c4",
+      "player_count": 27
+    },
+    {
       "path": "data/player-game-history/observations/401909932-20261105T204901607-0caf5f41aa7834cfb81367034ef5f5d687710049ec7e8d69670e255bc21b19df.json",
       "sha256": "8c9a9c6a0a91cf0ef76b40ab928e7901b7f9fd7f1affd77a5b4fa680d42bcee8",
       "game_id": "401909932",
       "event_at_utc": "2026-11-05T02:00:00.000Z",
       "retrieved_at_utc": "2026-11-05T20:49:01.607Z",
       "normalized_sha256": "0caf5f41aa7834cfb81367034ef5f5d687710049ec7e8d69670e255bc21b19df",
+      "player_count": 26
+    },
+    {
+      "path": "data/player-game-history/observations/401909932-20261106T200414872-ffdf629d3bb6dd8c1dbd3f5e800369964c9a44dafd147747d41cbdf2bc3900f7.json",
+      "sha256": "7352b755ca500b5ee9f6e874f24edef9f190840809f2317a6503e2448c330efc",
+      "game_id": "401909932",
+      "event_at_utc": "2026-11-05T02:00:00.000Z",
+      "retrieved_at_utc": "2026-11-06T20:04:14.872Z",
+      "normalized_sha256": "ffdf629d3bb6dd8c1dbd3f5e800369964c9a44dafd147747d41cbdf2bc3900f7",
       "player_count": 26
     },
     {
@@ -1195,6 +1267,24 @@
       "retrieved_at_utc": "2026-11-05T20:49:01.607Z",
       "normalized_sha256": "64b0164803f0b94137bba7d33ff60f3ecf03d6b9fee5ef1ba9354d38da4c1d6e",
       "player_count": 29
+    },
+    {
+      "path": "data/player-game-history/observations/401909936-20261106T200414872-e66ca5ad029066003a2308e8dc59f49124046e7001e7aa49a76b7c3805abeaed.json",
+      "sha256": "b9b2c888511c4fe54a5e7e7f1de64b96d2e3f8963c363e6e8460eaa36c805dea",
+      "game_id": "401909936",
+      "event_at_utc": "2026-11-06T02:00:00.000Z",
+      "retrieved_at_utc": "2026-11-06T20:04:14.872Z",
+      "normalized_sha256": "e66ca5ad029066003a2308e8dc59f49124046e7001e7aa49a76b7c3805abeaed",
+      "player_count": 25
+    },
+    {
+      "path": "data/player-game-history/observations/401909937-20261106T200414872-20ea60b01f6d0217693f02b6d1072a8c48de0a0e50c88f94090bcc032f1a9b76.json",
+      "sha256": "cc4e59bc60a1e93e0ba1de56fb0ac52b7b55ecb7e89124f39e5ad1e64d08015d",
+      "game_id": "401909937",
+      "event_at_utc": "2026-11-06T03:00:00.000Z",
+      "retrieved_at_utc": "2026-11-06T20:04:14.872Z",
+      "normalized_sha256": "20ea60b01f6d0217693f02b6d1072a8c48de0a0e50c88f94090bcc032f1a9b76",
+      "player_count": 28
     }
   ]
 }
