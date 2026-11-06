@@ -132,7 +132,7 @@ function fantasyPoints(player) {
     player.reb + 2 * player.ast + 4 * player.stl + 4 * player.blk - 2 * player.tov) * 10) / 10;
 }
 
-function parseEspnSummary(payload, expectedGameId = null) {
+function parseEspnSummary(payload, expectedGameId = null, {requireCompletePlayers = true} = {}) {
   const competition = payload?.header?.competitions?.[0];
   const competitors = competition?.competitors;
   const status = competition?.status?.type || payload?.header?.competitions?.[0]?.status?.type || {};
@@ -141,14 +141,18 @@ function parseEspnSummary(payload, expectedGameId = null) {
   const side = homeAway => competitors.find(item => item.homeAway === homeAway);
   const home = side('home'), away = side('away');
   const homeScore = finite(home?.score), awayScore = finite(away?.score);
-  if (homeScore === null || awayScore === null || homeScore === awayScore) throw new Error('ESPN final score is invalid');
+  if (![homeScore,awayScore].every(v=>Number.isInteger(v)&&v>=0) || homeScore === awayScore) throw new Error('ESPN final score is invalid');
   const gameId = String(competition.id || payload?.header?.id || expectedGameId || '');
+  if(!competition.id&&!payload?.header?.id)throw new Error('ESPN summary missing game identity');
+  if(competition.id&&payload?.header?.id&&String(competition.id)!==String(payload.header.id))throw new Error('ESPN summary game ID mismatch');
   if (expectedGameId && gameId && gameId !== String(expectedGameId)) throw new Error('ESPN summary game ID mismatch');
   const teams = {};
+  const participantIds = new Set();
   for (const group of payload?.boxscore?.players || []) {
     const abbr = canonicalTeam(group?.team?.abbreviation);
     const table = group?.statistics?.find(item => Array.isArray(item.labels) && Array.isArray(item.athletes));
     if (!abbr || !table) continue;
+    if (teams[abbr]) throw new Error(`ESPN duplicate ${abbr} player tables`);
     const index = Object.fromEntries(table.labels.map((label, i) => [String(label).toUpperCase(), i]));
     for (const required of ['MIN', 'PTS', '3PT', 'REB', 'AST']) {
       if (!Number.isInteger(index[required])) throw new Error(`ESPN box score missing ${required} for ${abbr}`);
@@ -157,6 +161,10 @@ function parseEspnSummary(payload, expectedGameId = null) {
       const stats = row.stats || [];
       const minutes = parseMinutes(stats[index.MIN]);
       const didNotPlay = row.didNotPlay === true;
+      if (!didNotPlay && (minutes === null || minutes < 0 ||
+          (String(stats[index.MIN]).includes(':') && !/^\d+:[0-5]\d$/.test(String(stats[index.MIN]))))) {
+        throw new Error(`ESPN malformed player minutes for ${abbr}`);
+      }
       const fg = madeAttempted(stats[index.FG]);
       const three = madeAttempted(stats[index['3PT']]);
       const ft = madeAttempted(stats[index.FT]);
@@ -180,6 +188,11 @@ function parseEspnSummary(payload, expectedGameId = null) {
         dreb: Number.isInteger(index.DREB) ? finite(stats[index.DREB]) : null,
         plus_minus: Number.isInteger(index['+/-']) ? finite(stats[index['+/-']]) : null,
       };
+      if (player.played) {
+        if (!player.provider_player_id || participantIds.has(player.provider_player_id)) throw new Error('ESPN participant identity missing or appears more than once');
+        participantIds.add(player.provider_player_id);
+        if (requireCompletePlayers && ['pts','reb','ast','three_pm'].some(key=>!Number.isInteger(player[key])||player[key]<0)) throw new Error('ESPN incomplete numeric player statistics');
+      }
       player.fpts = fantasyPoints(player);
       player.stocks = Number.isFinite(player.stl) && Number.isFinite(player.blk) ? player.stl + player.blk : null;
       player.double_double = ['pts', 'reb', 'ast', 'stl', 'blk'].filter(key => Number.isFinite(player[key]) && player[key] >= 10).length >= 2;

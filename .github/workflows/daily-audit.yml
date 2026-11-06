@@ -9,6 +9,9 @@ on:
       - '.github/workflows/daily-audit.yml'
       - 'tests/home_rail_states.test.cjs'
       - 'scripts/daily_tracker.cjs'
+      - 'scripts/morning_cycle.cjs'
+      - 'scripts/critique-evidence.cjs'
+      - 'tests/morning_cycle.test.cjs'
       - 'tests/daily_audit.test.cjs'
   # The game-data producer can finish after an audit starts. Re-run this
   # audited lock pipeline on its successful completion, using fresh main.
@@ -71,7 +74,7 @@ jobs:
       - name: Refresh official NBA roster/injury evidence (fail closed)
         run: python scripts/build_official_availability.py
       - name: Test lock, timezone and scoring rules
-        run: node --test tests/challenge_daily.test.cjs tests/daily_audit.test.cjs tests/prediction_engine.test.cjs tests/monte_carlo.test.cjs tests/site_navigation.test.cjs tests/roster_integrity_v18.test.cjs
+        run: node --test tests/morning_cycle.test.cjs tests/challenge_daily.test.cjs tests/daily_audit.test.cjs tests/prediction_engine.test.cjs tests/monte_carlo.test.cjs tests/site_navigation.test.cjs tests/roster_integrity_v18.test.cjs
       - name: Lock eligible slate or ingest each complete final independently
         run: node scripts/daily_tracker.cjs run
       # New locks exist only on this runner until Git publication succeeds.
@@ -82,7 +85,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p "$RUNNER_TEMP/pretip-lock-backup"
-          for file in audit/snapshots/*/forecast.lock.json; do
+          for file in audit/snapshots/*/forecast.lock.json audit/morning/*/initial.json audit/morning/*/games/*.review.json; do
             [ -f "$file" ] || continue
             if git ls-files --error-unmatch "$file" >/dev/null 2>&1; then continue; fi
             target="$RUNNER_TEMP/pretip-lock-backup/$file"

@@ -231,7 +231,12 @@ function assertFresh(label, source, now, maxHours, firstTip, field = 'built_at_u
   return new Date(timestamp).toISOString();
 }
 
-function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
+function slateSelection(rows,date,now,morningPreview=false) {
+  const slate=rows.filter(game=>A.melbourneDate(game.date)===date).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
+  const games=morningPreview?slate.filter(game=>game.status==='scheduled'&&Date.parse(game.date)>now):slate;
+  return {games,unforecasted:slate.filter(game=>!games.includes(game))};
+}
+function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS, morningPreview = false }) {
   const gameData = readJson(path.join(DATA, 'games.json'));
   const snapshot = readJson(path.join(DATA, 'v7-current.json'));
   const context = readJson(path.join(DATA, 'context.json'));
@@ -239,14 +244,14 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
   const rosterReport = readJson(path.join(DATA, 'roster-research-report.json'));
   const challengeReport = readJson(path.join(DATA, 'five-model-report.json'));
   const officialAvailability = readJson(path.join(DATA, 'availability-current.json'));
-  const games = (gameData.games || []).filter(game => A.melbourneDate(game.date) === date).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+  const {games,unforecasted}=slateSelection(gameData.games||[],date,now,morningPreview);
   if (!games.length) throw new Error(`No validated NBA games discovered for Melbourne date ${date}`);
   if (games.some(game => game.status !== 'scheduled')) throw new Error('At least one target game is no longer pregame; lock refused');
   const firstTip = Math.min(...games.map(game => Date.parse(game.date)));
   const lastTip = Math.max(...games.map(game => Date.parse(game.date)));
   if (!Number.isFinite(firstTip) || now >= firstTip) throw new Error('Tipoff has begun; lock refused');
   const minutesBefore = (firstTip - now) / 60000;
-  if (minutesBefore < LOCK_MINUTES_BEFORE_TIP || minutesBefore > LOCK_MAX_MINUTES_BEFORE_TIP) {
+  if (!morningPreview && (minutesBefore < LOCK_MINUTES_BEFORE_TIP || minutesBefore > LOCK_MAX_MINUTES_BEFORE_TIP)) {
     const error = new Error(`Outside lock window (${minutesBefore.toFixed(1)} minutes before first tip)`);
     error.code = 'OUTSIDE_WINDOW';
     throw error;
@@ -325,6 +330,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
   const playerCount = forecasts.reduce((count, game) => count + game.v9_player_projections.length, 0);
   return A.withIntegrity({
     schema: 'nba-twin-lab-daily-forecast-v2',
+    ...(morningPreview?{unforecasted_games:unforecasted.map(g=>({game_id:String(g.id),tip_utc:new Date(g.date).toISOString(),home:g.home.abbr,away:g.away.abbr,reason:'Already started, complete or not scheduled at snapshot capture; no initial prediction was made.'}))}:{}),
     locked_at_utc: new Date(now).toISOString(), locked_at_melbourne: A.melbourneDisplay(now),
     immutable_intent: 'Forecast fields are append-only and must never be edited after publication. Results belong in a separate review artifact.',
     scope: {
@@ -609,6 +615,7 @@ function verifyReviewProbabilities(forecast, challengeGame, reviewGame) {
 }
 
 function verifyAll() {
+  require('./morning_cycle.cjs').verify(ROOT);
   const lockRecords = new Map();
   for (const file of lockFiles()) {
     const value = readJson(file);
@@ -724,6 +731,8 @@ async function run(options) {
     } catch (error) { console.log(`Per-game review deferred safely: ${error.message}`); }
   }
   if (!options.dryRun) { buildLedger(now); buildPerformanceCentre(now); }
+  await require('./morning_cycle.cjs').run({ now, build: buildLock,
+    dryRun: options.dryRun, lockedRecords: recordsForLedger(), clock: Date.now });
 }
 
 async function main() {
@@ -741,6 +750,7 @@ async function main() {
 if (require.main === module) main().catch(error => { console.error(error.stack || error.message); process.exit(1); });
 
 module.exports = {
+  slateSelection,
   buildLock, buildReview, buildLedger, buildPerformanceCentre, processFinalGames, derivedReviewForDate,
   verifyAll, verifyChallengeLink, verifyReviewProbabilities, reviewWindowOpen, v9Projections, contextProfiles, trainedScoreMachine, gameReviewFile,
   LOCK_MINUTES_BEFORE_TIP, LOCK_MAX_MINUTES_BEFORE_TIP,
