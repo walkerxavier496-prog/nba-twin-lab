@@ -1,6 +1,6 @@
 {
   "schema": "nba-twin-lab-audit-ledger-v2",
-  "generated_at_utc": "2026-11-07T04:16:01.388Z",
+  "generated_at_utc": "2026-11-07T11:13:59.549Z",
   "timezone": "Australia/Melbourne",
   "production_policy": "production_elo_v7 remains production; research models are comparisons only and are never promoted automatically",
   "entries": [
@@ -2050,10 +2050,10 @@
     },
     {
       "melbourne_date": "2026-11-07",
-      "status": "partially_reviewed",
+      "status": "reviewed",
       "game_count": 9,
-      "reviewed_game_count": 7,
-      "pending_game_count": 2,
+      "reviewed_game_count": 9,
+      "pending_game_count": 0,
       "player_projection_count": 212,
       "locked_at_utc": "2026-11-06T20:30:13.276Z",
       "locked_at_melbourne": "Saturday 7 November 2026 at 7:30:13 am AEDT",
@@ -2061,21 +2061,28 @@
       "lock_sha256": "83a3ca49581d1d8072f8cd1d5cac5591a2389df925f81b3ed9a6a8788dcaa461",
       "lock_integrity_sha256": "ce77ab79b89258e1dc3b3b29f78c2cc1e2f2a270d4376424dcfec4f07e731399",
       "review_path": "audit/reviews/2026-11-07/review.json",
-      "review_sha256": "6b286ed2237c2164bf4d9aadc4e86c209e2255419d2f542c2cc273f607e78bcc",
+      "review_sha256": "3aea08e92d5d5226de0e18c79ffdf848af061d721317bb36232e871677565108",
       "summary": {
         "models": {
           "production_elo_v7": {
             "label": "Production Elo v7",
-            "count": 7,
-            "accuracy": 0.8571428571428571,
-            "brier": 0.1162608591969533,
-            "log_loss": 0.4028115304905472,
-            "score_mae_per_team": 11.692249491911014,
-            "margin_mae": 15.151638036062812,
-            "mean_confidence": 0.6807508813550032,
-            "confidence_gap": -0.17639197578785393,
+            "count": 9,
+            "accuracy": 0.8888888888888888,
+            "brier": 0.1085581650418073,
+            "log_loss": 0.3835880529373999,
+            "score_mae_per_team": 9.948732439051119,
+            "margin_mae": 12.673018754141761,
+            "mean_confidence": 0.6933591878548411,
+            "confidence_gap": -0.19552970103404776,
             "confidence_assessment": "insufficient_sample",
             "calibration": [
+              {
+                "low": 0.1,
+                "high": 0.2,
+                "count": 1,
+                "mean_probability": 0.14987816456909445,
+                "observed_rate": 0
+              },
               {
                 "low": 0.2,
                 "high": 0.3,
@@ -2098,6 +2105,13 @@
                 "observed_rate": 1
               },
               {
+                "low": 0.6,
+                "high": 0.7,
+                "count": 1,
+                "mean_probability": 0.6248546857776416,
+                "observed_rate": 1
+              },
+              {
                 "low": 0.7,
                 "high": 0.8,
                 "count": 1,
@@ -2115,16 +2129,23 @@
           },
           "possession_monte_carlo_v5": {
             "label": "Possession Monte Carlo v5",
-            "count": 7,
+            "count": 9,
             "accuracy": 1,
-            "brier": 0.156737145,
-            "log_loss": 0.5024122664698588,
-            "score_mae_per_team": 11.551749999999998,
-            "margin_mae": 14.957585714285711,
-            "mean_confidence": 0.6067714285714285,
-            "confidence_gap": -0.3932285714285715,
+            "brier": 0.15403230444444446,
+            "log_loss": 0.4955173001094882,
+            "score_mae_per_team": 9.739402777777777,
+            "margin_mae": 12.731483333333331,
+            "mean_confidence": 0.6120666666666666,
+            "confidence_gap": -0.38793333333333335,
             "confidence_assessment": "insufficient_sample",
             "calibration": [
+              {
+                "low": 0.2,
+                "high": 0.3,
+                "count": 1,
+                "mean_probability": 0.27935,
+                "observed_rate": 0
+              },
               {
                 "low": 0.3,
                 "high": 0.4,
@@ -2142,8 +2163,8 @@
               {
                 "low": 0.5,
                 "high": 0.6,
-                "count": 1,
-                "mean_probability": 0.5504,
+                "count": 2,
+                "mean_probability": 0.5454749999999999,
                 "observed_rate": 1
               },
               {
@@ -2157,16 +2178,23 @@
           },
           "joint_score_margin_v1": {
             "label": "One Machine · Joint score and margin research v1",
-            "count": 7,
+            "count": 9,
             "accuracy": 1,
-            "brier": 0.09547337096457376,
-            "log_loss": 0.36374485571618365,
-            "score_mae_per_team": 11.44812219933731,
-            "margin_mae": 13.27814739207618,
-            "mean_confidence": 0.6987454915844687,
-            "confidence_gap": -0.30125450841553125,
+            "brier": 0.09741743588264781,
+            "log_loss": 0.36316158858174163,
+            "score_mae_per_team": 9.555816191763746,
+            "margin_mae": 10.8263783570168,
+            "mean_confidence": 0.7016900639519117,
+            "confidence_gap": -0.2983099360480883,
             "confidence_assessment": "insufficient_sample",
             "calibration": [
+              {
+                "low": 0.1,
+                "high": 0.2,
+                "count": 1,
+                "mean_probability": 0.1421430476368379,
+                "observed_rate": 0
+              },
               {
                 "low": 0.2,
                 "high": 0.3,
@@ -2184,8 +2212,8 @@
               {
                 "low": 0.5,
                 "high": 0.6,
-                "count": 1,
-                "mean_probability": 0.5526643410643493,
+                "count": 2,
+                "mean_probability": 0.559399761588556,
                 "observed_rate": 1
               },
               {
@@ -2199,16 +2227,23 @@
           },
           "roster_beta_v1": {
             "label": "Roster-aware beta v1",
-            "count": 7,
-            "accuracy": 0.8571428571428571,
-            "brier": 0.14776380988521923,
-            "log_loss": 0.478811646491159,
+            "count": 9,
+            "accuracy": 0.8888888888888888,
+            "brier": 0.13677236474437404,
+            "log_loss": 0.451613205202979,
             "score_mae_per_team": null,
             "margin_mae": null,
-            "mean_confidence": 0.6467929620218902,
-            "confidence_gap": -0.2103498951209669,
+            "mean_confidence": 0.6609324030431298,
+            "confidence_gap": -0.227956485845759,
             "confidence_assessment": "insufficient_sample",
             "calibration": [
+              {
+                "low": 0.1,
+                "high": 0.2,
+                "count": 1,
+                "mean_probability": 0.1693880852402817,
+                "observed_rate": 0
+              },
               {
                 "low": 0.2,
                 "high": 0.3,
@@ -2231,6 +2266,13 @@
                 "observed_rate": 0.5
               },
               {
+                "low": 0.5,
+                "high": 0.6,
+                "count": 1,
+                "mean_probability": 0.5902289784752187,
+                "observed_rate": 1
+              },
+              {
                 "low": 0.6,
                 "high": 0.7,
                 "count": 1,
@@ -2248,16 +2290,23 @@
           },
           "m1_elo": {
             "label": "M1 · Elo baseline",
-            "count": 7,
-            "accuracy": 0.8571428571428571,
-            "brier": 0.1162608591969533,
-            "log_loss": 0.4028115304905472,
-            "score_mae_per_team": 11.692249491911014,
-            "margin_mae": 15.151638036062812,
-            "mean_confidence": 0.6807508813550032,
-            "confidence_gap": -0.17639197578785393,
+            "count": 9,
+            "accuracy": 0.8888888888888888,
+            "brier": 0.1085581650418073,
+            "log_loss": 0.3835880529373999,
+            "score_mae_per_team": 9.948732439051119,
+            "margin_mae": 12.673018754141761,
+            "mean_confidence": 0.6933591878548411,
+            "confidence_gap": -0.19552970103404776,
             "confidence_assessment": "insufficient_sample",
             "calibration": [
+              {
+                "low": 0.1,
+                "high": 0.2,
+                "count": 1,
+                "mean_probability": 0.14987816456909445,
+                "observed_rate": 0
+              },
               {
                 "low": 0.2,
                 "high": 0.3,
@@ -2280,6 +2329,13 @@
                 "observed_rate": 1
               },
               {
+                "low": 0.6,
+                "high": 0.7,
+                "count": 1,
+                "mean_probability": 0.6248546857776416,
+                "observed_rate": 1
+              },
+              {
                 "low": 0.7,
                 "high": 0.8,
                 "count": 1,
@@ -2297,16 +2353,23 @@
           },
           "m2_science": {
             "label": "M2 · Basketball Science",
-            "count": 7,
-            "accuracy": 0.8571428571428571,
-            "brier": 0.11444204138020964,
-            "log_loss": 0.4050208443088226,
+            "count": 9,
+            "accuracy": 0.8888888888888888,
+            "brier": 0.109683643029253,
+            "log_loss": 0.3908228309802869,
             "score_mae_per_team": null,
             "margin_mae": null,
-            "mean_confidence": 0.6739203383447373,
-            "confidence_gap": -0.1832225187981198,
+            "mean_confidence": 0.6845883879899147,
+            "confidence_gap": -0.2043005008989741,
             "confidence_assessment": "insufficient_sample",
             "calibration": [
+              {
+                "low": 0.1,
+                "high": 0.2,
+                "count": 1,
+                "mean_probability": 0.15275619386941525,
+                "observed_rate": 0
+              },
               {
                 "low": 0.2,
                 "high": 0.3,
@@ -2329,6 +2392,13 @@
                 "observed_rate": 1
               },
               {
+                "low": 0.5,
+                "high": 0.6,
+                "count": 1,
+                "mean_probability": 0.596609317365486,
+                "observed_rate": 1
+              },
+              {
                 "low": 0.7,
                 "high": 0.8,
                 "count": 2,
@@ -2339,16 +2409,23 @@
           },
           "m3_player_roster": {
             "label": "M3 · Player / Roster",
-            "count": 7,
-            "accuracy": 0.8571428571428571,
-            "brier": 0.14566256208050296,
-            "log_loss": 0.47443026777768516,
+            "count": 9,
+            "accuracy": 0.8888888888888888,
+            "brier": 0.13496428565278545,
+            "log_loss": 0.44796994051815214,
             "score_mae_per_team": null,
             "margin_mae": null,
-            "mean_confidence": 0.6471623873281701,
-            "confidence_gap": -0.209980469814687,
+            "mean_confidence": 0.6612878847678257,
+            "confidence_gap": -0.2276010041210631,
             "confidence_assessment": "insufficient_sample",
             "calibration": [
+              {
+                "low": 0.1,
+                "high": 0.2,
+                "count": 1,
+                "mean_probability": 0.17162287456874953,
+                "observed_rate": 0
+              },
               {
                 "low": 0.3,
                 "high": 0.4,
@@ -2362,6 +2439,13 @@
                 "count": 2,
                 "mean_probability": 0.4234096003927045,
                 "observed_rate": 0.5
+              },
+              {
+                "low": 0.5,
+                "high": 0.6,
+                "count": 1,
+                "mean_probability": 0.5930771261819906,
+                "observed_rate": 1
               },
               {
                 "low": 0.6,
@@ -2381,16 +2465,23 @@
           },
           "m4_monte_carlo": {
             "label": "M4 · Possession Monte Carlo",
-            "count": 7,
+            "count": 9,
             "accuracy": 1,
-            "brier": 0.1818454689285714,
-            "log_loss": 0.553190520251721,
-            "score_mae_per_team": 12.159114285714285,
-            "margin_mae": 15.937885714285713,
-            "mean_confidence": 0.5787928571428571,
-            "confidence_gap": -0.4212071428571429,
+            "brier": 0.17468263416666663,
+            "log_loss": 0.5389196788141674,
+            "score_mae_per_team": 10.68815,
+            "margin_mae": 13.706744444444444,
+            "mean_confidence": 0.5864722222222222,
+            "confidence_gap": -0.4135277777777778,
             "confidence_assessment": "insufficient_sample",
             "calibration": [
+              {
+                "low": 0.3,
+                "high": 0.4,
+                "count": 1,
+                "mean_probability": 0.37595,
+                "observed_rate": 0
+              },
               {
                 "low": 0.4,
                 "high": 0.5,
@@ -2401,24 +2492,31 @@
               {
                 "low": 0.6,
                 "high": 0.7,
-                "count": 3,
-                "mean_probability": 0.6504,
+                "count": 4,
+                "mean_probability": 0.6384625,
                 "observed_rate": 1
               }
             ]
           },
           "m5_regularized_ml": {
             "label": "M5 · Regularized ML",
-            "count": 7,
+            "count": 9,
             "accuracy": 1,
-            "brier": 0.11717528051660546,
-            "log_loss": 0.41219963781677743,
+            "brier": 0.11105201476628691,
+            "log_loss": 0.39487636914868784,
             "score_mae_per_team": null,
             "margin_mae": null,
-            "mean_confidence": 0.6676127666042179,
-            "confidence_gap": -0.33238723339578213,
+            "mean_confidence": 0.6805755375001324,
+            "confidence_gap": -0.31942446249986756,
             "confidence_assessment": "insufficient_sample",
             "calibration": [
+              {
+                "low": 0.1,
+                "high": 0.2,
+                "count": 1,
+                "mean_probability": 0.15357833194075407,
+                "observed_rate": 0
+              },
               {
                 "low": 0.2,
                 "high": 0.3,
@@ -2441,6 +2539,13 @@
                 "observed_rate": 1
               },
               {
+                "low": 0.6,
+                "high": 0.7,
+                "count": 1,
+                "mean_probability": 0.6054688032124209,
+                "observed_rate": 1
+              },
+              {
                 "low": 0.7,
                 "high": 0.8,
                 "count": 2,
@@ -2451,16 +2556,23 @@
           },
           "m6_ensemble": {
             "label": "M6 · Nested weighted ensemble",
-            "count": 7,
-            "accuracy": 0.8571428571428571,
-            "brier": 0.12500500220377092,
-            "log_loss": 0.42912959383330096,
+            "count": 9,
+            "accuracy": 0.8888888888888888,
+            "brier": 0.11747306186040518,
+            "log_loss": 0.4090350746610165,
             "score_mae_per_team": null,
             "margin_mae": null,
-            "mean_confidence": 0.6620572082753989,
-            "confidence_gap": -0.19508564886745816,
+            "mean_confidence": 0.6754965186995133,
+            "confidence_gap": -0.2133923701893755,
             "confidence_assessment": "insufficient_sample",
             "calibration": [
+              {
+                "low": 0.1,
+                "high": 0.2,
+                "count": 1,
+                "mean_probability": 0.15862167799198673,
+                "observed_rate": 0
+              },
               {
                 "low": 0.2,
                 "high": 0.3,
@@ -2485,8 +2597,8 @@
               {
                 "low": 0.6,
                 "high": 0.7,
-                "count": 1,
-                "mean_probability": 0.6961009019501936,
+                "count": 2,
+                "mean_probability": 0.6498953951550037,
                 "observed_rate": 1
               },
               {
@@ -2501,24 +2613,24 @@
         },
         "player_stats": {
           "pts": {
-            "count": 140,
-            "mae": 5.164038614339252
+            "count": 179,
+            "mae": 4.887828060600995
           },
           "reb": {
-            "count": 140,
-            "mae": 2.048974976541167
+            "count": 179,
+            "mae": 2.0189014316451566
           },
           "ast": {
-            "count": 140,
-            "mae": 1.4863825472536525
+            "count": 179,
+            "mae": 1.4802745637301717
           },
           "three_pm": {
-            "count": 140,
-            "mae": 1.0018440554240615
+            "count": 179,
+            "mae": 0.9931449887738717
           },
           "minutes": {
-            "count": 140,
-            "mae": 5.186417571428571
+            "count": 179,
+            "mae": 5.040210446927375
           }
         },
         "v18_roster_strength": {
@@ -2536,21 +2648,21 @@
     "models": {
       "production_elo_v7": {
         "label": "Production Elo v7",
-        "count": 41,
-        "accuracy": 0.6829268292682927,
-        "brier": 0.20323857592806227,
-        "log_loss": 0.58715789245682,
-        "score_mae_per_team": 10.53626951113538,
-        "margin_mae": 12.634492814958508,
-        "mean_confidence": 0.693182102367601,
-        "confidence_gap": 0.010255273099308293,
+        "count": 43,
+        "accuracy": 0.6976744186046512,
+        "brier": 0.19758090893135224,
+        "log_loss": 0.5745601245054044,
+        "score_mae_per_team": 10.225113848014733,
+        "margin_mae": 12.23278855693337,
+        "mean_confidence": 0.6952428539134928,
+        "confidence_gap": -0.00243156469115835,
         "confidence_assessment": "approximately_calibrated",
         "calibration": [
           {
             "low": 0.1,
             "high": 0.2,
-            "count": 1,
-            "mean_probability": 0.13220078366390284,
+            "count": 2,
+            "mean_probability": 0.14103947411649864,
             "observed_rate": 0
           },
           {
@@ -2584,9 +2696,9 @@
           {
             "low": 0.6,
             "high": 0.7,
-            "count": 6,
-            "mean_probability": 0.6614673447917455,
-            "observed_rate": 0.5
+            "count": 7,
+            "mean_probability": 0.6562369649325879,
+            "observed_rate": 0.5714285714285714
           },
           {
             "low": 0.7,
@@ -2613,16 +2725,23 @@
       },
       "possession_monte_carlo_v5": {
         "label": "Possession Monte Carlo v5",
-        "count": 41,
-        "accuracy": 0.7317073170731707,
-        "brier": 0.20690585907804876,
-        "log_loss": 0.6034989884108324,
-        "score_mae_per_team": 10.574522804878047,
-        "margin_mae": 12.918269999999998,
-        "mean_confidence": 0.601031219512195,
-        "confidence_gap": -0.13067609756097576,
+        "count": 43,
+        "accuracy": 0.7441860465116279,
+        "brier": 0.2040063010976744,
+        "log_loss": 0.5973541479195468,
+        "score_mae_per_team": 10.240646744186046,
+        "margin_mae": 12.547193488372093,
+        "mean_confidence": 0.6024065116279068,
+        "confidence_gap": -0.14177953488372108,
         "confidence_assessment": "underconfident",
         "calibration": [
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "count": 1,
+            "mean_probability": 0.27935,
+            "observed_rate": 0
+          },
           {
             "low": 0.3,
             "high": 0.4,
@@ -2640,9 +2759,9 @@
           {
             "low": 0.5,
             "high": 0.6,
-            "count": 14,
-            "mean_probability": 0.5420542857142857,
-            "observed_rate": 0.6428571428571429
+            "count": 15,
+            "mean_probability": 0.541954,
+            "observed_rate": 0.6666666666666666
           },
           {
             "low": 0.6,
@@ -2662,21 +2781,21 @@
       },
       "roster_beta_v1": {
         "label": "Roster-aware beta v1",
-        "count": 41,
-        "accuracy": 0.6829268292682927,
-        "brier": 0.20129107417352837,
-        "log_loss": 0.584120841473704,
+        "count": 43,
+        "accuracy": 0.6976744186046512,
+        "brier": 0.1965008989445929,
+        "log_loss": 0.5735300423676875,
         "score_mae_per_team": null,
         "margin_mae": null,
-        "mean_confidence": 0.6683837506586018,
-        "confidence_gap": -0.014543078609690951,
+        "mean_confidence": 0.6703389458194792,
+        "confidence_gap": -0.02733547278517201,
         "confidence_assessment": "approximately_calibrated",
         "calibration": [
           {
             "low": 0.1,
             "high": 0.2,
-            "count": 1,
-            "mean_probability": 0.16153555938445963,
+            "count": 2,
+            "mean_probability": 0.16546182231237067,
             "observed_rate": 0
           },
           {
@@ -2703,9 +2822,9 @@
           {
             "low": 0.5,
             "high": 0.6,
-            "count": 7,
-            "mean_probability": 0.5656984039239422,
-            "observed_rate": 0.5714285714285714
+            "count": 8,
+            "mean_probability": 0.5687647257428518,
+            "observed_rate": 0.625
           },
           {
             "low": 0.6,
@@ -2739,21 +2858,21 @@
       },
       "m1_elo": {
         "label": "M1 · Elo baseline",
-        "count": 41,
-        "accuracy": 0.6829268292682927,
-        "brier": 0.20323857592806227,
-        "log_loss": 0.58715789245682,
-        "score_mae_per_team": 10.53626951113538,
-        "margin_mae": 12.634492814958508,
-        "mean_confidence": 0.693182102367601,
-        "confidence_gap": 0.010255273099308293,
+        "count": 43,
+        "accuracy": 0.6976744186046512,
+        "brier": 0.19758090893135224,
+        "log_loss": 0.5745601245054044,
+        "score_mae_per_team": 10.225113848014733,
+        "margin_mae": 12.23278855693337,
+        "mean_confidence": 0.6952428539134928,
+        "confidence_gap": -0.00243156469115835,
         "confidence_assessment": "approximately_calibrated",
         "calibration": [
           {
             "low": 0.1,
             "high": 0.2,
-            "count": 1,
-            "mean_probability": 0.13220078366390284,
+            "count": 2,
+            "mean_probability": 0.14103947411649864,
             "observed_rate": 0
           },
           {
@@ -2787,9 +2906,9 @@
           {
             "low": 0.6,
             "high": 0.7,
-            "count": 6,
-            "mean_probability": 0.6614673447917455,
-            "observed_rate": 0.5
+            "count": 7,
+            "mean_probability": 0.6562369649325879,
+            "observed_rate": 0.5714285714285714
           },
           {
             "low": 0.7,
@@ -2816,21 +2935,21 @@
       },
       "m2_science": {
         "label": "M2 · Basketball Science",
-        "count": 41,
-        "accuracy": 0.6341463414634146,
-        "brier": 0.20210828487164162,
-        "log_loss": 0.5853582877768373,
+        "count": 43,
+        "accuracy": 0.6511627906976745,
+        "brier": 0.1970348413334678,
+        "log_loss": 0.5739988225002595,
         "score_mae_per_team": null,
         "margin_mae": null,
-        "mean_confidence": 0.6736466540377679,
-        "confidence_gap": 0.03950031257435327,
+        "mean_confidence": 0.6758922311405711,
+        "confidence_gap": 0.0247294404428966,
         "confidence_assessment": "approximately_calibrated",
         "calibration": [
           {
             "low": 0.1,
             "high": 0.2,
-            "count": 1,
-            "mean_probability": 0.15635567424042787,
+            "count": 2,
+            "mean_probability": 0.15455593405492157,
             "observed_rate": 0
           },
           {
@@ -2857,9 +2976,9 @@
           {
             "low": 0.5,
             "high": 0.6,
-            "count": 6,
-            "mean_probability": 0.5549439419641734,
-            "observed_rate": 0.5
+            "count": 7,
+            "mean_probability": 0.5608961384500751,
+            "observed_rate": 0.5714285714285714
           },
           {
             "low": 0.6,
@@ -2893,21 +3012,21 @@
       },
       "m3_player_roster": {
         "label": "M3 · Player / Roster",
-        "count": 41,
-        "accuracy": 0.7073170731707317,
-        "brier": 0.20027449579828305,
-        "log_loss": 0.5820222698489518,
+        "count": 43,
+        "accuracy": 0.7209302325581395,
+        "brier": 0.1954952317218873,
+        "log_loss": 0.5714797826517812,
         "score_mae_per_team": null,
         "margin_mae": null,
-        "mean_confidence": 0.6689855456679669,
-        "confidence_gap": -0.038331527502764806,
-        "confidence_assessment": "approximately_calibrated",
+        "mean_confidence": 0.6709270145116252,
+        "confidence_gap": -0.05000321804651431,
+        "confidence_assessment": "underconfident",
         "calibration": [
           {
             "low": 0.1,
             "high": 0.2,
-            "count": 1,
-            "mean_probability": 0.16731927446408734,
+            "count": 2,
+            "mean_probability": 0.16947107451641844,
             "observed_rate": 0
           },
           {
@@ -2934,9 +3053,9 @@
           {
             "low": 0.5,
             "high": 0.6,
-            "count": 8,
-            "mean_probability": 0.5580090760402896,
-            "observed_rate": 0.625
+            "count": 9,
+            "mean_probability": 0.5619055260560342,
+            "observed_rate": 0.6666666666666666
           },
           {
             "low": 0.6,
@@ -2963,21 +3082,21 @@
       },
       "m4_monte_carlo": {
         "label": "M4 · Possession Monte Carlo",
-        "count": 41,
-        "accuracy": 0.7073170731707317,
-        "brier": 0.21240525445121952,
-        "log_loss": 0.6146201715744034,
-        "score_mae_per_team": 10.421735975609757,
-        "margin_mae": 12.938976829268288,
-        "mean_confidence": 0.6071597560975611,
-        "confidence_gap": -0.10015731707317055,
+        "count": 43,
+        "accuracy": 0.7209302325581395,
+        "brier": 0.2094846711046512,
+        "log_loss": 0.6087760581887441,
+        "score_mae_per_team": 10.194668023255813,
+        "margin_mae": 12.611477906976742,
+        "mean_confidence": 0.6074476744186048,
+        "confidence_gap": -0.11348255813953467,
         "confidence_assessment": "underconfident",
         "calibration": [
           {
             "low": 0.3,
             "high": 0.4,
-            "count": 1,
-            "mean_probability": 0.3707,
+            "count": 2,
+            "mean_probability": 0.373325,
             "observed_rate": 0
           },
           {
@@ -2997,9 +3116,9 @@
           {
             "low": 0.6,
             "high": 0.7,
-            "count": 14,
-            "mean_probability": 0.647867857142857,
-            "observed_rate": 0.7142857142857143
+            "count": 15,
+            "mean_probability": 0.6448533333333333,
+            "observed_rate": 0.7333333333333333
           },
           {
             "low": 0.7,
@@ -3012,21 +3131,21 @@
       },
       "m5_regularized_ml": {
         "label": "M5 · Regularized ML",
-        "count": 41,
-        "accuracy": 0.6585365853658537,
-        "brier": 0.20094115297497248,
-        "log_loss": 0.5821656895977313,
+        "count": 43,
+        "accuracy": 0.6744186046511628,
+        "brier": 0.19576345212219107,
+        "log_loss": 0.5706344914215752,
         "score_mae_per_team": null,
         "margin_mae": null,
-        "mean_confidence": 0.6702544212198311,
-        "confidence_gap": 0.011717835853977454,
+        "mean_confidence": 0.6728446916577848,
+        "confidence_gap": -0.001573912993377946,
         "confidence_assessment": "approximately_calibrated",
         "calibration": [
           {
             "low": 0.1,
             "high": 0.2,
-            "count": 1,
-            "mean_probability": 0.14242405568207972,
+            "count": 2,
+            "mean_probability": 0.1480011938114169,
             "observed_rate": 0
           },
           {
@@ -3060,9 +3179,9 @@
           {
             "low": 0.6,
             "high": 0.7,
-            "count": 7,
-            "mean_probability": 0.6430098191820842,
-            "observed_rate": 0.5714285714285714
+            "count": 8,
+            "mean_probability": 0.6383171921858763,
+            "observed_rate": 0.625
           },
           {
             "low": 0.7,
@@ -3089,21 +3208,21 @@
       },
       "m6_ensemble": {
         "label": "M6 · Nested weighted ensemble",
-        "count": 41,
-        "accuracy": 0.6341463414634146,
-        "brier": 0.20039124001084066,
-        "log_loss": 0.5813239516069179,
+        "count": 43,
+        "accuracy": 0.6511627906976745,
+        "brier": 0.19530845073864458,
+        "log_loss": 0.5700393146744109,
         "score_mae_per_team": null,
         "margin_mae": null,
-        "mean_confidence": 0.6706412501834319,
-        "confidence_gap": 0.03649490872001726,
+        "mean_confidence": 0.673054871346245,
+        "confidence_gap": 0.02189208064857051,
         "confidence_assessment": "approximately_calibrated",
         "calibration": [
           {
             "low": 0.1,
             "high": 0.2,
-            "count": 1,
-            "mean_probability": 0.1488702941148643,
+            "count": 2,
+            "mean_probability": 0.15374598605342552,
             "observed_rate": 0
           },
           {
@@ -3137,9 +3256,9 @@
           {
             "low": 0.6,
             "high": 0.7,
-            "count": 8,
-            "mean_probability": 0.6550128932715744,
-            "observed_rate": 0.625
+            "count": 9,
+            "mean_probability": 0.6493103371702676,
+            "observed_rate": 0.6666666666666666
           },
           {
             "low": 0.7,
@@ -3166,16 +3285,23 @@
       },
       "joint_score_margin_v1": {
         "label": "One Machine · Joint score and margin research v1",
-        "count": 24,
-        "accuracy": 0.7916666666666666,
-        "brier": 0.16355624001369154,
-        "log_loss": 0.5083308034435706,
-        "score_mae_per_team": 10.019959684113969,
-        "margin_mae": 11.100698535109046,
-        "mean_confidence": 0.6952815287095372,
-        "confidence_gap": -0.09638513795712944,
+        "count": 26,
+        "accuracy": 0.8076923076923077,
+        "brier": 0.15899204178924659,
+        "log_loss": 0.49700690730261865,
+        "score_mae_per_team": 9.47478933650953,
+        "margin_mae": 10.419505319662886,
+        "mean_confidence": 0.696567262442493,
+        "confidence_gap": -0.1111250452498147,
         "confidence_assessment": "underconfident",
         "calibration": [
+          {
+            "low": 0.1,
+            "high": 0.2,
+            "count": 1,
+            "mean_probability": 0.1421430476368379,
+            "observed_rate": 0
+          },
           {
             "low": 0.2,
             "high": 0.3,
@@ -3200,9 +3326,9 @@
           {
             "low": 0.5,
             "high": 0.6,
-            "count": 4,
-            "mean_probability": 0.5609863454589179,
-            "observed_rate": 0.75
+            "count": 5,
+            "mean_probability": 0.5620161127896869,
+            "observed_rate": 0.8
           },
           {
             "low": 0.6,
@@ -3230,24 +3356,24 @@
     },
     "player_stats": {
       "pts": {
-        "count": 798,
-        "mae": 4.994392553303783
+        "count": 837,
+        "mae": 4.943227090055557
       },
       "reb": {
-        "count": 798,
-        "mae": 1.8613348462467942
+        "count": 837,
+        "mae": 1.8636464359064062
       },
       "ast": {
-        "count": 798,
-        "mae": 1.4081623995860695
+        "count": 837,
+        "mae": 1.4105008185924401
       },
       "three_pm": {
-        "count": 798,
-        "mae": 0.9728451173981365
+        "count": 837,
+        "mae": 0.9723359485243335
       },
       "minutes": {
-        "count": 798,
-        "mae": 4.867681190476187
+        "count": 837,
+        "mae": 4.8512649940262795
       }
     },
     "v18_roster_strength": {
