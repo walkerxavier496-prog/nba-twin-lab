@@ -1,6 +1,6 @@
 {
   "schema": "nba-twin-lab-audit-ledger-v2",
-  "generated_at_utc": "2026-11-08T11:50:17.781Z",
+  "generated_at_utc": "2026-11-08T18:53:37.744Z",
   "timezone": "Australia/Melbourne",
   "production_policy": "production_elo_v7 remains production; research models are comparisons only and are never promoted automatically",
   "entries": [
@@ -3223,6 +3223,22 @@
           "label": "Uncalibrated impact-signal direction only; no win probability or Brier"
         }
       }
+    },
+    {
+      "melbourne_date": "2026-11-09",
+      "status": "locked_awaiting_results",
+      "game_count": 7,
+      "reviewed_game_count": 0,
+      "pending_game_count": 7,
+      "player_projection_count": 166,
+      "locked_at_utc": "2026-11-08T18:53:37.744Z",
+      "locked_at_melbourne": "Monday 9 November 2026 at 5:53:37 am AEDT",
+      "lock_path": "audit/snapshots/2026-11-09/forecast.lock.json",
+      "lock_sha256": "ba0950d907abdd56ca27735a4ad16699bc3c53613e46fd8a95467ec561ff9fc0",
+      "lock_integrity_sha256": "b4f9e49952d15dd7296dd833fc0ef26424424af237e11e1d4ddb9bb168037107",
+      "review_path": null,
+      "review_sha256": null,
+      "summary": null
     }
   ],
   "longitudinal": {
