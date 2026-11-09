@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """Resolve a trusted publication receipt and package only a validated Git tree."""
 from datetime import datetime, timezone
+from pathlib import Path
 import fnmatch
 import io
 import json
 import os
-from pathlib import Path
 import re
 import subprocess
 import sys
 import tarfile
 import zipfile
+
+from publish_data import independent_run_output
 
 
 def git(*args):
@@ -45,7 +47,8 @@ def select_revision(event, receipt, default_revision, repository):
     if event.get("workflow_run"):
         run = event["workflow_run"]
         if (run["conclusion"] != "success" or run["head_branch"] != "main" or
-                run.get("event") not in ("schedule", "push", "workflow_dispatch") or
+                (run.get("event") not in ("schedule", "push", "workflow_dispatch") and
+                 not (run.get("event") == "workflow_run" and run.get("path") == ".github/workflows/daily-audit.yml")) or
                 run["head_repository"]["full_name"] != repository):
             raise ValueError("Untrusted or unsuccessful refresh run")
         if receipt is None:
@@ -78,9 +81,14 @@ def select_revision(event, receipt, default_revision, repository):
             raise ValueError("Invalid source revision")
         subprocess.run(["git", "merge-base", "--is-ancestor", source, revision], check=True)
         delta = git("diff", "--name-only", "--no-renames", source, revision).splitlines()
-        if any(not (p.startswith("data/refresh-status/") or
+        if any(not (p.startswith("data/refresh-status/") or independent_run_output(p) or
                     any(fnmatch.fnmatchcase(p, pattern) for pattern in config[producer])) for p in delta):
             raise ValueError("Receipt revision contains changes outside the producer outputs")
+        own_delta = git("diff", "--name-only", "--no-renames", revision + "^", revision).splitlines()
+        stamp = f"data/refresh-status/{producer}.json"
+        if stamp not in own_delta or any(p != stamp and not any(
+                fnmatch.fnmatchcase(p, pattern) for pattern in config[producer]) for p in own_delta):
+            raise ValueError("Publication commit contains changes outside the producer outputs")
         observed = timestamp(record["generation_observed_at_utc"])
         validated = timestamp(receipt.get("validated_at_utc"))
         published = timestamp(receipt.get("published_at_utc"))

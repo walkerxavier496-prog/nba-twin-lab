@@ -13,7 +13,7 @@ test('five-destination desktop and mobile navigation preserves contextual resear
  for(const route of ['challenge/daily.html','audit/','challenge/','team-intelligence/','twins/'])
   assert.ok(read('index.html').includes(route),route+' missing from contextual navigation');
  assert.ok(desktop.includes('watchlist/'),'Watchlist remains available through the contextual header action');
- for(const label of ['Games','Predictions','Players','League','Model Lab'])
+ for(const label of ['Games','Predictions','Players','League','Accuracy'])
   assert.match(mobile,new RegExp('"'+label+'"'));
  const brand=read('assets/concept3-fidelity.css');
  assert.match(brand,/\.brand-icon:before\{content:none!important/);
@@ -35,7 +35,7 @@ test('performance hub has clear defensive definitions, complete fantasy rules an
  assert.match(js,/steals===null\|\|blocks===null\?null/);
 });
 
-test('completed 31 Oct slate renders frozen picks, actual finals and six-model verdicts separately',async()=>{
+test('completed 31 Oct slate renders frozen picks, actual finals and the production score error',async()=>{
  const ledger=JSON.parse(read('data/audit-ledger.json'));
  const entry=ledger.entries.find(e=>e.melbourne_date==='2026-10-31');
  assert.ok(entry?.review_path,'The audit fixture must contain a reviewed 31 Oct slate');
@@ -58,10 +58,10 @@ test('completed 31 Oct slate renders frozen picks, actual finals and six-model v
   addEventListener:()=>{}
  };
  const media={image:team=>'<span>'+(team?.abbr||team)+'</span>',headshot:()=>null};
- const fetch=async url=>({ok:Object.hasOwn(files,url),status:200,json:async()=>files[url]});
+ const fetch=async url=>({ok:Object.hasOwn(files,url),status:200,arrayBuffer:async()=>Buffer.from(read(url.slice(3)).replaceAll('\r\n','\n')),json:async()=>files[url]});
  vm.runInNewContext(read('assets/concept3-hub.js'),{
   document:doc,window:{NbaMedia:media},location:{search:''},fetch,
-  URLSearchParams,Date,Intl,console
+  TextDecoder,crypto:{subtle:{digest:(_,bytes)=>require("node:crypto").createHash("sha256").update(bytes).digest()}},URLSearchParams,Date,Intl,console
  },{filename:'assets/concept3-hub.js'});
  await new Promise(resolve=>setImmediate(resolve));
  assert.match(markup.innerHTML,/10 genuinely locked games/);
@@ -69,9 +69,9 @@ test('completed 31 Oct slate renders frozen picks, actual finals and six-model v
  assert.equal(typeof results.onclick,'function');
  results.onclick();
  assert.match(markup.innerHTML,/PICK VS FINAL/);
- assert.match(markup.innerHTML,/SIX MACHINES/);
+ assert.match(markup.innerHTML,/POINTS ERROR \/ TEAM/);
  assert.match(markup.innerHTML,/AUDIT PENDING|✓ HIT|✕ MISS/);
  assert.match(markup.innerHTML,/79 – 95/,'The real CHA–WSH final must be visible');
- assert.match(markup.innerHTML,/[0-6]\/6 correct/);
+ assert.match(markup.innerHTML,/26\.9/, "original production score error");
  assert.equal(lock.forecasts[0].primary_forecast.home_win_probability,0.20674107431349767);
 });

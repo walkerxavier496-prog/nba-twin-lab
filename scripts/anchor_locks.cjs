@@ -102,7 +102,7 @@ function attachProof({ root = DEFAULT_ROOT, date, proof, status, now = Date.now(
   fs.writeFileSync(file, JSON.stringify(record, null, 2) + '\n');
 }
 
-function otsSync({ root = DEFAULT_ROOT, otsBin = process.env.OTS_BIN || 'ots', now = Date.now() } = {}) {
+function otsSync({ root = DEFAULT_ROOT, otsBin = process.env.OTS_BIN || 'ots', otsArgs = [], now = Date.now() } = {}) {
   const result = { stamped: [], upgraded: [], pending: [] };
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'ots-'));
   try {
@@ -114,7 +114,7 @@ function otsSync({ root = DEFAULT_ROOT, otsBin = process.env.OTS_BIN || 'ots', n
           // Stamp a copy: the client writes a sidecar file, and the lock folder must stay untouched.
           fs.copyFileSync(path.join(root, record.lock_path), work);
           if (sha256(fs.readFileSync(work)) !== record.lock_sha256) throw new Error('lock changed since anchoring');
-          execFileSync(otsBin, ['stamp', work], { stdio: 'pipe' });
+          execFileSync(otsBin, [...otsArgs, 'stamp', work], { stdio: 'pipe', timeout: 20000 });
           attachProof({ root, date, proof: fs.readFileSync(`${work}.ots`), status: 'pending', now });
           result.stamped.push(date);
           record.ots.status = 'pending';
@@ -123,9 +123,11 @@ function otsSync({ root = DEFAULT_ROOT, otsBin = process.env.OTS_BIN || 'ots', n
         if (record.ots.status === 'pending') {
           const proofFile = `${work}.ots`;
           fs.writeFileSync(proofFile, Buffer.from(record.ots.proof_base64, 'base64'));
-          const output = String(execFileSync(otsBin, ['upgrade', proofFile], { stdio: 'pipe' }));
+          const output = String(execFileSync(otsBin, [...otsArgs, 'upgrade', proofFile], { stdio: 'pipe', timeout: 20000 }));
           const complete = /Timestamp complete/i.test(output);
-          attachProof({ root, date, proof: fs.readFileSync(proofFile), status: complete ? 'confirmed' : 'pending', now });
+          const proof = fs.readFileSync(proofFile);
+          if (complete || proof.toString('base64') !== record.ots.proof_base64)
+            attachProof({ root, date, proof, status: complete ? 'confirmed' : 'pending', now });
           if (complete) result.upgraded.push(date); else result.pending.push(date);
         }
       } catch (error) {

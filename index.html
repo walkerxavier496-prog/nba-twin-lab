@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080e17"><meta name="description" content="NBA Twin Lab — today's NBA predictions, team matchups, six-model power rankings, player projections and verified accuracy.">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080e17"><meta name="description" content="NBA Twin Lab — today's NBA predictions, team matchups, locked game forecasts, player projections and verified accuracy.">
 <title>NBA Twin Lab · Game Day</title>
 <link rel="stylesheet" href="./assets/site-shell.css"><link rel="stylesheet" href="./assets/v12.css">
-<script defer src="./assets/site-shell.js?v27_1"></script><script defer src="./assets/team-media.js"></script><script defer src="./assets/live-scoreboard.js?v25_1"></script><script defer src="./assets/boxscore-plus.js"></script><script defer src="./assets/live-desk.js?v25_1"></script><script defer src="./assets/home.js?v27_1"></script><link rel="stylesheet" href="./assets/dark-v13.css"><link rel="stylesheet" href="./assets/live-desk.css?v24_1"><script defer src="./assets/team-prefs.js?v19_4"></script><link rel="stylesheet" href="./assets/nav-v15.css"><script defer src="./assets/site-nav.js?v27_1"></script><link rel="stylesheet" href="./assets/sortable-v17.css"><script defer src="./assets/sortable-tables.js?v27_1"></script><link rel="stylesheet" href="./assets/watchlist-v17.css"><script defer src="./assets/watchlist.js"></script><link rel="stylesheet" href="./assets/v19-concept3.css?v27_1"><link rel="stylesheet" href="./assets/concept3-fidelity.css?v27_2"></head>
+<script defer src="./assets/site-shell.js?v27_1"></script><script defer src="./assets/team-media.js"></script><script defer src="./assets/live-scoreboard.js?v25_1"></script><script defer src="./assets/boxscore-plus.js"></script><script defer src="./assets/live-desk.js?v25_1"></script><script defer src="./assets/home.js?v31_0"></script><link rel="stylesheet" href="./assets/dark-v13.css"><link rel="stylesheet" href="./assets/live-desk.css?v24_1"><script defer src="./assets/team-prefs.js?v19_4"></script><link rel="stylesheet" href="./assets/nav-v15.css"><script defer src="./assets/site-nav.js?v27_1"></script><link rel="stylesheet" href="./assets/sortable-v17.css"><script defer src="./assets/sortable-tables.js?v27_1"></script><link rel="stylesheet" href="./assets/watchlist-v17.css"><script defer src="./assets/watchlist.js"></script><link rel="stylesheet" href="./assets/v19-concept3.css?v27_1"><link rel="stylesheet" href="./assets/concept3-fidelity.css?v27_2"></head>
 <body class="v12 home">
 <a class="site-skip" href="#site-main">Skip to content</a>
 <header class="app-header"><div class="header-inner">
@@ -12,24 +12,18 @@
 </div></header>
 <div class="ribbon"><div class="ribbon-inner"><span class="ribbon-label">THE SLATE</span><div class="ribbon-track" id="home-ticker" aria-label="Verified pregame prediction ticker">Loading latest locked games…</div><a class="ribbon-link" href="./challenge/daily.html">VIEW ALL ↗</a></div></div>
 <main id="site-main" class="main-body">
- <section id="nov2-forecast-notice" aria-label="November 2 forecast publication status" style="max-width:1220px;margin:18px auto 20px;padding:17px 20px;border:1px solid #3a536c;border-radius:13px;background:#122236;color:#d9e6f2;font-size:14px;line-height:1.5">
- <strong style="display:block;color:#fff;letter-spacing:.04em">NOVEMBER 2 FORECAST STATUS · PROVISIONAL PREVIEWS</strong>
- <p style="margin:6px 0 11px">The official Melbourne November 2 four-game forecast did not pass publication checks before tip-off, so it is <strong>not a verified locked slate</strong>. Pre-tip research estimates are available separately. The NBA's US November 2 slate takes place November 3 in Melbourne; its 15-game preview includes Elo V7 and Monte Carlo, not the official sealed six-model forecast.</p>
- <a href="./challenge/nov2-us-preview.html" style="color:#91d9ff;font-weight:700;margin-right:22px">VIEW 15-GAME US NOV 2 PREVIEW ↗</a>
- <a href="./challenge/nov2-preview.html" style="color:#91d9ff;font-weight:700">VIEW 4-GAME MELBOURNE NOV 2 PREVIEW ↗</a>
- </section>
- <script>if(Date.now()>=Date.parse('2026-11-03T13:00:00Z'))document.getElementById('nov2-forecast-notice')?.remove();</script>
+
  <div class="hero-grid">
   <section class="lead-story" aria-label="NBA Twin Lab game day">
    <div class="v19-hero-art" aria-hidden="true"></div>
 <div class="eyebrow"><span class="signal-dot"></span> DATA. MODELS. BASKETBALL REALITY.</div>
    <div><h1>Smarter<br><em>NBA Predictions.</em></h1>
-    <p>Six prediction engines. Game-day data and player projections. Forecasts locked before tipoff, audited after the final buzzer. No made-up certainty.</p>
+    <p>One pick for each locked game, with its win probability and projected final score. See how each forecast scored after the buzzer.</p>
    </div>
    <div><div class="lead-actions"><a class="btn lime" href="./challenge/daily.html">TODAY'S PREDICTIONS <span aria-hidden="true">↗</span></a><a class="btn dark" href="#live-games">LIVE SCORES & FINALS</a><a class="btn dark" href="./predict/">MATCHUP LAB</a></div><a id="hero-live-status" class="hero-live-status" href="#live-games">CHECKING LIVE NBA GAMES…</a><p class="hero-stamp">NO HINDSIGHT PICKS. NO FAKE CERTAINTY.</p></div>
    <div class="metric-strip" aria-label="NBA Twin Lab model coverage">
-  <div><small>MODEL CONTENDERS</small><strong>06</strong><span>Five models + learned ensemble</span></div>
-  <div><small>HISTORICAL TEST</small><strong id="home-backtest">—</strong><span>Common-game rolling evaluation</span></div>
+  <div><small>FORECAST MODEL</small><strong>Elo</strong><span>Locked before tipoff</span></div>
+  <div><small>WINNER ACCURACY</small><strong id="home-backtest">—</strong><span id="home-graded">Awaiting graded finals</span></div>
   <div><small>LOCKED SLATES</small><strong id="home-locked">—</strong><span>Latest: <span id="home-date">not yet loaded</span></span></div>
   <div><small>PLAYER PROJECTIONS</small><strong id="home-projections" data-dynamic="true">—</strong><span>Latest verified pretip lock</span></div>
  </div>
@@ -38,7 +32,7 @@
   <section class="featured-box" aria-label="Featured locked NBA forecast">
    <div class="feature-head"><span>TODAY’S FEATURED MATCHUP</span><b id="feature-tip">Loading pregame slate…</b></div>
    <div class="feature-score"><div id="featured-game" class="sports-feature__match"><p>Loading a verified, locked game forecast…</p></div></div>
-   <div class="feature-bottom" id="feature-detail">Production Elo model · pretip forecast, not a live score</div><div class="feature-bottom"><a id="feature-game-link" class="btn primary" href="./game/">VIEW FULL ANALYSIS ↗</a></div><details class="v19-feature-insights"><summary>MODEL SPREAD & PLAYER PROJECTIONS <span aria-hidden="true">⌄</span></summary><div id="feature-confidence" class="feature-confidence" aria-label="Predictions versus model uncertainty"></div><div class="feature-players" id="feature-players" aria-label="Projected players from this exact matchup"></div></details>
+   <div class="feature-bottom" id="feature-detail">Production Elo model · pretip forecast, not a live score</div><div class="feature-bottom"><a id="feature-game-link" class="btn primary" href="./game/">VIEW FULL ANALYSIS ↗</a></div><details class="v19-feature-insights"><summary>LOCKED PICK & PLAYER PROJECTIONS <span aria-hidden="true">⌄</span></summary><div id="feature-confidence" class="feature-confidence" aria-label="Predictions versus model uncertainty"></div><div class="feature-players" id="feature-players" aria-label="Projected players from this exact matchup"></div></details>
   </section>
   <section class="c3-latest-results" aria-labelledby="c3-results-heading">
     <div class="c3-rail-heading"><h2 id="c3-results-heading">Latest Results</h2><a href="./#live-games">See all</a></div>
@@ -77,10 +71,9 @@
  <p class="scoreboard-source" id="scoreboard-source" aria-live="polite">Fetching ESPN game scores…</p><div id="home-games" class="live-games" aria-live="polite"><p>Reading the last locked game slate…</p></div>
  <p class="small-note">Scores and game clocks are sourced separately from ESPN and refresh automatically where available. Pregame predictions remain locked and never change with live results. Times shown in Melbourne time.</p></section>
  
-<section aria-labelledby="explore-heading"><div class="section-top"><div><div class="eyebrow">INSIDE THE LAB</div><h2 id="explore-heading">GO DEEPER.</h2></div><p>Make a matchup your own research project. Find what predicts outcomes, where our models disagree, and what they got wrong.</p></div>
+<section aria-labelledby="explore-heading"><div class="section-top"><div><div class="eyebrow">INSIDE THE LAB</div><h2 id="explore-heading">GO DEEPER.</h2></div><p>Explore player projections, team form and the original forecast for each game.</p></div>
  <div class="action-grid">
   <a class="action-tile" href="./predict/"><span class="kicker">01 / MATCHUP INTELLIGENCE</span><h3>GAME PREDICTOR</h3><p>Team strength, matchup context, probabilities and score projections from the validated production model.</p><b>EXPLORE GAMES ↗</b></a>
-  <a class="action-tile" href="./challenge/"><span class="kicker">02 / SIX-MODEL EXPERIMENT</span><h3>MODEL RANKINGS</h3><p>Elo, basketball science, player impact, Monte Carlo, ML and their separately evaluated ensemble.</p><b>SEE THE LEADERBOARD ↗</b></a>
   <a class="action-tile" href="./audit/"><span class="kicker">03 / FINAL BUZZER</span><h3>ACCURACY TRACKER</h3><p>Immutable forecasts matched against final results. Winner accuracy, probability quality and player-stat error.</p><b>CHECK THE RECEIPTS ↗</b></a>
   <a class="action-tile" href="./team-intelligence/"><span class="kicker">04 / PLAYING STYLES</span><h3>TEAM INTELLIGENCE</h3><p>Explore Four Factors, pace, recent performance and the matchup tendencies behind the numbers.</p><b>ANALYSE THE MATCHUP ↗</b></a>
   <a class="action-tile" href="./player-stats/"><span class="kicker">05 / THE PLAYER LAB</span><h3>PLAYER PROJECTIONS</h3><p>Research-level points, rebounds, assists and three-point forecasts. Availability remains explicitly uncertain.</p><b>EXPLORE PLAYER STATS ↗</b></a>

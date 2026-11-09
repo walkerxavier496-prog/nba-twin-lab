@@ -29,14 +29,8 @@ function models(g){
  return q?.predictions||g?.challenge_predictions||{};
 }
 function selectedModel(g){
- const one=g?.research_score_machine;
- if(one?.available===true && numbers(one.home_win_probability))
-  return {home:one.home_win_probability,label:'ONE MACHINE · JOINT RESEARCH V1'};
- // Research display policy: lowest common-sample Brier in the frozen five-model
- // historical report (3,643 games), not a retroactive change to production locks.
- // Do not substitute Elo or an unverified engine when M5 is unavailable.
- const m=models(g),p=m.m5_regularized_ml?.available&&numbers(m.m5_regularized_ml.home_win_probability)?m.m5_regularized_ml.home_win_probability:null;
- return numbers(p)?{home:p,label:'M5 · ML RESEARCH CHALLENGER'}:null;
+ const forecast=g?.primary_forecast,p=forecast?.home_win_probability;
+ return numbers(p)&&p>=0&&p<=1?{home:p,label:'PRODUCTION ELO',forecast}:null;
 }
 // NBA / ESPN / research snapshots disagree on some legacy abbreviations.
 const TEAM_ALIASES={WSH:'WAS',GSW:'GS',NYK:'NY',SAS:'SA',NOP:'NO',PHX:'PHO',BKN:'BRK',UTA:'UTAH',CHA:'CHO'};
@@ -57,6 +51,17 @@ async function get(url,optional=false){
  try{const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return await r.json()}
  catch(err){if(optional)return null;throw err}
 }
+async function verified(url,sha,optional=false){
+ try{
+  if(!/^[a-f0-9]{64}$/.test(sha||''))throw Error('Missing forecast archive checksum');
+  const response=await fetch(url,{cache:'no-store'});
+  if(!response.ok)throw Error('Archive HTTP '+response.status);
+  const bytes=await response.arrayBuffer(),digest=await crypto.subtle.digest('SHA-256',bytes);
+  const actual=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+  if(actual!==sha)throw Error('Archive checksum mismatch');
+  return JSON.parse(new TextDecoder().decode(bytes));
+ }catch(error){if(optional)return null;throw error}
+}
 async function loadGameReview(id){
  if(!state.entry||!state.lock||!(/^\d{6,12}$/.test(String(id))))return false;
  if(state.gameReviews[String(id)])return true;
@@ -66,6 +71,8 @@ async function loadGameReview(id){
  data.source_lock_integrity_sha256!==state.entry.lock_integrity_sha256||
  !Array.isArray(data.games)||data.games.length!==1||
  gameId(data.games[0])!==String(id)||
+ data.melbourne_date!==state.entry.melbourne_date||data.source_lock_sha256!==state.entry.lock_sha256||
+ data.games[0].models?.production_elo_v7?.p!==byId(id)?.primary_forecast?.home_win_probability||
  !numbers(data.games[0].away?.score)||!numbers(data.games[0].home?.score))
   return false;
  state.gameReviews[String(id)]=data.games[0];
@@ -82,7 +89,7 @@ function otherInfo(g){
  return {away:getT(g.away.abbr),home:getT(g.home.abbr),available:valid&&!!getT(g.away.abbr)&&!!getT(g.home.abbr),teams};
 }
 function dateStatus(){
- return state.entry?state.entry.melbourne_date+' · locked '+new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'numeric',minute:'2-digit',hour12:true}).format(new Date(state.lock.locked_at_utc))+' AEDT':'No verified lock';
+ return state.entry?state.entry.melbourne_date+' · locked '+new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Melbourne',hour:'numeric',minute:'2-digit',hour12:true}).format(new Date(state.lock.locked_at_utc))+' Melbourne time':'No verified lock';
 }
 function teamData(g,side){
  const players=(g.v9_player_projections||[]).filter(p=>sameTeam(p.team,g[side].abbr));
@@ -106,17 +113,6 @@ function pregameSummary(g){
  '<div class="c3-h2h-mid"><strong>'+esc(fmt(g.tip_utc))+'</strong><small>'+esc(state.entry?.melbourne_date||'')+'</small><em>LOCKED BEFORE TIPOFF</em></div>'+
  '<div class="c3-side right">'+logo(g.home,true)+'<div><b>'+esc(g.home.name)+'</b><small>HOME · '+esc(g.home.abbr)+'</small></div></div></div>'+
  '<p class="c3-source-note">Source: '+esc(model?.label||'No pregame model available')+' · '+esc(dateStatus())+' · numbers are historical pregame estimates, not live odds.</p>';
-}
-function modelCards(g){
- const ms=models(g),base=g.primary_forecast;
- return '<div class="c3-six-models">'+MODELS.map(([id,label])=>{
- const m=ms[id],p=m?.available&&numbers(m.home_win_probability)?m.home_win_probability:null;
- const favour=numbers(p)?p>=.5?g.home.abbr:g.away.abbr:'—';
- const prob=numbers(p)?Math.max(p,1-p):null;
- return '<div class="c3-engine"><small>'+esc(label)+'</small><b>'+pct(prob)+'</b>'+
- '<div class="c3-engine-track"><i style="width:'+(prob*100||0)+'%"></i></div>'+
- '<small>'+esc(favour)+' pick</small></div>';
- }).join('')+'</div>';
 }
 function basketballFactors(g){
  const info=otherInfo(g),a=info.away?.season,h=info.home?.season;
@@ -161,82 +157,50 @@ function basketballFactors(g){
  }
  return notes.map(note=>({...note,source:'verified season snapshot · pretip only'}));
 }
-function injuryFactors(g){
- const away=teamData(g,'away'),home=teamData(g,'home');
- const m=models(g),mp=MODELS.map(([id])=>m[id]).filter(p=>p?.available&&numbers(p.home_win_probability)).map(p=>p.home_win_probability);
- const spread=mp.length>1?(Math.max(...mp)-Math.min(...mp))*100:null;
- const f=basketballFactors(g);
- const factors=f.slice(0,4).map((x,i)=>['◉',x.text,x.detail+' '+x.why]);
- const absent=[...away.absent.map(x=>x.name+' ('+g.away.abbr+')'),...home.absent.map(x=>x.name+' ('+g.home.abbr+')')];
- factors.push(['✚','Availability and rotation',
-  (absent.length?'Officially OUT: '+absent.join(', ')+'. ':'No officially OUT players in the frozen projection list. ')+
-  'Lineups are inferred, not confirmed; official injury data was captured separately and DID NOT change locked probabilities.']);
- factors.push(['↗','Six-model uncertainty',
-  spread===null?'Comparable model probabilities unavailable.':
-  spread.toFixed(1)+' percentage points between most bullish and bearish models. This spread is model disagreement, NOT a calibrated confidence interval.']);
- if(!f.length)return '<p class="c3-muted">No reliable two-team pretip basketball statistics were available at the forecast cutoff.</p>';
- return '<div class="c3-factors">'+factors.map(([icon,title,detail])=>
-  '<div class="c3-factor"><span class="c3-factor-icon" aria-hidden="true">'+icon+'</span>'+
-  '<div><b>'+esc(title)+'</b><small>'+esc(detail)+'</small></div></div>').join('')+'</div>'+
- '<p class="c3-source-note">Verified cutoff '+esc(state.snapshot?.built_at_utc||'unknown')+
- ' · current season samples: '+esc(g.away.abbr)+' '+(state.snapshot?.teams?.find(t=>canonicalTeam(t.abbr)===canonicalTeam(g.away.abbr))?.season?.games||'—')+
- ', '+esc(g.home.abbr)+' '+(state.snapshot?.teams?.find(t=>canonicalTeam(t.abbr)===canonicalTeam(g.home.abbr))?.season?.games||'—')+
- ' games. Descriptive observations only; no proven causal contribution to this locked probability.</p>';
+function forecastFactors(g){
+ const f=g.primary_forecast?.factors;
+ if(!f)return '<p class="c3-muted">This lock recorded the pick and score. Individual rating and rest inputs were not archived.</p>';
+ const days=n=>numbers(n)?num0(n)+' days':'unavailable';
+ return '<dl class="c3-factors"><div><dt>Pregame team ratings</dt><dd>'+esc(g.away.abbr)+' '+num(f.away_rating)+' · '+esc(g.home.abbr)+' '+num(f.home_rating)+'</dd></div>'+
+ '<div><dt>Rest before tipoff</dt><dd>'+esc(g.away.abbr)+' '+days(f.away_rest_days)+' · '+esc(g.home.abbr)+' '+days(f.home_rest_days)+'</dd></div>'+
+ '<div><dt>Previous-season strength weight</dt><dd>'+pct(f.prior_season_weight)+'</dd></div>'+
+ '<div><dt>Home rating edge after venue, rest and prior adjustments</dt><dd>'+num(f.adjusted_home_rating_edge)+' Elo points</dd></div></dl>';
 }
 function postgameBar(g){
  const final=scoreFor(g),review=reviewFor(g);
  if(!final)return '';
  const winning=final.home>final.away?g.home.abbr:g.away.abbr;
- const machine=selectedModel(g),pick=machine?machine.home>=.5?g.home.abbr:g.away.abbr:null;
+ const machine=selectedModel(g),pick=machine?.forecast.winner;
  const verdict=pick?(pick===winning?'CORRECT PICK':'MISSED PICK'):'NO LOCKED PICK';
  return '<section class="c3-postgame-bar" aria-label="Verified final game result">'+
  '<div><span class="c3-postgame-label">FINAL · '+esc(final.kind)+'</span><strong>'+esc(g.away.abbr)+' '+final.away+' – '+final.home+' '+esc(g.home.abbr)+'</strong></div>'+
  '<div><span class="c3-postgame-label">LOCKED '+esc(machine?.label||'MODEL')+'</span>'+
  '<strong class="'+(pick===winning?'c3-correct':'c3-incorrect')+'">'+esc(pick||'—')+' · '+verdict+'</strong></div>'+
- '<button type="button" class="c3-btn" data-c3-show-audit="true">MACHINES VS REALITY ↓</button></section>';
+ '<button type="button" class="c3-btn" data-c3-show-audit="true">FORECAST VS FINAL ↓</button></section>';
 }
 function fullPostgame(g){
  const final=scoreFor(g),review=reviewFor(g);
  if(!final)return '';
  const actual=final.home>final.away?g.home.abbr:g.away.abbr;
  const original=g.primary_forecast?.projected_score;
- const rows=MODELS.map(([id,title])=>{
-  const forecast=models(g)[id],grade=review?.models?.[id];
-  const hp=forecast?.available&&numbers(forecast.home_win_probability)?forecast.home_win_probability:null;
-  const pick=numbers(hp)?hp>=.5?g.home.abbr:g.away.abbr:null;
-  const verdict=grade?grade.correct?'✓ CORRECT':'✕ WRONG':'NOT GRADED';
-  return '<tr><td>'+esc(title)+'</td><td>'+esc(pick||'—')+' '+pct(numbers(hp)?Math.max(hp,1-hp):null)+'</td>'+
-   '<td><span class="'+(grade?.correct?'c3-correct':'c3-incorrect')+'">'+verdict+'</span></td>'+
-   '<td>'+num(grade?.brier,3)+'</td><td>'+num(grade?.log_loss,3)+'</td>'+
-   '<td>'+num(grade?.score_mae_per_team,1)+'</td></tr>';
- }).join('');
- const scored=review?.player_results?.filter(p=>p.disposition==='played_scored')||[];
- const metrics=['pts','reb','ast','three_pm'].map(key=>{
-  const errors=scored.map(p=>p.absolute_errors?.[key]).filter(numbers);
-  return key.toUpperCase()+' MAE '+(errors.length?(errors.reduce((a,b)=>a+b,0)/errors.length).toFixed(2):'—');
- }).join(' · ');
- return '<section class="c3-postgame-detail" id="c3-postgame-audit">'+
- '<div class="c3-panel-title"><h3>Machines vs Reality</h3><span class="c3-status c3-final">INDEPENDENTLY VERIFIED FINAL</span></div>'+
- '<p>Actual: <strong>'+esc(actual)+' won '+(final.home>final.away?final.home+'–'+final.away:final.away+'–'+final.home)+'</strong> ('+
- esc(g.away.abbr)+' '+final.away+', '+esc(g.home.abbr)+' '+final.home+'). Original locked Elo projected '+
- esc(g.away.abbr)+' '+num0(original?.away)+' – '+num0(original?.home)+' '+esc(g.home.abbr)+
- '. Original predictions are preserved unchanged.</p>'+
- '<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>ENGINE</th><th>LOCKED PICK</th><th>RESULT</th><th>BRIER ↓</th><th>LOG LOSS ↓</th><th>SCORE MAE ↓</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
- '<p class="c3-source-note">'+(review?
- 'Audited against original pretip records. Score MAE shown only for engines with locked score predictions. '+scored.length+' participating-player predictions: '+metrics+'.':
- 'This game has a final score, but detailed audited per-engine/player grading is still pending.')+'</p></section>';
+ const grade=review?.models?.production_elo_v7;
+ return '<section class="c3-postgame-detail" id="c3-postgame-audit"><div class="c3-panel-title"><h3>Forecast vs final</h3><span>'+esc(final.kind)+'</span></div>'+
+ '<p>Locked score · '+esc(g.away.abbr)+' '+num0(original?.away)+' – '+num0(original?.home)+' '+esc(g.home.abbr)+'</p>'+
+ '<p>Final · '+esc(g.away.abbr)+' '+final.away+' – '+final.home+' '+esc(g.home.abbr)+' · '+esc(actual)+' won</p>'+
+ (grade?'<p>Brier '+num(grade.brier,3)+' · log loss '+num(grade.log_loss,3)+' · score error '+num(grade.score_mae_per_team,1)+' points per team.</p>':
+ '<p>Postgame grading pending.</p>')+'</section>';
 }
 function predictionPanel(g){
- const selection=selectedModel(g),p=selection?.home,away=numbers(p)?1-p:null;
- const mc=models(g).m4_monte_carlo;
- const scored=g.research_score_machine?.available?g.research_score_machine.projected_score:mc?.available?mc.projected_score:null;
- const one=window.TwinOneMachine?.readout?.(g,models(g));
- const readout=one?.available?'<div class="c3-source-note"><strong>'+(one.coherent_joint_forecast?'ONE MACHINE':'SEPARATE RESEARCH ENGINES')+' · '+esc(one.winner)+' '+pct(one.win_probability)+'</strong> · '+(one.score?'Projected score '+esc(g.away.abbr)+' '+one.score.away+'–'+one.score.home+' '+esc(g.home.abbr)+' · projected margin '+one.margin:'Score / margin unavailable')+(one.score_conflicts_with_pick?' · WARNING: score estimate disagrees with the pick.':'')+' · '+esc(one.reason)+(one.drivers?.length?'<div><strong>WHY (model margin contributions, not causal):</strong> '+one.drivers.slice(0,3).map(d=>esc(d.label)+' '+(d.margin_points>=0?'+':'')+num(d.margin_points)+' pts').join(' · ')+'</div>':'')+'</div>':'<p class="c3-source-note">Research readout unavailable — verified model inputs missing.</p>';
- return '<div class="c3-main-grid"><section class="c3-panel"><div class="c3-panel-title"><h3>Win Probability</h3><span class="c3-muted">'+esc(selection?.label||'UNAVAILABLE')+'</span></div>'+
+ const selection=selectedModel(g);
+ if(!selection)return '<p class="c3-muted">No production forecast was locked for this matchup.</p>';
+ const forecast=selection.forecast,p=selection.home,away=1-p,score=forecast.projected_score;
+ const margin=numbers(score?.home)&&numbers(score?.away)?score.home-score.away:null;
+ return '<div class="c3-main-grid"><section class="c3-panel"><div class="c3-panel-title"><h3>'+esc(forecast.winner)+' to win</h3><span>'+pct(forecast.winner_probability)+' win probability</span></div>'+
  '<div class="c3-prob-score"><div>'+logo(g.away,true)+'<strong>'+pct(away)+'</strong></div><div><strong>'+pct(p)+'</strong>'+logo(g.home,true)+'</div></div>'+
- track(away,p)+readout+
- '<p class="c3-source-note">'+(scored&&numbers(scored.away)&&numbers(scored.home)?(g.research_score_machine?.available?'One Machine research score estimate: ':'Separate Monte Carlo score estimate: ')+esc(g.away.abbr)+' '+num0(scored.away)+' – '+num0(scored.home)+' '+esc(g.home.abbr)+'. ':'Monte Carlo score estimate unavailable. ')+'Research engines share inputs and are not independent votes. Headline M5 is a historical challenger, not the production model.</p>'+
- '</section><section class="c3-panel"><div class="c3-panel-title"><h3>Key Factors</h3><span class="c3-muted">PREGAME EVIDENCE</span></div>'+injuryFactors(g)+'</section></div>'+fullPostgame(g);
+ track(away,p)+'<p>Projected final · '+esc(g.away.abbr)+' '+num(score?.away)+' – '+num(score?.home)+' '+esc(g.home.abbr)+'</p>'+
+ (margin===null?'':'<p>Projected margin · '+esc(margin>=0?g.home.abbr:g.away.abbr)+' by '+num(Math.abs(margin))+'</p>')+
+ '<p class="c3-source-note">'+esc(forecast.confidence_context||'Pregame estimate')+'. Player availability is outside this Elo forecast.</p></section>'+
+ '<section class="c3-panel"><div class="c3-panel-title"><h3>Key factors</h3></div>'+forecastFactors(g)+'</section></div>'+fullPostgame(g);
 }
 function lineupPanel(g){
  const team=side=>{
@@ -394,7 +358,7 @@ function bindLab(){
  $('c3-game-select').onchange=e=>{state.gid=e.target.value;state.playerTeam='all';state.tab='prediction';renderLab();
  const requested=state.gid;
  loadGameReview(requested).then(found=>{if(found&&state.gid===requested)renderLab()});
- if(typeof window.history?.replaceState==='function')window.history.replaceState(null,'','?game='+encodeURIComponent(state.gid))};
+ if(typeof window.history?.replaceState==='function')window.history.replaceState(null,'','?game='+encodeURIComponent(state.gid)+'&date='+encodeURIComponent(state.entry.melbourne_date))};
  document.querySelectorAll('[data-c3-game-tab]').forEach(el=>el.onclick=()=>{state.tab=el.dataset.c3GameTab;renderLab()});
  const post=$('c3-lab')?.querySelector?.('[data-c3-show-audit]');
  if(post)post.onclick=()=>{state.tab='prediction';renderLab();$('c3-postgame-audit')?.scrollIntoView?.({behavior:'smooth',block:'start'})};
@@ -406,30 +370,21 @@ function bindLab(){
 }
 function slateBody(g){
  const sel=selectedModel(g),p=sel?.home,away=numbers(p)?1-p:null,sc=g.primary_forecast?.projected_score;
- const modelArray=MODELS.map(([id])=>models(g)[id]).filter(x=>x?.available&&numbers(x.home_win_probability)).map(x=>x.home_win_probability);
- const spread=modelArray.length>1?Math.max(...modelArray)-Math.min(...modelArray):null;
- const grade=!numbers(p)?'missing':spread>=.20?'split':'';
- const source=!numbers(p)?'No lock':spread>=.20?'Disagreement':'Model range';
- const score=scoreFor(g),review=reviewFor(g),locked=selectedModel(g);
- const picked=numbers(locked?.home)?(locked.home>=.5?g.home.abbr:g.away.abbr):null;
- const actual=score?(score.home>score.away?g.home.abbr:g.away.abbr):null;
- const verdict=review&&picked?(picked===actual?'✓ HIT':'✕ MISS'):'AUDIT PENDING';
- const graded=MODELS.map(([id])=>review?.models?.[id]).filter(x=>typeof x?.correct==='boolean');
- const successes=graded.filter(x=>x.correct).length;
- const machineResult=graded.length?successes+'/'+graded.length+' correct':'—';
- return '<tr><td>'+esc(fmt(g.tip_utc))+'</td><td><a class="c3-player-name" href="../predict/?game='+encodeURIComponent(gameId(g))+'">'+
+ const score=scoreFor(g),review=reviewFor(g),forecast=sel?.forecast;
+ const picked=forecast?.winner,graded=review?.models?.production_elo_v7;
+ const verdict=graded?(graded.correct?'✓ HIT':'✕ MISS'):'AUDIT PENDING';
+ return '<tr><td>'+esc(fmt(g.tip_utc))+'</td><td><a class="c3-player-name" href="../predict/?game='+encodeURIComponent(gameId(g))+'&amp;date='+encodeURIComponent(state.entry.melbourne_date)+'">'+
  logo(g.away)+'<strong>'+esc(g.away.abbr)+' @ '+esc(g.home.abbr)+'</strong>'+logo(g.home)+'</a></td>'+
  '<td><div class="c3-prob-inline"><span>'+pct(away)+'</span><div class="c3-inline-track"><i style="width:'+(numbers(away)?away*100:0)+'%"></i><i style="width:'+(numbers(p)?p*100:0)+'%"></i></div><span>'+pct(p)+'</span></div></td>'+
- '<td>'+num0(sc?.away)+' – '+num0(sc?.home)+'</td><td><span class="c3-confidence '+grade+'" title="Across saved research engines; not a calibrated confidence grade">'+esc(source)+'</span>'+
- (numbers(spread)?'<small class="c3-muted"> '+(spread*100).toFixed(1)+'pp</small>':'')+'</td>'+
- (state.slateTab==='results'?'<td>'+esc(score?score.away+' – '+score.home:'Awaiting final')+'</td><td>'+esc(picked||'—')+'</td><td class="'+(review?(picked===actual?'c3-correct':'c3-incorrect'):'c3-muted')+'">'+esc(verdict)+'</td><td>'+esc(machineResult)+'</td>':'')+'</tr>';
+ '<td>'+num(sc?.away)+' – '+num(sc?.home)+'</td><td>'+esc(picked||'—')+' '+pct(forecast?.winner_probability)+'</td>'+
+ (state.slateTab==='results'?'<td>'+esc(score?score.away+' – '+score.home:'Awaiting final')+'</td><td class="'+(graded?(graded.correct?'c3-correct':'c3-incorrect'):'c3-muted')+'">'+esc(verdict)+'</td><td>'+num(graded?.score_mae_per_team,1)+'</td>':'')+'</tr>';
 }
 function slateFull(){
  const games=(state.lock.forecasts||[]).filter(g=>[g.away.name,g.home.name,g.away.abbr,g.home.abbr].some(s=>s.toLowerCase().includes(state.slateSearch.toLowerCase())));
  return '<div class="c3-controls"><input id="c3-slate-search" type="search" aria-label="Filter NBA teams" placeholder="Search a team…" value="'+esc(state.slateSearch)+'"></div>'+
- '<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>TIME · MELBOURNE</th><th>MATCHUP</th><th>WIN PROBABILITY</th><th>PREDICTED SCORE</th><th>MODEL AGREEMENT</th>'+
- (state.slateTab==='results'?'<th>ACTUAL FINAL</th><th>LOCKED PICK</th><th>PICK VS FINAL</th><th>SIX MACHINES</th>':'')+'</tr></thead><tbody>'+games.map(slateBody).join('')+'</tbody></table></div>'+
- '<p class="c3-source-note">All probabilities and projected scores come from the saved pretip lock. Confidence badges are replaced by measured model disagreement; no unsupported high/medium certainty claims. '+esc(dateStatus())+'.</p>';
+ '<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>TIME · MELBOURNE</th><th>MATCHUP</th><th>WIN PROBABILITY</th><th>PREDICTED SCORE</th><th>LOCKED PICK</th>'+
+ (state.slateTab==='results'?'<th>ACTUAL FINAL</th><th>PICK VS FINAL</th><th>POINTS ERROR / TEAM</th>':'')+'</tr></thead><tbody>'+games.map(slateBody).join('')+'</tbody></table></div>'+
+ '<p class="c3-source-note">The pick, score and probabilities come from the same pregame forecast. '+esc(dateStatus())+'.</p>';
 }
 function slateComparison(){
  return '<div class="c3-scroll"><table class="c3-data-table"><thead><tr><th>GAME</th>'+MODELS.map(x=>'<th>'+esc(x[1])+'</th>').join('')+'</tr></thead><tbody>'+
@@ -459,25 +414,34 @@ function renderSlate(){
 }
 async function load(){
  const parent=$('c3-lab')||$('c3-slate');if(!parent)return;
- parent.innerHTML='<p class="c3-muted">Loading immutable pretip forecasts and six research engines…</p>';
- const prefix=$('c3-lab')?'../':'../';
+ parent.innerHTML='<p class="c3-muted">Loading pregame forecast records…</p>';
+ const prefix='../';
  try{
   const ledger=await get(prefix+'data/audit-ledger.json');
   if(!Array.isArray(ledger.entries)||!ledger.entries.length)throw Error('No immutable pretip slate is available');
-  const entry=ledger.entries.at(-1);
+  const params=new URLSearchParams(location.search),requested=params.get('game'),requestedDate=params.get('date');
+  const schedule=await get(prefix+'data/games.json',true);
+  const requestedGame=requested&&schedule?.games?.find(game=>String(game.id)===requested);
+  const matchingDate=requestedDate||(requestedGame?new Intl.DateTimeFormat('sv-SE',{timeZone:'Australia/Melbourne'}).format(new Date(requestedGame.date)):null);
+  const entry=matchingDate?ledger.entries.find(row=>row.melbourne_date===matchingDate):ledger.entries.at(-1);
+  if(!entry)throw Error('No archived slate for the requested date');
   const date=entry.melbourne_date;
-  const [lock,sidecar,review,snapshot,results]=await Promise.all([
-   get(prefix+entry.lock_path),
+  const [lock,sidecar,review,snapshot]=await Promise.all([
+   verified(prefix+entry.lock_path,entry.lock_sha256),
    get(prefix+'audit/supplements/'+date+'/challenge.lock.json',true),
-   entry.review_path?get(prefix+entry.review_path,true):Promise.resolve(null),
-   get(prefix+'data/v7-current.json',true),get(prefix+'data/games.json',true)
+   entry.review_path?verified(prefix+entry.review_path,entry.review_sha256,true):Promise.resolve(null),
+   get(prefix+'data/v7-current.json',true)
   ]);
-  if(!lock.forecasts?.length||!lock.locked_at_utc)throw Error('Immutable forecast lock is incomplete');
+  if(!lock.forecasts?.length||lock.scope?.melbourne_date!==date||
+    lock.integrity?.canonical_payload_without_integrity!==entry.lock_integrity_sha256||
+    !lock.forecasts.every(game=>Date.parse(lock.locked_at_utc)<Date.parse(game.tip_utc)))throw Error('Immutable forecast lock is incomplete');
   const verifiedReview=review?.schema==='nba-twin-lab-daily-review-v3'&&
     review.source_lock_integrity_sha256===entry.lock_integrity_sha256&&
     review.melbourne_date===entry.melbourne_date&&Array.isArray(review.games)?review:null;
-  state.entry=entry;state.lock=lock;state.sidecar=sidecar;state.review=verifiedReview;state.snapshot=snapshot;state.results=results;
-  state.gid=new URLSearchParams(location.search).get('game')||gameId(lock.forecasts[0]);
+  state.entry=entry;state.lock=lock;state.sidecar=sidecar?.original_forecast_sha256===entry.lock_sha256&&
+    Date.parse(sidecar.locked_at_utc)<Date.parse(lock.scope.first_tip_utc)?sidecar:null;state.review=verifiedReview;state.snapshot=snapshot;state.results=schedule;
+  if(requested&&!byId(requested))throw Error('The requested game has no lock on this slate');
+  state.gid=requested||gameId(lock.forecasts[0]);
   if($('c3-lab'))await loadGameReview(state.gid);
   if($('c3-lab'))renderLab();
   else renderSlate();
@@ -497,7 +461,7 @@ async function refreshPostgame(){
   const prior=Number(state.entry.reviewed_game_count||0);
   const next=Number(entry.reviewed_game_count||0);
   if(entry.review_path&&(next!==prior||!state.review)){
-   const review=await get('../'+entry.review_path+'?refresh='+Date.now(),true);
+   const review=await verified('../'+entry.review_path+'?refresh='+Date.now(),entry.review_sha256,true);
    if(review?.schema==='nba-twin-lab-daily-review-v3'&&
      review.source_lock_integrity_sha256===state.entry.lock_integrity_sha256&&
      review.melbourne_date===state.entry.melbourne_date&&Array.isArray(review.games)){

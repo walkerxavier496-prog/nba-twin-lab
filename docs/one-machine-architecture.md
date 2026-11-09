@@ -9,7 +9,7 @@ One headline forecast must show one winner, one win probability, a coherent proj
 - `scripts/score_machine_audit.cjs`: walks forward by NBA season; each year is evaluated only using earlier-season training data. The default audit is read-only. `--preview` emits provisional slate predictions, `--model` includes the frozen trained coefficients in stdout.
 - `scripts/daily_tracker.cjs`: **only for new eligible pre-tip locks**, trains on previous-season features, attaches a `research_score_machine` output with data SHA256, raw scores, display scores, margin, probability, top numeric contributing factors and explicit non-production status. The locked baseline remains intact.
 - `scripts/audit-core.cjs`: postgame review scores `joint_score_margin_v1` on the frozen value for win accuracy, Brier, log loss, score MAE and margin error, alongside the benchmarks.
-- `predict/one-machine.js` and `assets/concept3-hub.js`: display one locked research pick with scores, margin and explanations when available; older locks retain their recorded research challenger view. Six benchmark engine comparisons are in the Model Breakdown tab.
+- `predict/one-machine.js` and `assets/concept3-hub.js`: keep research available for audit. Public game and daily views use the original production winner, probability and score from the same lock. New locks include Elo and rest evidence. Earlier locks explicitly disclose when those inputs were not recorded. Model Breakdown holds the research comparisons.
 
 ## Walk-forward audit (2024–2026)
 

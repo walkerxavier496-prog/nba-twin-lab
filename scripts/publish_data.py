@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 import fnmatch
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import time
@@ -50,12 +51,20 @@ def guard_outputs(paths, allowed, base):
         json.loads(Path(path).read_text())
 
 
+def independent_run_output(path):
+    """These committed artifacts are never read by another data generator."""
+    return bool(re.fullmatch(r"(?:audit/anchors/\d{4}-\d{2}-\d{2}|research-reviews/chronology-v1/runs/\d+-\d+/[\w.-]+)\.json", path))
+
+
 def publish(workflow, receipt, validate):
     config = json.loads(Path("scripts/publication.json").read_text())
     allowed = config[workflow]
     base = git("rev-parse", "HEAD").stdout.strip()
     changed = paths_changed()
     guard_outputs(changed, allowed, base)
+    if workflow == "daily-audit" and not changed:
+        print("No new forecast, review, availability or timestamp proof to publish")
+        return None
     # Per-producer files avoid metadata conflicts between otherwise disjoint runs.
     stamp = Path("data/refresh-status") / f"{workflow}.json"
     stamp.parent.mkdir(parents=True, exist_ok=True)
@@ -77,8 +86,8 @@ def publish(workflow, receipt, validate):
         "run_attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
         "changed_artifacts": changed,
     }, indent=2) + "\n")
-    git("add", "--", *changed, str(stamp))
-    if paths_changed() != sorted(changed + [str(stamp)]):
+    git("add", "--", *changed, stamp.as_posix())
+    if paths_changed() != sorted(changed + [stamp.as_posix()]):
         raise ValueError("Unexpected changes while staging publication")
     git("-c", "user.name=github-actions[bot]", "-c",
         "user.email=41898282+github-actions[bot]@users.noreply.github.com",
@@ -89,10 +98,12 @@ def publish(workflow, receipt, validate):
         # change. Metadata-only commits are safe to integrate. Other changes
         # require a fresh run from main; never reset/copy stale data over them.
         upstream = git("diff", "--name-only", "--no-renames", base, "origin/main").stdout.splitlines()
-        unsafe = [p for p in upstream if not p.startswith("data/refresh-status/")]
+        unsafe = [p for p in upstream if not p.startswith("data/refresh-status/")
+                  and (p in changed or not independent_run_output(p))]
         if unsafe:
             raise ValueError("Upstream inputs changed; rerun refresh from main: " + ", ".join(unsafe))
-        rebased = git("rebase", "origin/main", check=False)
+        rebased = git("-c", "user.name=github-actions[bot]", "-c",
+                      "user.email=41898282+github-actions[bot]@users.noreply.github.com", "rebase", "origin/main", check=False)
         if rebased.returncode:
             git("rebase", "--abort")
             raise ValueError("Publication conflict; preserved both versions, rerun from main")

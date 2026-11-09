@@ -16,6 +16,38 @@ test('lock scheduler tolerates delayed GitHub Actions while still locking strict
   assert.ok(T.LOCK_MAX_MINUTES_BEFORE_TIP < 24 * 60);
 });
 
+test('stale player inputs cannot suppress an eligible production lock or create player projections', t => {
+  const home = {id:'1',name:'Atlanta Hawks',abbr:'ATL'}, away = {id:'2',name:'Boston Celtics',abbr:'BOS'};
+  const target = {id:'future', season:2027, home, away, status:'scheduled', date:'2026-12-01T01:00:00Z'};
+  const now = Date.parse(target.date) - 3600000;
+  const baseline = Array.from({length:801}, (_, index) => ({
+    id:String(10000+index), season:2026, home, away, status:'final', homeScore:105, awayScore:100,
+    date:new Date(Date.UTC(2025,9,1) + index*3600000).toISOString(),
+  }));
+  const started = {...target, id:'already-started', date:'2026-11-30T23:00:00Z', status:'live'};
+  const fresh = {source:{name:'fixture'}, built_at_utc:new Date(now-60000).toISOString(), games:[...baseline,started,target]};
+  const originalRead = fs.readFileSync;
+  t.mock.method(fs, 'readFileSync', (file, ...args) => {
+    if (file === path.join(ROOT, 'data/games.json')) return JSON.stringify(fresh);
+    if (file === path.join(ROOT, 'data/context.json')) return JSON.stringify({teams:[],built_at_utc:'2026-11-01T00:00:00Z'});
+    if (file === path.join(ROOT, 'data/v7-current.json'))
+      return JSON.stringify({ strict_no_future_data:true, teams:Array(30).fill({}), coverage:{season:target.season}, built_at_utc:'2026-11-01T00:00:00Z' });
+    return originalRead(file, ...args);
+  });
+  const lock = T.buildLock({date:A.melbourneDate(target.date), now, simulations:100});
+  assert.ok(A.verifyIntegrity(lock));
+  assert.match(lock.source_provenance.v9_player_rotation.unavailable_reason, /stale/);
+  assert.deepEqual(lock.scope.excluded_game_ids, ['already-started']);
+  assert.deepEqual(lock.forecasts.map(game => game.game_id), ['future']);
+  const [forecast] = lock.forecasts;
+  assert.equal(forecast.primary_forecast.model_id, 'production_elo_v7');
+  assert.ok(Number.isFinite(forecast.primary_forecast.factors.adjusted_home_rating_edge));
+  assert.equal(forecast.v9_player_projections.length, 0);
+  assert.equal(forecast.unified_shadow.available, false);
+  assert.equal(forecast.research_score_machine.available, false);
+  assert.ok(Object.values(forecast.challenge_predictions).every(row => !row.available));
+});
+
 test('Melbourne date discovery follows AEST and AEDT instead of a fixed UTC offset', () => {
   assert.equal(A.melbourneDate('2026-06-01T14:30:00Z'), '2026-06-02');
   assert.equal(A.melbourneDate('2026-10-30T13:30:00Z'), '2026-10-31');

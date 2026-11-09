@@ -1,6 +1,6 @@
 # Data publication and Pages releases
 
-All 13 data publishers use `.github/actions/publish-data`. The action installs
+All 14 data publishers use `.github/actions/publish-data`. The action installs
 the release-check dependencies and calls `scripts/publish_data.py`. The declared
 output inventory is `scripts/publication.json`:
 
@@ -8,6 +8,7 @@ output inventory is `scripts/publication.json`:
 | --- | --- |
 | challenge-supplement-2026-10-31 | Independent immutable challenge sidecar |
 | daily-audit | New audit JSON, derived ledger/performance centre, availability |
+| player-history | Append-only player-game observations and derived history indexes |
 | five-model-challenge | Six-model comparison report |
 | game-science | Basketball Science report |
 | roster-research | Roster report, priors, rotation history |
@@ -39,7 +40,7 @@ figures are not changed by this publication implementation.
    graded probability with its immutable source.
 4. The publisher stages all declared changes and its own refresh-status record,
    creates a commit, fetches `main`, and rebases without force or reset/copy
-   conflict resolution. Changes upstream outside refresh-status metadata fail
+   conflict resolution. Concurrent changes to independent timestamp-proof files or run-specific research JSON may be integrated when this producer did not change the same path. Other upstream changes outside refresh-status metadata fail
    closed: rerun that producer from current `main` to regenerate its inputs.
 5. `scripts/validate_release.sh` runs the full Python and JavaScript suites,
    stored audit/sidecar verification, and syntax/JSON checks against the resulting
@@ -48,22 +49,22 @@ figures are not changed by this publication implementation.
    uploaded. A push race against metadata-only updates is rebased and tested
    again. A conflict/input change requires regeneration, never silent overwrite.
 
-Each successful refresh publishes `data/refresh-status/<producer>.json`, even
+Daily polls with no new evidence, review, availability change or proof skip the commit and deployment. Each successful publication writes `data/refresh-status/<producer>.json`, even
 when the generator found no changed source data. `generation_observed_at_utc`
 records when the publisher observed the generated outputs, before release
 validation. Source-reported generation timestamps are copied separately into
 `artifact_generation_timestamps`; unavailable source timestamps remain unknown.
-Observation is not a claim that upstream data has just been generated or changed.
+The schedule builder records a fresh observation after every successful validated download, including an unchanged schedule. A stale player feed leaves conditional projections and player-dependent comparisons unavailable while the independently validated Elo forecast can still be sealed. After a delayed run the first lock for a date may include only the remaining games with at least 20 minutes before tip. Earlier game IDs are listed as excluded and never receive hindsight picks. Observation is not a claim that upstream data has just been generated or changed.
 
 ## Deployment handoff
 
 The default Actions token cannot recursively trigger push workflows. Pages uses
-`workflow_run` on an explicit list of the 13 producers, in addition to normal
+`workflow_run` on an explicit list of the 14 producers, in addition to normal
 human pushes and manual deployment. It does not listen to itself. This avoids
 PATs, extra write permissions, dispatch loops, and relying on bot-push events.
 
-Only successful same-repository `main` runs from schedule, push or manual
-dispatch events qualify; pull-request events are rejected. Pages downloads a bounded
+Successful same-repository `main` runs from schedule, push or manual
+dispatch events qualify. The daily audit may also be triggered by a successful same-repository main data refresh; pull-request events are rejected. Pages downloads a bounded
 receipt ZIP from that run and attempt, reads only its `receipt.json` member, and
 never extracts or executes artifact files. Extra members, traversal paths,
 symlinks, oversized payloads and non-object JSON are rejected. The receipt must

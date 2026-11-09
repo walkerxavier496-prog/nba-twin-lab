@@ -18,6 +18,7 @@ on:
       - V9 player stat projections and audit
       - Validate and refresh NBA Twin Lab data
     types: [completed]
+    branches: [main]
   workflow_dispatch:
     inputs:
       melbourne_date:
@@ -38,7 +39,11 @@ concurrency:
 
 jobs:
   track:
-    if: github.ref == 'refs/heads/main'
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name != 'workflow_run' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_repository.full_name == github.repository))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -49,14 +54,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Reject failed or non-main source refresh
-        if: github.event_name == 'workflow_run'
-        env:
-          SOURCE_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
-          SOURCE_BRANCH: ${{ github.event.workflow_run.head_branch }}
-        run: |
-          test "$SOURCE_CONCLUSION" = success
-          test "$SOURCE_BRANCH" = main
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

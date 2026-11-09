@@ -60,11 +60,9 @@ function drawGameSelector(){
  $('game-count').textContent=games.length+' of '+(data.lock.forecasts||[]).length+' games'+(query?' · search: '+query:'');
  $('game-selector').innerHTML=games.length?games.map(game=>{
   const actual=scoreFor(game.game_id),observed=liveFor(game.game_id),isSelected=String(game.game_id)===String(selected);
-  const featured=modelsFor(game).m6_ensemble?.home_win_probability;
-  const picked=isNumber(featured)?(featured>=.5?game.home.abbr:game.away.abbr):game.primary_forecast?.winner;
-  const probability=isNumber(featured)?Math.max(featured,1-featured):game.primary_forecast?.winner_probability;
+  const picked=game.primary_forecast?.winner,probability=game.primary_forecast?.winner_probability;
   return '<button type="button" class="game-button" data-game="'+esc(game.game_id)+'" aria-pressed="'+isSelected+'" aria-label="'+esc(matchName(game)+' '+shortTime(game.tip_utc))+'">'+
-   '<div class="game-button__inner"><div class="game-button__meta"><small>'+esc(shortTime(game.tip_utc))+'</small><b>'+esc(matchName(game))+'</b><small>'+(hasScore(observed)?'<span class="score">'+esc(scoreLabel(observed))+' · '+observed.away.score+'–'+observed.home.score+'</span>':actual?'<span class="score">FINAL '+esc(actual.away.score)+'–'+esc(actual.home.score)+'</span>':'ENS PICK '+esc(picked||'—')+' · '+pct(probability))+'</small></div><div class="game-button__marks">'+crest(game.away)+crest(game.home)+'</div></div></button>';
+   '<div class="game-button__inner"><div class="game-button__meta"><small>'+esc(shortTime(game.tip_utc))+'</small><b>'+esc(matchName(game))+'</b><small>'+(hasScore(observed)?'<span class="score">'+esc(scoreLabel(observed))+' · '+observed.away.score+'–'+observed.home.score+'</span>':actual?'<span class="score">FINAL '+esc(actual.away.score)+'–'+esc(actual.home.score)+'</span>':'LOCKED PICK '+esc(picked||'—')+' · '+pct(probability))+'</small></div><div class="game-button__marks">'+crest(game.away)+crest(game.home)+'</div></div></button>';
  }).join(''):'<p class="muted">No matchups fit these filters. Try another team or select All games.</p>';
  document.querySelectorAll('#game-selector [data-game]').forEach(button=>button.onclick=()=>selectGame(button.dataset.game));
 }

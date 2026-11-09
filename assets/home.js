@@ -30,7 +30,7 @@ async function verifiedJson(url,expectedSha){
  return JSON.parse(text);
 }
 let archive=null,liveFeed=null,selectedMelbourneDate=null,ledgerEntries=[],archiveCache=new Map(),historySnapshot=null,playerTrendSnapshot=null,playerTrendStatus='';
-let archiveStatus='not loaded',reviewStatus='Daily review not loaded',sidecarStatus='Research sidecar not loaded';
+let archiveStatus='not loaded',reviewStatus='Daily review not loaded';
 function matchingForecast(game){
  return archive?.lock.forecasts?.find(g=>String(g.game_id)===String(game.id))||null;
 }
@@ -81,26 +81,12 @@ function playerSpotlight(game){
   (media?.playerImage?.(p)||'')+'<span><b>'+esc(p.name)+'</b><small>'+esc(p.team)+' · projected '+p.projection_if_play.pts.toFixed(1)+' PTS</small></span></a>').join('')+'</div>':
   '<p class="small-note">No verified conditional player projections are available for this matchup.</p>';
 }
-function showModelDisagreement(game){
- const box=$('feature-confidence');
+function showConfidence(game){
+ const box=$('feature-confidence'),p=game.primary_forecast;
  if(!box)return;
- const p=game.primary_forecast;
- if(!p){box.innerHTML='';return}
- const supplement=archive?.sidecar?.games?.find(item=>String(item.game_id)===String(game.game_id||game.id));
- const models=supplement?.predictions||game.challenge_predictions||{};
- const chances=Object.entries(models).filter(([,m])=>m?.available===true&&Number.isFinite(m.home_win_probability));
- if(chances.length<2){
-  box.innerHTML='<div class="feature-confidence__quiet">PRODUCTION ELO: '+pct(p.winner_probability)+' · research comparison unavailable ('+esc(sidecarStatus)+'). The original lock is unchanged.</div>';
-  return;
- }
- const awayChances=chances.map(([name,m])=>({id:name,prob:1-m.home_win_probability}));
- const lo=awayChances.reduce((a,b)=>a.prob<b.prob?a:b),hi=awayChances.reduce((a,b)=>a.prob>b.prob?a:b);
- const spread=(hi.prob-lo.prob)*100,warning=spread>=20;
- const selectedName=p.winner;
- box.innerHTML='<div class="feature-confidence__'+(warning?'warning':'quiet')+'"><b>'+
-  (warning?'⚠ MODELS DISAGREE · ':'MODEL SPREAD · ')+spread.toFixed(1)+' PERCENTAGE POINTS</b>'+
-  '<span>'+esc(game.away.abbr)+' win chance spans '+pct(lo.prob)+' ('+esc(lo.id)+') to '+pct(hi.prob)+' ('+esc(hi.id)+'). This is a range of model opinions, not a calibrated prediction interval.</span>'+
-  '<small>Original ELO '+esc(selectedName)+' '+pct(p.winner_probability)+' · not updated during the game · roster and official injury uncertainty remains.</small></div>';
+ box.textContent=p?('Locked pick · '+p.winner+' '+pct(p.winner_probability)+
+  ' · Projected final '+game.away.abbr+' '+(Number.isFinite(p.projected_score?.away)?p.projected_score.away.toFixed(1):'—')+
+  ' – '+(Number.isFinite(p.projected_score?.home)?p.projected_score.home.toFixed(1):'—')+' '+game.home.abbr):'';
 }
 function renderFeatured(chosen,note=''){
  const prediction=chosen.primary_forecast,meta=observedScore(chosen);
@@ -120,7 +106,7 @@ function renderFeatured(chosen,note=''){
     '<p class="c3-muted">No verified locked probability available.</p>');
  show('feature-detail',(meta.actual?'Archived pretip forecast':'Locked before tipoff')+' · '+evidence+(note?' · '+note:'')+' · '+fmt(chosen.tip_utc||chosen.date));
  if($('feature-game-link'))$('feature-game-link').href=gameLink(chosen);
- showModelDisagreement(chosen);
+ showConfidence(chosen);
  if(prediction)playerSpotlight(chosen);
  else if($('feature-players'))$('feature-players').innerHTML='<p class="small-note">No locked player projection for this matchup.</p>';
 }
@@ -212,7 +198,7 @@ function renderMachineScorecard(){
   const actualHome=Number(grade.home?.score),actualAway=Number(grade.away?.score);
   if(!locked||!production||!Number.isFinite(actualHome)||!Number.isFinite(actualAway)||
      production.p!==locked.home_win_probability||production.actual!==(actualHome>actualAway?1:0)||
-     production.correct!==(production.actual===(production.p>0.5?1:0)))continue;
+     production.correct!==(production.actual===(production.p>=0.5?1:0)))continue;
   checked.push({forecast,grade,production,actualHome,actualAway});
  }
  const modelStats=review.summary?.models||{};
@@ -225,7 +211,7 @@ function renderMachineScorecard(){
  const models=supportsDailyMetrics?Object.entries(modelStats).filter(([id])=>id!=='production_elo_v7').map(([id,value])=>
   '<tr><th scope="row">'+esc(value.label||id)+'</th><td>'+esc(value.count??'—')+'</td><td>'+pct(value.accuracy)+'</td><td>'+(Number.isFinite(value.brier)?value.brier.toFixed(3):'—')+'</td><td>'+(Number.isFinite(value.score_mae_per_team)?value.score_mae_per_team.toFixed(1):'—')+'</td></tr>').join(''):'';
  const rows=checked.sort((a,b)=>Date.parse(a.grade.tip_utc||0)-Date.parse(b.grade.tip_utc||0)).map(({forecast,grade,production,actualHome,actualAway})=>{
-  const homePick=production.p>0.5,predicted=homePick?forecast.home.abbr:forecast.away.abbr;
+  const homePick=production.p>=0.5,predicted=homePick?forecast.home.abbr:forecast.away.abbr;
   const actual=actualHome>actualAway?forecast.home.abbr:forecast.away.abbr;
   const scoreError=Number.isFinite(production.score_mae_per_team)?production.score_mae_per_team:null;
   return '<tr><td>'+esc(forecast.away.abbr)+' @ '+esc(forecast.home.abbr)+'</td><td>'+esc(predicted)+' · '+pct(homePick?production.p:1-production.p)+'</td><td>'+actual+' · '+actualAway+'–'+actualHome+'</td><td>'+ (predicted===actual?'Correct':'Incorrect')+'</td><td>'+ (scoreError===null?'—':scoreError.toFixed(1))+'</td></tr>';
@@ -326,11 +312,11 @@ function latestProjectionCount(){
 async function loadDailyArchive(date){
  const entry=ledgerEntries.find(item=>item.melbourne_date===date&&item.lock_path);
  if(!entry){
-  archive=null;archiveStatus='no archived pregame lock for this date';reviewStatus='No lock-bound review exists';sidecarStatus='No research sidecar exists';show('home-projections',latestProjectionCount());window.NbaLiveDesk?.setLockedForecasts?.([]);return;
+  archive=null;archiveStatus='no archived pregame lock for this date';reviewStatus='No lock-bound review exists';show('home-projections',latestProjectionCount());window.NbaLiveDesk?.setLockedForecasts?.([]);return;
  }
  if(archiveCache.has(date)){
   if(isoMelbourneDate(selectedMelbourneDate)===date){
-   archive=archiveCache.get(date);archiveStatus='original forecast lock SHA-256 verified';reviewStatus=archive.reviewStatus;sidecarStatus=archive.sidecarStatus;window.NbaLiveDesk?.setLockedForecasts?.(archive.lock.forecasts||[]);
+   archive=archiveCache.get(date);archiveStatus='original forecast lock SHA-256 verified';reviewStatus=archive.reviewStatus;window.NbaLiveDesk?.setLockedForecasts?.(archive.lock.forecasts||[]);
    const count=(archive.lock.forecasts||[]).reduce((total,game)=>total+(Array.isArray(game.v9_player_projections)?game.v9_player_projections.length:0),0);
    show('home-projections',count?count.toLocaleString('en-AU'):'—');
   }
@@ -338,7 +324,6 @@ async function loadDailyArchive(date){
  }
  archive=null;window.NbaLiveDesk?.setLockedForecasts?.([]);
  reviewStatus=entry.status==='reviewed'?'Review hash verification pending':'Review not yet marked complete';
- sidecarStatus='Research sidecar unavailable';
  try{
   const lock=await verifiedJson('./'+entry.lock_path,entry.lock_sha256);
   if(lock.scope?.melbourne_date!==date||lock.integrity?.canonical_payload_without_integrity!==entry.lock_integrity_sha256||
@@ -346,7 +331,7 @@ async function loadDailyArchive(date){
    throw Error('Forecast lock scope or pregame cutoff is invalid');
   const projectionCount=(lock.forecasts||[]).reduce((total,game)=>total+(Array.isArray(game.v9_player_projections)?game.v9_player_projections.length:0),0);
   show('home-projections',projectionCount?projectionCount.toLocaleString('en-AU'):'—');
-  const loaded={entry,lock,sidecar:null,review:null};
+  const loaded={entry,lock,review:null};
   if(entry.review_path&&entry.review_sha256&&entry.status==='reviewed'){
    try{
     const review=await verifiedJson('./'+entry.review_path,entry.review_sha256);
@@ -358,13 +343,6 @@ async function loadDailyArchive(date){
    }catch(error){reviewStatus='Review verification failed: '+error.message}
   }else reviewStatus='No completed, lock-bound review in the audit ledger';
   loaded.reviewStatus=reviewStatus;
-  try{
-   const sidecar=await json('./audit/supplements/'+date+'/challenge.lock.json');
-   if(sidecar.original_forecast_sha256===entry.lock_sha256&&Date.parse(sidecar.locked_at_utc)<Date.parse(lock.scope.first_tip_utc)){
-    loaded.sidecar=sidecar;sidecarStatus='Original-lock-bound research sidecar loaded';
-   }else sidecarStatus='Research sidecar is not bound to the original lock';
-  }catch(error){sidecarStatus='Research sidecar unavailable: '+error.message}
-  loaded.sidecarStatus=sidecarStatus;
   archiveCache.set(date,loaded);
   if(isoMelbourneDate(selectedMelbourneDate)===date||!selectedMelbourneDate){
    archive=loaded;archiveStatus='original forecast lock SHA-256 verified';window.NbaLiveDesk?.setLockedForecasts?.(lock.forecasts||[]);
@@ -391,15 +369,16 @@ async function refresh(date=selectedMelbourneDate){
 }
 async function init(){
  selectedMelbourneDate=scores?.melbourneDate?.(new Date())||scores?.usDate?.(new Date())||null;
- const [led,report,historyData,playerTrendData]=await Promise.allSettled([
-  json('./data/audit-ledger.json'),json('./data/five-model-report.json'),json('./data/games.json'),
+ const [led,historyData,playerTrendData]=await Promise.allSettled([
+  json('./data/audit-ledger.json'),json('./data/games.json'),
   json('./data/player-game-history/trends.json')
  ]);
- if(report.status==='fulfilled'&&Number.isFinite(report.value.common_evaluation?.games))show('home-backtest',report.value.common_evaluation.games.toLocaleString('en-AU')+' games');
  if(historyData.status==='fulfilled')historySnapshot=historyData.value;
  if(playerTrendData.status==='fulfilled')playerTrendSnapshot=playerTrendData.value;
  else playerTrendStatus=String(playerTrendData.reason?.message||'history file unavailable');
  if(led.status==='fulfilled'){
+   const measured=led.value.longitudinal?.models?.production_elo_v7;
+   if(measured?.count>0){show('home-backtest',pct(measured.accuracy));show('home-graded',measured.count+' graded games')}
    ledgerEntries=(led.value.entries||[]).filter(e=>e.lock_path).sort((a,b)=>String(b.melbourne_date).localeCompare(String(a.melbourne_date)));
    show('home-locked',String(ledgerEntries.length));
    if(ledgerEntries.length){show('home-date',ledgerEntries[0].melbourne_date);await loadDailyArchive(ledgerEntries[0].melbourne_date)}

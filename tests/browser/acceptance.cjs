@@ -19,7 +19,6 @@ const VIEWPORTS = [[1440, 900], [1280, 800], [390, 844], [375, 812]];
 const GAME = '401909277';
 const json = file => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8'));
 const LOCK = json('practice/2026-10-31-melbourne/forecast.lock.json');
-const SIDECAR = json('audit/supplements/2026-10-31/challenge.lock.json');
 const REVIEW = json('audit/reviews/2026-10-31/games/' + GAME + '.review.json').games[0];
 const LEDGER = json('data/audit-ledger.json');
 const outNames = f => (f.v9_player_projections || []).filter(p => String(p.official_injury_report?.status).toLowerCase() === 'out').map(p => p.name);
@@ -78,7 +77,7 @@ async function check(vp, name, fn) {
     const pages = [
       ['home', '/', 'HOME', 'Games'], ['predict', '/predict/', 'PREDICT', 'Predictions'],
       ['daily', '/challenge/daily.html', 'DAILY', 'Predictions'], ['players', '/player-stats/', 'PLAYERS', 'Players'],
-      ['audit', '/audit/', 'AUDIT', 'Model Lab'], ['league', '/league/', 'TEAMS', 'League'],
+      ['audit', '/audit/', 'AUDIT', 'Accuracy'], ['league', '/league/', 'TEAMS', 'League'],
     ];
     for (const [key, url, desktopLabel, mobileLabel] of pages) {
       await check(width, `navigation + no horizontal overflow: ${key}`, async () => {
@@ -105,7 +104,7 @@ async function check(vp, name, fn) {
 
     // ---------- Predictor ----------
     await check(width, 'predictor: five tabs switch and never stay on a loader', async () => {
-      const page = await open('/predict/?game=' + GAME, '#c3-lab .c3-main-grid');
+      const page = await open('/predict/?date=2026-10-31&game=' + GAME, '#c3-lab .c3-main-grid');
       const names = await page.locator('[data-c3-game-tab]').evaluateAll(els => els.map(e => e.dataset.c3GameTab));
       assert.equal(names.length, 5, names.join(','));
       for (const name of names) {
@@ -121,12 +120,12 @@ async function check(vp, name, fn) {
       await page.close();
     });
     await check(width, 'predictor: one headline, six engines in audit and honest key factors', async () => {
-      const page = await open('/predict/?game=' + GAME, '#c3-lab .c3-main-grid');
+      const page = await open('/predict/?date=2026-10-31&game=' + GAME, '#c3-lab .c3-main-grid');
       const body = await text(page, '#c3-lab');
       assert.equal(await page.locator('.c3-six-models').count(), 0, 'one headline prediction; no competing engine cards');
-      const ml = SIDECAR.games.find(g => String(g.game_id) === GAME).predictions.m5_regularized_ml.home_win_probability;
-      const chosenAway = Math.round(100 * (1 - ml)) + '%';
-      assert.ok(body.includes(chosenAway), 'locked research challenger away probability ' + chosenAway);
+      const official = forecast(GAME).primary_forecast.home_win_probability;
+      const chosenAway = Math.round(100 * (1 - official)) + '%';
+      assert.ok(body.includes(chosenAway), 'locked production away probability ' + chosenAway);
       await page.locator('[data-c3-game-tab="models"]').click();
       const modelBody = await text(page, '#c3-lab');
       for (const engine of ['Elo', 'Basketball Science', 'Player / Roster', 'Monte Carlo', 'Machine Learning', 'Ensemble']) assert.ok(modelBody.includes(engine), engine);
@@ -140,16 +139,15 @@ async function check(vp, name, fn) {
       await page.close();
     });
     await check(width, 'predictor: postgame grade matches the audited review', async () => {
-      const page = await open('/predict/?game=' + GAME, '#c3-lab .c3-main-grid');
+      const page = await open('/predict/?date=2026-10-31&game=' + GAME, '#c3-lab .c3-main-grid');
       const body = await text(page, '#c3-lab');
       assert.match(body, /CHA\s*79\s*[–-]\s*95\s*WSH/, 'audited final score');
-      assert.match(body, REVIEW.models.m6_ensemble.correct ? /CORRECT/i : /MISSED PICK/i);
-      assert.match(body, /Machines vs Reality/i);
+      assert.match(body, REVIEW.models.production_elo_v7.correct ? /CORRECT/i : /MISSED PICK/i);
+      assert.match(body, /Forecast vs final/i);
       const grade = page.locator('#c3-postgame-audit');
       assert.ok(await grade.count() > 0, 'postgame detail present');
-      const verdicts = await grade.locator('tbody tr td:nth-child(3)').allInnerTexts();
-      const correct = ['m1_elo', 'm2_science', 'm3_player_roster', 'm4_monte_carlo', 'm5_regularized_ml', 'm6_ensemble'].filter(id => REVIEW.models[id]?.correct).length;
-      assert.equal(verdicts.filter(v => /CORRECT/.test(v) && !/WRONG/.test(v)).length, correct, 'correct engines match review');
+      const error=REVIEW.models.production_elo_v7.score_mae_per_team.toFixed(1);
+      assert.ok((await grade.innerText()).includes(error+' points per team'), 'score error matches original production review');
       await shot(page, 'predict-postgame');
       await page.close();
     });
@@ -158,7 +156,7 @@ async function check(vp, name, fn) {
     const exclusionGames = width === 1440 || width === 375 ? LOCK.forecasts : LOCK.forecasts.slice(0, 3);
     await check(width, `lineups: officially OUT players excluded (${exclusionGames.length} games)`, async () => {
       for (const f of exclusionGames) {
-        const page = await open('/predict/?game=' + f.game_id, '#c3-lab .c3-main-grid');
+        const page = await open('/predict/?date=2026-10-31&game=' + f.game_id, '#c3-lab .c3-main-grid');
         await page.locator('[data-c3-game-tab="lineups"]').click();
         const rows = await page.locator('.c3-lineup-table tbody tr td:first-child').allInnerTexts();
         const absent = await page.locator('.c3-absences').allInnerTexts();
@@ -188,7 +186,7 @@ async function check(vp, name, fn) {
     });
     await check(width, 'projections: OUT hidden by default, sort, search, team filter', async () => {
       const f = forecast(GAME), outs = outNames(f);
-      const page = await open('/predict/?game=' + GAME, '#c3-lab .c3-main-grid');
+      const page = await open('/predict/?date=2026-10-31&game=' + GAME, '#c3-lab .c3-main-grid');
       await page.locator('[data-c3-game-tab="players"]').click();
       const names = async () => page.locator('.c3-data-table tbody tr td:first-child').allInnerTexts();
       for (const n of await names()) assert.ok(!outs.includes(n.trim()), 'OUT player shown by default: ' + n);
@@ -229,7 +227,7 @@ async function check(vp, name, fn) {
 
     // ---------- Daily predictions ----------
     await check(width, 'daily: slate rows, tabs, search and sorting match the lock', async () => {
-      const page = await open('/challenge/daily.html', '#c3-slate .c3-data-table tbody tr');
+      const page = await open('/challenge/daily.html?date=2026-10-31', '#c3-slate .c3-data-table tbody tr');
       const matchups = async () => (await page.locator('#c3-slate .c3-data-table tbody tr td:nth-child(2)').allInnerTexts()).map(s => s.replace(/\s+/g, ' ').trim());
       const rows = await matchups();
       assert.equal(rows.length, LOCK.forecasts.length);
@@ -328,7 +326,7 @@ async function check(vp, name, fn) {
 
     // ---------- Concept 3 look (automated approximations of the reference) ----------
     await check(width, 'visual: dark navy canvas, blue active tab, blue/pink probability bar', async () => {
-      const page = await open('/predict/?game=' + GAME, '#c3-lab .c3-main-grid');
+      const page = await open('/predict/?date=2026-10-31&game=' + GAME, '#c3-lab .c3-main-grid');
       const rgb = value => value.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number);
       const luminance = ([r, g, b]) => (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
       const bg = rgb(await page.evaluate(() => getComputedStyle(document.body).backgroundColor === 'rgba(0, 0, 0, 0)' ? getComputedStyle(document.documentElement).backgroundColor : getComputedStyle(document.body).backgroundColor));

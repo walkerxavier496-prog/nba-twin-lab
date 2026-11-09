@@ -16,7 +16,7 @@ const fixture={
  '../data/v7-current.json':JSON.parse(read('data/v7-current.json')),
  '../data/games.json':JSON.parse(read('data/games.json'))
 };
-const sourceFetch=async uri=>({ok:Object.hasOwn(fixture,uri),status:200,json:async()=>fixture[uri]});
+const sourceFetch=async uri=>({ok:Object.hasOwn(fixture,uri),status:200,arrayBuffer:async()=>Buffer.from(read(uri.slice(3)).replaceAll('\r\n','\n')),json:async()=>fixture[uri]});
 function run(view,source){
  const markup={innerHTML:''},select={value:'401909277',onchange:null};
  const tabs=[...['prediction','lineups','players','matchup','models','full','results'].map(name=>({dataset:{c3GameTab:name,c3SlateTab:name},onclick:null}))];
@@ -25,7 +25,7 @@ function run(view,source){
  const location={search:'?game=401909277'};
  const win={NbaMedia:{image:team=>'<span class="team-logo">'+(team.abbr||team)+'</span>',
   headshot:id=>'https://cdn.nba.com/headshots/nba/latest/260x190/'+id+'.png'}};
- vm.runInNewContext(source,{window:win,document:doc,location,fetch:sourceFetch,URLSearchParams,Date,Intl,console},{filename:source===read('assets/concept3-audit.js')?'audit':view});
+ vm.runInNewContext(source,{window:win,document:doc,location,fetch:sourceFetch,TextDecoder,crypto:{subtle:{digest:(_,bytes)=>require("node:crypto").createHash("sha256").update(bytes).digest()}},URLSearchParams,Date,Intl,console},{filename:source===read('assets/concept3-audit.js')?'audit':view});
  return {markup,tabs};
 }
 test('approved reference retains explicit high fidelity requirements and original provenance',()=>{
@@ -52,15 +52,15 @@ test('homepage follows Concept 3 hero/metrics/right rail composition and preserv
  assert.match(home,/phase==='final'/);
  assert.doesNotMatch(home,/score\.random\(/);
 });
-test('Game Lab renders actual six frozen model outputs and usable five tabs',async()=>{
+test('Game Lab shows the official locked pick and keeps the research breakdown accessible',async()=>{
  const {markup,tabs}=run('c3-lab',read('assets/concept3-hub.js'));
  await new Promise(resolve=>setImmediate(resolve));
  const html=markup.innerHTML;
  assert.match(html,/Charlotte Hornets/);
  assert.match(html,/Washington Wizards/);
- assert.match(html,/Basketball Science/);
- assert.match(html,/Machine Learning/);
- assert.match(html,/76%/); // actual M6 CHA away chance of 75.74%, rounded
+ assert.doesNotMatch(html,/Machine Learning|Basketball Science/);
+ assert.match(html,/CHA to win/);
+ assert.match(html,/79% win probability/);
  for(const name of ['Prediction','Lineups','Player Projections','Matchup Analysis','Model Breakdown'])
   assert.ok(html.includes(name),name);
  const tab=tabs.find(btn=>btn.dataset.c3GameTab==='lineups');
@@ -70,12 +70,12 @@ test('Game Lab renders actual six frozen model outputs and usable five tabs',asy
  assert.match(markup.innerHTML,/OFFICIAL PRETIP ABSENCES/);
  assert.match(markup.innerHTML,/NOT confirmed starting five/);
 });
-test('Daily slate matches ten immutable 31 October games and shows measured disagreement, not fake confidence',async()=>{
+test('Daily slate matches ten immutable 31 October games with the locked production pick and its probability',async()=>{
  const {markup,tabs}=run('c3-slate',read('assets/concept3-hub.js'));
  await new Promise(resolve=>setImmediate(resolve));
  assert.match(markup.innerHTML,/10 genuinely locked games/);
  assert.match(markup.innerHTML,/WIN PROBABILITY/);
- assert.match(markup.innerHTML,/MODEL AGREEMENT/);
+ assert.match(markup.innerHTML,/LOCKED PICK/);
  assert.match(markup.innerHTML,/Charlotte|CHA @ WSH/);
  assert.doesNotMatch(markup.innerHTML,/Value Bets/);
  assert.doesNotMatch(markup.innerHTML,/67\.3%/);

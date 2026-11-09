@@ -107,15 +107,15 @@ test('otsSync stamps unstamped anchors then upgrades pending ones to confirmed',
   const { root, bytes } = fixture();
   N.run({ root, now: NOW });
   let bin = fakeOts(root, { complete: false });
-  assert.deepEqual(N.otsSync({ root, otsBin: bin, now: NOW }), { stamped: ['2026-10-31'], upgraded: [], pending: ['2026-10-31'] });
+  assert.deepEqual(N.otsSync({ root, otsBin: process.execPath, otsArgs: [bin], now: NOW }), { stamped: ['2026-10-31'], upgraded: [], pending: ['2026-10-31'] });
   let record = JSON.parse(fs.readFileSync(anchorPath(root), 'utf8'));
   assert.equal(record.ots.status, 'pending');
   assert.equal(Buffer.from(record.ots.proof_base64, 'base64').toString(), 'STAMPED:' + bytes.length);
   bin = fakeOts(root, { complete: true });
-  assert.deepEqual(N.otsSync({ root, otsBin: bin, now: NOW }), { stamped: [], upgraded: ['2026-10-31'], pending: [] });
+  assert.deepEqual(N.otsSync({ root, otsBin: process.execPath, otsArgs: [bin], now: NOW }), { stamped: [], upgraded: ['2026-10-31'], pending: [] });
   record = JSON.parse(fs.readFileSync(anchorPath(root), 'utf8'));
   assert.equal(record.ots.status, 'confirmed');
-  assert.deepEqual(N.otsSync({ root, otsBin: bin, now: NOW }), { stamped: [], upgraded: [], pending: [] });
+  assert.deepEqual(N.otsSync({ root, otsBin: process.execPath, otsArgs: [bin], now: NOW }), { stamped: [], upgraded: [], pending: [] });
 });
 
 test('otsSync leaves the protected lock folder untouched and survives an unavailable client', () => {

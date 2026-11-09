@@ -90,7 +90,7 @@ test('v18 frontend must display roster gate without rewriting original 31 Octobe
  assert.equal(locked.forecasts[0].primary_forecast.winner,'CHA');
  const nextTracker=fs.readFileSync(path.join(__dirname,'../scripts/daily_tracker.cjs'),'utf8');
  assert.ok(nextTracker.includes('v18_roster_integrity: rosterIntegrity'));
- assert.ok(nextTracker.includes('RI.auditGame({game,snapshot,availability:officialAvailability,now})'));
+ assert.ok(nextTracker.includes('RI.auditGame({game,snapshot:playerBuilt ? snapshot : {},availability:officialAvailability,now})'));
  const feed=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/availability-current.json')));
  assert.ok(['verified','unavailable'].includes(feed.status),'No fabricated availability state');
  if(feed.status==='verified'){

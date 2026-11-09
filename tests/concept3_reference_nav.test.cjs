@@ -49,9 +49,9 @@ function activeMobile(pathname){
  vm.runInNewContext(read('assets/site-shell.js'),{document,location:{pathname,href:'https://x.test'+pathname},URL,console},{filename:'site-shell.js'});
  return made.filter(e=>e.attrs['aria-current']==='page').map(e=>e.attrs['aria-label']);
 }
-test('mobile bottom bar marks exactly one destination, and Daily is Predictions rather than Model Lab',()=>{
+test('mobile bottom bar marks exactly one destination, and Daily is Predictions rather than Accuracy',()=>{
  assert.deepEqual(activeMobile('/nba-twin-lab/challenge/daily.html'),['Predictions']);
- assert.deepEqual(activeMobile('/nba-twin-lab/challenge/'),['Model Lab']);
- assert.deepEqual(activeMobile('/nba-twin-lab/audit/'),['Model Lab']);
+ assert.deepEqual(activeMobile('/nba-twin-lab/challenge/'),['Accuracy']);
+ assert.deepEqual(activeMobile('/nba-twin-lab/audit/'),['Accuracy']);
  assert.deepEqual(activeMobile('/nba-twin-lab/predict/'),['Predictions']);
 });

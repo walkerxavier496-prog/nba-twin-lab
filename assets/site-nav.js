@@ -38,7 +38,6 @@ function init(){
   link('TEAMS','league/',isTeams)+
   link('STATS','#live-player-stats',isScores||isGame)+
   link('AUDIT','audit/',isAudit)+
-  link('MODELS','challenge/',isModels)+
   '<details class="nav-group nav-explore"><summary aria-label="More NBA tools">MORE <span aria-hidden="true">⌄</span></summary>'+
   '<div class="nav-dropdown" role="group" aria-label="More NBA Twin Lab tools">'+
   '<a href="'+href('#live-games')+'">Games Command Centre</a>'+
@@ -46,6 +45,7 @@ function init(){
   '<a href="'+href('team/')+'">Team Centre</a>'+
   '<a href="'+href('team-intelligence/')+'">Team Comparison</a>'+
   '<a href="'+href('league/#cup')+'">NBA Cup</a>'+
+  link('MODELS','challenge/',isModels)+
   '<a href="'+href('twins/')+'">Player Twins</a>'+
   '</div></details>';
  for(const menu of nav.querySelectorAll('details')){

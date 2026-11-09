@@ -16,11 +16,16 @@ runs:
     - shell: bash
       run: python -m pip install -r requirements.txt -r requirements-test.txt
     - name: Commit, validate and publish exact revision
+      id: publish
       shell: bash
       env:
         PRODUCER: ${{ inputs.workflow }}
-      run: python scripts/publish_data.py "$PRODUCER" --receipt "$RUNNER_TEMP/publication-receipt/receipt.json"
+      run: |
+        receipt="$RUNNER_TEMP/publication-receipt/receipt.json"
+        python scripts/publish_data.py "$PRODUCER" --receipt "$receipt"
+        if [ -f "$receipt" ]; then echo "published=true" >> "$GITHUB_OUTPUT"; fi
     - name: Hand exact published revision to Pages
+      if: steps.publish.outputs.published == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: publication-receipt-${{ github.run_attempt }}

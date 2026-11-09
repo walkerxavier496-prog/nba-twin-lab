@@ -505,7 +505,7 @@ async function showMachine(){
    const p=snapshot.primary_forecast,final=!!reviewGame,finalPending=game.phase==='final'&&!final;
    root.innerHTML=productionForecast(p,lock.locked_at_utc,final,reviewGame,reviewedAt)+
     (reviewError?'<p class="game-empty">Official postgame grading unavailable: '+esc(reviewError)+'. Grading is withheld.</p>':'')+
-    '<section class="machine-section"><div class="machine-section-heading"><div><span class="eyebrow">RESEARCH / EXPERIMENTAL · NOT PRODUCTION</span><h3>'+ (final?'CHALLENGER MACHINES VS REALITY':'FROZEN CHALLENGER MACHINES') +'</h3></div><p>Separate sidecar forecasts; none replace the official production pick.</p></div>'+machineRows(final?reviewGame.models:frozen,final)+'</section>'+
+    '<details class="machine-section"><summary>Research comparisons</summary><div class="machine-section-heading"><div><span class="eyebrow">RESEARCH / EXPERIMENTAL · NOT PRODUCTION</span><h3>'+ (final?'CHALLENGER MACHINES VS REALITY':'FROZEN CHALLENGER MACHINES') +'</h3></div><p>Separate sidecar forecasts; none replace the official production pick.</p></div>'+machineRows(final?reviewGame.models:frozen,final)+'</details>'+
     (final?'<section class="machine-section"><h3>PLAYER FORECASTS VS ACTUALS</h3>'+playerGrades(reviewGame)+'</section><section class="machine-section"><h3>POSTGAME INTELLIGENCE · OBSERVED EVIDENCE</h3>'+postgameEvidence(reviewGame)+'</section>':'<p class="game-disclaimer">Automatic grading appears after this individual game is final and both player tables are complete. It does not wait for the full slate.</p>')+
     '<a class="btn primary" href="../audit/">FULL MODEL LEADERBOARD ↗</a>';return;
   }

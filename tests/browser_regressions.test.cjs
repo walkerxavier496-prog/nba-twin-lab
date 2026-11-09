@@ -28,30 +28,23 @@ test('lineup grid can shrink inside its container and the game page states provi
  assert.match(read('assets/game-page.js'),/Forecast and grading are unavailable until the game feed responds/);
 });
 test('edited assets carry a fresh cache-busting version on every page that loads them',()=>{
- for(const [asset,pages,version] of [['concept3-hub.js',['predict/index.html','challenge/daily.html'],'v30_0'],['game-page.js',['game/index.html'],'v27_1'],['home.js',['index.html'],'v27_1'],['concept3-fidelity.css',['predict/index.html','index.html'],'v27_2']])
+ for(const [asset,pages,version] of [['concept3-hub.js',['predict/index.html','challenge/daily.html'],'v31_0'],['game-page.js',['game/index.html'],'v31_0'],['home.js',['index.html'],'v31_0'],['concept3-fidelity.css',['predict/index.html','index.html'],'v27_2']])
   for(const page of pages)assert.match(read(page),new RegExp(asset.replace('.','\\.')+'\\?'+version),page+' '+asset);
 });
 test('lineup table overrides the global 690px table minimum so STATUS is never clipped',()=>{
  assert.match(read('assets/concept3-fidelity.css'),/\.c3-lineup-table\{width:100%;min-width:0;border-collapse:collapse;table-layout:fixed\}/);
 });
 
-test('headline predictions never silently fall back to Elo',()=>{
+test('headline score, winner and win chance are all read from the original production forecast',()=>{
  const hub=read('assets/concept3-hub.js');
- assert.match(hub,/M5 · ML RESEARCH CHALLENGER/);
- assert.doesNotMatch(hub,/ELO · PRODUCTION/);
- assert.match(hub,/return numbers\(p\)\?\{home:p,label:'M5 · ML RESEARCH CHALLENGER'\}:null/);
-});
-
-test('headline score is labelled as a different Monte Carlo engine, never Elo',()=>{
- const hub=read('assets/concept3-hub.js');
- assert.match(hub,/const mc=models\(g\)\.m4_monte_carlo/);
- assert.match(hub,/Separate Monte Carlo score estimate:/);
- assert.doesNotMatch(hub,/Projected score \(Elo\):/);
-});
-
-test('single research readout is mounted on both predictors',()=>{
- for(const page of ['predict/index.html','challenge/daily.html'])assert.match(read(page),/predict\/one-machine\.js\?v2/);
- assert.match(read('assets/concept3-hub.js'),/TwinOneMachine\?\.readout/);
+ const selection=hub.slice(hub.indexOf('function selectedModel'),hub.indexOf('// NBA / ESPN'));
+ assert.match(selection,/primary_forecast/);
+ assert.doesNotMatch(selection,/research_score_machine|m5_regularized_ml/);
+ const panel=hub.slice(hub.indexOf('function predictionPanel'),hub.indexOf('function lineupPanel'));
+ assert.match(panel,/forecast\.projected_score/);
+ assert.match(panel,/forecast\.winner_probability/);
+ assert.match(panel,/forecastFactors\(g\)/);
+ assert.doesNotMatch(panel,/Monte Carlo|TwinOneMachine/);
 });
 
 test('primary prediction removes six competing engine cards while retaining audit breakdown',()=>{

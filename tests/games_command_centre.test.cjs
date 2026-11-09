@@ -16,7 +16,7 @@ test('homepage command centre leads with Melbourne scoreboard and compact primar
  assert.match(html,/GAMES <em>COMMAND CENTRE\./);
  for(const section of ['HOME','PREDICT','predict/','DAILY','challenge/daily.html','PLAYERS','player-stats/','TEAMS','league/','STATS','#live-player-stats','AUDIT','audit/','MODELS','challenge/','#live-games'])
   assert.ok(nav.includes(section),section+' is a primary navigation destination');
- for(const section of ['Games','Predictions','League','Players','Model Lab'])assert.ok(mobile.includes('"'+section+'"'));
+ for(const section of ['Games','Predictions','League','Players','Accuracy'])assert.ok(mobile.includes('"'+section+'"'));
  assert.doesNotMatch(read('assets/v19-concept3.css'),/body\.v12\.home #live-games\{[^}]*order:-1/);
  assert.match(read('assets/v19-concept3.css'),/home-command-panels/);
  assert.match(read('assets/v19-concept3.css'),/@media\(max-width:760px\)\{body\.v12\.home \.home-command-panels\{grid-template-columns:1fr\}\}/);

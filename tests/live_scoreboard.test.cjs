@@ -113,8 +113,8 @@ test('homepage shows genuine sourced score separately from frozen pregame predic
  assert.match(get('scoreboard-source').textContent,/ARCHIVED PREGAME FORECASTS/);
  assert.ok(latestFeed&&latestFeed.games[0].away.score===47,'Real scores must reach the independent live desk');
  assert.match(get('feature-detail').textContent,/Archived pretip forecast/);
- assert.match(get('feature-confidence').innerHTML,/MODELS DISAGREE/);
- assert.match(get('feature-confidence').innerHTML,/25\.1 PERCENTAGE POINTS/);
+ assert.match(get('feature-confidence').textContent,/Locked pick · CHA 79\.3%/);
+ assert.match(get('feature-confidence').textContent,/Projected final CHA 117\.8 – 110\.0 WSH/);
  const untouched=original.forecasts.find(g=>g.game_id==='401909277');
  assert.ok(untouched);
  assert.equal(untouched.primary_forecast.winner_probability,0.7932589256865024);

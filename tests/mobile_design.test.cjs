@@ -40,11 +40,11 @@ function renderNavigation(pathname){
  assert.ok(nav,'mobile nav not created');
  return nav;
 }
-test('mobile navigation has five focused NBA destinations including Model Lab',()=>{
+test('mobile navigation has five focused NBA destinations including Accuracy',()=>{
  const scenarios=[
   ['/nba-twin-lab/','Games'],
   ['/nba-twin-lab/predict/','Predictions'],
-  ['/nba-twin-lab/challenge/','Model Lab'],
+  ['/nba-twin-lab/audit/','Accuracy'],
   ['/nba-twin-lab/player-stats/','Players'],
   ['/nba-twin-lab/league/','League']
  ];

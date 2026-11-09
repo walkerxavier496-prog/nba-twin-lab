@@ -10,6 +10,7 @@ const RS = require('../predict/roster-strength.js');
 const A = require('./audit-core.cjs');
 const C = require('./five_model_challenge.cjs');
 const SM = require('../predict/score-machine.js');
+const Unified = require('./unified_shadow.cjs');
 
 const ROOT = path.join(__dirname, '..');
 const DATA = path.join(ROOT, 'data');
@@ -226,22 +227,27 @@ function sourceTime(source, field = 'built_at_utc') {
 function assertFresh(label, source, now, maxHours, firstTip, field = 'built_at_utc') {
   const timestamp = sourceTime(source, field);
   const ageHours = (now - timestamp) / 3600000;
-  if (timestamp > now + 60000 || timestamp >= firstTip) throw new Error(`${label} source is future-dated or post-tip`);
+  if (timestamp > now || timestamp >= firstTip) throw new Error(`${label} source is future-dated or post-tip`);
   if (ageHours > maxHours) throw new Error(`${label} source is stale (${ageHours.toFixed(1)}h)`);
   return new Date(timestamp).toISOString();
 }
 
 function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
   const gameData = readJson(path.join(DATA, 'games.json'));
-  const snapshot = readJson(path.join(DATA, 'v7-current.json'));
+  const snapshotFile = path.join(DATA, 'v7-current.json');
+  const snapshot = fs.existsSync(snapshotFile) ? readJson(snapshotFile) : {};
   const context = readJson(path.join(DATA, 'context.json'));
   const rosterPriors = readJson(path.join(DATA, 'roster-priors.json'));
   const rosterReport = readJson(path.join(DATA, 'roster-research-report.json'));
   const challengeReport = readJson(path.join(DATA, 'five-model-report.json'));
   const officialAvailability = readJson(path.join(DATA, 'availability-current.json'));
-  const games = (gameData.games || []).filter(game => A.melbourneDate(game.date) === date).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
-  if (!games.length) throw new Error(`No validated NBA games discovered for Melbourne date ${date}`);
-  if (games.some(game => game.status !== 'scheduled')) throw new Error('At least one target game is no longer pregame; lock refused');
+  const slate = (gameData.games || []).filter(game => A.melbourneDate(game.date) === date)
+    .sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+  if (!slate.length) throw new Error(`No validated NBA games discovered for Melbourne date ${date}`);
+  if (new Set(slate.map(game => String(game.id))).size !== slate.length) throw new Error('Duplicate game in target slate');
+  const games = slate.filter(game => game.status === 'scheduled' && Date.parse(game.date) - now >= LOCK_MINUTES_BEFORE_TIP * 60000);
+  if (!games.length) throw new Error('Outside lock window: no games remain eligible before tipoff');
+  const excluded = slate.filter(game => !games.includes(game)).map(game => String(game.id));
   const firstTip = Math.min(...games.map(game => Date.parse(game.date)));
   const lastTip = Math.max(...games.map(game => Date.parse(game.date)));
   if (!Number.isFinite(firstTip) || now >= firstTip) throw new Error('Tipoff has begun; lock refused');
@@ -252,36 +258,59 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
     throw error;
   }
   const gameBuilt = assertFresh('Schedule/results', gameData, now, MAX_GAME_FEED_AGE_HOURS, firstTip);
-  const playerBuilt = assertFresh('V9 player/rotation', snapshot, now, MAX_PLAYER_FEED_AGE_HOURS, firstTip);
-  if (!snapshot.strict_no_future_data || snapshot.teams?.length !== 30) throw new Error('V9 snapshot failed provenance or coverage checks');
   const season = Number(games[0].season);
-  if (games.some(game => Number(game.season) !== season) || Number(snapshot.coverage?.season) !== season) throw new Error('Season mismatch in lock inputs');
-  const profiles = contextProfiles(context, season), teams = playerTeams(snapshot);
-  const scoreFit = trainedScoreMachine(season);
-  const scoreTeamIndex = new Map(snapshot.teams.map(t=>[R.canonical(t.abbr),t]));
+  if (!Number.isInteger(season) || games.some(game => Number(game.season) !== season)) throw new Error('Season mismatch in schedule');
+  const contextBuilt = sourceTime(context);
+  if (contextBuilt > now || contextBuilt >= firstTip) throw new Error('Team context source is future-dated or post-tip');
+  const profiles = contextProfiles(context, season);
+  let playerBuilt = null, researchIssue = null, scoreFit = null;
+  try {
+    if (!snapshot.strict_no_future_data || snapshot.teams?.length !== 30 || Number(snapshot.coverage?.season) !== season)
+      throw new Error('Player snapshot failed provenance, coverage or season checks');
+    playerBuilt = assertFresh('V9 player/rotation', snapshot, now, MAX_PLAYER_FEED_AGE_HOURS, firstTip);
+    scoreFit = trainedScoreMachine(season);
+  } catch (error) {
+    researchIssue = error.message;
+  }
+  const teams = playerBuilt ? playerTeams(snapshot) : new Map();
+  const shadow = Unified.forSlate(season, snapshot, now, gameData);
+  const state = E.ratings(gameData.games, new Date(now).toISOString());
+  if (state.finals < 800) throw new Error('Historical Elo coverage is insufficient');
   const forecasts = [];
   for (const game of games) {
-    const state = E.ratings(gameData.games, new Date(Math.min(now, Date.parse(game.date))).toISOString());
-    if (state.finals < 800) throw new Error('Historical Elo coverage is insufficient');
     const primary = E.forecast(game, state, profiles);
     const simulation = E.monteCarlo(game, state, profiles, { simulations, seed: `daily-audit-v2|${game.id}|${game.date}|${simulations}` });
-    const roster = R.modelForecast({ game, baseline: primary, snapshot, priorRotations: rosterPriors, report: rosterReport, now });
-    const challenge = C.predictLiveModels({ game, baseline: primary, snapshot, rosterForecast: roster,
-      report: challengeReport, gameData, simulations });
-    const rosterIntegrity = RI.auditGame({game,snapshot,availability:officialAvailability,now});
+    const roster = playerBuilt ? R.modelForecast({ game, baseline: primary, snapshot, priorRotations: rosterPriors, report: rosterReport, now }) : {available:false, reason:researchIssue};
+    let challenge;
+    try {
+      if (!playerBuilt) throw new Error(researchIssue);
+      challenge = C.predictLiveModels({ game, baseline: primary, snapshot, rosterForecast: roster,
+        report: challengeReport, gameData, simulations });
+    } catch (error) {
+      challenge = Object.fromEntries(C.ALL_IDS.map(id => [id, { available: false, reason: error.message }]));
+    }
+    const rosterIntegrity = RI.auditGame({game,snapshot:playerBuilt ? snapshot : {},availability:officialAvailability,now});
     const rosterStrength = RS.matchup(rosterIntegrity);
-    const scoreForecast=SM.predict(scoreFit.fit,
-      scoreTeamIndex.get(R.canonical(game.home.abbr)),scoreTeamIndex.get(R.canonical(game.away.abbr)));
+    const scoreForecast = scoreFit ? SM.predict(scoreFit.fit,
+      teams.get(A.canonicalTeam(game.home.abbr)), teams.get(A.canonicalTeam(game.away.abbr))) :
+      {available:false,reason:researchIssue};
     forecasts.push({
       game_id: String(game.id), tip_utc: new Date(game.date).toISOString(), tip_melbourne: A.melbourneDisplay(game.date),
       away: { id: String(game.away.id), name: game.away.name, abbr: game.away.abbr },
       home: { id: String(game.home.id), name: game.home.name, abbr: game.home.abbr },
+      unified_shadow: shadow(game, primary, rosterStrength),
       primary_forecast: {
         model_id: 'production_elo_v7', model: 'production Elo baseline', version_status: 'production',
         winner: primary.homeWin >= 0.5 ? game.home.abbr : game.away.abbr,
         winner_probability: Math.max(primary.homeWin, primary.awayWin),
         home_win_probability: primary.homeWin, away_win_probability: primary.awayWin,
         projected_score: { away: primary.awayScore, home: primary.homeScore },
+        factors: {
+          home_rating: primary.homeRating, away_rating: primary.awayRating,
+          home_rest_days: primary.homeRest, away_rest_days: primary.awayRest,
+          prior_season_weight: primary.priorWeight, adjusted_home_rating_edge: primary.eloEdge,
+        },
+        confidence_context: primary.confidence,
       },
       diagnostics: {
         monte_carlo: {
@@ -319,7 +348,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
       } : {model_id:'joint_score_margin_v1',available:false,reason:scoreForecast.reason},
       v18_roster_integrity: rosterIntegrity,
       v18_roster_strength: rosterStrength,
-      v9_player_projections: v9Projections(game, teams),
+      v9_player_projections: teams.has(A.canonicalTeam(game.home.abbr)) && teams.has(A.canonicalTeam(game.away.abbr)) ? v9Projections(game, teams) : [],
     });
   }
   const playerCount = forecasts.reduce((count, game) => count + game.v9_player_projections.length, 0);
@@ -329,6 +358,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
     immutable_intent: 'Forecast fields are append-only and must never be edited after publication. Results belong in a separate review artifact.',
     scope: {
       melbourne_date: date, timezone: 'Australia/Melbourne', games: games.length, player_projections: playerCount,
+      scheduled_slate_size: slate.length, excluded_game_ids: excluded,
       first_tip_utc: new Date(firstTip).toISOString(), last_tip_utc: new Date(lastTip).toISOString(),
     },
     model_policy: {
@@ -339,7 +369,7 @@ function buildLock({ date, now, simulations = DEFAULT_SIMULATIONS }) {
     source_provenance: {
       schedule_results: { name: gameData.source?.name, url: gameData.source?.url, built_at_utc: gameBuilt, status: gameData.source?.status },
       team_context: { name: context.source?.name, url: context.source?.url, built_at_utc: context.built_at_utc },
-      v9_player_rotation: { name: 'NBA Stats-derived pregame player logs via repository V9 builder', built_at_utc: playerBuilt, strict_no_future_data: true },
+      v9_player_rotation: { name: 'NBA Stats-derived pregame player logs via repository V9 builder', built_at_utc: playerBuilt, strict_no_future_data: Boolean(playerBuilt), unavailable_reason: researchIssue },
       roster_research: { generated_at_utc: rosterReport.generated_at_utc, status: rosterReport.status },
       five_model_challenge: { generated_at_utc: challengeReport.generated_at_utc, version: challengeReport.version,
         schema: challengeReport.schema, status: challengeReport.status, strict_no_future_data: challengeReport.strict_no_future_data },
@@ -614,6 +644,9 @@ function verifyAll() {
     const value = readJson(file);
     if (!A.verifyIntegrity(value)) throw new Error(`Lock integrity failed: ${path.relative(ROOT, file)}`);
     if (!value.scope?.melbourne_date || !(value.forecasts || []).length) throw new Error(`Lock coverage failed: ${path.relative(ROOT, file)}`);
+    const lockedAt = Date.parse(value.locked_at_utc);
+    if (!value.forecasts.every(game => lockedAt < Date.parse(game.tip_utc)))
+      throw new Error(`Late or undated lock: ${file}`);
     const relative = path.relative(ROOT, file).replaceAll(path.sep, '/');
     lockRecords.set(relative, { file, relative, value, sha256: A.sha256(fs.readFileSync(file)) });
   }
@@ -691,28 +724,34 @@ function reviewWindowOpen(lock, now) {
 async function run(options) {
   const now = Date.parse(options.now || new Date().toISOString());
   if (!Number.isFinite(now)) throw new Error('Invalid --now timestamp');
-  const date = options.date || process.env.TRACKER_DATE || A.melbourneDate(now);
-  let existing = lockForDate(date);
-  if (existing) {
-    console.log(`Forecast already locked for ${date}: ${path.relative(ROOT, existing)}`);
-  } else {
-    try {
-      const lock = buildLock({ date, now, simulations: options.simulations || Number(process.env.TRACKER_SIMULATIONS) || DEFAULT_SIMULATIONS });
-      const destination = path.join(AUDIT, 'snapshots', date, 'forecast.lock.json');
-      if (options.dryRun) console.log(JSON.stringify(lock, null, 2));
-      else {
-        writeExclusive(destination, lock);
-        console.log(`Locked ${lock.scope.games} games and ${lock.scope.player_projections} player projections for ${date}`);
-        existing = destination;
-      }
-    } catch (error) {
-      if (error.code === 'OUTSIDE_WINDOW') console.log(`No lock written: ${error.message}`);
-      else {
-        const gameData = readJson(path.join(DATA, 'games.json'));
-        const target = (gameData.games || []).filter(game => A.melbourneDate(game.date) === date);
-        const firstTip = target.length ? Math.min(...target.map(game => Date.parse(game.date))) : null;
-        if (firstTip && now > firstTip + 10 * 60000) console.error(`LOCK GAP ${date}: ${error.message}`);
-        else console.log(`Lock deferred safely: ${error.message}`);
+  if (options.now && !options.dryRun) throw new Error('An explicit clock is allowed only for a dry run');
+  const selected = options.date || process.env.TRACKER_DATE;
+  const dates = selected ? [selected] : [...new Set([A.melbourneDate(now), A.melbourneDate(now + LOCK_MAX_MINUTES_BEFORE_TIP * 60000)])];
+  for (const date of dates) {
+    const existing = lockForDate(date);
+    if (existing) {
+      console.log(`Forecast already locked for ${date}: ${path.relative(ROOT, existing)}`);
+    } else {
+      try {
+        const lock = buildLock({ date, now, simulations: options.simulations || Number(process.env.TRACKER_SIMULATIONS) || DEFAULT_SIMULATIONS });
+        const destination = path.join(AUDIT, 'snapshots', date, 'forecast.lock.json');
+        if (options.dryRun) console.log(JSON.stringify(lock, null, 2));
+        else {
+          if (Date.now() >= Date.parse(lock.scope.first_tip_utc)) throw new Error('Tipoff began during computation; lock refused');
+          writeExclusive(destination, lock);
+          console.log(`Locked ${lock.scope.games} games and ${lock.scope.player_projections} player projections for ${date}`);
+        }
+      } catch (error) {
+        if (error.code === 'OUTSIDE_WINDOW') console.log(`No lock written: ${error.message}`);
+        else {
+          const gameData = readJson(path.join(DATA, 'games.json'));
+          const target = (gameData.games || []).filter(game => A.melbourneDate(game.date) === date);
+          const firstTip = target.length ? Math.min(...target.map(game => Date.parse(game.date))) : null;
+          if (firstTip && now > firstTip + 10 * 60000) console.error(`LOCK GAP ${date}: ${error.message}`);
+          else if (firstTip && firstTip - now <= LOCK_MAX_MINUTES_BEFORE_TIP * 60000)
+            console.error(`::warning title=Pregame lock deferred::${date}: ${error.message}`);
+          else console.log(`Lock deferred safely: ${error.message}`);
+        }
       }
     }
   }

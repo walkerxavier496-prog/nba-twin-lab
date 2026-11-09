@@ -110,9 +110,16 @@ def fetch_range(session: requests.Session, start: dt.date, end: dt.date) -> list
         "seasontype": 2,
         "limit": 500,
     }
-    response = session.get(ENDPOINT, params=params, timeout=24, headers=HEADERS)
-    response.raise_for_status()
-    return parse_events(response.json())
+    for attempt in range(3):
+        try:
+            response = session.get(ENDPOINT, params=params, timeout=24, headers=HEADERS)
+            response.raise_for_status()
+            return parse_events(response.json())
+        except requests.RequestException as exc:
+            status = getattr(exc.response, "status_code", None)
+            if attempt == 2 or (status is not None and status < 500 and status != 429):
+                raise
+            time.sleep(2 ** attempt)
 
 
 def build(session: requests.Session, today: dt.date) -> dict:
@@ -212,16 +219,9 @@ def main():
     with requests.Session() as session:
         payload = build(session, args.today)
     if args.output.exists():
-        try:
-            old = json.loads(args.output.read_text(encoding="utf-8"))
-            record_final_observations(payload, old)
-            if (old.get("games") == payload["games"] and
-                    old.get("coverage") == payload["coverage"] and
-                    old.get("source") == payload["source"]):
-                print("No changes in verified schedule or results; keeping existing file")
-                return
-        except (ValueError, OSError):
-            pass
+        old = json.loads(args.output.read_text(encoding="utf-8"))
+        record_final_observations(payload, old)
+    # The verified feed observation advances even when the schedule is unchanged.
     args.output.parent.mkdir(parents=True, exist_ok=True)
     temp = args.output.with_suffix(".json.tmp")
     temp.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

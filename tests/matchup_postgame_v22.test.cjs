@@ -27,9 +27,9 @@ function render(tab,opts={}){
  };
  const doc={readyState:'complete',getElementById:byId,querySelectorAll:()=>[],visibilityState:'visible'};
  const win={NbaMedia:{image:x=>'<span class="team-logo">'+(x.abbr||x)+'</span>',headshot:id=>'nba-image-'+id+'.png'}};
- const fetch=async url=>({ok:Object.hasOwn(map,url),status:Object.hasOwn(map,url)?200:404,json:async()=>map[url]});
+ const fetch=async url=>({ok:Object.hasOwn(map,url),status:Object.hasOwn(map,url)?200:404,arrayBuffer:async()=>Buffer.from(read(url.slice(3)).replaceAll('\r\n','\n')),json:async()=>map[url]});
  const script=read('assets/concept3-hub.js').replace("tab:'prediction',slateTab:","tab:'"+tab+"',slateTab:");
- vm.runInNewContext(script,{window:win,document:doc,location:{search:'?game='+gameId},URLSearchParams,fetch,Date,Intl},
+ vm.runInNewContext(script,{window:win,document:doc,location:{search:'?game='+gameId},TextDecoder,crypto:{subtle:{digest:(_,bytes)=>require("node:crypto").createHash("sha256").update(bytes).digest()}},URLSearchParams,fetch,Date,Intl},
   {filename:'assets/concept3-hub.js'});
  return {byId,rendered:async()=>{await new Promise(resolve=>setImmediate(resolve));return byId('c3-lab').innerHTML}};
 }
@@ -48,16 +48,15 @@ test('Both teams load from a VERIFIED pretip snapshot despite WSH/WAS alias diff
  assert.match(html,/10-30/,'Washington actual 3PT shots');
  assert.match(html,/small early-season samples|5 games/);
 });
-test('Each individual FINAL review grades six machines without waiting for the slate review',async()=>{
+test('Each individual FINAL review grades the original production forecast without waiting for the slate review',async()=>{
  const html=await render('prediction').rendered();
  assert.match(html,/CHA 79 – 95 WSH/);
  assert.match(html,/MISSED PICK/);
- assert.match(html,/Machines vs Reality/);
- assert.match(html,/0\.574/,'Saved M6 ensemble Brier for Washington upset');
- assert.match(html,/BRIER/);
- assert.match(html,/LOG LOSS/);
- assert.match(html,/196|participating-player predictions:/);
- assert.match(html,/Original predictions are preserved unchanged/i);
+ assert.match(html,/Forecast vs final/);
+ assert.match(html,/Brier 0\.629/,'Saved production Brier for Washington upset');
+ assert.match(html,/log loss 1\.576/);
+ assert.match(html,/score error 26\.9 points per team/);
+ assert.doesNotMatch(html,/0\.574|Machines vs Reality/);
 });
 test('Model Breakdown shows true postgame verdicts instead of only pregame probabilities',async()=>{
  const html=await render('models').rendered();
@@ -87,9 +86,9 @@ test('Never leak a revised posttip team snapshot back into pretip basketball rea
 });
 test('No fabricated final grading before an independently verified outcome',async()=>{
  const html=await render('prediction',{noReview:true,noFinal:true}).rendered();
- assert.doesNotMatch(html,/Machines vs Reality/);
+ assert.doesNotMatch(html,/Forecast vs final/);
  assert.doesNotMatch(html,/MISSED PICK/);
- assert.match(html,/ML RESEARCH CHALLENGER/);
+ assert.match(html,/PRODUCTION ELO/);
 });
 test('Immutable pregame locks retain the same snapshots after postgame display',()=>{
  assert.equal(lock.forecasts[0].primary_forecast.winner,'CHA');

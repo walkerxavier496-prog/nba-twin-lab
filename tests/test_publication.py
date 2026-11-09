@@ -11,6 +11,7 @@ import pytest
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
 
 
 def load(name):
@@ -169,6 +170,34 @@ def test_new_upstream_inputs_fail_closed(repository):
     assert not receipt.exists()
 
 
+@pytest.mark.parametrize("other_output", [
+    "audit/anchors/2026-11-09.json",
+    "research-reviews/chronology-v1/runs/42398461002-1/season-test.json",
+])
+def test_unrelated_published_proof_and_research_outputs_can_coexist(repository, other_output):
+    work, remote, receipt = repository
+    upstream_commit(work, remote, other_output)
+    (work / "data/current.json").write_text('{"value":3}')
+    sha = pub.publish("test-refresh", receipt, [sys.executable, "-c", "pass"])
+    git(work, "fetch", "origin", "main")
+    assert deploy.select_revision(refresh_event(work), json.loads(receipt.read_text()), sha, "test/nba") == sha
+    assert json.loads(git(work, "show", f"HEAD:{other_output}")) == {}
+
+
+def test_idle_daily_poll_does_not_commit_or_request_deployment(repository):
+    work, remote, receipt = repository
+    config = json.loads((work / "scripts/publication.json").read_text())
+    config["daily-audit"] = ["audit/**/*.json"]
+    (work / "scripts/publication.json").write_text(json.dumps(config))
+    git(work, "add", "scripts/publication.json")
+    git(work, "commit", "-m", "Configure daily publisher")
+    git(work, "push", "origin", "HEAD:main")
+    before = git(remote, "rev-parse", "main")
+    assert pub.publish("daily-audit", receipt, [sys.executable, "-c", "pass"]) is None
+    assert before == git(remote, "rev-parse", "main")
+    assert not receipt.exists()
+
+
 def test_push_race_rebases_and_revalidates_exact_new_sha(repository, monkeypatch, tmp_path):
     work, remote, receipt = repository
     original_git = pub.git
@@ -309,7 +338,10 @@ def test_every_publisher_uses_shared_action_and_nonrecursive_pages_handoff():
         spec = workflow(path)
         assert spec["name"] in triggers
         job = next(iter(spec["jobs"].values()))
-        assert job["if"] == "github.ref == 'refs/heads/main'"
+        assert "github.ref == 'refs/heads/main'" in job["if"]
+        if name == "daily-audit":
+            assert "conclusion == 'success'" in job["if"]
+            assert "head_repository.full_name == github.repository" in job["if"]
         assert job["steps"][0]["with"]["fetch-depth"] == "0"
         action = job["steps"][-1]
         assert action["uses"] == "./.github/actions/publish-data"
