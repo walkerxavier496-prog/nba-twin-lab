@@ -24,9 +24,9 @@ Historical lineups were unavailable; no injuries or minutes have been fabricated
 1. Recent margin/rest/prior-SRS features offer only tiny Brier gains over Elo recalibration; recalibrated Elo had higher winner accuracy.
 2. Features are correlated with the Elo strength input.
 3. The unified model's 2026 ECE was 0.0418 compared with Elo 0.0340 (worse).
-4. The old October report listed 69.19% for 2026 Elo; current-code replay yielded 68.78%. Investigate version drift before cross-report comparisons.
+4. The old October legacy report listed 69.19%; the existing chronology-corrected report gives 68.78% and Brier 0.20618665, exactly matching this replay. The difference follows the result-availability correction in commit 4bcb803ab3. Use research-reviews/chronology-v1/evaluations/paired-v1/corrected-historical-model-report.json as the appropriate baseline.
 5. Meaningful player/lineup tests require archived, timestamped, source-attributed pre-tip data.
 6. Historical locks untouched. No changes to live model, predictions or probabilities.
 
 ## Goose reviewer assignment
-Inspect model code and test suite read-only. Explain Elo version drift, identify hidden feature correlation and overfit, design leakage-safe player impact data with expected-minute uncertainty, and propose stronger rival architectures. Record findings separately; do not deploy or edit the same model files.
+Inspect model code and test suite read-only. Verify corrected result-availability chronology, identify hidden feature correlation and overfit, design leakage-safe player impact data with expected-minute uncertainty, and propose stronger rival architectures. Record findings separately; do not deploy or edit the same model files.
