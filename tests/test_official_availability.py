@@ -13,6 +13,27 @@ o=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(o)
 
 class OfficialAvailabilityTests(unittest.TestCase):
+    def test_comma_separated_suffix_keeps_unique_official_roster_identity(self):
+        # NBA injury report, 2026-11-08 6 PM ET, page 5: Udeh, Jr., Ernest.
+        for raw in ("Udeh, Jr., Ernest", "Udeh,Jr.,Ernest"):
+            with self.subTest(raw=raw):
+                player = o.reversed_nba_name(raw)
+                roster_key = o.namekey("Ernest Udeh, Jr.")
+                self.assertEqual(o.namekey(player), roster_key)
+                parsed = {"CLE@CHA": {"teams": {
+                    "CLE": {"submitted": True, "injuries": [{"name": player, "status": "OUT"}]},
+                    "CHA": {"submitted": True, "injuries": []}}}}
+                row = {"id": "fixture", "away": {"abbr": "CLE"}, "home": {"abbr": "CHA"}}
+                rosters = {
+                    "CLE": {"ids": ["1643640"], "name_ids": {roster_key: ["1643640"]}, "source_url": "fixture"},
+                    "CHA": {"ids": [], "name_ids": {}, "source_url": "fixture"}}
+                matched = o.report_for_game(row, parsed, rosters)
+                self.assertEqual(matched["teams"]["CLE"]["injuries"], [{"player_id": "1643640", "status": "OUT"}])
+                for invalid_ids in ([], ["1643640", "another-id"]):
+                    rosters["CLE"]["name_ids"][roster_key] = invalid_ids
+                    with self.assertRaisesRegex(ValueError, "Ambiguous NBA official injury name"):
+                        o.report_for_game(row, parsed, rosters)
+
     def test_filename_uses_eastern_timezone_and_cutoff(self):
         url=o.NBA_REPORT_HOST+"Injury-Report_2026-10-30_05_15PM.pdf"
         self.assertEqual(o.source_time(url).isoformat(),"2026-10-30T21:15:00+00:00")

@@ -60,6 +60,11 @@ def namekey(name):
 def reversed_nba_name(value):
     text=str(value).strip()
     if "," not in text: return text
+    # Some official PDF names put the suffix in its own comma-delimited field.
+    parts = [part.strip() for part in text.split(",")]
+    if len(parts) == 3 and parts[0] and parts[2] and re.fullmatch(r"(?:Jr|Sr)\.?", parts[1], re.I):
+        surname, suffix, given = parts
+        return f"{given} {surname} {suffix}"
     last,first=text.split(",",1)
     return f"{first.strip()} {last.strip()}"
 
