@@ -35,3 +35,11 @@ test('a suspended or unknown result cannot provide a travel or congestion signal
   Object.assign(recorded,{result_available_at_utc:'2026-11-08T01:00Z',result_availability_verified:true,result_availability_source:'timestamped final'});
   assert.deepEqual(U.scheduleFeatures(target,[recorded],cutoff),[-1,-1]);
 });
+
+test('research CLI cannot mint forward forecasts for completed games or use a post-tip cutoff',()=>{
+  const F=require('../scripts/player_engine_forecast.cjs');
+  const date=new Date(Date.now()-86400000).toISOString();
+  const game={season:2027,date,status:'final'};
+  assert.throws(()=>F.buildForecast([],{},game,{}, {cutoffMs:Date.parse(date)-100}),/future scheduled/);
+  assert.throws(()=>F.buildForecast([],{},game,{}, {cutoffMs:Date.parse(date),allowHistorical:true}),/strictly before tip/);
+});

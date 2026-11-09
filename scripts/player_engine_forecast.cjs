@@ -31,14 +31,14 @@ function loadAllCorpus(){
 const manifestHash=()=>sha(Buffer.concat(fs.readdirSync(CORPUS).filter(f=>f.endsWith('.json.gz')).sort().map(f=>fs.readFileSync(path.join(CORPUS,f)))));
 
 // Calibration from every EARLIER out-of-sample prediction (naive variant: the only one knowable pregame).
-let calCache=null;
+
 function liveCalibration(corpus,params){
- if(calCache)return calCache;
+
  const hist=corpus.filter(g=>/^\d{4}$/.test(String(g.season))&&g.season>=2021&&g.season<=2026);
  const {rows}=B.runEngine(hist,params,'naive',[2022,2023,2024,2025,2026]);
- calCache=PE.fitCalibration(rows.map(r=>({raw_margin:r.raw.raw_margin,raw_total:r.raw.raw_total,margin:r.hs-r.as,total:r.hs+r.as,restDiff:r.restDiff,resid_diff:r.raw.resid_diff,resid_total_sum:r.raw.resid_total_sum,home:r.hs,away:r.as})));
+ return PE.fitCalibration(rows.map(r=>({raw_margin:r.raw.raw_margin,raw_total:r.raw.raw_total,margin:r.hs-r.as,total:r.hs+r.as,restDiff:r.restDiff,resid_diff:r.raw.resid_diff,resid_total_sum:r.raw.resid_total_sum,home:r.hs,away:r.as})));
  // player prediction bands from the same earlier predictions
- return calCache;
+
 }
 
 function stateAsOf(corpus,params,cutoffMs){
@@ -63,13 +63,15 @@ function readAvailability(file,gameId){
 
 function buildForecast(corpus,params,game,availability,opts={}){
  if(Number(game.season)<2027&&!opts.allowHistorical)throw new Error('live forecasts are for the current season; historical games are evaluated by the backtest');
- const tip=Date.parse(game.date),cutoff=opts.cutoffMs??tip;
+ const tip=Date.parse(game.date),now=Date.now(),cutoff=opts.cutoffMs??now;
+ if(!Number.isFinite(cutoff)||!Number.isFinite(tip)||cutoff>now||cutoff>=tip)throw new Error('Information cutoff must be real and strictly before tip');
+ if(!opts.allowHistorical&&(game.status!=='scheduled'||now>=tip))throw new Error('Live forecast requires a future scheduled game');
  if(availability.published_at_utc&&!(Date.parse(availability.published_at_utc)<=cutoff))throw new Error('availability report published after the information cutoff');
  const {state,last,observed}=stateAsOf(corpus,params,cutoff);
  const input={date:game.date,home:{id:String(game.home.id),availability:availability.home||{}},away:{id:String(game.away.id),availability:availability.away||{}}};
  const raw=PE.forecastGame(state,input);
  const cal=liveCalibration(corpus.filter(g=>g.avail<cutoff),params);
- const prev=new Map();for(const g of corpus.filter(g=>g.tip<tip)){prev.set(g.home.id,g.tip);prev.set(g.away.id,g.tip);}
+ const prev=new Map();for(const g of corpus.filter(g=>g.avail<cutoff)){prev.set(g.home.id,g.tip);prev.set(g.away.id,g.tip);}
  const rest=t=>prev.has(String(t))?Math.min(3,Math.max(0,Math.floor((tip-prev.get(String(t)))/86400000))):null;
  const restDiff=rest(game.home.id)===null||rest(game.away.id)===null?0:Math.max(-3,Math.min(3,rest(game.home.id)-rest(game.away.id)));
  const f=PE.applyCalibration(raw,cal,restDiff);
@@ -182,6 +184,7 @@ if(require.main===module){
   const artifact=buildForecast(corpus,params,game,availability,arg('--cutoff')?{cutoffMs:Date.parse(arg('--cutoff'))}:{});
   const out=path.resolve(arg('--out')||path.join(ROOT,'research-reviews/player-engine-v1/forecasts',id+'.forecast.json'));
   if(!out.startsWith(path.join(ROOT,'research-reviews')+path.sep)&&!out.startsWith('/tmp/')&&!out.startsWith('/private/tmp/'))throw new Error('forecasts are written only under research-reviews/');
+  if(Date.now()>=Date.parse(game.date))throw new Error('Tip passed during forecast creation');
   fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,JSON.stringify(artifact,null,1)+'\n',{flag:'wx'});
   console.log('wrote',out);
  }else if(cmd==='grade'){

@@ -22,7 +22,7 @@ function forward(root=ROOT) {
       if(reviewed.has(id)||!A.verifyIntegrity(review)||review.source_lock_sha256!==entry.lock_sha256 ||
         review.game_id!==id || !(Date.parse(review.reviewed_at_utc)>tip))throw Error('Invalid grade '+id);
       const game=review.games[0];
-      if(game.game_id!==id || f.home.abbr!==game.home.abbr || f.away.abbr!==game.away.abbr)throw Error('Game mismatch '+id);
+      if(game.game_id!==id || A.canonicalTeam(f.home.abbr)!==A.canonicalTeam(game.home.abbr) || A.canonicalTeam(f.away.abbr)!==A.canonicalTeam(game.away.abbr))throw Error('Game mismatch '+id);
       const row={id,date:f.tip_utc,hs:game.home.score,as:game.away.score};
       if(!Number.isFinite(row.hs)||!Number.isFinite(row.as)||row.hs===row.as)throw Error('Invalid final '+id);
       reviewed.add(id);
