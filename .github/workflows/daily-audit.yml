@@ -16,6 +16,7 @@ on:
     workflows:
       - Validate and refresh NBA game predictions
       - V9 player stat projections and audit
+      - Validate and refresh NBA Twin Lab data
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -101,6 +102,9 @@ jobs:
         run: node scripts/challenge_supplement.cjs verify
       - name: Verify immutable artifacts and derived ledger
         run: node scripts/daily_tracker.cjs verify
+      # Warning-only read audit: never fabricate or backfill predictions after tip.
+      - name: Check genuine missing pretip forecast coverage
+        run: node scripts/forecast_coverage.cjs --recent 2 --warn
       # Anchoring must never block locking or publication, so these steps are
       # non-fatal. Missing/failed timestamps are retried on the next 15-minute run.
       - name: Record lock anchors (hash of each pre-tip lock)

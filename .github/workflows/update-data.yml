@@ -3,6 +3,9 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '25 13 * * *'
+    # Two more pre-tip opportunities if GitHub scheduling or data sources are delayed.
+    - cron: '05 17 * * *'
+    - cron: '05 20 * * *'
   push:
     branches: [main]
     paths: ['build_data.py', 'requirements.txt', 'tests/test_build_data.py', '.github/workflows/update-data.yml']
