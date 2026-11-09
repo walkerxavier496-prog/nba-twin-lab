@@ -1,0 +1,42 @@
+name: Replay unified NBA forecast
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'predict/unified.js'
+      - 'predict/score-machine.js'
+      - 'scripts/unified_*.cjs'
+      - 'research-reviews/unified-v1/**'
+  push:
+    branches: [main]
+    paths:
+      - 'research-reviews/chronology-v1/inputs/**'
+      - 'data/historical-games.json'
+      - 'data/context.json'
+permissions:
+  contents: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/unified.test.cjs
+      - name: Fit from earlier seasons and replay four rolling origins
+        run: node scripts/unified_backtest.cjs "$RUNNER_TEMP/unified"
+      - name: Grade genuine locks and verify frozen fit on engine changes
+        run: |
+          node scripts/unified_forward.cjs > "$RUNNER_TEMP/unified/forward.json"
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            for f in research-reviews/unified-v1/fit-*.json research-reviews/unified-v1/walk-forward-*.json; do
+              cmp "$f" "$RUNNER_TEMP/unified/$(basename "$f")"
+            done
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unified-review-${{ github.sha }}
+          path: ${{ runner.temp }}/unified
+          retention-days: 30

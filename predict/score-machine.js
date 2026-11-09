@@ -43,7 +43,7 @@ function solve(A,b){
  }return M.map(x=>x[k]);
 }
 function ridge(rows,target,lambda=120){
- const d=names.length,A=Array.from({length:d},()=>Array(d).fill(0)),b=Array(d).fill(0);
+ const d=rows[0].x.length,A=Array.from({length:d},()=>Array(d).fill(0)),b=Array(d).fill(0);
  for(const row of rows){const x=row.x,y=row[target];for(let i=0;i<d;i++){b[i]+=x[i]*y;for(let j=0;j<d;j++)A[i][j]+=x[i]*x[j];}}
  for(let i=1;i<d;i++)A[i][i]+=lambda;
  return solve(A,b);
@@ -85,5 +85,5 @@ function predict(model,home,away){
   intercept_margin_points:model.margin_coefficients[0],impact_by_feature:Object.fromEntries(names.slice(1).map((name,i)=>[name,{margin_points:model.margin_coefficients[i+1]*x[i+1],total_points:model.total_coefficients[i+1]*x[i+1]}]))},
   warning:'Research estimate. Historical roster availability is inferred, official current injury/roster coverage must be verified before publication.'};
 }
-return Object.freeze({names,vector,train,predict,blend});
+return Object.freeze({names,vector,train,predict,blend,ridge});
 });
