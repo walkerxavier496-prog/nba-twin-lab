@@ -8,7 +8,7 @@ const ROOT = path.join(__dirname,'..');
 function forward(root=ROOT) {
   const ledger=JSON.parse(fs.readFileSync(path.join(root,'data/audit-ledger.json')));
   const elo=[],pairs={existing_joint:[],unified:[]},reviewed=new Set();
-  const errors=[];
+  const errors=[],versions={};
   for(const entry of ledger.entries) {
     const lockBytes=fs.readFileSync(path.join(root,entry.lock_path));
     const lock=JSON.parse(lockBytes);
@@ -29,7 +29,12 @@ function forward(root=ROOT) {
       const base=observe(row,f.primary_forecast);
       elo.push(base);
       for(const [key,forecast] of [['existing_joint',f.research_score_machine],['unified',f.unified_shadow]]) {
-        if(forecast?.available)pairs[key].push({candidate:observe(row,forecast),base});
+        if(!forecast?.available)continue;
+        const pair={candidate:observe(row,forecast),base};
+        if(key==='unified'){
+          if(forecast.model_id!=='unified-margin-v1'||!/^([0-9a-f]{64})$/.test(forecast.model_sha256))throw Error('Unversioned shadow forecast');
+          (versions[forecast.model_sha256]??=[]).push(pair);
+        }else pairs[key].push(pair);
       }
       const probabilities=Object.fromEntries(Object.entries(game.models).map(([k,m])=>[k,m.p]));
       errors.push(probabilities);
@@ -47,6 +52,13 @@ function forward(root=ROOT) {
   for(const [k,rows] of Object.entries(pairs)){
     const a=rows.map(r=>r.candidate),b=rows.map(r=>r.base);
     output[k]=a.length?{candidate:B.teamMetrics(a),elo_same_games:B.teamMetrics(b),paired:compare(a,b)}:{games:0};
+  }
+  output.unified={games:Object.values(versions).reduce((n,rows)=>n+rows.length,0),versions:{}};
+  for(const [hash,rows] of Object.entries(versions)){
+    rows.sort((a,b)=>a.candidate.date.localeCompare(b.candidate.date)||a.candidate.id.localeCompare(b.candidate.id));
+    const first=rows.slice(0,500),candidate=first.map(r=>r.candidate),baseline=first.map(r=>r.base);
+    output.unified.versions[hash]={locked_and_graded:rows.length,planned_review_ready:first.length===500,
+      candidate:B.teamMetrics(candidate),elo:B.teamMetrics(baseline),paired:compare(candidate,baseline)};
   }
   return output;
 }

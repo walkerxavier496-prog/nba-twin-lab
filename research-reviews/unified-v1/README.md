@@ -1,0 +1,29 @@
+# Unified forecast evaluation
+
+The public forecast remains production Elo v7. Future pre-tip locks also carry a versioned research forecast when the required sources pass validation. Past locks and per-game reviews are immutable. To revert the new experiment, remove its call from the daily tracker and retain every existing lock and model artifact.
+
+## Data and pipeline
+
+The replay reconstructs production Elo with the previous regular season and the available part of the current season. Team statistics and inferred player impact come from the chronology-corrected intelligence archive. Source hashes are in the fit artifact. The upstream build records 7,301 team-games' worth of two-sided rows and 155,942 player rows in its provenance manifest. This checkout contains derived historical features. It cannot independently reproduce the private original extraction from scratch.
+
+Each margin and total starts from the Elo forecast's score context. Fixed-penalty ridge regression learns residuals from adjusted efficiency, scoring environment, pace, player-impact difference, rotation continuity, recent net rating, rest, nominal venue changes and four-day workload. A later 300-game calibration window provides the distribution of margin errors. The win probability integrates that distribution directly. Margin intervals and both scores come from the same fitted pipeline. Historical final-availability timestamps use the established archive policy, including a conservative delay when the actual time is unavailable. Historical snapshots use tip-time cutoffs. Real locks occur earlier and may have less information.
+
+The player input represents projected minutes and box-score-derived impact. Team continuity proxies lineup changes. The venue feature counts nominal home-team changes and cannot resolve neutral sites. Coach identity, lineups sharing the court, scheme changes, actual travel miles and unreported injuries remain unobserved. Verified current availability is recorded separately as feasible roster scenarios; the historical archive cannot calibrate their effect on the win probability.
+
+## Prior systems and model choices
+
+- The corrected six-model report compares 3,630 common games. M1 Elo Brier was 0.21086, M2 science 0.20857, M3 roster 0.20901, M4 Monte Carlo 0.22520, M5 regularised logistic regression 0.20779 and M6 ensemble 0.21072. Its sample and feed horizon differ from this replay. Do not rank those figures against the new report.
+- On 57 actual locks, the correlation between M1 and M6 home-win probabilities was 0.9871. M1 duplicates the production Elo forecast. The frozen ensemble weights, model definitions and per-season fits remain in the corrected report under the chronology review directory.
+- The earlier player-first experiment covers 3,678 matched games. Brier was 0.21127 using inferred availability and 0.20764 using eventual participation. The latter uses information learned after the prediction cutoff. It is an unavailable-information experiment and cannot qualify for promotion.
+- Ridge shrinkage is equivalent to a Gaussian coefficient prior under the squared-error model. This fit uses a fixed penalty and empirical forecast errors. It does not estimate a full Bayesian posterior. A dynamic paired-comparison model could estimate uncertainty in team strength. Player and five-man lineup effects require time-stamped stints, reliable minutes and partial pooling before treating them as individual effects. [Glickman](https://www.glicko.net/ratings/glicko.pdf) and [Sill](https://www.sloansportsconference.com/research-papers/improved-nba-adjusted-using-regularization-and-out-of-sample-testing).
+- Gradient boosting can fit nonlinear feature interactions. Neither the legacy M5 label nor this ridge fit denotes a boosted tree. The residual distribution in this engine is integrated over every calibration observation, avoiding random variability from repeated draws. The repository retains its historical possession simulations and player projection experiments. [Friedman](https://doi.org/10.1214/aos/1013203451).
+
+## Evidence and promotion
+
+Run `node scripts/unified_backtest.cjs` to reproduce the frozen report and fit. A matching existing file is accepted. A different result requires a separate version or output directory. The read-only replay workflow retrains on certified input changes and uploads the results for review. It cannot promote an artifact. Team state and player features update separately through verified data refreshes.
+
+The replay evaluates 4,920 games in four full seasons. Brier and inferred rotation ablation favour the candidate. Winner accuracy and log-loss intervals include zero change. Score MAE is slightly higher. The nominal 80% margin interval covered 79.98% pooled; coverage and calibration can differ by season. Scheduling inputs did not demonstrate a reliable incremental benefit. These results come from previously inspected seasons.
+
+Run `node scripts/daily_tracker.cjs verify` and `node scripts/unified_forward.cjs` in a byte-preserving checkout to grade only predictions already present in immutable locks. The forward report links each grade to its original lock, compares identical game sets and reports legacy probability correlations. No forecast is reconstructed after a game.
+
+Before the first new forward outcome, reserve the first 500 graded, paired pre-tip games for each unchanged fit hash, ordered by tip then ID. Inspect missed-game coverage, forecast availability by team and time-to-tip, interval coverage and calibration by season. Retain Elo unless both Brier and log-loss day-clustered 95% intervals favour the candidate, score MAE is no worse and coverage review supports deployment. There is no automatic promotion. The 500-game horizon is a review point; it cannot guarantee enough statistical power.
