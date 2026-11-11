@@ -1,9 +1,37 @@
 {
   "workflow": "daily-audit",
-  "generation_observed_at_utc": "2026-11-11T01:46:20.457647+00:00",
-  "artifact_generation_timestamps": {},
-  "source_revision": "a850e1f93e7cf1b52520e1f2fbfd35f383b852a5",
-  "run_id": "42941307926",
+  "generation_observed_at_utc": "2026-11-11T08:45:46.672270+00:00",
+  "artifact_generation_timestamps": {
+    "audit/reviews/2026-11-11/games/401909960.review.json": {
+      "reviewed_at_utc": "2026-11-11T08:45:36.944Z"
+    },
+    "audit/reviews/2026-11-11/games/401909961.review.json": {
+      "reviewed_at_utc": "2026-11-11T08:45:36.944Z"
+    },
+    "audit/reviews/2026-11-11/games/401909962.review.json": {
+      "reviewed_at_utc": "2026-11-11T08:45:36.944Z"
+    },
+    "audit/reviews/2026-11-11/games/401909963.review.json": {
+      "reviewed_at_utc": "2026-11-11T08:45:36.944Z"
+    },
+    "audit/reviews/2026-11-11/games/401909964.review.json": {
+      "reviewed_at_utc": "2026-11-11T08:45:36.944Z"
+    },
+    "audit/reviews/2026-11-11/games/401909965.review.json": {
+      "reviewed_at_utc": "2026-11-11T08:45:36.944Z"
+    },
+    "audit/reviews/2026-11-11/review.json": {
+      "generated_at_utc": "2026-11-11T08:45:36.944Z"
+    },
+    "data/audit-ledger.json": {
+      "generated_at_utc": "2026-11-11T08:45:36.944Z"
+    },
+    "data/performance-centre.json": {
+      "generated_at_utc": "2026-11-11T08:45:36.944Z"
+    }
+  },
+  "source_revision": "89063daaec7db9de848021ada9e576aded87c8ca",
+  "run_id": "42989546327",
   "run_attempt": "1",
   "changed_artifacts": [
     "audit/anchors/2026-10-31.json",
@@ -14,6 +42,15 @@
     "audit/anchors/2026-11-08.json",
     "audit/anchors/2026-11-09.json",
     "audit/anchors/2026-11-10.json",
-    "audit/anchors/2026-11-11.json"
+    "audit/anchors/2026-11-11.json",
+    "audit/reviews/2026-11-11/games/401909960.review.json",
+    "audit/reviews/2026-11-11/games/401909961.review.json",
+    "audit/reviews/2026-11-11/games/401909962.review.json",
+    "audit/reviews/2026-11-11/games/401909963.review.json",
+    "audit/reviews/2026-11-11/games/401909964.review.json",
+    "audit/reviews/2026-11-11/games/401909965.review.json",
+    "audit/reviews/2026-11-11/review.json",
+    "data/audit-ledger.json",
+    "data/performance-centre.json"
   ]
 }
