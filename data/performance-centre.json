@@ -1,6 +1,6 @@
 {
   "schema": "nba-twin-lab-performance-centre-v1",
-  "generated_at_utc": "2026-11-12T03:59:27.447Z",
+  "generated_at_utc": "2026-11-12T12:26:56.952Z",
   "source": "Append-only verified ESPN final-game reviews; live games are layered in the browser and labelled live.",
   "fantasy_formula": "ESPN default: PTS + 3PM + 2 FGM - FGA + FTM - FTA + REB + 2 AST + 4 STL + 4 BLK - 2 TOV",
   "days": [
@@ -51004,8 +51004,8 @@
     },
     {
       "melbourne_date": "2026-11-12",
-      "status": "partial",
-      "completed_games": 7,
+      "status": "complete",
+      "completed_games": 10,
       "expected_games": 10,
       "games": [
         {
@@ -56022,6 +56022,2055 @@
               "projection_grade": null
             }
           ]
+        },
+        {
+          "game_id": "401909973",
+          "tip_utc": "2026-11-12T02:00:00.000Z",
+          "home": {
+            "abbr": "UTA",
+            "score": 108
+          },
+          "away": {
+            "abbr": "ORL",
+            "score": 123
+          },
+          "players": [
+            {
+              "id": "4566434",
+              "name": "Franz Wagner",
+              "team": "ORL",
+              "minutes": 39,
+              "pts": 38,
+              "reb": 8,
+              "ast": 1,
+              "three": 3,
+              "stl": 1,
+              "blk": 0,
+              "stocks": 1,
+              "tov": 4,
+              "fpts": 49,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 25.063109155245964,
+                  "reb": 6.450825511829431,
+                  "ast": 9.241784092111347,
+                  "three_pm": 1.1833379052645967
+                },
+                "absolute_errors": {
+                  "pts": 12.936890844754036,
+                  "reb": 1.5491744881705687,
+                  "ast": 8.241784092111347,
+                  "three_pm": 1.8166620947354033,
+                  "minutes": 1.4274800000000027
+                }
+              }
+            },
+            {
+              "id": "4277847",
+              "name": "Wendell Carter Jr.",
+              "team": "ORL",
+              "minutes": 28,
+              "pts": 9,
+              "reb": 7,
+              "ast": 3,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 2,
+              "fpts": 19,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 14.714299936625794,
+                  "reb": 10.498851988450685,
+                  "ast": 1.027210381441088,
+                  "three_pm": 1.0983086101552495
+                },
+                "absolute_errors": {
+                  "pts": 5.714299936625794,
+                  "reb": 3.498851988450685,
+                  "ast": 1.972789618558912,
+                  "three_pm": 1.0983086101552495,
+                  "minutes": 6.304659999999998
+                }
+              }
+            },
+            {
+              "id": "4066320",
+              "name": "Desmond Bane",
+              "team": "ORL",
+              "minutes": 34,
+              "pts": 25,
+              "reb": 3,
+              "ast": 2,
+              "three": 7,
+              "stl": 1,
+              "blk": 0,
+              "stocks": 1,
+              "tov": 1,
+              "fpts": 43,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 17.886406948758214,
+                  "reb": 4.328710537185965,
+                  "ast": 2.425001354736609,
+                  "three_pm": 3.564168329570956
+                },
+                "absolute_errors": {
+                  "pts": 7.113593051241786,
+                  "reb": 1.328710537185965,
+                  "ast": 0.42500135473660894,
+                  "three_pm": 3.435831670429044,
+                  "minutes": 0.4005900000000011
+                }
+              }
+            },
+            {
+              "id": "4593034",
+              "name": "Alex Morales",
+              "team": "ORL",
+              "minutes": 18,
+              "pts": 5,
+              "reb": 4,
+              "ast": 3,
+              "three": 1,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 16,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 1.4984018030546629,
+                  "reb": 1.7843958479400401,
+                  "ast": 0.3411536273902038,
+                  "three_pm": 0.09574940819973461
+                },
+                "absolute_errors": {
+                  "pts": 3.501598196945337,
+                  "reb": 2.21560415205996,
+                  "ast": 2.6588463726097964,
+                  "three_pm": 0.9042505918002653,
+                  "minutes": 5.341049999999999
+                }
+              }
+            },
+            {
+              "id": "4712849",
+              "name": "Anthony Black",
+              "team": "ORL",
+              "minutes": 39,
+              "pts": 22,
+              "reb": 7,
+              "ast": 8,
+              "three": 3,
+              "stl": 1,
+              "blk": 0,
+              "stocks": 1,
+              "tov": 3,
+              "fpts": 42,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 17.7699511268633,
+                  "reb": 5.948595834478259,
+                  "ast": 4.6019667279221705,
+                  "three_pm": 1.7947908012020934
+                },
+                "absolute_errors": {
+                  "pts": 4.230048873136699,
+                  "reb": 1.051404165521741,
+                  "ast": 3.3980332720778295,
+                  "three_pm": 1.2052091987979066,
+                  "minutes": 9.23339
+                }
+              }
+            },
+            {
+              "id": "6478",
+              "name": "Nikola Vucevic",
+              "team": "ORL",
+              "minutes": 14,
+              "pts": 3,
+              "reb": 5,
+              "ast": 1,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 9,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 3.0279154733898745,
+                  "reb": 2.8671983987816105,
+                  "ast": 1.6024384402532474,
+                  "three_pm": 0.48281153885284844
+                },
+                "absolute_errors": {
+                  "pts": 0.027915473389874546,
+                  "reb": 2.1328016012183895,
+                  "ast": 0.6024384402532474,
+                  "three_pm": 0.48281153885284844,
+                  "minutes": 3.9146400000000003
+                }
+              }
+            },
+            {
+              "id": "4348700",
+              "name": "Goga Bitadze",
+              "team": "ORL",
+              "minutes": 20,
+              "pts": 4,
+              "reb": 7,
+              "ast": 0,
+              "three": 0,
+              "stl": 1,
+              "blk": 2,
+              "stocks": 3,
+              "tov": 0,
+              "fpts": 21,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 4.008377337561823,
+                  "reb": 4.1784765352510105,
+                  "ast": 0.7344649234941121,
+                  "three_pm": 0
+                },
+                "absolute_errors": {
+                  "pts": 0.00837733756182324,
+                  "reb": 2.8215234647489895,
+                  "ast": 0.7344649234941121,
+                  "three_pm": 0,
+                  "minutes": 9.66523
+                }
+              }
+            },
+            {
+              "id": "4397204",
+              "name": "Colin Castleton",
+              "team": "ORL",
+              "minutes": 1,
+              "pts": 0,
+              "reb": 0,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 0,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": null
+            },
+            {
+              "id": "3133635",
+              "name": "Jevon Carter",
+              "team": "ORL",
+              "minutes": 28,
+              "pts": 11,
+              "reb": 3,
+              "ast": 4,
+              "three": 3,
+              "stl": 2,
+              "blk": 0,
+              "stocks": 2,
+              "tov": 0,
+              "fpts": 29,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 4.2733730944847155,
+                  "reb": 0.8414526682606414,
+                  "ast": 1.257332088699858,
+                  "three_pm": 1.1533723948346895
+                },
+                "absolute_errors": {
+                  "pts": 6.7266269055152845,
+                  "reb": 2.1585473317393586,
+                  "ast": 2.742667911300142,
+                  "three_pm": 1.8466276051653105,
+                  "minutes": 15.48654
+                }
+              }
+            },
+            {
+              "id": "5239561",
+              "name": "Jase Richardson",
+              "team": "ORL",
+              "minutes": 20,
+              "pts": 6,
+              "reb": 1,
+              "ast": 2,
+              "three": 1,
+              "stl": 1,
+              "blk": 2,
+              "stocks": 3,
+              "tov": 1,
+              "fpts": 18,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 7.267836900135785,
+                  "reb": 1.9953839315502797,
+                  "ast": 2.585752244869242,
+                  "three_pm": 0.7340076674855174
+                },
+                "absolute_errors": {
+                  "pts": 1.2678369001357854,
+                  "reb": 0.9953839315502797,
+                  "ast": 0.585752244869242,
+                  "three_pm": 0.2659923325144826,
+                  "minutes": 3.142990000000001
+                }
+              }
+            },
+            {
+              "id": "4397077",
+              "name": "Jaxson Hayes",
+              "team": "UTA",
+              "minutes": 30,
+              "pts": 11,
+              "reb": 8,
+              "ast": 0,
+              "three": 0,
+              "stl": 2,
+              "blk": 0,
+              "stocks": 2,
+              "tov": 1,
+              "fpts": 25,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 8.553733863220968,
+                  "reb": 5.386356117646896,
+                  "ast": 1.5257288331299823,
+                  "three_pm": 0
+                },
+                "absolute_errors": {
+                  "pts": 2.446266136779032,
+                  "reb": 2.613643882353104,
+                  "ast": 1.5257288331299823,
+                  "three_pm": 0,
+                  "minutes": 5.953140000000001
+                }
+              }
+            },
+            {
+              "id": "4432811",
+              "name": "Josh Green",
+              "team": "UTA",
+              "minutes": 26,
+              "pts": 3,
+              "reb": 2,
+              "ast": 1,
+              "three": 1,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 1,
+              "fpts": 4,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 4.3122282199399296,
+                  "reb": 1.9990676136057115,
+                  "ast": 1.1651014810923748,
+                  "three_pm": 0.6650958657136873
+                },
+                "absolute_errors": {
+                  "pts": 1.3122282199399296,
+                  "reb": 0.000932386394288498,
+                  "ast": 0.16510148109237477,
+                  "three_pm": 0.3349041342863127,
+                  "minutes": 3.9030699999999996
+                }
+              }
+            },
+            {
+              "id": "4433627",
+              "name": "Keyonte George",
+              "team": "UTA",
+              "minutes": 33,
+              "pts": 13,
+              "reb": 7,
+              "ast": 7,
+              "three": 2,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 3,
+              "fpts": 23,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 19.858895506346933,
+                  "reb": 4.77651346135008,
+                  "ast": 6.21687692265339,
+                  "three_pm": 1.3485897803139117
+                },
+                "absolute_errors": {
+                  "pts": 6.858895506346933,
+                  "reb": 2.2234865386499196,
+                  "ast": 0.7831230773466098,
+                  "three_pm": 0.6514102196860883,
+                  "minutes": 0.865479999999998
+                }
+              }
+            },
+            {
+              "id": "4873138",
+              "name": "Ace Bailey",
+              "team": "UTA",
+              "minutes": 31,
+              "pts": 18,
+              "reb": 7,
+              "ast": 2,
+              "three": 3,
+              "stl": 2,
+              "blk": 4,
+              "stocks": 6,
+              "tov": 2,
+              "fpts": 46,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 13.173079745909654,
+                  "reb": 6.079615074780799,
+                  "ast": 1.7679845758253696,
+                  "three_pm": 1.3059070944005757
+                },
+                "absolute_errors": {
+                  "pts": 4.826920254090346,
+                  "reb": 0.9203849252192011,
+                  "ast": 0.2320154241746304,
+                  "three_pm": 1.6940929055994243,
+                  "minutes": 1.3128799999999998
+                }
+              }
+            },
+            {
+              "id": "5041955",
+              "name": "Darryn Peterson",
+              "team": "UTA",
+              "minutes": 33,
+              "pts": 22,
+              "reb": 4,
+              "ast": 5,
+              "three": 2,
+              "stl": 1,
+              "blk": 1,
+              "stocks": 2,
+              "tov": 1,
+              "fpts": 39,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 18.25020307990162,
+                  "reb": 3.952145026891518,
+                  "ast": 4.226324189886017,
+                  "three_pm": 2.5982592860099465
+                },
+                "absolute_errors": {
+                  "pts": 3.7497969200983796,
+                  "reb": 0.04785497310848186,
+                  "ast": 0.7736758101139829,
+                  "three_pm": 0.5982592860099465,
+                  "minutes": 1.7033999999999985
+                }
+              }
+            },
+            {
+              "id": "5105839",
+              "name": "Brice Sensabaugh",
+              "team": "UTA",
+              "minutes": 23,
+              "pts": 19,
+              "reb": 3,
+              "ast": 1,
+              "three": 3,
+              "stl": 1,
+              "blk": 1,
+              "stocks": 2,
+              "tov": 1,
+              "fpts": 34,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 6.0179305575908355,
+                  "reb": 2.884093499770449,
+                  "ast": 1.530591666811068,
+                  "three_pm": 1.1257558409642374
+                },
+                "absolute_errors": {
+                  "pts": 12.982069442409164,
+                  "reb": 0.11590650022955096,
+                  "ast": 0.530591666811068,
+                  "three_pm": 1.8742441590357626,
+                  "minutes": 9.38037
+                }
+              }
+            },
+            {
+              "id": "4277919",
+              "name": "Mo Bamba",
+              "team": "UTA",
+              "minutes": 18,
+              "pts": 5,
+              "reb": 1,
+              "ast": 1,
+              "three": 0,
+              "stl": 0,
+              "blk": 2,
+              "stocks": 2,
+              "tov": 0,
+              "fpts": 16,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 6.8765597147054125,
+                  "reb": 6.755214267493916,
+                  "ast": 0.5030670349633388,
+                  "three_pm": 0
+                },
+                "absolute_errors": {
+                  "pts": 1.8765597147054125,
+                  "reb": 5.755214267493916,
+                  "ast": 0.4969329650366612,
+                  "three_pm": 0,
+                  "minutes": 0.9622799999999998
+                }
+              }
+            },
+            {
+              "id": "3133602",
+              "name": "Svi Mykhailiuk",
+              "team": "UTA",
+              "minutes": 20,
+              "pts": 3,
+              "reb": 0,
+              "ast": 2,
+              "three": 1,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 7,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 2.6938488705194565,
+                  "reb": 1.344002572833373,
+                  "ast": 0.8364172369396328,
+                  "three_pm": 0.44085426398264616
+                },
+                "absolute_errors": {
+                  "pts": 0.30615112948054346,
+                  "reb": 1.344002572833373,
+                  "ast": 1.1635827630603672,
+                  "three_pm": 0.5591457360173538,
+                  "minutes": 4.8562899999999996
+                }
+              }
+            },
+            {
+              "id": "4065663",
+              "name": "Josh Okogie",
+              "team": "UTA",
+              "minutes": 15,
+              "pts": 7,
+              "reb": 3,
+              "ast": 0,
+              "three": 1,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 1,
+              "fpts": 9,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 4.0540476058312445,
+                  "reb": 3.1405932107584094,
+                  "ast": 1.3269728111566963,
+                  "three_pm": 0.4593015318335667
+                },
+                "absolute_errors": {
+                  "pts": 2.9459523941687555,
+                  "reb": 0.14059321075840936,
+                  "ast": 1.3269728111566963,
+                  "three_pm": 0.5406984681664333,
+                  "minutes": 4.959589999999999
+                }
+              }
+            },
+            {
+              "id": "4683766",
+              "name": "Isaiah Collier",
+              "team": "UTA",
+              "minutes": 12,
+              "pts": 7,
+              "reb": 3,
+              "ast": 2,
+              "three": 1,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 1,
+              "fpts": 12,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 7.597773237291665,
+                  "reb": 3.442453119322166,
+                  "ast": 3.816054590371253,
+                  "three_pm": 0.5048979804384035
+                },
+                "absolute_errors": {
+                  "pts": 0.5977732372916646,
+                  "reb": 0.4424531193221659,
+                  "ast": 1.816054590371253,
+                  "three_pm": 0.4951020195615965,
+                  "minutes": 4.514700000000001
+                }
+              }
+            }
+          ]
+        },
+        {
+          "game_id": "401909974",
+          "tip_utc": "2026-11-12T02:30:00.000Z",
+          "home": {
+            "abbr": "HOU",
+            "score": 115
+          },
+          "away": {
+            "abbr": "GSW",
+            "score": 108
+          },
+          "players": [
+            {
+              "id": "6589",
+              "name": "Draymond Green",
+              "team": "GSW",
+              "minutes": 27,
+              "pts": 7,
+              "reb": 5,
+              "ast": 7,
+              "three": 1,
+              "stl": 0,
+              "blk": 1,
+              "stocks": 1,
+              "tov": 1,
+              "fpts": 30,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 2.9460685505424364,
+                  "reb": 4.6891587908628605,
+                  "ast": 7.429474824318364,
+                  "three_pm": 0.17367437187511206
+                },
+                "absolute_errors": {
+                  "pts": 4.053931449457563,
+                  "reb": 0.31084120913713953,
+                  "ast": 0.4294748243183637,
+                  "three_pm": 0.826325628124888,
+                  "minutes": 0.6043200000000013
+                }
+              }
+            },
+            {
+              "id": "5175737",
+              "name": "Yaxel Lendeborg",
+              "team": "GSW",
+              "minutes": 36,
+              "pts": 25,
+              "reb": 10,
+              "ast": 0,
+              "three": 2,
+              "stl": 2,
+              "blk": 0,
+              "stocks": 2,
+              "tov": 2,
+              "fpts": 37,
+              "double_double": true,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 21.169218240864865,
+                  "reb": 6.876025663308903,
+                  "ast": 4.067863153363169,
+                  "three_pm": 2.6079523646001395
+                },
+                "absolute_errors": {
+                  "pts": 3.830781759135135,
+                  "reb": 3.123974336691097,
+                  "ast": 4.067863153363169,
+                  "three_pm": 0.6079523646001395,
+                  "minutes": 4.428799999999999
+                }
+              }
+            },
+            {
+              "id": "3213",
+              "name": "Al Horford",
+              "team": "GSW",
+              "minutes": 21,
+              "pts": 2,
+              "reb": 1,
+              "ast": 4,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 6,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 4.832658104992579,
+                  "reb": 3.894651729280601,
+                  "ast": 2.6522673032949067,
+                  "three_pm": 1.1029977406179132
+                },
+                "absolute_errors": {
+                  "pts": 2.8326581049925794,
+                  "reb": 2.894651729280601,
+                  "ast": 1.3477326967050933,
+                  "three_pm": 1.1029977406179132,
+                  "minutes": 3.8999099999999984
+                }
+              }
+            },
+            {
+              "id": "3975",
+              "name": "Stephen Curry",
+              "team": "GSW",
+              "minutes": 6,
+              "pts": 3,
+              "reb": 0,
+              "ast": 0,
+              "three": 1,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 1,
+              "fpts": 1,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 30.14349286960232,
+                  "reb": 4.412316010921736,
+                  "ast": 4.120038354578146,
+                  "three_pm": 4.795715582772171
+                },
+                "absolute_errors": {
+                  "pts": 27.14349286960232,
+                  "reb": 4.412316010921736,
+                  "ast": 4.120038354578146,
+                  "three_pm": 3.7957155827721714,
+                  "minutes": 22.6973
+                }
+              }
+            },
+            {
+              "id": "4709138",
+              "name": "Brandin Podziemski",
+              "team": "GSW",
+              "minutes": 37,
+              "pts": 22,
+              "reb": 6,
+              "ast": 4,
+              "three": 4,
+              "stl": 2,
+              "blk": 0,
+              "stocks": 2,
+              "tov": 1,
+              "fpts": 44,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 16.988309123372236,
+                  "reb": 4.701678081167606,
+                  "ast": 3.807292495832304,
+                  "three_pm": 3.111373614155783
+                },
+                "absolute_errors": {
+                  "pts": 5.011690876627764,
+                  "reb": 1.2983219188323938,
+                  "ast": 0.192707504167696,
+                  "three_pm": 0.8886263858442169,
+                  "minutes": 4.736609999999999
+                }
+              }
+            },
+            {
+              "id": "2990969",
+              "name": "Georges Niang",
+              "team": "GSW",
+              "minutes": 19,
+              "pts": 5,
+              "reb": 5,
+              "ast": 0,
+              "three": 1,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 5,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 9.022619021391677,
+                  "reb": 2.901293815871278,
+                  "ast": 1.7420725433418893,
+                  "three_pm": 1.5972979336651425
+                },
+                "absolute_errors": {
+                  "pts": 4.022619021391677,
+                  "reb": 2.098706184128722,
+                  "ast": 1.7420725433418893,
+                  "three_pm": 0.5972979336651425,
+                  "minutes": 2.087869999999999
+                }
+              }
+            },
+            {
+              "id": "4703396",
+              "name": "Graham Ike",
+              "team": "GSW",
+              "minutes": 4,
+              "pts": 4,
+              "reb": 0,
+              "ast": 1,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 6,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": null
+            },
+            {
+              "id": "4897449",
+              "name": "Malevy Leons",
+              "team": "GSW",
+              "minutes": 4,
+              "pts": 0,
+              "reb": 3,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 2,
+              "stocks": 2,
+              "tov": 0,
+              "fpts": 10,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": null
+            },
+            {
+              "id": "4997536",
+              "name": "Gui Santos",
+              "team": "GSW",
+              "minutes": 12,
+              "pts": 0,
+              "reb": 3,
+              "ast": 1,
+              "three": 0,
+              "stl": 0,
+              "blk": 1,
+              "stocks": 1,
+              "tov": 4,
+              "fpts": -2,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 5.246889835810213,
+                  "reb": 4.213041611114262,
+                  "ast": 1.7106413432140828,
+                  "three_pm": 0.27099190783961447
+                },
+                "absolute_errors": {
+                  "pts": 5.246889835810213,
+                  "reb": 1.213041611114262,
+                  "ast": 0.7106413432140828,
+                  "three_pm": 0.27099190783961447,
+                  "minutes": 6.220320000000001
+                }
+              }
+            },
+            {
+              "id": "4397886",
+              "name": "Charles Bassey",
+              "team": "GSW",
+              "minutes": 13,
+              "pts": 7,
+              "reb": 6,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 1,
+              "stocks": 1,
+              "tov": 0,
+              "fpts": 18,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 9.15694577054025,
+                  "reb": 6.173655062395869,
+                  "ast": 0.638818703945122,
+                  "three_pm": 0
+                },
+                "absolute_errors": {
+                  "pts": 2.1569457705402506,
+                  "reb": 0.17365506239586903,
+                  "ast": 0.638818703945122,
+                  "three_pm": 0,
+                  "minutes": 1.1676099999999998
+                }
+              }
+            },
+            {
+              "id": "4066436",
+              "name": "De'Anthony Melton",
+              "team": "GSW",
+              "minutes": 25,
+              "pts": 11,
+              "reb": 4,
+              "ast": 4,
+              "three": 3,
+              "stl": 0,
+              "blk": 1,
+              "stocks": 1,
+              "tov": 2,
+              "fpts": 25,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 9.630413252051184,
+                  "reb": 4.400062669348879,
+                  "ast": 2.1154842628170196,
+                  "three_pm": 2.1326822808123658
+                },
+                "absolute_errors": {
+                  "pts": 1.3695867479488157,
+                  "reb": 0.4000626693488787,
+                  "ast": 1.8845157371829804,
+                  "three_pm": 0.8673177191876342,
+                  "minutes": 2.6804699999999997
+                }
+              }
+            },
+            {
+              "id": "4433149",
+              "name": "LJ Cryer",
+              "team": "GSW",
+              "minutes": 18,
+              "pts": 13,
+              "reb": 1,
+              "ast": 1,
+              "three": 3,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 18,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": null
+            },
+            {
+              "id": "4897262",
+              "name": "Will Richard",
+              "team": "GSW",
+              "minutes": 19,
+              "pts": 9,
+              "reb": 4,
+              "ast": 0,
+              "three": 2,
+              "stl": 1,
+              "blk": 0,
+              "stocks": 1,
+              "tov": 2,
+              "fpts": 14,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 5.539370004777291,
+                  "reb": 1.9485866586285043,
+                  "ast": 1.3332896425258147,
+                  "three_pm": 0.9212562572089016
+                },
+                "absolute_errors": {
+                  "pts": 3.4606299952227086,
+                  "reb": 2.0514133413714957,
+                  "ast": 1.3332896425258147,
+                  "three_pm": 1.0787437427910984,
+                  "minutes": 1.6022800000000004
+                }
+              }
+            },
+            {
+              "id": "3202",
+              "name": "Kevin Durant",
+              "team": "HOU",
+              "minutes": 34,
+              "pts": 20,
+              "reb": 4,
+              "ast": 5,
+              "three": 1,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 2,
+              "fpts": 29,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 20.420058073269523,
+                  "reb": 6.90193908273512,
+                  "ast": 3.900365307178592,
+                  "three_pm": 1.1440171185290957
+                },
+                "absolute_errors": {
+                  "pts": 0.42005807326952294,
+                  "reb": 2.9019390827351197,
+                  "ast": 1.0996346928214078,
+                  "three_pm": 0.1440171185290957,
+                  "minutes": 0.3228500000000025
+                }
+              }
+            },
+            {
+              "id": "4432639",
+              "name": "Jabari Smith Jr.",
+              "team": "HOU",
+              "minutes": 35,
+              "pts": 14,
+              "reb": 8,
+              "ast": 0,
+              "three": 2,
+              "stl": 1,
+              "blk": 3,
+              "stocks": 4,
+              "tov": 2,
+              "fpts": 32,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 16.318357005995104,
+                  "reb": 6.886331325599167,
+                  "ast": 2.5013741002131793,
+                  "three_pm": 2.69209947075804
+                },
+                "absolute_errors": {
+                  "pts": 2.3183570059951037,
+                  "reb": 1.1136686744008326,
+                  "ast": 2.5013741002131793,
+                  "three_pm": 0.6920994707580399,
+                  "minutes": 0.8654599999999988
+                }
+              }
+            },
+            {
+              "id": "4871144",
+              "name": "Alperen Sengun",
+              "team": "HOU",
+              "minutes": 37,
+              "pts": 19,
+              "reb": 13,
+              "ast": 9,
+              "three": 1,
+              "stl": 1,
+              "blk": 1,
+              "stocks": 2,
+              "tov": 2,
+              "fpts": 55,
+              "double_double": true,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 20.9145068053881,
+                  "reb": 9.066685239515111,
+                  "ast": 7.996289616910317,
+                  "three_pm": 0.8669870453827669
+                },
+                "absolute_errors": {
+                  "pts": 1.9145068053881005,
+                  "reb": 3.9333147604848886,
+                  "ast": 1.0037103830896834,
+                  "three_pm": 0.13301295461723306,
+                  "minutes": 2.24953
+                }
+              }
+            },
+            {
+              "id": "2991230",
+              "name": "Fred VanVleet",
+              "team": "HOU",
+              "minutes": 30,
+              "pts": 18,
+              "reb": 2,
+              "ast": 6,
+              "three": 4,
+              "stl": 3,
+              "blk": 0,
+              "stocks": 3,
+              "tov": 0,
+              "fpts": 51,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 13.905784678665878,
+                  "reb": 2.9447075166356864,
+                  "ast": 5.06579866500484,
+                  "three_pm": 3.0114136692876508
+                },
+                "absolute_errors": {
+                  "pts": 4.094215321334122,
+                  "reb": 0.9447075166356864,
+                  "ast": 0.9342013349951603,
+                  "three_pm": 0.9885863307123492,
+                  "minutes": 0.03719999999999857
+                }
+              }
+            },
+            {
+              "id": "4684740",
+              "name": "Amen Thompson",
+              "team": "HOU",
+              "minutes": 29,
+              "pts": 19,
+              "reb": 7,
+              "ast": 4,
+              "three": 0,
+              "stl": 1,
+              "blk": 2,
+              "stocks": 3,
+              "tov": 2,
+              "fpts": 45,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 14.043947863044654,
+                  "reb": 6.461997332469676,
+                  "ast": 2.518860474831338,
+                  "three_pm": 0.043421450561698695
+                },
+                "absolute_errors": {
+                  "pts": 4.956052136955346,
+                  "reb": 0.538002667530324,
+                  "ast": 1.481139525168662,
+                  "three_pm": 0.043421450561698695,
+                  "minutes": 4.50206
+                }
+              }
+            },
+            {
+              "id": "3136777",
+              "name": "Jae'Sean Tate",
+              "team": "HOU",
+              "minutes": 1,
+              "pts": 0,
+              "reb": 0,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 0,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": null
+            },
+            {
+              "id": "4433192",
+              "name": "Tari Eason",
+              "team": "HOU",
+              "minutes": 22,
+              "pts": 6,
+              "reb": 3,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 1,
+              "stocks": 1,
+              "tov": 1,
+              "fpts": 4,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 9.884440191671056,
+                  "reb": 6.3333678857285545,
+                  "ast": 1.8172933147736576,
+                  "three_pm": 1.2733370841285423
+                },
+                "absolute_errors": {
+                  "pts": 3.8844401916710556,
+                  "reb": 3.3333678857285545,
+                  "ast": 1.8172933147736576,
+                  "three_pm": 1.2733370841285423,
+                  "minutes": 2.1900499999999994
+                }
+              }
+            },
+            {
+              "id": "4592857",
+              "name": "Isaiah Crawford",
+              "team": "HOU",
+              "minutes": 1,
+              "pts": 0,
+              "reb": 0,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 0,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 2.6184669584640874,
+                  "reb": 0.7753714403856562,
+                  "ast": 0.11098059709747546,
+                  "three_pm": 0.32993600332089623
+                },
+                "absolute_errors": {
+                  "pts": 2.6184669584640874,
+                  "reb": 0.7753714403856562,
+                  "ast": 0.11098059709747546,
+                  "three_pm": 0.32993600332089623,
+                  "minutes": 4.2363
+                }
+              }
+            },
+            {
+              "id": "4432827",
+              "name": "Oscar Tshiebwe",
+              "team": "HOU",
+              "minutes": 1,
+              "pts": 0,
+              "reb": 0,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 0,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 2.1475260415503046,
+                  "reb": 1.8320988514712622,
+                  "ast": 0.2522323223812053,
+                  "three_pm": 0
+                },
+                "absolute_errors": {
+                  "pts": 2.1475260415503046,
+                  "reb": 1.8320988514712622,
+                  "ast": 0.2522323223812053,
+                  "three_pm": 0,
+                  "minutes": 4.99493
+                }
+              }
+            },
+            {
+              "id": "2990992",
+              "name": "Marcus Smart",
+              "team": "HOU",
+              "minutes": 17,
+              "pts": 6,
+              "reb": 2,
+              "ast": 1,
+              "three": 2,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 1,
+              "fpts": 12,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 7.434756697035426,
+                  "reb": 2.4950680382864214,
+                  "ast": 2.0741257113139953,
+                  "three_pm": 1.451298010483493
+                },
+                "absolute_errors": {
+                  "pts": 1.434756697035426,
+                  "reb": 0.49506803828642143,
+                  "ast": 1.0741257113139953,
+                  "three_pm": 0.5487019895165071,
+                  "minutes": 4.011189999999999
+                }
+              }
+            },
+            {
+              "id": "3037789",
+              "name": "Bogdan Bogdanovic",
+              "team": "HOU",
+              "minutes": 10,
+              "pts": 0,
+              "reb": 0,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 0,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 4.528581389066597,
+                  "reb": 1.176776145543137,
+                  "ast": 0.9609077648039902,
+                  "three_pm": 0.8859153858521323
+                },
+                "absolute_errors": {
+                  "pts": 4.528581389066597,
+                  "reb": 1.176776145543137,
+                  "ast": 0.9609077648039902,
+                  "three_pm": 0.8859153858521323,
+                  "minutes": 0.23052000000000028
+                }
+              }
+            },
+            {
+              "id": "4711272",
+              "name": "Reed Sheppard",
+              "team": "HOU",
+              "minutes": 20,
+              "pts": 13,
+              "reb": 1,
+              "ast": 1,
+              "three": 3,
+              "stl": 1,
+              "blk": 0,
+              "stocks": 1,
+              "tov": 1,
+              "fpts": 22,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 9.901049527944924,
+                  "reb": 1.3897402852016836,
+                  "ast": 1.9080863899542349,
+                  "three_pm": 2.321575175132394
+                },
+                "absolute_errors": {
+                  "pts": 3.0989504720550762,
+                  "reb": 0.3897402852016836,
+                  "ast": 0.9080863899542349,
+                  "three_pm": 0.6784248248676059,
+                  "minutes": 0.7148900000000005
+                }
+              }
+            },
+            {
+              "id": "5105837",
+              "name": "Bruce Thornton",
+              "team": "HOU",
+              "minutes": 3,
+              "pts": 0,
+              "reb": 0,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 0,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": null
+            }
+          ]
+        },
+        {
+          "game_id": "401909975",
+          "tip_utc": "2026-11-12T03:00:00.000Z",
+          "home": {
+            "abbr": "POR",
+            "score": 118
+          },
+          "away": {
+            "abbr": "OKC",
+            "score": 108
+          },
+          "players": [
+            {
+              "id": "4222252",
+              "name": "Isaiah Hartenstein",
+              "team": "OKC",
+              "minutes": 34,
+              "pts": 20,
+              "reb": 11,
+              "ast": 6,
+              "three": 0,
+              "stl": 2,
+              "blk": 0,
+              "stocks": 2,
+              "tov": 6,
+              "fpts": 45,
+              "double_double": true,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 6.023920235351377,
+                  "reb": 11.016020108344494,
+                  "ast": 4.3487933307413495,
+                  "three_pm": 0
+                },
+                "absolute_errors": {
+                  "pts": 13.976079764648624,
+                  "reb": 0.016020108344493522,
+                  "ast": 1.6512066692586505,
+                  "three_pm": 0,
+                  "minutes": 9.66871
+                }
+              }
+            },
+            {
+              "id": "5174983",
+              "name": "Aday Mara",
+              "team": "OKC",
+              "minutes": 32,
+              "pts": 11,
+              "reb": 6,
+              "ast": 2,
+              "three": 0,
+              "stl": 0,
+              "blk": 1,
+              "stocks": 1,
+              "tov": 2,
+              "fpts": 20,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 9.670922306847572,
+                  "reb": 7.443379925171547,
+                  "ast": 1.4423830904576185,
+                  "three_pm": 0.1316075695586081
+                },
+                "absolute_errors": {
+                  "pts": 1.3290776931524277,
+                  "reb": 1.4433799251715467,
+                  "ast": 0.5576169095423815,
+                  "three_pm": 0.1316075695586081,
+                  "minutes": 9.196860000000001
+                }
+              }
+            },
+            {
+              "id": "2991350",
+              "name": "Alex Caruso",
+              "team": "OKC",
+              "minutes": 29,
+              "pts": 14,
+              "reb": 7,
+              "ast": 2,
+              "three": 4,
+              "stl": 3,
+              "blk": 0,
+              "stocks": 3,
+              "tov": 3,
+              "fpts": 37,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 6.096313681966256,
+                  "reb": 3.7644037277920313,
+                  "ast": 2.8006687323633543,
+                  "three_pm": 1.3928073120158184
+                },
+                "absolute_errors": {
+                  "pts": 7.903686318033744,
+                  "reb": 3.2355962722079687,
+                  "ast": 0.8006687323633543,
+                  "three_pm": 2.6071926879841816,
+                  "minutes": 11.72505
+                }
+              }
+            },
+            {
+              "id": "4278073",
+              "name": "Shai Gilgeous-Alexander",
+              "team": "OKC",
+              "minutes": 36,
+              "pts": 31,
+              "reb": 4,
+              "ast": 2,
+              "three": 0,
+              "stl": 1,
+              "blk": 0,
+              "stocks": 1,
+              "tov": 2,
+              "fpts": 36,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 30.114206083489865,
+                  "reb": 4.385048137821349,
+                  "ast": 5.143728846402336,
+                  "three_pm": 2.3609053790024834
+                },
+                "absolute_errors": {
+                  "pts": 0.885793916510135,
+                  "reb": 0.3850481378213493,
+                  "ast": 3.143728846402336,
+                  "three_pm": 2.3609053790024834,
+                  "minutes": 4.549309999999998
+                }
+              }
+            },
+            {
+              "id": "4683778",
+              "name": "Jared McCain",
+              "team": "OKC",
+              "minutes": 31,
+              "pts": 10,
+              "reb": 6,
+              "ast": 3,
+              "three": 2,
+              "stl": 1,
+              "blk": 0,
+              "stocks": 1,
+              "tov": 1,
+              "fpts": 16,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 14.224340535708022,
+                  "reb": 3.8614694744850926,
+                  "ast": 1.759416163041838,
+                  "three_pm": 1.781322208231365
+                },
+                "absolute_errors": {
+                  "pts": 4.224340535708022,
+                  "reb": 2.1385305255149074,
+                  "ast": 1.240583836958162,
+                  "three_pm": 0.2186777917686351,
+                  "minutes": 4.066089999999999
+                }
+              }
+            },
+            {
+              "id": "3133626",
+              "name": "Kenrich Williams",
+              "team": "OKC",
+              "minutes": 26,
+              "pts": 11,
+              "reb": 2,
+              "ast": 2,
+              "three": 2,
+              "stl": 0,
+              "blk": 1,
+              "stocks": 1,
+              "tov": 0,
+              "fpts": 18,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 7.1720122779752575,
+                  "reb": 3.9914849763620333,
+                  "ast": 1.3917291395984868,
+                  "three_pm": 1.557928913911302
+                },
+                "absolute_errors": {
+                  "pts": 3.8279877220247425,
+                  "reb": 1.9914849763620333,
+                  "ast": 0.6082708604015132,
+                  "three_pm": 0.44207108608869805,
+                  "minutes": 4.919499999999999
+                }
+              }
+            },
+            {
+              "id": "4432185",
+              "name": "Micah Peavy",
+              "team": "OKC",
+              "minutes": 12,
+              "pts": 0,
+              "reb": 3,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 1,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 4.256495778776438,
+                  "reb": 3.5716728509106677,
+                  "ast": 0.1081799913315379,
+                  "three_pm": 0.6604158729378098
+                },
+                "absolute_errors": {
+                  "pts": 4.256495778776438,
+                  "reb": 0.5716728509106677,
+                  "ast": 0.1081799913315379,
+                  "three_pm": 0.6604158729378098,
+                  "minutes": 7.0105499999999985
+                }
+              }
+            },
+            {
+              "id": "4702384",
+              "name": "Nique Clifford",
+              "team": "OKC",
+              "minutes": 16,
+              "pts": 5,
+              "reb": 3,
+              "ast": 1,
+              "three": 1,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 0,
+              "fpts": 10,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": null
+            },
+            {
+              "id": "5241364",
+              "name": "Bennett Stirtz",
+              "team": "OKC",
+              "minutes": 25,
+              "pts": 6,
+              "reb": 1,
+              "ast": 1,
+              "three": 2,
+              "stl": 3,
+              "blk": 1,
+              "stocks": 4,
+              "tov": 1,
+              "fpts": 20,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 11.107150794009923,
+                  "reb": 1.6684063193657526,
+                  "ast": 1.2761933925225353,
+                  "three_pm": 2.2691901888851533
+                },
+                "absolute_errors": {
+                  "pts": 5.1071507940099234,
+                  "reb": 0.6684063193657526,
+                  "ast": 0.2761933925225353,
+                  "three_pm": 0.26919018888515334,
+                  "minutes": 3.6225500000000004
+                }
+              }
+            },
+            {
+              "id": "4431736",
+              "name": "Toumani Camara",
+              "team": "POR",
+              "minutes": 38,
+              "pts": 14,
+              "reb": 5,
+              "ast": 3,
+              "three": 2,
+              "stl": 1,
+              "blk": 2,
+              "stocks": 3,
+              "tov": 0,
+              "fpts": 39,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 11.381615050424966,
+                  "reb": 3.633935207906959,
+                  "ast": 1.2801962661762967,
+                  "three_pm": 2.5185496960226508
+                },
+                "absolute_errors": {
+                  "pts": 2.6183849495750344,
+                  "reb": 1.366064792093041,
+                  "ast": 1.7198037338237033,
+                  "three_pm": 0.5185496960226508,
+                  "minutes": 10.02018
+                }
+              }
+            },
+            {
+              "id": "4683021",
+              "name": "Deni Avdija",
+              "team": "POR",
+              "minutes": 35,
+              "pts": 28,
+              "reb": 3,
+              "ast": 6,
+              "three": 4,
+              "stl": 4,
+              "blk": 2,
+              "stocks": 6,
+              "tov": 5,
+              "fpts": 59,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 21.097136161517138,
+                  "reb": 6.170925129238204,
+                  "ast": 6.262233026352879,
+                  "three_pm": 1.7549576320869045
+                },
+                "absolute_errors": {
+                  "pts": 6.902863838482862,
+                  "reb": 3.1709251292382037,
+                  "ast": 0.26223302635287915,
+                  "three_pm": 2.2450423679130953,
+                  "minutes": 2.622410000000002
+                }
+              }
+            },
+            {
+              "id": "5105565",
+              "name": "Donovan Clingan",
+              "team": "POR",
+              "minutes": 30,
+              "pts": 5,
+              "reb": 12,
+              "ast": 2,
+              "three": 1,
+              "stl": 1,
+              "blk": 3,
+              "stocks": 4,
+              "tov": 2,
+              "fpts": 34,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 10.47974008140268,
+                  "reb": 10.475884057995193,
+                  "ast": 1.4087518304509037,
+                  "three_pm": 1.005716787632443
+                },
+                "absolute_errors": {
+                  "pts": 5.47974008140268,
+                  "reb": 1.5241159420048067,
+                  "ast": 0.5912481695490963,
+                  "three_pm": 0.005716787632443099,
+                  "minutes": 4.747199999999999
+                }
+              }
+            },
+            {
+              "id": "6606",
+              "name": "Damian Lillard",
+              "team": "POR",
+              "minutes": 32,
+              "pts": 18,
+              "reb": 3,
+              "ast": 3,
+              "three": 2,
+              "stl": 1,
+              "blk": 0,
+              "stocks": 1,
+              "tov": 2,
+              "fpts": 25,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 19.444770820305234,
+                  "reb": 2.724508552644796,
+                  "ast": 4.729967415511526,
+                  "three_pm": 2.9447491553482474
+                },
+                "absolute_errors": {
+                  "pts": 1.4447708203052336,
+                  "reb": 0.27549144735520414,
+                  "ast": 1.7299674155115259,
+                  "three_pm": 0.9447491553482474,
+                  "minutes": 3.9182200000000016
+                }
+              }
+            },
+            {
+              "id": "5081727",
+              "name": "Sidy Cissoko",
+              "team": "POR",
+              "minutes": 29,
+              "pts": 19,
+              "reb": 2,
+              "ast": 0,
+              "three": 4,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 2,
+              "fpts": 23,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 6.968359367416307,
+                  "reb": 3.5569785302735686,
+                  "ast": 2.221808955171382,
+                  "three_pm": 1.1023840613168925
+                },
+                "absolute_errors": {
+                  "pts": 12.031640632583693,
+                  "reb": 1.5569785302735686,
+                  "ast": 2.221808955171382,
+                  "three_pm": 2.8976159386831073,
+                  "minutes": 5.99268
+                }
+              }
+            },
+            {
+              "id": "4066211",
+              "name": "Robert Williams III",
+              "team": "POR",
+              "minutes": 17,
+              "pts": 10,
+              "reb": 7,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 1,
+              "stocks": 1,
+              "tov": 1,
+              "fpts": 21,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 6.7744512206335274,
+                  "reb": 6.260287771153479,
+                  "ast": 0.969054681986616,
+                  "three_pm": 0.0853530342593701
+                },
+                "absolute_errors": {
+                  "pts": 3.2255487793664726,
+                  "reb": 0.7397122288465212,
+                  "ast": 0.969054681986616,
+                  "three_pm": 0.0853530342593701,
+                  "minutes": 0.6019299999999994
+                }
+              }
+            },
+            {
+              "id": "4592435",
+              "name": "Branden Carlson",
+              "team": "POR",
+              "minutes": 10,
+              "pts": 0,
+              "reb": 2,
+              "ast": 0,
+              "three": 0,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 1,
+              "fpts": -1,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 1.878749639596476,
+                  "reb": 2.6653668397201926,
+                  "ast": 0.18148437028684206,
+                  "three_pm": 0
+                },
+                "absolute_errors": {
+                  "pts": 1.878749639596476,
+                  "reb": 0.6653668397201926,
+                  "ast": 0.18148437028684206,
+                  "three_pm": 0,
+                  "minutes": 2.2176
+                }
+              }
+            },
+            {
+              "id": "3995",
+              "name": "Jrue Holiday",
+              "team": "POR",
+              "minutes": 30,
+              "pts": 19,
+              "reb": 3,
+              "ast": 5,
+              "three": 5,
+              "stl": 2,
+              "blk": 0,
+              "stocks": 2,
+              "tov": 3,
+              "fpts": 37,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 12.046024171231855,
+                  "reb": 2.7162213685044967,
+                  "ast": 3.184948473388396,
+                  "three_pm": 2.275333247469148
+                },
+                "absolute_errors": {
+                  "pts": 6.9539758287681455,
+                  "reb": 0.2837786314955033,
+                  "ast": 1.815051526611604,
+                  "three_pm": 2.724666752530852,
+                  "minutes": 4.132449999999999
+                }
+              }
+            },
+            {
+              "id": "4683678",
+              "name": "Scoot Henderson",
+              "team": "POR",
+              "minutes": 19,
+              "pts": 5,
+              "reb": 2,
+              "ast": 2,
+              "three": 1,
+              "stl": 0,
+              "blk": 0,
+              "stocks": 0,
+              "tov": 2,
+              "fpts": 5,
+              "double_double": false,
+              "triple_double": false,
+              "projection_grade": {
+                "disposition": "played_scored",
+                "projection_if_play": {
+                  "pts": 8.434131523249166,
+                  "reb": 2.032603112715495,
+                  "ast": 1.6545784938893149,
+                  "three_pm": 1.0401160453932543
+                },
+                "absolute_errors": {
+                  "pts": 3.4341315232491656,
+                  "reb": 0.0326031127154951,
+                  "ast": 0.3454215061106851,
+                  "three_pm": 0.04011604539325431,
+                  "minutes": 3.9592600000000004
+                }
+              }
+            }
+          ]
         }
       ]
     }
@@ -56032,6 +58081,41 @@
       "name": "Toumani Camara",
       "team": "POR",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "4431736",
+          "name": "Toumani Camara",
+          "team": "POR",
+          "minutes": 38,
+          "pts": 14,
+          "reb": 5,
+          "ast": 3,
+          "three": 2,
+          "stl": 1,
+          "blk": 2,
+          "stocks": 3,
+          "tov": 0,
+          "fpts": 39,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 11.381615050424966,
+              "reb": 3.633935207906959,
+              "ast": 1.2801962661762967,
+              "three_pm": 2.5185496960226508
+            },
+            "absolute_errors": {
+              "pts": 2.6183849495750344,
+              "reb": 1.366064792093041,
+              "ast": 1.7198037338237033,
+              "three_pm": 0.5185496960226508,
+              "minutes": 10.02018
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -56212,20 +58296,20 @@
         "games": 5,
         "averages": {
           "pts": 11.4,
-          "reb": 4.4,
-          "ast": 1,
-          "three": 2.6,
-          "fpts": 17.8
+          "reb": 4.6,
+          "ast": 1.6,
+          "three": 2.2,
+          "fpts": 20.2
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 11.4,
-          "reb": 4.4,
-          "ast": 1,
-          "three": 2.6,
-          "fpts": 17.8
+          "pts": 11.833333333333334,
+          "reb": 4.5,
+          "ast": 1.3333333333333333,
+          "three": 2.5,
+          "fpts": 21.333333333333332
         }
       }
     },
@@ -56234,6 +58318,41 @@
       "name": "Deni Avdija",
       "team": "POR",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "4683021",
+          "name": "Deni Avdija",
+          "team": "POR",
+          "minutes": 35,
+          "pts": 28,
+          "reb": 3,
+          "ast": 6,
+          "three": 4,
+          "stl": 4,
+          "blk": 2,
+          "stocks": 6,
+          "tov": 5,
+          "fpts": 59,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 21.097136161517138,
+              "reb": 6.170925129238204,
+              "ast": 6.262233026352879,
+              "three_pm": 1.7549576320869045
+            },
+            "absolute_errors": {
+              "pts": 6.902863838482862,
+              "reb": 3.1709251292382037,
+              "ast": 0.26223302635287915,
+              "three_pm": 2.2450423679130953,
+              "minutes": 2.622410000000002
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -56413,21 +58532,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 22.6,
-          "reb": 5.4,
-          "ast": 5.4,
-          "three": 1.8,
-          "fpts": 33.4
+          "pts": 23.4,
+          "reb": 5,
+          "ast": 6.2,
+          "three": 2.2,
+          "fpts": 39.2
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 22.6,
-          "reb": 5.4,
-          "ast": 5.4,
-          "three": 1.8,
-          "fpts": 33.4
+          "pts": 23.5,
+          "reb": 5,
+          "ast": 5.5,
+          "three": 2.1666666666666665,
+          "fpts": 37.666666666666664
         }
       }
     },
@@ -56436,6 +58555,41 @@
       "name": "Donovan Clingan",
       "team": "POR",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "5105565",
+          "name": "Donovan Clingan",
+          "team": "POR",
+          "minutes": 30,
+          "pts": 5,
+          "reb": 12,
+          "ast": 2,
+          "three": 1,
+          "stl": 1,
+          "blk": 3,
+          "stocks": 4,
+          "tov": 2,
+          "fpts": 34,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 10.47974008140268,
+              "reb": 10.475884057995193,
+              "ast": 1.4087518304509037,
+              "three_pm": 1.005716787632443
+            },
+            "absolute_errors": {
+              "pts": 5.47974008140268,
+              "reb": 1.5241159420048067,
+              "ast": 0.5912481695490963,
+              "three_pm": 0.005716787632443099,
+              "minutes": 4.747199999999999
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -56615,21 +58769,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 10.2,
-          "reb": 11.2,
-          "ast": 1.4,
-          "three": 1,
-          "fpts": 31.2
+          "pts": 10.4,
+          "reb": 11.8,
+          "ast": 1.8,
+          "three": 1.2,
+          "fpts": 34.8
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 10.2,
-          "reb": 11.2,
-          "ast": 1.4,
+          "pts": 9.333333333333334,
+          "reb": 11.333333333333334,
+          "ast": 1.5,
           "three": 1,
-          "fpts": 31.2
+          "fpts": 31.666666666666668
         }
       }
     },
@@ -56638,6 +58792,41 @@
       "name": "Damian Lillard",
       "team": "POR",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "6606",
+          "name": "Damian Lillard",
+          "team": "POR",
+          "minutes": 32,
+          "pts": 18,
+          "reb": 3,
+          "ast": 3,
+          "three": 2,
+          "stl": 1,
+          "blk": 0,
+          "stocks": 1,
+          "tov": 2,
+          "fpts": 25,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 19.444770820305234,
+              "reb": 2.724508552644796,
+              "ast": 4.729967415511526,
+              "three_pm": 2.9447491553482474
+            },
+            "absolute_errors": {
+              "pts": 1.4447708203052336,
+              "reb": 0.27549144735520414,
+              "ast": 1.7299674155115259,
+              "three_pm": 0.9447491553482474,
+              "minutes": 3.9182200000000016
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -56817,21 +59006,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 20.2,
-          "reb": 2.8,
-          "ast": 4.8,
-          "three": 2.8,
-          "fpts": 32.4
+          "pts": 19.4,
+          "reb": 2.4,
+          "ast": 4.6,
+          "three": 2.6,
+          "fpts": 30.6
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 20.2,
-          "reb": 2.8,
-          "ast": 4.8,
-          "three": 2.8,
-          "fpts": 32.4
+          "pts": 19.833333333333332,
+          "reb": 2.8333333333333335,
+          "ast": 4.5,
+          "three": 2.6666666666666665,
+          "fpts": 31.166666666666668
         }
       }
     },
@@ -56840,6 +59029,41 @@
       "name": "Scoot Henderson",
       "team": "POR",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "4683678",
+          "name": "Scoot Henderson",
+          "team": "POR",
+          "minutes": 19,
+          "pts": 5,
+          "reb": 2,
+          "ast": 2,
+          "three": 1,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 2,
+          "fpts": 5,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 8.434131523249166,
+              "reb": 2.032603112715495,
+              "ast": 1.6545784938893149,
+              "three_pm": 1.0401160453932543
+            },
+            "absolute_errors": {
+              "pts": 3.4341315232491656,
+              "reb": 0.0326031127154951,
+              "ast": 0.3454215061106851,
+              "three_pm": 0.04011604539325431,
+              "minutes": 3.9592600000000004
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -57019,21 +59243,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 9.6,
-          "reb": 2,
-          "ast": 1.6,
+          "pts": 7.8,
+          "reb": 1.8,
+          "ast": 1.8,
           "three": 1.2,
-          "fpts": 11.8
+          "fpts": 8.8
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 9.6,
+          "pts": 8.833333333333334,
           "reb": 2,
-          "ast": 1.6,
-          "three": 1.2,
-          "fpts": 11.8
+          "ast": 1.6666666666666667,
+          "three": 1.1666666666666667,
+          "fpts": 10.666666666666666
         }
       }
     },
@@ -57042,6 +59266,41 @@
       "name": "Robert Williams III",
       "team": "POR",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "4066211",
+          "name": "Robert Williams III",
+          "team": "POR",
+          "minutes": 17,
+          "pts": 10,
+          "reb": 7,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 1,
+          "stocks": 1,
+          "tov": 1,
+          "fpts": 21,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 6.7744512206335274,
+              "reb": 6.260287771153479,
+              "ast": 0.969054681986616,
+              "three_pm": 0.0853530342593701
+            },
+            "absolute_errors": {
+              "pts": 3.2255487793664726,
+              "reb": 0.7397122288465212,
+              "ast": 0.969054681986616,
+              "three_pm": 0.0853530342593701,
+              "minutes": 0.6019299999999994
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -57184,23 +59443,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 5,
-          "reb": 4.5,
-          "ast": 1.25,
+          "pts": 6,
+          "reb": 5,
+          "ast": 1,
           "three": 0,
-          "fpts": 16.75
+          "fpts": 17.6
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 5,
-          "reb": 4.5,
-          "ast": 1.25,
+          "pts": 6,
+          "reb": 5,
+          "ast": 1,
           "three": 0,
-          "fpts": 16.75
+          "fpts": 17.6
         }
       }
     },
@@ -57312,6 +59571,41 @@
       "team": "POR",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "4592435",
+          "name": "Branden Carlson",
+          "team": "POR",
+          "minutes": 10,
+          "pts": 0,
+          "reb": 2,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 1,
+          "fpts": -1,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 1.878749639596476,
+              "reb": 2.6653668397201926,
+              "ast": 0.18148437028684206,
+              "three_pm": 0
+            },
+            "absolute_errors": {
+              "pts": 1.878749639596476,
+              "reb": 0.6653668397201926,
+              "ast": 0.18148437028684206,
+              "three_pm": 0,
+              "minutes": 2.2176
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
           "id": "4592435",
@@ -57373,23 +59667,23 @@
         }
       ],
       "last5": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 2,
-          "reb": 3,
-          "ast": 0.3333333333333333,
+          "pts": 1.5,
+          "reb": 2.75,
+          "ast": 0.25,
           "three": 0,
-          "fpts": 8
+          "fpts": 5.75
         }
       },
       "last10": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 2,
-          "reb": 3,
-          "ast": 0.3333333333333333,
+          "pts": 1.5,
+          "reb": 2.75,
+          "ast": 0.25,
           "three": 0,
-          "fpts": 8
+          "fpts": 5.75
         }
       }
     },
@@ -57550,6 +59844,41 @@
       "name": "Jrue Holiday",
       "team": "POR",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "3995",
+          "name": "Jrue Holiday",
+          "team": "POR",
+          "minutes": 30,
+          "pts": 19,
+          "reb": 3,
+          "ast": 5,
+          "three": 5,
+          "stl": 2,
+          "blk": 0,
+          "stocks": 2,
+          "tov": 3,
+          "fpts": 37,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 12.046024171231855,
+              "reb": 2.7162213685044967,
+              "ast": 3.184948473388396,
+              "three_pm": 2.275333247469148
+            },
+            "absolute_errors": {
+              "pts": 6.9539758287681455,
+              "reb": 0.2837786314955033,
+              "ast": 1.815051526611604,
+              "three_pm": 2.724666752530852,
+              "minutes": 4.132449999999999
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -57729,21 +60058,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 13,
-          "reb": 2.8,
-          "ast": 4.4,
-          "three": 2.2,
-          "fpts": 28
+          "pts": 14,
+          "reb": 2.6,
+          "ast": 4.8,
+          "three": 2.8,
+          "fpts": 29.4
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 13,
-          "reb": 2.8,
-          "ast": 4.4,
-          "three": 2.2,
-          "fpts": 28
+          "pts": 14,
+          "reb": 2.8333333333333335,
+          "ast": 4.5,
+          "three": 2.6666666666666665,
+          "fpts": 29.5
         }
       }
     },
@@ -58022,6 +60351,41 @@
       "team": "POR",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "5081727",
+          "name": "Sidy Cissoko",
+          "team": "POR",
+          "minutes": 29,
+          "pts": 19,
+          "reb": 2,
+          "ast": 0,
+          "three": 4,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 2,
+          "fpts": 23,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 6.968359367416307,
+              "reb": 3.5569785302735686,
+              "ast": 2.221808955171382,
+              "three_pm": 1.1023840613168925
+            },
+            "absolute_errors": {
+              "pts": 12.031640632583693,
+              "reb": 1.5569785302735686,
+              "ast": 2.221808955171382,
+              "three_pm": 2.8976159386831073,
+              "minutes": 5.99268
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
           "id": "5081727",
@@ -58200,21 +60564,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 7.4,
-          "reb": 2.8,
-          "ast": 1.6,
-          "three": 1.4,
-          "fpts": 15.2
+          "pts": 11,
+          "reb": 2.6,
+          "ast": 1.4,
+          "three": 2.2,
+          "fpts": 18.4
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 7.4,
-          "reb": 2.8,
-          "ast": 1.6,
-          "three": 1.4,
-          "fpts": 15.2
+          "pts": 9.333333333333334,
+          "reb": 2.6666666666666665,
+          "ast": 1.3333333333333333,
+          "three": 1.8333333333333333,
+          "fpts": 16.5
         }
       }
     },
@@ -58355,6 +60719,41 @@
       "name": "Jaxson Hayes",
       "team": "UTA",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4397077",
+          "name": "Jaxson Hayes",
+          "team": "UTA",
+          "minutes": 30,
+          "pts": 11,
+          "reb": 8,
+          "ast": 0,
+          "three": 0,
+          "stl": 2,
+          "blk": 0,
+          "stocks": 2,
+          "tov": 1,
+          "fpts": 25,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 8.553733863220968,
+              "reb": 5.386356117646896,
+              "ast": 1.5257288331299823,
+              "three_pm": 0
+            },
+            "absolute_errors": {
+              "pts": 2.446266136779032,
+              "reb": 2.613643882353104,
+              "ast": 1.5257288331299823,
+              "three_pm": 0,
+              "minutes": 5.953140000000001
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909963",
@@ -58534,21 +60933,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 9.6,
-          "reb": 5.2,
-          "ast": 1.4,
+          "pts": 10.4,
+          "reb": 5.4,
+          "ast": 1,
           "three": 0,
-          "fpts": 23.8
+          "fpts": 24.8
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 9.6,
-          "reb": 5.2,
-          "ast": 1.4,
+          "pts": 9.833333333333334,
+          "reb": 5.666666666666667,
+          "ast": 1.1666666666666667,
           "three": 0,
-          "fpts": 23.8
+          "fpts": 24
         }
       }
     },
@@ -58557,6 +60956,41 @@
       "name": "Keyonte George",
       "team": "UTA",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4433627",
+          "name": "Keyonte George",
+          "team": "UTA",
+          "minutes": 33,
+          "pts": 13,
+          "reb": 7,
+          "ast": 7,
+          "three": 2,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 3,
+          "fpts": 23,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 19.858895506346933,
+              "reb": 4.77651346135008,
+              "ast": 6.21687692265339,
+              "three_pm": 1.3485897803139117
+            },
+            "absolute_errors": {
+              "pts": 6.858895506346933,
+              "reb": 2.2234865386499196,
+              "ast": 0.7831230773466098,
+              "three_pm": 0.6514102196860883,
+              "minutes": 0.865479999999998
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-09",
           "game_id": "401909947",
@@ -58699,23 +61133,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 12.5,
-          "reb": 5.25,
-          "ast": 5.25,
-          "three": 0.5,
-          "fpts": 21.75
+          "pts": 12.6,
+          "reb": 5.6,
+          "ast": 5.6,
+          "three": 0.8,
+          "fpts": 22
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 12.5,
-          "reb": 5.25,
-          "ast": 5.25,
-          "three": 0.5,
-          "fpts": 21.75
+          "pts": 12.6,
+          "reb": 5.6,
+          "ast": 5.6,
+          "three": 0.8,
+          "fpts": 22
         }
       }
     },
@@ -58724,6 +61158,41 @@
       "name": "Ace Bailey",
       "team": "UTA",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4873138",
+          "name": "Ace Bailey",
+          "team": "UTA",
+          "minutes": 31,
+          "pts": 18,
+          "reb": 7,
+          "ast": 2,
+          "three": 3,
+          "stl": 2,
+          "blk": 4,
+          "stocks": 6,
+          "tov": 2,
+          "fpts": 46,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 13.173079745909654,
+              "reb": 6.079615074780799,
+              "ast": 1.7679845758253696,
+              "three_pm": 1.3059070944005757
+            },
+            "absolute_errors": {
+              "pts": 4.826920254090346,
+              "reb": 0.9203849252192011,
+              "ast": 0.2320154241746304,
+              "three_pm": 1.6940929055994243,
+              "minutes": 1.3128799999999998
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909963",
@@ -58903,21 +61372,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 11.2,
+          "pts": 13,
           "reb": 5.6,
-          "ast": 1.6,
-          "three": 1.2,
-          "fpts": 24.8
+          "ast": 1.8,
+          "three": 1.6,
+          "fpts": 27.8
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 11.2,
-          "reb": 5.6,
-          "ast": 1.6,
-          "three": 1.2,
-          "fpts": 24.8
+          "pts": 12.333333333333334,
+          "reb": 5.833333333333333,
+          "ast": 1.6666666666666667,
+          "three": 1.5,
+          "fpts": 28.333333333333332
         }
       }
     },
@@ -58926,6 +61395,41 @@
       "name": "Darryn Peterson",
       "team": "UTA",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "5041955",
+          "name": "Darryn Peterson",
+          "team": "UTA",
+          "minutes": 33,
+          "pts": 22,
+          "reb": 4,
+          "ast": 5,
+          "three": 2,
+          "stl": 1,
+          "blk": 1,
+          "stocks": 2,
+          "tov": 1,
+          "fpts": 39,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 18.25020307990162,
+              "reb": 3.952145026891518,
+              "ast": 4.226324189886017,
+              "three_pm": 2.5982592860099465
+            },
+            "absolute_errors": {
+              "pts": 3.7497969200983796,
+              "reb": 0.04785497310848186,
+              "ast": 0.7736758101139829,
+              "three_pm": 0.5982592860099465,
+              "minutes": 1.7033999999999985
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909963",
@@ -59105,21 +61609,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 20.4,
+          "pts": 21.6,
           "reb": 4,
-          "ast": 4.6,
-          "three": 3.2,
-          "fpts": 42
+          "ast": 4.8,
+          "three": 3,
+          "fpts": 44
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 20.4,
+          "pts": 20.666666666666668,
           "reb": 4,
-          "ast": 4.6,
-          "three": 3.2,
-          "fpts": 42
+          "ast": 4.666666666666667,
+          "three": 3,
+          "fpts": 41.5
         }
       }
     },
@@ -59316,6 +61820,41 @@
       "team": "UTA",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "5105839",
+          "name": "Brice Sensabaugh",
+          "team": "UTA",
+          "minutes": 23,
+          "pts": 19,
+          "reb": 3,
+          "ast": 1,
+          "three": 3,
+          "stl": 1,
+          "blk": 1,
+          "stocks": 2,
+          "tov": 1,
+          "fpts": 34,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 6.0179305575908355,
+              "reb": 2.884093499770449,
+              "ast": 1.530591666811068,
+              "three_pm": 1.1257558409642374
+            },
+            "absolute_errors": {
+              "pts": 12.982069442409164,
+              "reb": 0.11590650022955096,
+              "ast": 0.530591666811068,
+              "three_pm": 1.8742441590357626,
+              "minutes": 9.38037
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-11",
           "game_id": "401909963",
           "id": "5105839",
@@ -59494,21 +62033,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 5.2,
+          "pts": 6.6,
           "reb": 2.8,
-          "ast": 1.8,
-          "three": 0.8,
-          "fpts": 9
+          "ast": 1.6,
+          "three": 1,
+          "fpts": 12.2
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 5.2,
-          "reb": 2.8,
-          "ast": 1.8,
-          "three": 0.8,
-          "fpts": 9
+          "pts": 7.5,
+          "reb": 2.8333333333333335,
+          "ast": 1.6666666666666667,
+          "three": 1.1666666666666667,
+          "fpts": 13.166666666666666
         }
       }
     },
@@ -59517,6 +62056,41 @@
       "name": "Mo Bamba",
       "team": "UTA",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4277919",
+          "name": "Mo Bamba",
+          "team": "UTA",
+          "minutes": 18,
+          "pts": 5,
+          "reb": 1,
+          "ast": 1,
+          "three": 0,
+          "stl": 0,
+          "blk": 2,
+          "stocks": 2,
+          "tov": 0,
+          "fpts": 16,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 6.8765597147054125,
+              "reb": 6.755214267493916,
+              "ast": 0.5030670349633388,
+              "three_pm": 0
+            },
+            "absolute_errors": {
+              "pts": 1.8765597147054125,
+              "reb": 5.755214267493916,
+              "ast": 0.4969329650366612,
+              "three_pm": 0,
+              "minutes": 0.9622799999999998
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909963",
@@ -59659,23 +62233,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 6,
-          "reb": 5.5,
-          "ast": 0.25,
+          "pts": 5.8,
+          "reb": 4.6,
+          "ast": 0.4,
           "three": 0,
-          "fpts": 20.5
+          "fpts": 19.6
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 6,
-          "reb": 5.5,
-          "ast": 0.25,
+          "pts": 5.8,
+          "reb": 4.6,
+          "ast": 0.4,
           "three": 0,
-          "fpts": 20.5
+          "fpts": 19.6
         }
       }
     },
@@ -59684,6 +62258,41 @@
       "name": "Svi Mykhailiuk",
       "team": "UTA",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "3133602",
+          "name": "Svi Mykhailiuk",
+          "team": "UTA",
+          "minutes": 20,
+          "pts": 3,
+          "reb": 0,
+          "ast": 2,
+          "three": 1,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 7,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 2.6938488705194565,
+              "reb": 1.344002572833373,
+              "ast": 0.8364172369396328,
+              "three_pm": 0.44085426398264616
+            },
+            "absolute_errors": {
+              "pts": 0.30615112948054346,
+              "reb": 1.344002572833373,
+              "ast": 1.1635827630603672,
+              "three_pm": 0.5591457360173538,
+              "minutes": 4.8562899999999996
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909963",
@@ -59863,21 +62472,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 3.2,
-          "reb": 1,
-          "ast": 1.4,
-          "three": 0.8,
-          "fpts": 5.6
+          "pts": 2.6,
+          "reb": 0.8,
+          "ast": 1.2,
+          "three": 0.6,
+          "fpts": 4.2
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 3.2,
-          "reb": 1,
-          "ast": 1.4,
-          "three": 0.8,
-          "fpts": 5.6
+          "pts": 3.1666666666666665,
+          "reb": 0.8333333333333334,
+          "ast": 1.5,
+          "three": 0.8333333333333334,
+          "fpts": 5.833333333333333
         }
       }
     },
@@ -59886,6 +62495,41 @@
       "name": "Josh Okogie",
       "team": "UTA",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4065663",
+          "name": "Josh Okogie",
+          "team": "UTA",
+          "minutes": 15,
+          "pts": 7,
+          "reb": 3,
+          "ast": 0,
+          "three": 1,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 1,
+          "fpts": 9,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 4.0540476058312445,
+              "reb": 3.1405932107584094,
+              "ast": 1.3269728111566963,
+              "three_pm": 0.4593015318335667
+            },
+            "absolute_errors": {
+              "pts": 2.9459523941687555,
+              "reb": 0.14059321075840936,
+              "ast": 1.3269728111566963,
+              "three_pm": 0.5406984681664333,
+              "minutes": 4.959589999999999
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909963",
@@ -60065,21 +62709,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 5.4,
-          "reb": 2.6,
+          "pts": 6.8,
+          "reb": 3,
           "ast": 1.2,
-          "three": 0.6,
-          "fpts": 10.4
+          "three": 0.8,
+          "fpts": 12.6
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 5.4,
-          "reb": 2.6,
-          "ast": 1.2,
-          "three": 0.6,
-          "fpts": 10.4
+          "pts": 5.666666666666667,
+          "reb": 2.6666666666666665,
+          "ast": 1,
+          "three": 0.6666666666666666,
+          "fpts": 10.166666666666666
         }
       }
     },
@@ -60088,6 +62732,41 @@
       "name": "Josh Green",
       "team": "UTA",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4432811",
+          "name": "Josh Green",
+          "team": "UTA",
+          "minutes": 26,
+          "pts": 3,
+          "reb": 2,
+          "ast": 1,
+          "three": 1,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 1,
+          "fpts": 4,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 4.3122282199399296,
+              "reb": 1.9990676136057115,
+              "ast": 1.1651014810923748,
+              "three_pm": 0.6650958657136873
+            },
+            "absolute_errors": {
+              "pts": 1.3122282199399296,
+              "reb": 0.000932386394288498,
+              "ast": 0.16510148109237477,
+              "three_pm": 0.3349041342863127,
+              "minutes": 3.9030699999999996
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909963",
@@ -60237,21 +62916,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 3.6,
-          "reb": 1.8,
-          "ast": 1.2,
-          "three": 0.6,
-          "fpts": 6.8
+          "pts": 4.2,
+          "reb": 2.2,
+          "ast": 1.4,
+          "three": 0.8,
+          "fpts": 7.6
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 3.6,
-          "reb": 1.8,
-          "ast": 1.2,
-          "three": 0.6,
-          "fpts": 6.8
+          "pts": 3.5,
+          "reb": 1.8333333333333333,
+          "ast": 1.1666666666666667,
+          "three": 0.6666666666666666,
+          "fpts": 6.333333333333333
         }
       }
     },
@@ -60260,6 +62939,41 @@
       "name": "Isaiah Collier",
       "team": "UTA",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4683766",
+          "name": "Isaiah Collier",
+          "team": "UTA",
+          "minutes": 12,
+          "pts": 7,
+          "reb": 3,
+          "ast": 2,
+          "three": 1,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 1,
+          "fpts": 12,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 7.597773237291665,
+              "reb": 3.442453119322166,
+              "ast": 3.816054590371253,
+              "three_pm": 0.5048979804384035
+            },
+            "absolute_errors": {
+              "pts": 0.5977732372916646,
+              "reb": 0.4424531193221659,
+              "ast": 1.816054590371253,
+              "three_pm": 0.4951020195615965,
+              "minutes": 4.514700000000001
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909963",
@@ -60439,21 +63153,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 8.4,
-          "reb": 3,
-          "ast": 3.2,
-          "three": 0.8,
-          "fpts": 16.4
+          "pts": 8.2,
+          "reb": 3.4,
+          "ast": 2.8,
+          "three": 1,
+          "fpts": 15.2
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 8.4,
+          "pts": 8.166666666666666,
           "reb": 3,
-          "ast": 3.2,
-          "three": 0.8,
-          "fpts": 16.4
+          "ast": 3,
+          "three": 0.8333333333333334,
+          "fpts": 15.666666666666666
         }
       }
     },
@@ -69914,6 +72628,26 @@
       "team": "SAC",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "4702384",
+          "name": "Nique Clifford",
+          "team": "OKC",
+          "minutes": 16,
+          "pts": 5,
+          "reb": 3,
+          "ast": 1,
+          "three": 1,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 10,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": null
+        },
+        {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
           "id": "4702384",
@@ -70040,23 +72774,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 2.25,
-          "reb": 2,
-          "ast": 1.25,
-          "three": 0.25,
-          "fpts": 6.25
+          "pts": 2.8,
+          "reb": 2.2,
+          "ast": 1.2,
+          "three": 0.4,
+          "fpts": 7
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 2.25,
-          "reb": 2,
-          "ast": 1.25,
-          "three": 0.25,
-          "fpts": 6.25
+          "pts": 2.8,
+          "reb": 2.2,
+          "ast": 1.2,
+          "three": 0.4,
+          "fpts": 7
         }
       }
     },
@@ -81289,6 +84023,41 @@
       "team": "OKC",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "4222252",
+          "name": "Isaiah Hartenstein",
+          "team": "OKC",
+          "minutes": 34,
+          "pts": 20,
+          "reb": 11,
+          "ast": 6,
+          "three": 0,
+          "stl": 2,
+          "blk": 0,
+          "stocks": 2,
+          "tov": 6,
+          "fpts": 45,
+          "double_double": true,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 6.023920235351377,
+              "reb": 11.016020108344494,
+              "ast": 4.3487933307413495,
+              "three_pm": 0
+            },
+            "absolute_errors": {
+              "pts": 13.976079764648624,
+              "reb": 0.016020108344493522,
+              "ast": 1.6512066692586505,
+              "three_pm": 0,
+              "minutes": 9.66871
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
           "id": "4222252",
@@ -81467,21 +84236,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 5.2,
-          "reb": 10,
-          "ast": 4.4,
+          "pts": 7.2,
+          "reb": 10.8,
+          "ast": 5.6,
           "three": 0,
-          "fpts": 27
+          "fpts": 31.4
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 5.2,
-          "reb": 10,
-          "ast": 4.4,
+          "pts": 7.666666666666667,
+          "reb": 10.166666666666666,
+          "ast": 4.666666666666667,
           "three": 0,
-          "fpts": 27
+          "fpts": 30
         }
       }
     },
@@ -81490,6 +84259,41 @@
       "name": "Kenrich Williams",
       "team": "OKC",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "3133626",
+          "name": "Kenrich Williams",
+          "team": "OKC",
+          "minutes": 26,
+          "pts": 11,
+          "reb": 2,
+          "ast": 2,
+          "three": 2,
+          "stl": 0,
+          "blk": 1,
+          "stocks": 1,
+          "tov": 0,
+          "fpts": 18,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 7.1720122779752575,
+              "reb": 3.9914849763620333,
+              "ast": 1.3917291395984868,
+              "three_pm": 1.557928913911302
+            },
+            "absolute_errors": {
+              "pts": 3.8279877220247425,
+              "reb": 1.9914849763620333,
+              "ast": 0.6082708604015132,
+              "three_pm": 0.44207108608869805,
+              "minutes": 4.919499999999999
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -81670,20 +84474,20 @@
         "games": 5,
         "averages": {
           "pts": 7.8,
-          "reb": 4.4,
-          "ast": 1.8,
-          "three": 1.6,
-          "fpts": 15.8
+          "reb": 3.4,
+          "ast": 1.6,
+          "three": 1.4,
+          "fpts": 15
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 7.8,
-          "reb": 4.4,
-          "ast": 1.8,
-          "three": 1.6,
-          "fpts": 15.8
+          "pts": 8.333333333333334,
+          "reb": 4,
+          "ast": 1.8333333333333333,
+          "three": 1.6666666666666667,
+          "fpts": 16.166666666666668
         }
       }
     },
@@ -81692,6 +84496,41 @@
       "name": "Shai Gilgeous-Alexander",
       "team": "OKC",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "4278073",
+          "name": "Shai Gilgeous-Alexander",
+          "team": "OKC",
+          "minutes": 36,
+          "pts": 31,
+          "reb": 4,
+          "ast": 2,
+          "three": 0,
+          "stl": 1,
+          "blk": 0,
+          "stocks": 1,
+          "tov": 2,
+          "fpts": 36,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 30.114206083489865,
+              "reb": 4.385048137821349,
+              "ast": 5.143728846402336,
+              "three_pm": 2.3609053790024834
+            },
+            "absolute_errors": {
+              "pts": 0.885793916510135,
+              "reb": 0.3850481378213493,
+              "ast": 3.143728846402336,
+              "three_pm": 2.3609053790024834,
+              "minutes": 4.549309999999998
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -81871,21 +84710,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 30.6,
+          "pts": 31.6,
           "reb": 4,
-          "ast": 5.4,
-          "three": 2.6,
-          "fpts": 47
+          "ast": 5.2,
+          "three": 2,
+          "fpts": 46.6
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 30.6,
+          "pts": 30.666666666666668,
           "reb": 4,
-          "ast": 5.4,
-          "three": 2.6,
-          "fpts": 47
+          "ast": 4.833333333333333,
+          "three": 2.1666666666666665,
+          "fpts": 45.166666666666664
         }
       }
     },
@@ -81894,6 +84733,41 @@
       "name": "Jared McCain",
       "team": "OKC",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "4683778",
+          "name": "Jared McCain",
+          "team": "OKC",
+          "minutes": 31,
+          "pts": 10,
+          "reb": 6,
+          "ast": 3,
+          "three": 2,
+          "stl": 1,
+          "blk": 0,
+          "stocks": 1,
+          "tov": 1,
+          "fpts": 16,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 14.224340535708022,
+              "reb": 3.8614694744850926,
+              "ast": 1.759416163041838,
+              "three_pm": 1.781322208231365
+            },
+            "absolute_errors": {
+              "pts": 4.224340535708022,
+              "reb": 2.1385305255149074,
+              "ast": 1.240583836958162,
+              "three_pm": 0.2186777917686351,
+              "minutes": 4.066089999999999
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -82074,20 +84948,20 @@
         "games": 5,
         "averages": {
           "pts": 15.6,
-          "reb": 5.2,
-          "ast": 1.8,
-          "three": 1.8,
-          "fpts": 29.8
+          "reb": 5.6,
+          "ast": 2,
+          "three": 2.2,
+          "fpts": 30.2
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 15.6,
-          "reb": 5.2,
-          "ast": 1.8,
-          "three": 1.8,
-          "fpts": 29.8
+          "pts": 14.666666666666666,
+          "reb": 5.333333333333333,
+          "ast": 2,
+          "three": 1.8333333333333333,
+          "fpts": 27.5
         }
       }
     },
@@ -82533,6 +85407,41 @@
       "team": "OKC",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "5174983",
+          "name": "Aday Mara",
+          "team": "OKC",
+          "minutes": 32,
+          "pts": 11,
+          "reb": 6,
+          "ast": 2,
+          "three": 0,
+          "stl": 0,
+          "blk": 1,
+          "stocks": 1,
+          "tov": 2,
+          "fpts": 20,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 9.670922306847572,
+              "reb": 7.443379925171547,
+              "ast": 1.4423830904576185,
+              "three_pm": 0.1316075695586081
+            },
+            "absolute_errors": {
+              "pts": 1.3290776931524277,
+              "reb": 1.4433799251715467,
+              "ast": 0.5576169095423815,
+              "three_pm": 0.1316075695586081,
+              "minutes": 9.196860000000001
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
           "id": "5174983",
@@ -82711,21 +85620,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 10.8,
-          "reb": 8.6,
-          "ast": 1.6,
+          "pts": 11.6,
+          "reb": 8,
+          "ast": 1.4,
           "three": 0.2,
-          "fpts": 29.6
+          "fpts": 27
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 10.8,
-          "reb": 8.6,
-          "ast": 1.6,
-          "three": 0.2,
-          "fpts": 29.6
+          "pts": 10.833333333333334,
+          "reb": 8.166666666666666,
+          "ast": 1.6666666666666667,
+          "three": 0.16666666666666666,
+          "fpts": 28
         }
       }
     },
@@ -82734,6 +85643,41 @@
       "name": "Micah Peavy",
       "team": "OKC",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "4432185",
+          "name": "Micah Peavy",
+          "team": "OKC",
+          "minutes": 12,
+          "pts": 0,
+          "reb": 3,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 1,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 4.256495778776438,
+              "reb": 3.5716728509106677,
+              "ast": 0.1081799913315379,
+              "three_pm": 0.6604158729378098
+            },
+            "absolute_errors": {
+              "pts": 4.256495778776438,
+              "reb": 0.5716728509106677,
+              "ast": 0.1081799913315379,
+              "three_pm": 0.6604158729378098,
+              "minutes": 7.0105499999999985
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -82883,21 +85827,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 4.8,
-          "reb": 3,
+          "pts": 4.4,
+          "reb": 3.4,
           "ast": 0,
           "three": 0.8,
-          "fpts": 10.6
+          "fpts": 10.2
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 4.8,
+          "pts": 4,
           "reb": 3,
           "ast": 0,
-          "three": 0.8,
-          "fpts": 10.6
+          "three": 0.6666666666666666,
+          "fpts": 9
         }
       }
     },
@@ -83058,6 +86002,41 @@
       "name": "Bennett Stirtz",
       "team": "OKC",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "5241364",
+          "name": "Bennett Stirtz",
+          "team": "OKC",
+          "minutes": 25,
+          "pts": 6,
+          "reb": 1,
+          "ast": 1,
+          "three": 2,
+          "stl": 3,
+          "blk": 1,
+          "stocks": 4,
+          "tov": 1,
+          "fpts": 20,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 11.107150794009923,
+              "reb": 1.6684063193657526,
+              "ast": 1.2761933925225353,
+              "three_pm": 2.2691901888851533
+            },
+            "absolute_errors": {
+              "pts": 5.1071507940099234,
+              "reb": 0.6684063193657526,
+              "ast": 0.2761933925225353,
+              "three_pm": 0.26919018888515334,
+              "minutes": 3.6225500000000004
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
@@ -83237,21 +86216,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 11.2,
+          "pts": 10.2,
           "reb": 2,
-          "ast": 1.8,
-          "three": 2.4,
-          "fpts": 21
+          "ast": 1.4,
+          "three": 2.2,
+          "fpts": 21.2
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 11.2,
-          "reb": 2,
-          "ast": 1.8,
-          "three": 2.4,
-          "fpts": 21
+          "pts": 10.333333333333334,
+          "reb": 1.8333333333333333,
+          "ast": 1.6666666666666667,
+          "three": 2.3333333333333335,
+          "fpts": 20.833333333333332
         }
       }
     },
@@ -83260,6 +86239,41 @@
       "name": "Kevin Durant",
       "team": "HOU",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "3202",
+          "name": "Kevin Durant",
+          "team": "HOU",
+          "minutes": 34,
+          "pts": 20,
+          "reb": 4,
+          "ast": 5,
+          "three": 1,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 2,
+          "fpts": 29,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 20.420058073269523,
+              "reb": 6.90193908273512,
+              "ast": 3.900365307178592,
+              "three_pm": 1.1440171185290957
+            },
+            "absolute_errors": {
+              "pts": 0.42005807326952294,
+              "reb": 2.9019390827351197,
+              "ast": 1.0996346928214078,
+              "three_pm": 0.1440171185290957,
+              "minutes": 0.3228500000000025
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909957",
@@ -83439,21 +86453,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 19.6,
-          "reb": 6.6,
-          "ast": 3.8,
+          "pts": 18,
+          "reb": 6.4,
+          "ast": 4.6,
           "three": 0.6,
-          "fpts": 32.8
+          "fpts": 33.8
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 19.6,
-          "reb": 6.6,
-          "ast": 3.8,
-          "three": 0.6,
-          "fpts": 32.8
+          "pts": 19.666666666666668,
+          "reb": 6.166666666666667,
+          "ast": 4,
+          "three": 0.6666666666666666,
+          "fpts": 32.166666666666664
         }
       }
     },
@@ -83462,6 +86476,41 @@
       "name": "Jabari Smith Jr.",
       "team": "HOU",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4432639",
+          "name": "Jabari Smith Jr.",
+          "team": "HOU",
+          "minutes": 35,
+          "pts": 14,
+          "reb": 8,
+          "ast": 0,
+          "three": 2,
+          "stl": 1,
+          "blk": 3,
+          "stocks": 4,
+          "tov": 2,
+          "fpts": 32,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 16.318357005995104,
+              "reb": 6.886331325599167,
+              "ast": 2.5013741002131793,
+              "three_pm": 2.69209947075804
+            },
+            "absolute_errors": {
+              "pts": 2.3183570059951037,
+              "reb": 1.1136686744008326,
+              "ast": 2.5013741002131793,
+              "three_pm": 0.6920994707580399,
+              "minutes": 0.8654599999999988
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909957",
@@ -83641,21 +86690,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 19,
-          "reb": 7.6,
-          "ast": 2.4,
-          "three": 3.2,
-          "fpts": 37.6
+          "pts": 17.4,
+          "reb": 8.6,
+          "ast": 2,
+          "three": 3,
+          "fpts": 38.2
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 19,
-          "reb": 7.6,
-          "ast": 2.4,
-          "three": 3.2,
-          "fpts": 37.6
+          "pts": 18.166666666666668,
+          "reb": 7.666666666666667,
+          "ast": 2,
+          "three": 3,
+          "fpts": 36.666666666666664
         }
       }
     },
@@ -83664,6 +86713,41 @@
       "name": "Alperen Sengun",
       "team": "HOU",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4871144",
+          "name": "Alperen Sengun",
+          "team": "HOU",
+          "minutes": 37,
+          "pts": 19,
+          "reb": 13,
+          "ast": 9,
+          "three": 1,
+          "stl": 1,
+          "blk": 1,
+          "stocks": 2,
+          "tov": 2,
+          "fpts": 55,
+          "double_double": true,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 20.9145068053881,
+              "reb": 9.066685239515111,
+              "ast": 7.996289616910317,
+              "three_pm": 0.8669870453827669
+            },
+            "absolute_errors": {
+              "pts": 1.9145068053881005,
+              "reb": 3.9333147604848886,
+              "ast": 1.0037103830896834,
+              "three_pm": 0.13301295461723306,
+              "minutes": 2.24953
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909957",
@@ -83806,23 +86890,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 19.25,
-          "reb": 8.5,
-          "ast": 8,
-          "three": 0.75,
-          "fpts": 47.5
+          "pts": 19.2,
+          "reb": 9.4,
+          "ast": 8.2,
+          "three": 0.8,
+          "fpts": 49
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 19.25,
-          "reb": 8.5,
-          "ast": 8,
-          "three": 0.75,
-          "fpts": 47.5
+          "pts": 19.2,
+          "reb": 9.4,
+          "ast": 8.2,
+          "three": 0.8,
+          "fpts": 49
         }
       }
     },
@@ -83831,6 +86915,41 @@
       "name": "Marcus Smart",
       "team": "HOU",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "2990992",
+          "name": "Marcus Smart",
+          "team": "HOU",
+          "minutes": 17,
+          "pts": 6,
+          "reb": 2,
+          "ast": 1,
+          "three": 2,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 1,
+          "fpts": 12,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 7.434756697035426,
+              "reb": 2.4950680382864214,
+              "ast": 2.0741257113139953,
+              "three_pm": 1.451298010483493
+            },
+            "absolute_errors": {
+              "pts": 1.434756697035426,
+              "reb": 0.49506803828642143,
+              "ast": 1.0741257113139953,
+              "three_pm": 0.5487019895165071,
+              "minutes": 4.011189999999999
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909957",
@@ -83995,21 +87114,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 10,
+          "pts": 9.6,
           "reb": 3,
-          "ast": 2.6,
-          "three": 2.2,
-          "fpts": 22.4
+          "ast": 2,
+          "three": 2.6,
+          "fpts": 19.6
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 10,
-          "reb": 3,
-          "ast": 2.6,
-          "three": 2.2,
-          "fpts": 22.4
+          "pts": 9.333333333333334,
+          "reb": 2.8333333333333335,
+          "ast": 2.3333333333333335,
+          "three": 2.1666666666666665,
+          "fpts": 20.666666666666668
         }
       }
     },
@@ -84018,6 +87137,41 @@
       "name": "Amen Thompson",
       "team": "HOU",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4684740",
+          "name": "Amen Thompson",
+          "team": "HOU",
+          "minutes": 29,
+          "pts": 19,
+          "reb": 7,
+          "ast": 4,
+          "three": 0,
+          "stl": 1,
+          "blk": 2,
+          "stocks": 3,
+          "tov": 2,
+          "fpts": 45,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 14.043947863044654,
+              "reb": 6.461997332469676,
+              "ast": 2.518860474831338,
+              "three_pm": 0.043421450561698695
+            },
+            "absolute_errors": {
+              "pts": 4.956052136955346,
+              "reb": 0.538002667530324,
+              "ast": 1.481139525168662,
+              "three_pm": 0.043421450561698695,
+              "minutes": 4.50206
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909957",
@@ -84197,21 +87351,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 12.4,
-          "reb": 5,
-          "ast": 2.6,
+          "pts": 13.2,
+          "reb": 5.8,
+          "ast": 2.2,
           "three": 0,
-          "fpts": 28.8
+          "fpts": 29.4
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 12.4,
-          "reb": 5,
-          "ast": 2.6,
+          "pts": 13.5,
+          "reb": 5.333333333333333,
+          "ast": 2.8333333333333335,
           "three": 0,
-          "fpts": 28.8
+          "fpts": 31.5
         }
       }
     },
@@ -84220,6 +87374,26 @@
       "name": "Jae'Sean Tate",
       "team": "HOU",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "3136777",
+          "name": "Jae'Sean Tate",
+          "team": "HOU",
+          "minutes": 1,
+          "pts": 0,
+          "reb": 0,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 0,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": null
+        },
         {
           "melbourne_date": "2026-11-03",
           "game_id": "401909916",
@@ -84277,23 +87451,23 @@
         }
       ],
       "last5": {
-        "games": 2,
+        "games": 3,
         "averages": {
           "pts": 0,
-          "reb": 2,
-          "ast": 0.5,
+          "reb": 1.3333333333333333,
+          "ast": 0.3333333333333333,
           "three": 0,
-          "fpts": 3
+          "fpts": 2
         }
       },
       "last10": {
-        "games": 2,
+        "games": 3,
         "averages": {
           "pts": 0,
-          "reb": 2,
-          "ast": 0.5,
+          "reb": 1.3333333333333333,
+          "ast": 0.3333333333333333,
           "three": 0,
-          "fpts": 3
+          "fpts": 2
         }
       }
     },
@@ -84302,6 +87476,41 @@
       "name": "Tari Eason",
       "team": "HOU",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4433192",
+          "name": "Tari Eason",
+          "team": "HOU",
+          "minutes": 22,
+          "pts": 6,
+          "reb": 3,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 1,
+          "stocks": 1,
+          "tov": 1,
+          "fpts": 4,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 9.884440191671056,
+              "reb": 6.3333678857285545,
+              "ast": 1.8172933147736576,
+              "three_pm": 1.2733370841285423
+            },
+            "absolute_errors": {
+              "pts": 3.8844401916710556,
+              "reb": 3.3333678857285545,
+              "ast": 1.8172933147736576,
+              "three_pm": 1.2733370841285423,
+              "minutes": 2.1900499999999994
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909957",
@@ -84481,21 +87690,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 9.2,
-          "reb": 6.4,
-          "ast": 2.2,
+          "pts": 8.2,
+          "reb": 4.4,
+          "ast": 1.8,
           "three": 1.4,
-          "fpts": 25
+          "fpts": 20.2
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 9.2,
-          "reb": 6.4,
-          "ast": 2.2,
-          "three": 1.4,
-          "fpts": 25
+          "pts": 8.666666666666666,
+          "reb": 5.833333333333333,
+          "ast": 1.8333333333333333,
+          "three": 1.1666666666666667,
+          "fpts": 21.5
         }
       }
     },
@@ -84504,6 +87713,41 @@
       "name": "Isaiah Crawford",
       "team": "HOU",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4592857",
+          "name": "Isaiah Crawford",
+          "team": "HOU",
+          "minutes": 1,
+          "pts": 0,
+          "reb": 0,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 0,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 2.6184669584640874,
+              "reb": 0.7753714403856562,
+              "ast": 0.11098059709747546,
+              "three_pm": 0.32993600332089623
+            },
+            "absolute_errors": {
+              "pts": 2.6184669584640874,
+              "reb": 0.7753714403856562,
+              "ast": 0.11098059709747546,
+              "three_pm": 0.32993600332089623,
+              "minutes": 4.2363
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909957",
@@ -84581,23 +87825,23 @@
         }
       ],
       "last5": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 2.6666666666666665,
-          "reb": 0.3333333333333333,
+          "pts": 2,
+          "reb": 0.25,
           "ast": 0,
-          "three": 0.6666666666666666,
-          "fpts": 3.6666666666666665
+          "three": 0.5,
+          "fpts": 2.75
         }
       },
       "last10": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 2.6666666666666665,
-          "reb": 0.3333333333333333,
+          "pts": 2,
+          "reb": 0.25,
           "ast": 0,
-          "three": 0.6666666666666666,
-          "fpts": 3.6666666666666665
+          "three": 0.5,
+          "fpts": 2.75
         }
       }
     },
@@ -84704,6 +87948,41 @@
       "team": "HOU",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4432827",
+          "name": "Oscar Tshiebwe",
+          "team": "HOU",
+          "minutes": 1,
+          "pts": 0,
+          "reb": 0,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 0,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 2.1475260415503046,
+              "reb": 1.8320988514712622,
+              "ast": 0.2522323223812053,
+              "three_pm": 0
+            },
+            "absolute_errors": {
+              "pts": 2.1475260415503046,
+              "reb": 1.8320988514712622,
+              "ast": 0.2522323223812053,
+              "three_pm": 0,
+              "minutes": 4.99493
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-08",
           "game_id": "401909943",
           "id": "4432827",
@@ -84800,23 +88079,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 2,
-          "reb": 1.75,
-          "ast": 0.25,
+          "pts": 1.6,
+          "reb": 1.4,
+          "ast": 0.2,
           "three": 0,
-          "fpts": 4.5
+          "fpts": 3.6
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 2,
-          "reb": 1.75,
-          "ast": 0.25,
+          "pts": 1.6,
+          "reb": 1.4,
+          "ast": 0.2,
           "three": 0,
-          "fpts": 4.5
+          "fpts": 3.6
         }
       }
     },
@@ -84825,6 +88104,41 @@
       "name": "Bogdan Bogdanovic",
       "team": "HOU",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "3037789",
+          "name": "Bogdan Bogdanovic",
+          "team": "HOU",
+          "minutes": 10,
+          "pts": 0,
+          "reb": 0,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 0,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 4.528581389066597,
+              "reb": 1.176776145543137,
+              "ast": 0.9609077648039902,
+              "three_pm": 0.8859153858521323
+            },
+            "absolute_errors": {
+              "pts": 4.528581389066597,
+              "reb": 1.176776145543137,
+              "ast": 0.9609077648039902,
+              "three_pm": 0.8859153858521323,
+              "minutes": 0.23052000000000028
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909957",
@@ -85004,21 +88318,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 3.6,
-          "reb": 1.4,
+          "pts": 2.4,
+          "reb": 1.2,
           "ast": 0.6,
           "three": 0.4,
-          "fpts": 4.2
+          "fpts": 3.6
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 3.6,
-          "reb": 1.4,
-          "ast": 0.6,
-          "three": 0.4,
-          "fpts": 4.2
+          "pts": 3,
+          "reb": 1.1666666666666667,
+          "ast": 0.5,
+          "three": 0.3333333333333333,
+          "fpts": 3.5
         }
       }
     },
@@ -85027,6 +88341,26 @@
       "name": "Bruce Thornton",
       "team": "HOU",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "5105837",
+          "name": "Bruce Thornton",
+          "team": "HOU",
+          "minutes": 3,
+          "pts": 0,
+          "reb": 0,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 0,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": null
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909957",
@@ -85089,23 +88423,23 @@
         }
       ],
       "last5": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 2.3333333333333335,
-          "reb": 0.3333333333333333,
+          "pts": 1.75,
+          "reb": 0.25,
           "ast": 0,
-          "three": 0.3333333333333333,
-          "fpts": 3.3333333333333335
+          "three": 0.25,
+          "fpts": 2.5
         }
       },
       "last10": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 2.3333333333333335,
-          "reb": 0.3333333333333333,
+          "pts": 1.75,
+          "reb": 0.25,
           "ast": 0,
-          "three": 0.3333333333333333,
-          "fpts": 3.3333333333333335
+          "three": 0.25,
+          "fpts": 2.5
         }
       }
     },
@@ -94470,6 +97804,41 @@
       "team": "ORL",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4566434",
+          "name": "Franz Wagner",
+          "team": "ORL",
+          "minutes": 39,
+          "pts": 38,
+          "reb": 8,
+          "ast": 1,
+          "three": 3,
+          "stl": 1,
+          "blk": 0,
+          "stocks": 1,
+          "tov": 4,
+          "fpts": 49,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 25.063109155245964,
+              "reb": 6.450825511829431,
+              "ast": 9.241784092111347,
+              "three_pm": 1.1833379052645967
+            },
+            "absolute_errors": {
+              "pts": 12.936890844754036,
+              "reb": 1.5491744881705687,
+              "ast": 8.241784092111347,
+              "three_pm": 1.8166620947354033,
+              "minutes": 1.4274800000000027
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-11",
           "game_id": "401909964",
           "id": "4566434",
@@ -94648,21 +98017,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 25.6,
-          "reb": 5.8,
-          "ast": 10,
-          "three": 1.4,
-          "fpts": 51.2
+          "pts": 28,
+          "reb": 6.4,
+          "ast": 8,
+          "three": 1.6,
+          "fpts": 51.4
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 25.6,
-          "reb": 5.8,
-          "ast": 10,
-          "three": 1.4,
-          "fpts": 51.2
+          "pts": 27.666666666666668,
+          "reb": 6.166666666666667,
+          "ast": 8.5,
+          "three": 1.6666666666666667,
+          "fpts": 50.833333333333336
         }
       }
     },
@@ -94671,6 +98040,41 @@
       "name": "Wendell Carter Jr.",
       "team": "ORL",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4277847",
+          "name": "Wendell Carter Jr.",
+          "team": "ORL",
+          "minutes": 28,
+          "pts": 9,
+          "reb": 7,
+          "ast": 3,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 2,
+          "fpts": 19,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 14.714299936625794,
+              "reb": 10.498851988450685,
+              "ast": 1.027210381441088,
+              "three_pm": 1.0983086101552495
+            },
+            "absolute_errors": {
+              "pts": 5.714299936625794,
+              "reb": 3.498851988450685,
+              "ast": 1.972789618558912,
+              "three_pm": 1.0983086101552495,
+              "minutes": 6.304659999999998
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909964",
@@ -94850,21 +98254,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 16,
+          "pts": 13.8,
           "reb": 10.2,
-          "ast": 0.8,
-          "three": 1.2,
-          "fpts": 35
+          "ast": 1.2,
+          "three": 1,
+          "fpts": 32
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 16,
-          "reb": 10.2,
-          "ast": 0.8,
-          "three": 1.2,
-          "fpts": 35
+          "pts": 14.833333333333334,
+          "reb": 9.666666666666666,
+          "ast": 1.1666666666666667,
+          "three": 1,
+          "fpts": 32.333333333333336
         }
       }
     },
@@ -94873,6 +98277,41 @@
       "name": "Desmond Bane",
       "team": "ORL",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4066320",
+          "name": "Desmond Bane",
+          "team": "ORL",
+          "minutes": 34,
+          "pts": 25,
+          "reb": 3,
+          "ast": 2,
+          "three": 7,
+          "stl": 1,
+          "blk": 0,
+          "stocks": 1,
+          "tov": 1,
+          "fpts": 43,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 17.886406948758214,
+              "reb": 4.328710537185965,
+              "ast": 2.425001354736609,
+              "three_pm": 3.564168329570956
+            },
+            "absolute_errors": {
+              "pts": 7.113593051241786,
+              "reb": 1.328710537185965,
+              "ast": 0.42500135473660894,
+              "three_pm": 3.435831670429044,
+              "minutes": 0.4005900000000011
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909964",
@@ -95015,23 +98454,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 19.5,
-          "reb": 4.25,
-          "ast": 3.25,
-          "three": 4.25,
-          "fpts": 26.5
+          "pts": 20.6,
+          "reb": 4,
+          "ast": 3,
+          "three": 4.8,
+          "fpts": 29.8
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 19.5,
-          "reb": 4.25,
-          "ast": 3.25,
-          "three": 4.25,
-          "fpts": 26.5
+          "pts": 20.6,
+          "reb": 4,
+          "ast": 3,
+          "three": 4.8,
+          "fpts": 29.8
         }
       }
     },
@@ -95040,6 +98479,41 @@
       "name": "Jase Richardson",
       "team": "ORL",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "5239561",
+          "name": "Jase Richardson",
+          "team": "ORL",
+          "minutes": 20,
+          "pts": 6,
+          "reb": 1,
+          "ast": 2,
+          "three": 1,
+          "stl": 1,
+          "blk": 2,
+          "stocks": 3,
+          "tov": 1,
+          "fpts": 18,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 7.267836900135785,
+              "reb": 1.9953839315502797,
+              "ast": 2.585752244869242,
+              "three_pm": 0.7340076674855174
+            },
+            "absolute_errors": {
+              "pts": 1.2678369001357854,
+              "reb": 0.9953839315502797,
+              "ast": 0.585752244869242,
+              "three_pm": 0.2659923325144826,
+              "minutes": 3.142990000000001
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909964",
@@ -95219,21 +98693,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 6.2,
-          "reb": 2.8,
+          "pts": 6.6,
+          "reb": 1.8,
           "ast": 3,
-          "three": 0.4,
-          "fpts": 17.6
+          "three": 0.6,
+          "fpts": 16.6
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 6.2,
-          "reb": 2.8,
-          "ast": 3,
-          "three": 0.4,
-          "fpts": 17.6
+          "pts": 6.166666666666667,
+          "reb": 2.5,
+          "ast": 2.8333333333333335,
+          "three": 0.5,
+          "fpts": 17.666666666666668
         }
       }
     },
@@ -95409,6 +98883,41 @@
       "name": "Nikola Vucevic",
       "team": "ORL",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "6478",
+          "name": "Nikola Vucevic",
+          "team": "ORL",
+          "minutes": 14,
+          "pts": 3,
+          "reb": 5,
+          "ast": 1,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 9,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 3.0279154733898745,
+              "reb": 2.8671983987816105,
+              "ast": 1.6024384402532474,
+              "three_pm": 0.48281153885284844
+            },
+            "absolute_errors": {
+              "pts": 0.027915473389874546,
+              "reb": 2.1328016012183895,
+              "ast": 0.6024384402532474,
+              "three_pm": 0.48281153885284844,
+              "minutes": 3.9146400000000003
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909964",
@@ -95589,20 +99098,20 @@
         "games": 5,
         "averages": {
           "pts": 3,
-          "reb": 2.4,
-          "ast": 0.8,
-          "three": 0.6,
-          "fpts": 7.4
+          "reb": 3.2,
+          "ast": 1,
+          "three": 0.4,
+          "fpts": 8
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
           "pts": 3,
-          "reb": 2.4,
-          "ast": 0.8,
-          "three": 0.6,
-          "fpts": 7.4
+          "reb": 2.8333333333333335,
+          "ast": 0.8333333333333334,
+          "three": 0.5,
+          "fpts": 7.666666666666667
         }
       }
     },
@@ -95611,6 +99120,41 @@
       "name": "Jevon Carter",
       "team": "ORL",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "3133635",
+          "name": "Jevon Carter",
+          "team": "ORL",
+          "minutes": 28,
+          "pts": 11,
+          "reb": 3,
+          "ast": 4,
+          "three": 3,
+          "stl": 2,
+          "blk": 0,
+          "stocks": 2,
+          "tov": 0,
+          "fpts": 29,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 4.2733730944847155,
+              "reb": 0.8414526682606414,
+              "ast": 1.257332088699858,
+              "three_pm": 1.1533723948346895
+            },
+            "absolute_errors": {
+              "pts": 6.7266269055152845,
+              "reb": 2.1585473317393586,
+              "ast": 2.742667911300142,
+              "three_pm": 1.8466276051653105,
+              "minutes": 15.48654
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909964",
@@ -95753,23 +99297,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 3.5,
-          "reb": 0.5,
-          "ast": 1,
-          "three": 1,
-          "fpts": 6.25
+          "pts": 5,
+          "reb": 1,
+          "ast": 1.6,
+          "three": 1.4,
+          "fpts": 10.8
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 3.5,
-          "reb": 0.5,
-          "ast": 1,
-          "three": 1,
-          "fpts": 6.25
+          "pts": 5,
+          "reb": 1,
+          "ast": 1.6,
+          "three": 1.4,
+          "fpts": 10.8
         }
       }
     },
@@ -95778,6 +99322,41 @@
       "name": "Alex Morales",
       "team": "ORL",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4593034",
+          "name": "Alex Morales",
+          "team": "ORL",
+          "minutes": 18,
+          "pts": 5,
+          "reb": 4,
+          "ast": 3,
+          "three": 1,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 16,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 1.4984018030546629,
+              "reb": 1.7843958479400401,
+              "ast": 0.3411536273902038,
+              "three_pm": 0.09574940819973461
+            },
+            "absolute_errors": {
+              "pts": 3.501598196945337,
+              "reb": 2.21560415205996,
+              "ast": 2.6588463726097964,
+              "three_pm": 0.9042505918002653,
+              "minutes": 5.341049999999999
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909964",
@@ -95927,21 +99506,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 2,
-          "reb": 2.4,
-          "ast": 0.2,
-          "three": 0.2,
-          "fpts": 6.8
+          "pts": 3,
+          "reb": 3,
+          "ast": 0.8,
+          "three": 0.4,
+          "fpts": 9.8
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 2,
-          "reb": 2.4,
-          "ast": 0.2,
-          "three": 0.2,
-          "fpts": 6.8
+          "pts": 2.5,
+          "reb": 2.6666666666666665,
+          "ast": 0.6666666666666666,
+          "three": 0.3333333333333333,
+          "fpts": 8.333333333333334
         }
       }
     },
@@ -103984,6 +107563,41 @@
       "team": "HOU",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "2991230",
+          "name": "Fred VanVleet",
+          "team": "HOU",
+          "minutes": 30,
+          "pts": 18,
+          "reb": 2,
+          "ast": 6,
+          "three": 4,
+          "stl": 3,
+          "blk": 0,
+          "stocks": 3,
+          "tov": 0,
+          "fpts": 51,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 13.905784678665878,
+              "reb": 2.9447075166356864,
+              "ast": 5.06579866500484,
+              "three_pm": 3.0114136692876508
+            },
+            "absolute_errors": {
+              "pts": 4.094215321334122,
+              "reb": 0.9447075166356864,
+              "ast": 0.9342013349951603,
+              "three_pm": 0.9885863307123492,
+              "minutes": 0.03719999999999857
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-10",
           "game_id": "401909957",
           "id": "2991230",
@@ -104125,23 +107739,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 13,
-          "reb": 2.75,
-          "ast": 5.25,
-          "three": 3,
-          "fpts": 27.5
+          "pts": 14,
+          "reb": 2.6,
+          "ast": 5.4,
+          "three": 3.2,
+          "fpts": 32.2
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 13,
-          "reb": 2.75,
-          "ast": 5.25,
-          "three": 3,
-          "fpts": 27.5
+          "pts": 14,
+          "reb": 2.6,
+          "ast": 5.4,
+          "three": 3.2,
+          "fpts": 32.2
         }
       }
     },
@@ -104150,6 +107764,41 @@
       "name": "Reed Sheppard",
       "team": "HOU",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4711272",
+          "name": "Reed Sheppard",
+          "team": "HOU",
+          "minutes": 20,
+          "pts": 13,
+          "reb": 1,
+          "ast": 1,
+          "three": 3,
+          "stl": 1,
+          "blk": 0,
+          "stocks": 1,
+          "tov": 1,
+          "fpts": 22,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 9.901049527944924,
+              "reb": 1.3897402852016836,
+              "ast": 1.9080863899542349,
+              "three_pm": 2.321575175132394
+            },
+            "absolute_errors": {
+              "pts": 3.0989504720550762,
+              "reb": 0.3897402852016836,
+              "ast": 0.9080863899542349,
+              "three_pm": 0.6784248248676059,
+              "minutes": 0.7148900000000005
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909957",
@@ -104257,23 +107906,23 @@
         }
       ],
       "last5": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 7.333333333333333,
-          "reb": 0.3333333333333333,
-          "ast": 0.3333333333333333,
-          "three": 2,
-          "fpts": 8
+          "pts": 8.75,
+          "reb": 0.5,
+          "ast": 0.5,
+          "three": 2.25,
+          "fpts": 11.5
         }
       },
       "last10": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 7.333333333333333,
-          "reb": 0.3333333333333333,
-          "ast": 0.3333333333333333,
-          "three": 2,
-          "fpts": 8
+          "pts": 8.75,
+          "reb": 0.5,
+          "ast": 0.5,
+          "three": 2.25,
+          "fpts": 11.5
         }
       }
     },
@@ -109071,6 +112720,41 @@
       "team": "GSW",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "6589",
+          "name": "Draymond Green",
+          "team": "GSW",
+          "minutes": 27,
+          "pts": 7,
+          "reb": 5,
+          "ast": 7,
+          "three": 1,
+          "stl": 0,
+          "blk": 1,
+          "stocks": 1,
+          "tov": 1,
+          "fpts": 30,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 2.9460685505424364,
+              "reb": 4.6891587908628605,
+              "ast": 7.429474824318364,
+              "three_pm": 0.17367437187511206
+            },
+            "absolute_errors": {
+              "pts": 4.053931449457563,
+              "reb": 0.31084120913713953,
+              "ast": 0.4294748243183637,
+              "three_pm": 0.826325628124888,
+              "minutes": 0.6043200000000013
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
           "id": "6589",
@@ -109249,21 +112933,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 2.4,
-          "reb": 4.4,
-          "ast": 8.2,
-          "three": 0,
-          "fpts": 27.2
+          "pts": 3.4,
+          "reb": 4.6,
+          "ast": 7.8,
+          "three": 0.2,
+          "fpts": 25.8
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 2.4,
-          "reb": 4.4,
-          "ast": 8.2,
-          "three": 0,
-          "fpts": 27.2
+          "pts": 3.1666666666666665,
+          "reb": 4.5,
+          "ast": 8,
+          "three": 0.16666666666666666,
+          "fpts": 27.666666666666668
         }
       }
     },
@@ -109272,6 +112956,41 @@
       "name": "Yaxel Lendeborg",
       "team": "GSW",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "5175737",
+          "name": "Yaxel Lendeborg",
+          "team": "GSW",
+          "minutes": 36,
+          "pts": 25,
+          "reb": 10,
+          "ast": 0,
+          "three": 2,
+          "stl": 2,
+          "blk": 0,
+          "stocks": 2,
+          "tov": 2,
+          "fpts": 37,
+          "double_double": true,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 21.169218240864865,
+              "reb": 6.876025663308903,
+              "ast": 4.067863153363169,
+              "three_pm": 2.6079523646001395
+            },
+            "absolute_errors": {
+              "pts": 3.830781759135135,
+              "reb": 3.123974336691097,
+              "ast": 4.067863153363169,
+              "three_pm": 0.6079523646001395,
+              "minutes": 4.428799999999999
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
@@ -109451,21 +113170,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 17,
-          "reb": 5.8,
+          "pts": 20.8,
+          "reb": 7.6,
           "ast": 3.6,
-          "three": 2,
-          "fpts": 32.8
+          "three": 2.2,
+          "fpts": 40.6
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 17,
-          "reb": 5.8,
-          "ast": 3.6,
+          "pts": 18.333333333333332,
+          "reb": 6.5,
+          "ast": 3,
           "three": 2,
-          "fpts": 32.8
+          "fpts": 33.5
         }
       }
     },
@@ -109474,6 +113193,41 @@
       "name": "Stephen Curry",
       "team": "GSW",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "3975",
+          "name": "Stephen Curry",
+          "team": "GSW",
+          "minutes": 6,
+          "pts": 3,
+          "reb": 0,
+          "ast": 0,
+          "three": 1,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 1,
+          "fpts": 1,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 30.14349286960232,
+              "reb": 4.412316010921736,
+              "ast": 4.120038354578146,
+              "three_pm": 4.795715582772171
+            },
+            "absolute_errors": {
+              "pts": 27.14349286960232,
+              "reb": 4.412316010921736,
+              "ast": 4.120038354578146,
+              "three_pm": 3.7957155827721714,
+              "minutes": 22.6973
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
@@ -109653,21 +113407,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 32,
-          "reb": 4.4,
-          "ast": 5,
-          "three": 5.6,
-          "fpts": 52.2
+          "pts": 26.4,
+          "reb": 3.6,
+          "ast": 3.8,
+          "three": 4.2,
+          "fpts": 40.8
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 32,
-          "reb": 4.4,
-          "ast": 5,
-          "three": 5.6,
-          "fpts": 52.2
+          "pts": 27.166666666666668,
+          "reb": 3.6666666666666665,
+          "ast": 4.166666666666667,
+          "three": 4.833333333333333,
+          "fpts": 43.666666666666664
         }
       }
     },
@@ -109676,6 +113430,41 @@
       "name": "Brandin Podziemski",
       "team": "GSW",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4709138",
+          "name": "Brandin Podziemski",
+          "team": "GSW",
+          "minutes": 37,
+          "pts": 22,
+          "reb": 6,
+          "ast": 4,
+          "three": 4,
+          "stl": 2,
+          "blk": 0,
+          "stocks": 2,
+          "tov": 1,
+          "fpts": 44,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 16.988309123372236,
+              "reb": 4.701678081167606,
+              "ast": 3.807292495832304,
+              "three_pm": 3.111373614155783
+            },
+            "absolute_errors": {
+              "pts": 5.011690876627764,
+              "reb": 1.2983219188323938,
+              "ast": 0.192707504167696,
+              "three_pm": 0.8886263858442169,
+              "minutes": 4.736609999999999
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
@@ -109855,21 +113644,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 18,
-          "reb": 4.6,
-          "ast": 3.2,
+          "pts": 18.2,
+          "reb": 4.8,
+          "ast": 2.8,
           "three": 3.6,
-          "fpts": 38.4
+          "fpts": 37.4
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 18,
-          "reb": 4.6,
-          "ast": 3.2,
-          "three": 3.6,
-          "fpts": 38.4
+          "pts": 18.666666666666668,
+          "reb": 4.833333333333333,
+          "ast": 3.3333333333333335,
+          "three": 3.6666666666666665,
+          "fpts": 39.333333333333336
         }
       }
     },
@@ -109878,6 +113667,41 @@
       "name": "Will Richard",
       "team": "GSW",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4897262",
+          "name": "Will Richard",
+          "team": "GSW",
+          "minutes": 19,
+          "pts": 9,
+          "reb": 4,
+          "ast": 0,
+          "three": 2,
+          "stl": 1,
+          "blk": 0,
+          "stocks": 1,
+          "tov": 2,
+          "fpts": 14,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 5.539370004777291,
+              "reb": 1.9485866586285043,
+              "ast": 1.3332896425258147,
+              "three_pm": 0.9212562572089016
+            },
+            "absolute_errors": {
+              "pts": 3.4606299952227086,
+              "reb": 2.0514133413714957,
+              "ast": 1.3332896425258147,
+              "three_pm": 1.0787437427910984,
+              "minutes": 1.6022800000000004
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-08",
           "game_id": "401909942",
@@ -110020,23 +113844,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 5.75,
-          "reb": 2.5,
-          "ast": 1.25,
-          "three": 1.25,
-          "fpts": 12.75
+          "pts": 6.4,
+          "reb": 2.8,
+          "ast": 1,
+          "three": 1.4,
+          "fpts": 13
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 5.75,
-          "reb": 2.5,
-          "ast": 1.25,
-          "three": 1.25,
-          "fpts": 12.75
+          "pts": 6.4,
+          "reb": 2.8,
+          "ast": 1,
+          "three": 1.4,
+          "fpts": 13
         }
       }
     },
@@ -110045,6 +113869,41 @@
       "name": "Georges Niang",
       "team": "GSW",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "2990969",
+          "name": "Georges Niang",
+          "team": "GSW",
+          "minutes": 19,
+          "pts": 5,
+          "reb": 5,
+          "ast": 0,
+          "three": 1,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 5,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 9.022619021391677,
+              "reb": 2.901293815871278,
+              "ast": 1.7420725433418893,
+              "three_pm": 1.5972979336651425
+            },
+            "absolute_errors": {
+              "pts": 4.022619021391677,
+              "reb": 2.098706184128722,
+              "ast": 1.7420725433418893,
+              "three_pm": 0.5972979336651425,
+              "minutes": 2.087869999999999
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
@@ -110224,21 +114083,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 11.4,
+          "pts": 10.2,
           "reb": 3.4,
-          "ast": 2,
-          "three": 2,
-          "fpts": 24.4
+          "ast": 1.8,
+          "three": 1.6,
+          "fpts": 20.2
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 11.4,
-          "reb": 3.4,
-          "ast": 2,
-          "three": 2,
-          "fpts": 24.4
+          "pts": 10.333333333333334,
+          "reb": 3.6666666666666665,
+          "ast": 1.6666666666666667,
+          "three": 1.8333333333333333,
+          "fpts": 21.166666666666668
         }
       }
     },
@@ -110247,6 +114106,26 @@
       "name": "Graham Ike",
       "team": "GSW",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4703396",
+          "name": "Graham Ike",
+          "team": "GSW",
+          "minutes": 4,
+          "pts": 4,
+          "reb": 0,
+          "ast": 1,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 6,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": null
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
@@ -110309,23 +114188,23 @@
         }
       ],
       "last5": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 1.3333333333333333,
-          "reb": 2,
-          "ast": 0.6666666666666666,
+          "pts": 2,
+          "reb": 1.5,
+          "ast": 0.75,
           "three": 0,
-          "fpts": 5.333333333333333
+          "fpts": 5.5
         }
       },
       "last10": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 1.3333333333333333,
-          "reb": 2,
-          "ast": 0.6666666666666666,
+          "pts": 2,
+          "reb": 1.5,
+          "ast": 0.75,
           "three": 0,
-          "fpts": 5.333333333333333
+          "fpts": 5.5
         }
       }
     },
@@ -110334,6 +114213,41 @@
       "name": "Charles Bassey",
       "team": "GSW",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4397886",
+          "name": "Charles Bassey",
+          "team": "GSW",
+          "minutes": 13,
+          "pts": 7,
+          "reb": 6,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 1,
+          "stocks": 1,
+          "tov": 0,
+          "fpts": 18,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 9.15694577054025,
+              "reb": 6.173655062395869,
+              "ast": 0.638818703945122,
+              "three_pm": 0
+            },
+            "absolute_errors": {
+              "pts": 2.1569457705402506,
+              "reb": 0.17365506239586903,
+              "ast": 0.638818703945122,
+              "three_pm": 0,
+              "minutes": 1.1676099999999998
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
@@ -110513,21 +114427,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 10.6,
-          "reb": 6.6,
-          "ast": 0.6,
+          "pts": 10.8,
+          "reb": 7,
+          "ast": 0.4,
           "three": 0,
-          "fpts": 22.6
+          "fpts": 23.4
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 10.6,
-          "reb": 6.6,
-          "ast": 0.6,
+          "pts": 10,
+          "reb": 6.5,
+          "ast": 0.5,
           "three": 0,
-          "fpts": 22.6
+          "fpts": 21.833333333333332
         }
       }
     },
@@ -110703,6 +114617,41 @@
       "name": "De'Anthony Melton",
       "team": "GSW",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4066436",
+          "name": "De'Anthony Melton",
+          "team": "GSW",
+          "minutes": 25,
+          "pts": 11,
+          "reb": 4,
+          "ast": 4,
+          "three": 3,
+          "stl": 0,
+          "blk": 1,
+          "stocks": 1,
+          "tov": 2,
+          "fpts": 25,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 9.630413252051184,
+              "reb": 4.400062669348879,
+              "ast": 2.1154842628170196,
+              "three_pm": 2.1326822808123658
+            },
+            "absolute_errors": {
+              "pts": 1.3695867479488157,
+              "reb": 0.4000626693488787,
+              "ast": 1.8845157371829804,
+              "three_pm": 0.8673177191876342,
+              "minutes": 2.6804699999999997
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
@@ -110882,21 +114831,21 @@
       "last5": {
         "games": 5,
         "averages": {
-          "pts": 8.6,
-          "reb": 4.6,
-          "ast": 2.2,
-          "three": 1.8,
-          "fpts": 21.2
+          "pts": 7.6,
+          "reb": 4.4,
+          "ast": 2.4,
+          "three": 1.6,
+          "fpts": 18.8
         }
       },
       "last10": {
-        "games": 5,
+        "games": 6,
         "averages": {
-          "pts": 8.6,
-          "reb": 4.6,
-          "ast": 2.2,
-          "three": 1.8,
-          "fpts": 21.2
+          "pts": 9,
+          "reb": 4.5,
+          "ast": 2.5,
+          "three": 2,
+          "fpts": 21.833333333333332
         }
       }
     },
@@ -110905,6 +114854,26 @@
       "name": "LJ Cryer",
       "team": "GSW",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4433149",
+          "name": "LJ Cryer",
+          "team": "GSW",
+          "minutes": 18,
+          "pts": 13,
+          "reb": 1,
+          "ast": 1,
+          "three": 3,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 18,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": null
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
@@ -110967,23 +114936,23 @@
         }
       ],
       "last5": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 3.3333333333333335,
-          "reb": 0,
+          "pts": 5.75,
+          "reb": 0.25,
           "ast": 1,
-          "three": 0.6666666666666666,
-          "fpts": 4.666666666666667
+          "three": 1.25,
+          "fpts": 8
         }
       },
       "last10": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 3.3333333333333335,
-          "reb": 0,
+          "pts": 5.75,
+          "reb": 0.25,
           "ast": 1,
-          "three": 0.6666666666666666,
-          "fpts": 4.666666666666667
+          "three": 1.25,
+          "fpts": 8
         }
       }
     },
@@ -118867,6 +122836,41 @@
       "team": "ORL",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4712849",
+          "name": "Anthony Black",
+          "team": "ORL",
+          "minutes": 39,
+          "pts": 22,
+          "reb": 7,
+          "ast": 8,
+          "three": 3,
+          "stl": 1,
+          "blk": 0,
+          "stocks": 1,
+          "tov": 3,
+          "fpts": 42,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 17.7699511268633,
+              "reb": 5.948595834478259,
+              "ast": 4.6019667279221705,
+              "three_pm": 1.7947908012020934
+            },
+            "absolute_errors": {
+              "pts": 4.230048873136699,
+              "reb": 1.051404165521741,
+              "ast": 3.3980332720778295,
+              "three_pm": 1.2052091987979066,
+              "minutes": 9.23339
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-11",
           "game_id": "401909964",
           "id": "4712849",
@@ -119008,23 +123012,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 17.75,
+          "pts": 18.6,
           "reb": 7,
-          "ast": 6.75,
-          "three": 2,
-          "fpts": 45.75
+          "ast": 7,
+          "three": 2.2,
+          "fpts": 45
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 17.75,
+          "pts": 18.6,
           "reb": 7,
-          "ast": 6.75,
-          "three": 2,
-          "fpts": 45.75
+          "ast": 7,
+          "three": 2.2,
+          "fpts": 45
         }
       }
     },
@@ -119033,6 +123037,41 @@
       "name": "Goga Bitadze",
       "team": "ORL",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4348700",
+          "name": "Goga Bitadze",
+          "team": "ORL",
+          "minutes": 20,
+          "pts": 4,
+          "reb": 7,
+          "ast": 0,
+          "three": 0,
+          "stl": 1,
+          "blk": 2,
+          "stocks": 3,
+          "tov": 0,
+          "fpts": 21,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 4.008377337561823,
+              "reb": 4.1784765352510105,
+              "ast": 0.7344649234941121,
+              "three_pm": 0
+            },
+            "absolute_errors": {
+              "pts": 0.00837733756182324,
+              "reb": 2.8215234647489895,
+              "ast": 0.7344649234941121,
+              "three_pm": 0,
+              "minutes": 9.66523
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-11",
           "game_id": "401909964",
@@ -119175,23 +123214,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 3,
-          "reb": 4,
-          "ast": 0.75,
+          "pts": 3.2,
+          "reb": 4.6,
+          "ast": 0.6,
           "three": 0,
-          "fpts": 9.75
+          "fpts": 12
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 3,
-          "reb": 4,
-          "ast": 0.75,
+          "pts": 3.2,
+          "reb": 4.6,
+          "ast": 0.6,
           "three": 0,
-          "fpts": 9.75
+          "fpts": 12
         }
       }
     },
@@ -119200,6 +123239,26 @@
       "name": "Colin Castleton",
       "team": "ORL",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909973",
+          "id": "4397204",
+          "name": "Colin Castleton",
+          "team": "ORL",
+          "minutes": 1,
+          "pts": 0,
+          "reb": 0,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 0,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": null
+        },
         {
           "melbourne_date": "2026-11-06",
           "game_id": "401909936",
@@ -119222,23 +123281,23 @@
         }
       ],
       "last5": {
-        "games": 1,
+        "games": 2,
         "averages": {
           "pts": 0,
           "reb": 0,
-          "ast": 1,
+          "ast": 0.5,
           "three": 0,
-          "fpts": 2
+          "fpts": 1
         }
       },
       "last10": {
-        "games": 1,
+        "games": 2,
         "averages": {
           "pts": 0,
           "reb": 0,
-          "ast": 1,
+          "ast": 0.5,
           "three": 0,
-          "fpts": 2
+          "fpts": 1
         }
       }
     },
@@ -119616,6 +123675,26 @@
       "team": "GSW",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4897449",
+          "name": "Malevy Leons",
+          "team": "GSW",
+          "minutes": 4,
+          "pts": 0,
+          "reb": 3,
+          "ast": 0,
+          "three": 0,
+          "stl": 0,
+          "blk": 2,
+          "stocks": 2,
+          "tov": 0,
+          "fpts": 10,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": null
+        },
+        {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
           "id": "4897449",
@@ -119657,23 +123736,23 @@
         }
       ],
       "last5": {
-        "games": 2,
+        "games": 3,
         "averages": {
           "pts": 0,
-          "reb": 1.5,
+          "reb": 2,
           "ast": 0,
           "three": 0,
-          "fpts": 2
+          "fpts": 4.666666666666667
         }
       },
       "last10": {
-        "games": 2,
+        "games": 3,
         "averages": {
           "pts": 0,
-          "reb": 1.5,
+          "reb": 2,
           "ast": 0,
           "three": 0,
-          "fpts": 2
+          "fpts": 4.666666666666667
         }
       }
     },
@@ -119682,6 +123761,41 @@
       "name": "Al Horford",
       "team": "GSW",
       "games": [
+        {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "3213",
+          "name": "Al Horford",
+          "team": "GSW",
+          "minutes": 21,
+          "pts": 2,
+          "reb": 1,
+          "ast": 4,
+          "three": 0,
+          "stl": 0,
+          "blk": 0,
+          "stocks": 0,
+          "tov": 0,
+          "fpts": 6,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 4.832658104992579,
+              "reb": 3.894651729280601,
+              "ast": 2.6522673032949067,
+              "three_pm": 1.1029977406179132
+            },
+            "absolute_errors": {
+              "pts": 2.8326581049925794,
+              "reb": 2.894651729280601,
+              "ast": 1.3477326967050933,
+              "three_pm": 1.1029977406179132,
+              "minutes": 3.8999099999999984
+            }
+          }
+        },
         {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
@@ -119824,23 +123938,23 @@
         }
       ],
       "last5": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 4.5,
-          "reb": 3.5,
-          "ast": 2.75,
-          "three": 1,
-          "fpts": 20
+          "pts": 4,
+          "reb": 3,
+          "ast": 3,
+          "three": 0.8,
+          "fpts": 17.2
         }
       },
       "last10": {
-        "games": 4,
+        "games": 5,
         "averages": {
-          "pts": 4.5,
-          "reb": 3.5,
-          "ast": 2.75,
-          "three": 1,
-          "fpts": 20
+          "pts": 4,
+          "reb": 3,
+          "ast": 3,
+          "three": 0.8,
+          "fpts": 17.2
         }
       }
     },
@@ -120754,6 +124868,41 @@
       "team": "OKC",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909975",
+          "id": "2991350",
+          "name": "Alex Caruso",
+          "team": "OKC",
+          "minutes": 29,
+          "pts": 14,
+          "reb": 7,
+          "ast": 2,
+          "three": 4,
+          "stl": 3,
+          "blk": 0,
+          "stocks": 3,
+          "tov": 3,
+          "fpts": 37,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 6.096313681966256,
+              "reb": 3.7644037277920313,
+              "ast": 2.8006687323633543,
+              "three_pm": 1.3928073120158184
+            },
+            "absolute_errors": {
+              "pts": 7.903686318033744,
+              "reb": 3.2355962722079687,
+              "ast": 0.8006687323633543,
+              "three_pm": 2.6071926879841816,
+              "minutes": 11.72505
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-11",
           "game_id": "401909965",
           "id": "2991350",
@@ -120860,23 +125009,23 @@
         }
       ],
       "last5": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 3.3333333333333335,
-          "reb": 3.6666666666666665,
+          "pts": 6,
+          "reb": 4.5,
           "ast": 2,
-          "three": 0.6666666666666666,
-          "fpts": 13
+          "three": 1.5,
+          "fpts": 19
         }
       },
       "last10": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 3.3333333333333335,
-          "reb": 3.6666666666666665,
+          "pts": 6,
+          "reb": 4.5,
           "ast": 2,
-          "three": 0.6666666666666666,
-          "fpts": 13
+          "three": 1.5,
+          "fpts": 19
         }
       }
     },
@@ -123777,6 +127926,41 @@
       "team": "GSW",
       "games": [
         {
+          "melbourne_date": "2026-11-12",
+          "game_id": "401909974",
+          "id": "4997536",
+          "name": "Gui Santos",
+          "team": "GSW",
+          "minutes": 12,
+          "pts": 0,
+          "reb": 3,
+          "ast": 1,
+          "three": 0,
+          "stl": 0,
+          "blk": 1,
+          "stocks": 1,
+          "tov": 4,
+          "fpts": -2,
+          "double_double": false,
+          "triple_double": false,
+          "projection_grade": {
+            "disposition": "played_scored",
+            "projection_if_play": {
+              "pts": 5.246889835810213,
+              "reb": 4.213041611114262,
+              "ast": 1.7106413432140828,
+              "three_pm": 0.27099190783961447
+            },
+            "absolute_errors": {
+              "pts": 5.246889835810213,
+              "reb": 1.213041611114262,
+              "ast": 0.7106413432140828,
+              "three_pm": 0.27099190783961447,
+              "minutes": 6.220320000000001
+            }
+          }
+        },
+        {
           "melbourne_date": "2026-11-10",
           "game_id": "401909959",
           "id": "4997536",
@@ -123868,23 +128052,23 @@
         }
       ],
       "last5": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 2.6666666666666665,
-          "reb": 4.333333333333333,
-          "ast": 1.6666666666666667,
+          "pts": 2,
+          "reb": 4,
+          "ast": 1.5,
           "three": 0,
-          "fpts": 8
+          "fpts": 5.5
         }
       },
       "last10": {
-        "games": 3,
+        "games": 4,
         "averages": {
-          "pts": 2.6666666666666665,
-          "reb": 4.333333333333333,
-          "ast": 1.6666666666666667,
+          "pts": 2,
+          "reb": 4,
+          "ast": 1.5,
           "three": 0,
-          "fpts": 8
+          "fpts": 5.5
         }
       }
     },
