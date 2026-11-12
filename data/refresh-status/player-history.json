@@ -1,27 +1,38 @@
 {
   "workflow": "player-history",
-  "generation_observed_at_utc": "2026-11-10T20:36:05.238649+00:00",
+  "generation_observed_at_utc": "2026-11-12T21:04:19.163723+00:00",
   "artifact_generation_timestamps": {
     "data/player-game-history/index.json": {
-      "generated_at_utc": "2026-11-10T20:35:42.535Z"
+      "generated_at_utc": "2026-11-12T21:03:57.277Z"
     },
     "data/player-game-history/trends.json": {
-      "generated_at_utc": "2026-11-10T20:35:42.535Z"
+      "generated_at_utc": "2026-11-12T21:03:57.277Z"
     }
   },
-  "source_revision": "1629ec9a915c52c8c64410f5964b598c2d59a5df",
-  "run_id": "42896816675",
+  "source_revision": "4e649aa1f96ab875c926214545240d7028bfbad7",
+  "run_id": "43306472406",
   "run_attempt": "1",
   "changed_artifacts": [
     "data/player-game-history/index.json",
-    "data/player-game-history/observations/401909952-20261110T203542535-ad6bc1ad6315ae098c16c2b37540da9a04369b2b99452cc27800eae8f9b6cf41.json",
-    "data/player-game-history/observations/401909953-20261110T203542535-4ceb9b43f5770987ddfe53ca90980a9e83dcfeef8ab82d1304cbeaa6d0534cbf.json",
-    "data/player-game-history/observations/401909954-20261110T203542535-7ab865e310fb1a9908cce0fe0102e6f0ef40e31cb9df9cdc63d305d4cd8c4327.json",
-    "data/player-game-history/observations/401909955-20261110T203542535-5b475c4837c0d234f202ad1d56293360c934938aeaaf2eccc52bf0bd44c26e64.json",
-    "data/player-game-history/observations/401909956-20261110T203542535-d1bf9f588a6b4053889e0331737d1485eb82926bca5e637453409d718e253365.json",
-    "data/player-game-history/observations/401909957-20261110T203542535-bf4381dfe0d34c224e5c2f5352087d1196986ab16b1ac87aab63f03828b660e7.json",
-    "data/player-game-history/observations/401909958-20261110T203542535-f3e034bdba6a648259b4557f20f8f2071dd85aa0b70be8b2720afaadf68afad6.json",
-    "data/player-game-history/observations/401909959-20261110T203542535-a931e4e16cf74a2724764847f33717955e3df5259f0e34a76f834db32000855a.json",
+    "data/player-game-history/observations/401909955-20261112T210357277-1e27c8cda7569c8b3e6c332db0e30f0e30f7b4fcf43c0b57a991ee84aeff1bfb.json",
+    "data/player-game-history/observations/401909957-20261112T210357277-cb1f46767a5ef4d7e77880a78080f2936c0e7ba515e07981991ca5c633902cce.json",
+    "data/player-game-history/observations/401909958-20261112T210357277-296af6eee0189e2049578594b6904ca1ee0d46a52084d3914e4d1310a6824564.json",
+    "data/player-game-history/observations/401909960-20261112T210357277-c2e2f5bacaead75a02a93183d8363f2d00936cac68e26e06d90603f3ec107c9e.json",
+    "data/player-game-history/observations/401909961-20261112T210357277-c2f4536bf7ca6a8f2a87cc53da9d350cd1e82f6c03d29eed1d2b17b252d7d07f.json",
+    "data/player-game-history/observations/401909962-20261112T210357277-6837be6e6ac28c8f134877294a104442b96e06ad2456a091411d59b32fda4087.json",
+    "data/player-game-history/observations/401909963-20261112T210357277-08239f30972048b2b4b86f23f897a377c6dce385c2e8db15de749b86cd329d1e.json",
+    "data/player-game-history/observations/401909964-20261112T210357277-3abd5e6cbc51e90293e9f1d416be7b313be941aee88f2d3e09ea89baaceb42c5.json",
+    "data/player-game-history/observations/401909965-20261112T210357277-df6b117f85d3f2dd7ce5906573fe45a17e5f848944c186fea52b28ae1c9293f9.json",
+    "data/player-game-history/observations/401909966-20261112T210357277-374f0f4f1d400fe0b7ef0a14432e224f8c86ac307447d24113fb2e766759cf1e.json",
+    "data/player-game-history/observations/401909967-20261112T210357277-3a4310e8670858521544ed9f85f27ebd6f8ae7948f9b2849db2747e3eeb4214d.json",
+    "data/player-game-history/observations/401909968-20261112T210357277-1b1f05d8d66b4ee2e3701817476d656b7db77827ec5a87ed8b86582113c7d2d9.json",
+    "data/player-game-history/observations/401909969-20261112T210357277-5fc76a76908c719624f7b66918f30f7a80742a791c589cfbbc22db796d28cfd5.json",
+    "data/player-game-history/observations/401909970-20261112T210357277-93ad4f62306a0524f71cee789c77aadb505ee67d0503d1967efae97923133111.json",
+    "data/player-game-history/observations/401909971-20261112T210357277-3fb7abf3c2c2a5f5e3f027f596e166ca49253aa7b088ae7e05a917bf52a51214.json",
+    "data/player-game-history/observations/401909972-20261112T210357277-a0ba23116dae88feb3f5827594d247a8f37c689cd6b2a75ad51a155ffd9fc35b.json",
+    "data/player-game-history/observations/401909973-20261112T210357277-3c4ab672cfb5e72c092845b36434bd81aa2d23948b4cceaed9438eee7be3775d.json",
+    "data/player-game-history/observations/401909974-20261112T210357277-27d2c0a3b1b25f112541a8a21cffe3eff66e8b72e94d9640a91d482be7cd2396.json",
+    "data/player-game-history/observations/401909975-20261112T210357277-94355dc2e13d3551245e5142c7a6d815e85c1043e48beceabd8804c7599beace.json",
     "data/player-game-history/trends.json"
   ]
 }
