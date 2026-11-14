@@ -1,0 +1,25 @@
+name: Unified NBA challenger checks
+on:
+  pull_request:
+    paths:
+      - 'predict/unified-engine.js'
+      - 'tests/unified_engine.test.cjs'
+      - 'scripts/evaluate_unified.cjs'
+      - '.github/workflows/unified-challenger-ci.yml'
+permissions:
+  contents: read
+jobs:
+  challenger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check code syntax
+        run: node --check predict/unified-engine.js && node --check scripts/evaluate_unified.cjs
+      - name: Test historical and unified engine safeguards
+        run: node --test tests/prediction_engine.test.cjs tests/unified_engine.test.cjs
+      - name: Rebuild read-only fixed-split accuracy evidence
+        run: node scripts/evaluate_unified.cjs
