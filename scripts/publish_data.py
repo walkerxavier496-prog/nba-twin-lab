@@ -34,6 +34,8 @@ def immutable(path):
             path in ("data/v7-intelligence.json", "data/rotation-history.json") or
             (path.startswith("data/") and path.endswith("report.json")) or
             path.startswith("audit/snapshots/") or
+            (path.startswith("audit/morning/") and
+             (path.endswith("/initial.json") or "/games/" in path)) or
             path.startswith("audit/supplements/") or
             (path.startswith("audit/reviews/") and "/games/" in path))
 
@@ -78,7 +80,7 @@ def publish(workflow, receipt, validate):
         "changed_artifacts": changed,
     }, indent=2) + "\n")
     git("add", "--", *changed, str(stamp))
-    if paths_changed() != sorted(changed + [str(stamp)]):
+    if paths_changed() != sorted(changed + [stamp.as_posix()]):
         raise ValueError("Unexpected changes while staging publication")
     git("-c", "user.name=github-actions[bot]", "-c",
         "user.email=41898282+github-actions[bot]@users.noreply.github.com",

@@ -5,6 +5,8 @@ on:
     - cron: '45 11 * * *'
     # Additional pre-tip refresh for Australia/Melbourne morning slates.
     - cron: '05 17 * * *'
+    # 06:00 AEDT / AEST candidates. Local-time gate below avoids the extra refresh.
+    - cron: '0 19,20 * * *'
   push:
     branches: [main]
     paths:
@@ -25,8 +27,24 @@ concurrency:
   group: nba-twin-lab-predictions
   cancel-in-progress: false
 jobs:
-  predictions:
+  clock:
     if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    outputs:
+      proceed: ${{ steps.local.outputs.proceed }}
+    steps:
+      - id: local
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          if [ "$SCHEDULE" != '0 19,20 * * *' ] || [ "$(TZ=Australia/Melbourne date +%H)" = 06 ]; then
+            echo 'proceed=true' >> "$GITHUB_OUTPUT"
+          fi
+  predictions:
+    needs: clock
+    if: github.ref == 'refs/heads/main' && needs.clock.outputs.proceed == 'true'
     env:
       NBA_REVIEW_OUTPUT_DIR: research-reviews/chronology-v1/runs/${{ github.run_id }}-${{ github.run_attempt }}
     runs-on: ubuntu-latest

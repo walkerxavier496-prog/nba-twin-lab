@@ -1,0 +1,58 @@
+/* Morning Game Centre: use Concept 3 colours, not a competing page theme. */
+.daily-cycle{margin:24px auto;padding:24px;max-width:1220px;border:1px solid #274664;border-radius:14px;background:#0e1b2b;color:#d9e6f2;line-height:1.6}
+.daily-cycle h2{margin:8px 0 12px;color:#fff;font:inherit;font-size:clamp(1.5rem,4vw,2rem);font-weight:800}
+.daily-cycle h3{font-size:1rem;color:#f4f8ff;margin:12px 0}
+.daily-cycle a{color:#91d9ff;text-decoration:underline;text-underline-offset:3px}
+.daily-cycle details{border-top:1px solid #274664;padding:12px 0}
+.daily-cycle summary{cursor:pointer;color:#fff;font-weight:700;padding:4px 0}
+.daily-cycle :focus-visible{outline:2px solid #91d9ff;outline-offset:4px}
+.daily-cycle .cycle-status{border-left:3px solid #91d9ff;padding-left:14px}
+.cycle-top{display:flex;align-items:start;justify-content:space-between;gap:20px}
+.cycle-top>div{max-width:760px}
+.cycle-date-label{display:grid;gap:6px;min-width:185px;font-size:.78rem;font-weight:700;color:#a8c1d8}
+.cycle-date-label select{background:#142a43;color:#f4f8ff;border:1px solid #365675;border-radius:8px;padding:10px 12px;font:inherit;min-height:44px}
+.cycle-muted{color:#9eb8d0;font-size:.84rem}
+.cycle-section-heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.cycle-games{list-style:none;padding:0;margin:14px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,295px),1fr));gap:12px}
+.cycle-game{padding:16px;background:#13263b;border:1px solid #254561;border-radius:10px;min-width:0;overflow-wrap:anywhere}
+.cycle-game-head{display:flex;justify-content:space-between;align-items:start;gap:12px}
+.cycle-game-head strong{color:#fff;font-size:1.05rem}
+.cycle-game-head span{color:#a7bed5;font-size:.8rem}
+.cycle-pick{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0 10px}
+.cycle-pick span:first-child{flex-basis:100%;font-size:.75rem;color:#9eb8d0;text-transform:uppercase;letter-spacing:.06em}
+.cycle-pick strong{color:#fff;font-size:1.35rem}
+.cycle-pick span:last-child{color:#91d9ff;font-weight:700}
+.cycle-bar{height:9px;border-radius:999px;background:#6553b9;overflow:hidden}
+.cycle-bar span{display:block;height:100%;background:#20caff}
+.cycle-split{display:flex;justify-content:space-between;gap:12px;font-size:.78rem;color:#a8c1d8;margin-top:5px}
+.cycle-score{font-weight:700;color:#f4f8ff}
+.cycle-result{padding:8px 10px;border-radius:6px;background:#19354c;color:#d6f0ff}
+.cycle-comparisons,.cycle-models{list-style:none;margin:10px 0;padding:0;display:grid;gap:8px}
+.cycle-comparisons li{display:flex;justify-content:space-between;gap:12px;font-size:.85rem}
+.cycle-comparisons li span{color:#a8c1d8;text-align:right}
+.cycle-reports{border-top:1px solid #274664;margin-top:24px;padding-top:10px}
+.cycle-models{grid-template-columns:repeat(auto-fit,minmax(min(100%,255px),1fr));gap:12px}
+.cycle-models li{padding:12px;background:#13263b;border-radius:8px;overflow-wrap:anywhere}
+.cycle-models span{display:block;margin-top:5px;font-size:.82rem;color:#a8c1d8}
+.cycle-findings{padding-left:24px}
+.cycle-findings li{padding:8px 0}
+.cycle-findings p{margin:4px 0;color:#a8c1d8;font-size:.84rem}
+@media(max-width:700px){.daily-cycle{padding:16px;margin:18px 12px}.cycle-top{flex-direction:column}.cycle-date-label{width:100%}.daily-cycle summary{min-height:44px}.cycle-game-head{flex-wrap:wrap}}
+
+.daily-cycle{scroll-margin-top:90px}
+.cycle-preview-warning{border:1px solid #eab308;background:#3b2b10;color:#fff1b8;border-radius:8px;padding:10px 14px;font-size:.85rem;font-weight:800;letter-spacing:.03em}
+.cycle-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}
+.cycle-actions [role=group]{display:flex;gap:4px;padding:4px;background:#071225;border-radius:10px}
+.daily-cycle button{padding:10px 14px;border-radius:7px;border:1px solid #365675;background:#142a43;color:#d9e6f2;font:inherit;font-size:.85rem;cursor:pointer;min-height:44px}
+.daily-cycle button:hover{border-color:#20caff}.daily-cycle button[aria-pressed=true]{background:#1879ff;color:#fff;border-color:#1879ff}
+.cycle-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;border:1px solid #274664;background:#274664;border-radius:10px;overflow:hidden;margin:20px 0}
+.cycle-kpis div{padding:16px;background:#071225}.cycle-kpis small{display:block;color:#9eb8d0;font-size:.65rem;letter-spacing:.05em}.cycle-kpis strong{display:block;color:#f4f8ff;font-size:1.55rem;font-variant-numeric:tabular-nums;margin-top:8px}
+.cycle-game{border-top:3px solid var(--cycle-team,#20caff);box-shadow:0 8px 28px #03091540}
+.cycle-game-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:16px;color:#8ba7c2;font-size:.65rem;letter-spacing:.05em;font-weight:700}
+.cycle-badge{padding:4px 7px;border:1px solid #365675;border-radius:4px;color:#b8d8f7}.cycle-badge.final{color:#70e2b5;background:#0c302a;border-color:#1b6652}
+.cycle-game-head strong{display:flex;align-items:center;gap:6px}.cycle-game-head .team-logo{width:26px;height:26px;min-width:26px}
+.cycle-projections{list-style:none;margin:8px 0;padding:0;max-height:340px;overflow:auto;scrollbar-width:thin}
+.cycle-projections li{padding:9px 0;border-bottom:1px solid #274664;font-size:.8rem}.cycle-projections span{display:block;color:#9eb8d0;margin-top:3px}
+.cycle-models li p{font-size:.8rem;color:#a8c1d8}.cycle-models li summary{font-size:.8rem}
+.home .daily-cycle .cycle-reports,.home .daily-cycle .cycle-recurring{display:none}
+@media(max-width:700px){.cycle-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.cycle-kpis div{padding:12px}.cycle-actions{gap:8px}.cycle-actions a{font-size:.8rem}.cycle-game-head{display:block}.cycle-game-head>span{display:block;margin-top:8px}.cycle-game-meta{font-size:.58rem}}

@@ -308,8 +308,16 @@ def test_every_publisher_uses_shared_action_and_nonrecursive_pages_handoff():
         path = ROOT / ".github/workflows" / f"{name}.yml"
         spec = workflow(path)
         assert spec["name"] in triggers
-        job = next(iter(spec["jobs"].values()))
-        assert job["if"] == "github.ref == 'refs/heads/main'"
+        publishers = [job for job in spec["jobs"].values()
+                      if job["steps"][-1].get("uses") == "./.github/actions/publish-data"]
+        assert len(publishers) == 1
+        job = publishers[0]
+        if name == "update-predictions":
+            assert job["needs"] == "clock"
+            assert job["if"] == "github.ref == 'refs/heads/main' && needs.clock.outputs.proceed == 'true'"
+            assert spec["jobs"]["clock"]["if"] == "github.ref == 'refs/heads/main'"
+        else:
+            assert job["if"] == "github.ref == 'refs/heads/main'"
         assert job["steps"][0]["with"]["fetch-depth"] == "0"
         action = job["steps"][-1]
         assert action["uses"] == "./.github/actions/publish-data"
@@ -344,6 +352,33 @@ def test_player_history_observations_are_immutable_while_indexes_are_derived():
         "data/player-game-history/trends.json",
         "data/player-game-history/observations/*.json",
     }
+
+
+def test_morning_publications_and_results_are_immutable_but_reports_are_derived():
+    assert pub.immutable("audit/morning/2026-11-04/initial.json")
+    assert pub.immutable("audit/morning/2026-11-04/games/123.review.json")
+    assert not pub.immutable("audit/morning/2026-11-04/critique.json")
+    assert not pub.immutable("audit/critiques/2026-11-04/locked.json")
+    assert "data/daily-cycle.json" in json.loads((ROOT / "scripts/publication.json").read_text())["daily-audit"]
+
+
+def test_morning_scheduling_reuses_existing_producers_and_pr_checks_are_read_only():
+    refresh = workflow(ROOT / ".github/workflows/update-predictions.yml")
+    assert {row["cron"] for row in refresh["on"]["schedule"]} == {"45 11 * * *", "05 17 * * *", "0 19,20 * * *"}
+    assert "TZ=Australia/Melbourne date +%H" in refresh["jobs"]["clock"]["steps"][0]["run"]
+    audit = workflow(ROOT / ".github/workflows/daily-audit.yml")
+    assert audit["on"]["schedule"] == [{"cron": "*/15 * * * *"}]
+    assert audit["concurrency"]["cancel-in-progress"] == "false"
+    assert refresh["jobs"]["clock"]["permissions"] == {"contents": "read"}
+    assert workflow(ROOT / ".github/workflows/site-mobile.yml")["permissions"] == {"contents": "read"}
+
+
+def test_release_yaml_validation_rejects_duplicate_keys(tmp_path):
+    validator = load("validate_release")
+    path = tmp_path / "workflow.yml"
+    path.write_text("permissions:\n  contents: read\npermissions:\n  contents: write\n")
+    with pytest.raises(ValueError, match="Duplicate YAML key"):
+        validator.validate_yaml(path)
 
 
 def test_v7_and_v9_declare_all_builder_outputs():
