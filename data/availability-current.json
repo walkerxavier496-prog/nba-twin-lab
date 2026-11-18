@@ -2,13 +2,13 @@
   "schema": "nba-twin-lab-availability-v18",
   "status": "verified",
   "strict_no_future_data": true,
-  "published_at_utc": "2026-11-18T22:00:00Z",
-  "built_at_utc": "2026-11-18T22:03:50.100814Z",
+  "published_at_utc": "2026-11-18T23:15:00Z",
+  "built_at_utc": "2026-11-18T23:22:25.313817Z",
   "source": {
     "type": "official",
-    "url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-11-18_05_00PM.pdf",
+    "url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-11-18_06_15PM.pdf",
     "league_roster": "https://www.nba.com/team/{team-id}/roster",
-    "sha256": "0d3a1c524929d8457a8fd3bde5b37e4b01c619019c6b5a2e6668c7e66e6a3088",
+    "sha256": "4a944757f1400a4d85342e88f0106b5736e3abf40a4f27e5e06c24d8624ebb5a",
     "team_rosters": [
       "https://www.nba.com/team/1610612737/roster",
       "https://www.nba.com/team/1610612751/roster",
@@ -77,7 +77,7 @@
             },
             {
               "player_id": "1641708",
-              "status": "QUESTIONABLE"
+              "status": "AVAILABLE"
             }
           ],
           "roster_source_url": "https://www.nba.com/team/1610612745/roster"
@@ -114,11 +114,11 @@
             },
             {
               "player_id": "204456",
-              "status": "PROBABLE"
+              "status": "AVAILABLE"
             },
             {
               "player_id": "1629614",
-              "status": "QUESTIONABLE"
+              "status": "OUT"
             },
             {
               "player_id": "1641767",
@@ -273,8 +273,12 @@
               "status": "OUT"
             },
             {
-              "player_id": "1629731",
+              "player_id": "1630178",
               "status": "QUESTIONABLE"
+            },
+            {
+              "player_id": "1629731",
+              "status": "OUT"
             }
           ],
           "roster_source_url": "https://www.nba.com/team/1610612755/roster"
@@ -360,10 +364,6 @@
             {
               "player_id": "1643637",
               "status": "OUT"
-            },
-            {
-              "player_id": "1630172",
-              "status": "PROBABLE"
             },
             {
               "player_id": "1643410",
@@ -498,7 +498,7 @@
             },
             {
               "player_id": "1629628",
-              "status": "QUESTIONABLE"
+              "status": "OUT"
             },
             {
               "player_id": "1642927",
