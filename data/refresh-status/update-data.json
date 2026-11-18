@@ -1,9 +1,15 @@
 {
   "workflow": "update-data",
-  "generation_observed_at_utc": "2026-11-18T02:18:39.410315+00:00",
-  "artifact_generation_timestamps": {},
-  "source_revision": "91a513ae84e0f91cc2e7d8424da258647248d3c0",
-  "run_id": "44222071648",
+  "generation_observed_at_utc": "2026-11-18T21:30:19.499983+00:00",
+  "artifact_generation_timestamps": {
+    "data/seasons.json": {
+      "built_at_utc": "2026-11-18T21:28:39.041891+00:00"
+    }
+  },
+  "source_revision": "99e5dde1de76e90dd8a2afc8ddf67679e97860d4",
+  "run_id": "44401769847",
   "run_attempt": "1",
-  "changed_artifacts": []
+  "changed_artifacts": [
+    "data/seasons.json"
+  ]
 }
