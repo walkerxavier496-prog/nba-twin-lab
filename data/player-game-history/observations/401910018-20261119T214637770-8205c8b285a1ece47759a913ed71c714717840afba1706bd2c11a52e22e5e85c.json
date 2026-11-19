@@ -1,0 +1,3204 @@
+{
+  "schema": "nba-twin-lab-player-game-observation-v1",
+  "game_id": "401910018",
+  "event_at_utc": "2026-11-19T03:00:00.000Z",
+  "event_date_source": "ESPN summary event date",
+  "home": {
+    "id": "23",
+    "abbr": "SAC",
+    "score": 107
+  },
+  "away": {
+    "id": "21",
+    "abbr": "PHX",
+    "score": 128
+  },
+  "players": [
+    {
+      "player_id": "3155526",
+      "name": "Dillon Brooks",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 31,
+        "pts": 29,
+        "reb": 3,
+        "ast": 5,
+        "three_pm": 5,
+        "fgm": 12,
+        "fga": 18,
+        "ftm": 0,
+        "fta": 1,
+        "stl": 0,
+        "blk": 0,
+        "tov": 1,
+        "oreb": 0,
+        "dreb": 3,
+        "plus_minus": 26,
+        "fpts": 50
+      }
+    },
+    {
+      "player_id": "4066383",
+      "name": "Miles Bridges",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 29,
+        "pts": 13,
+        "reb": 6,
+        "ast": 5,
+        "three_pm": 1,
+        "fgm": 6,
+        "fga": 8,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 1,
+        "blk": 1,
+        "tov": 0,
+        "oreb": 0,
+        "dreb": 6,
+        "plus_minus": 28,
+        "fpts": 42
+      }
+    },
+    {
+      "player_id": "4601023",
+      "name": "Oso Ighodaro",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 21,
+        "pts": 7,
+        "reb": 4,
+        "ast": 2,
+        "three_pm": 0,
+        "fgm": 3,
+        "fga": 4,
+        "ftm": 1,
+        "fta": 2,
+        "stl": 2,
+        "blk": 0,
+        "tov": 0,
+        "oreb": 0,
+        "dreb": 4,
+        "plus_minus": 0,
+        "fpts": 24
+      }
+    },
+    {
+      "player_id": "3136193",
+      "name": "Devin Booker",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 33,
+        "pts": 29,
+        "reb": 2,
+        "ast": 6,
+        "three_pm": 2,
+        "fgm": 10,
+        "fga": 18,
+        "ftm": 7,
+        "fta": 7,
+        "stl": 1,
+        "blk": 0,
+        "tov": 1,
+        "oreb": 0,
+        "dreb": 2,
+        "plus_minus": 31,
+        "fpts": 49
+      }
+    },
+    {
+      "player_id": "4437244",
+      "name": "Jalen Green",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 30,
+        "pts": 18,
+        "reb": 7,
+        "ast": 7,
+        "three_pm": 4,
+        "fgm": 6,
+        "fga": 14,
+        "ftm": 2,
+        "fta": 2,
+        "stl": 1,
+        "blk": 0,
+        "tov": 2,
+        "oreb": 1,
+        "dreb": 6,
+        "plus_minus": 21,
+        "fpts": 41
+      }
+    },
+    {
+      "player_id": "4888725",
+      "name": "Ryan Dunn",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 13,
+        "pts": 6,
+        "reb": 5,
+        "ast": 2,
+        "three_pm": 0,
+        "fgm": 2,
+        "fga": 5,
+        "ftm": 2,
+        "fta": 4,
+        "stl": 0,
+        "blk": 0,
+        "tov": 1,
+        "oreb": 0,
+        "dreb": 5,
+        "plus_minus": -7,
+        "fpts": 10
+      }
+    },
+    {
+      "player_id": "5041953",
+      "name": "Koa Peat",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 4,
+        "pts": 2,
+        "reb": 0,
+        "ast": 0,
+        "three_pm": 0,
+        "fgm": 1,
+        "fga": 1,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 0,
+        "blk": 1,
+        "tov": 0,
+        "oreb": 0,
+        "dreb": 0,
+        "plus_minus": -4,
+        "fpts": 7
+      }
+    },
+    {
+      "player_id": "5105977",
+      "name": "Rasheer Fleming",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 4,
+        "pts": 0,
+        "reb": 1,
+        "ast": 1,
+        "three_pm": 0,
+        "fgm": 0,
+        "fga": 0,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 0,
+        "blk": 0,
+        "tov": 1,
+        "oreb": 0,
+        "dreb": 1,
+        "plus_minus": -4,
+        "fpts": 1
+      }
+    },
+    {
+      "player_id": "5203685",
+      "name": "Khaman Maluach",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 21,
+        "pts": 10,
+        "reb": 2,
+        "ast": 0,
+        "three_pm": 0,
+        "fgm": 4,
+        "fga": 5,
+        "ftm": 2,
+        "fta": 2,
+        "stl": 0,
+        "blk": 0,
+        "tov": 2,
+        "oreb": 1,
+        "dreb": 1,
+        "plus_minus": 5,
+        "fpts": 11
+      }
+    },
+    {
+      "player_id": "3913174",
+      "name": "Luke Kennard",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 17,
+        "pts": 3,
+        "reb": 3,
+        "ast": 1,
+        "three_pm": 1,
+        "fgm": 1,
+        "fga": 4,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 0,
+        "blk": 0,
+        "tov": 0,
+        "oreb": 0,
+        "dreb": 3,
+        "plus_minus": 11,
+        "fpts": 7
+      }
+    },
+    {
+      "player_id": "4278402",
+      "name": "Jordan Goodwin",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 17,
+        "pts": 2,
+        "reb": 5,
+        "ast": 3,
+        "three_pm": 0,
+        "fgm": 1,
+        "fga": 2,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 1,
+        "blk": 0,
+        "tov": 0,
+        "oreb": 4,
+        "dreb": 1,
+        "plus_minus": 3,
+        "fpts": 17
+      }
+    },
+    {
+      "player_id": "4278585",
+      "name": "Collin Gillespie",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 17,
+        "pts": 9,
+        "reb": 3,
+        "ast": 1,
+        "three_pm": 2,
+        "fgm": 2,
+        "fga": 4,
+        "ftm": 3,
+        "fta": 4,
+        "stl": 1,
+        "blk": 0,
+        "tov": 3,
+        "oreb": 1,
+        "dreb": 2,
+        "plus_minus": -1,
+        "fpts": 13
+      }
+    },
+    {
+      "player_id": "4280245",
+      "name": "Jamaree Bouyea",
+      "identity_status": "verified",
+      "team": {
+        "id": "21",
+        "abbr": "PHX"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 4,
+        "pts": 0,
+        "reb": 1,
+        "ast": 1,
+        "three_pm": 0,
+        "fgm": 0,
+        "fga": 1,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 1,
+        "blk": 0,
+        "tov": 0,
+        "oreb": 0,
+        "dreb": 1,
+        "plus_minus": -4,
+        "fpts": 6
+      }
+    },
+    {
+      "player_id": "3155942",
+      "name": "Domantas Sabonis",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 24,
+        "pts": 8,
+        "reb": 13,
+        "ast": 8,
+        "three_pm": 0,
+        "fgm": 4,
+        "fga": 7,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 1,
+        "blk": 0,
+        "tov": 3,
+        "oreb": 4,
+        "dreb": 9,
+        "plus_minus": -5,
+        "fpts": 36
+      }
+    },
+    {
+      "player_id": "4065732",
+      "name": "De'Andre Hunter",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 35,
+        "pts": 7,
+        "reb": 1,
+        "ast": 4,
+        "three_pm": 1,
+        "fgm": 3,
+        "fga": 11,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 1,
+        "blk": 0,
+        "tov": 2,
+        "oreb": 0,
+        "dreb": 1,
+        "plus_minus": -22,
+        "fpts": 12
+      }
+    },
+    {
+      "player_id": "4594327",
+      "name": "Keegan Murray",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 31,
+        "pts": 12,
+        "reb": 7,
+        "ast": 3,
+        "three_pm": 0,
+        "fgm": 6,
+        "fga": 10,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 1,
+        "blk": 0,
+        "tov": 1,
+        "oreb": 0,
+        "dreb": 7,
+        "plus_minus": -10,
+        "fpts": 29
+      }
+    },
+    {
+      "player_id": "3064440",
+      "name": "Zach LaVine",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 32,
+        "pts": 18,
+        "reb": 5,
+        "ast": 2,
+        "three_pm": 2,
+        "fgm": 8,
+        "fga": 12,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 1,
+        "blk": 0,
+        "tov": 1,
+        "oreb": 0,
+        "dreb": 5,
+        "plus_minus": -22,
+        "fpts": 35
+      }
+    },
+    {
+      "player_id": "5142620",
+      "name": "Darius Acuff Jr.",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 35,
+        "pts": 36,
+        "reb": 4,
+        "ast": 6,
+        "three_pm": 6,
+        "fgm": 11,
+        "fga": 22,
+        "ftm": 8,
+        "fta": 10,
+        "stl": 0,
+        "blk": 2,
+        "tov": 2,
+        "oreb": 0,
+        "dreb": 4,
+        "plus_minus": -19,
+        "fpts": 60
+      }
+    },
+    {
+      "player_id": "4395650",
+      "name": "Leaky Black",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 17,
+        "pts": 3,
+        "reb": 0,
+        "ast": 2,
+        "three_pm": 1,
+        "fgm": 1,
+        "fga": 5,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 0,
+        "blk": 1,
+        "tov": 0,
+        "oreb": 0,
+        "dreb": 0,
+        "plus_minus": -26,
+        "fpts": 9
+      }
+    },
+    {
+      "player_id": "4431679",
+      "name": "Precious Achiuwa",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 8,
+        "pts": 0,
+        "reb": 0,
+        "ast": 0,
+        "three_pm": 0,
+        "fgm": 0,
+        "fga": 1,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 0,
+        "blk": 0,
+        "tov": 1,
+        "oreb": 0,
+        "dreb": 0,
+        "plus_minus": 3,
+        "fpts": -3
+      }
+    },
+    {
+      "player_id": "4917149",
+      "name": "Alex Karaban",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 4,
+        "pts": 0,
+        "reb": 1,
+        "ast": 0,
+        "three_pm": 0,
+        "fgm": 0,
+        "fga": 2,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 0,
+        "blk": 0,
+        "tov": 0,
+        "oreb": 1,
+        "dreb": 0,
+        "plus_minus": 4,
+        "fpts": -1
+      }
+    },
+    {
+      "player_id": "2488653",
+      "name": "Mason Plumlee",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 4,
+        "pts": 0,
+        "reb": 2,
+        "ast": 1,
+        "three_pm": 0,
+        "fgm": 0,
+        "fga": 0,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 1,
+        "blk": 0,
+        "tov": 1,
+        "oreb": 1,
+        "dreb": 1,
+        "plus_minus": 4,
+        "fpts": 6
+      }
+    },
+    {
+      "player_id": "4433174",
+      "name": "Dylan Cardwell",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 12,
+        "pts": 6,
+        "reb": 4,
+        "ast": 0,
+        "three_pm": 0,
+        "fgm": 2,
+        "fga": 2,
+        "ftm": 2,
+        "fta": 2,
+        "stl": 0,
+        "blk": 0,
+        "tov": 1,
+        "oreb": 3,
+        "dreb": 1,
+        "plus_minus": -10,
+        "fpts": 10
+      }
+    },
+    {
+      "player_id": "4066262",
+      "name": "Malik Monk",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 20,
+        "pts": 8,
+        "reb": 1,
+        "ast": 2,
+        "three_pm": 2,
+        "fgm": 3,
+        "fga": 6,
+        "ftm": 0,
+        "fta": 0,
+        "stl": 1,
+        "blk": 0,
+        "tov": 3,
+        "oreb": 0,
+        "dreb": 1,
+        "plus_minus": 4,
+        "fpts": 13
+      }
+    },
+    {
+      "player_id": "4279318",
+      "name": "Daeqwon Plowden",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 4,
+        "pts": 3,
+        "reb": 0,
+        "ast": 0,
+        "three_pm": 1,
+        "fgm": 1,
+        "fga": 3,
+        "ftm": 0,
+        "fta": 2,
+        "stl": 0,
+        "blk": 0,
+        "tov": 0,
+        "oreb": 0,
+        "dreb": 0,
+        "plus_minus": 4,
+        "fpts": 1
+      }
+    },
+    {
+      "player_id": "5106058",
+      "name": "Emanuel Sharp",
+      "identity_status": "verified",
+      "team": {
+        "id": "23",
+        "abbr": "SAC"
+      },
+      "availability": "played",
+      "dnp_reason": null,
+      "stats": {
+        "minutes": 14,
+        "pts": 6,
+        "reb": 2,
+        "ast": 1,
+        "three_pm": 1,
+        "fgm": 2,
+        "fga": 7,
+        "ftm": 1,
+        "fta": 1,
+        "stl": 2,
+        "blk": 0,
+        "tov": 0,
+        "oreb": 2,
+        "dreb": 0,
+        "plus_minus": -10,
+        "fpts": 16
+      }
+    }
+  ],
+  "source": {
+    "name": "ESPN public NBA summary (unofficial)",
+    "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=401910018",
+    "scoreboard_snapshot_at_utc": "2026-11-19T19:38:11.000Z",
+    "retrieved_at_utc": "2026-11-19T21:46:37.770Z",
+    "response_sha256": "f46f493bb4160432e6bb8fe1112cbcd3ffa6649e4441e40ee1edf9fe62bb69f3",
+    "extract_sha256": "4907d3490e1e22e2c28d0c75563e5344df409a3b73a3f6693c69496c0a90b134"
+  },
+  "source_extract": {
+    "header": {
+      "id": "401910018",
+      "uid": "s:40~l:46~e:401910018",
+      "season": {
+        "year": 2027,
+        "current": true,
+        "type": 2
+      },
+      "timeValid": true,
+      "competitions": [
+        {
+          "id": "401910018",
+          "uid": "s:40~l:46~e:401910018~c:401910018",
+          "date": "2026-11-19T03:00Z",
+          "neutralSite": false,
+          "conferenceCompetition": false,
+          "boxscoreAvailable": true,
+          "commentaryAvailable": false,
+          "liveAvailable": false,
+          "shotChartAvailable": true,
+          "timeoutsAvailable": true,
+          "possessionArrowAvailable": false,
+          "onWatchESPN": false,
+          "recent": false,
+          "wallclockAvailable": true,
+          "boxscoreSource": "full",
+          "playByPlaySource": "full",
+          "competitors": [
+            {
+              "id": "23",
+              "uid": "s:40~l:46~t:23",
+              "order": 0,
+              "homeAway": "home",
+              "winner": false,
+              "team": {
+                "id": "23",
+                "guid": "e266c4ea-9af3-1bd8-06fb-fd608fd30e26",
+                "uid": "s:40~l:46~t:23",
+                "location": "Sacramento",
+                "name": "Kings",
+                "abbreviation": "SAC",
+                "displayName": "Sacramento Kings",
+                "color": "5a2d81",
+                "alternateColor": "6a7a82",
+                "logos": [
+                  {
+                    "href": "https://a.espncdn.com/i/teamlogos/nba/500/sac.png",
+                    "width": 500,
+                    "height": 500,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "default"
+                    ],
+                    "lastUpdated": "2024-06-25T21:17Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/i/teamlogos/nba/500-dark/sac.png",
+                    "width": 500,
+                    "height": 500,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "dark"
+                    ],
+                    "lastUpdated": "2024-06-25T21:13Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/sac.png",
+                    "width": 500,
+                    "height": 500,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "scoreboard"
+                    ],
+                    "lastUpdated": "2024-06-25T21:18Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/i/teamlogos/nba/500-dark/scoreboard/sac.png",
+                    "width": 500,
+                    "height": 500,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "scoreboard",
+                      "dark"
+                    ],
+                    "lastUpdated": "2024-06-25T21:14Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/primary_logo_on_white_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_on_white_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/primary_logo_on_black_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_on_black_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/primary_logo_on_primary_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_on_primary_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/primary_logo_on_secondary_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_on_secondary_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/primary_logo_black.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_black"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/primary_logo_white.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_white"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/secondary_logo_on_white_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_on_white_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/secondary_logo_on_black_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_on_black_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/secondary_logo_on_primary_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_on_primary_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/secondary_logo_on_secondary_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_on_secondary_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/secondary_logo_black.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_black"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/e266c4ea-9af3-1bd8-06fb-fd608fd30e26/logos/secondary_logo_white.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_white"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  }
+                ],
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/nba/team/_/name/sac/sacramento-kings",
+                    "text": "Clubhouse"
+                  }
+                ]
+              },
+              "score": "107",
+              "linescores": [
+                {
+                  "displayValue": "31"
+                },
+                {
+                  "displayValue": "29"
+                },
+                {
+                  "displayValue": "24"
+                },
+                {
+                  "displayValue": "23"
+                }
+              ],
+              "record": [
+                {
+                  "type": "total",
+                  "summary": "1-13",
+                  "displayValue": "1-13"
+                },
+                {
+                  "type": "home",
+                  "summary": "0-9",
+                  "displayValue": "0-9"
+                },
+                {
+                  "type": "vsconf",
+                  "summary": "0-0",
+                  "displayValue": "0-0"
+                }
+              ],
+              "possession": false
+            },
+            {
+              "id": "21",
+              "uid": "s:40~l:46~t:21",
+              "order": 1,
+              "homeAway": "away",
+              "winner": true,
+              "team": {
+                "id": "21",
+                "guid": "c6eade89-5971-0e84-8ccb-cd91482b2b50",
+                "uid": "s:40~l:46~t:21",
+                "location": "Phoenix",
+                "name": "Suns",
+                "abbreviation": "PHX",
+                "displayName": "Phoenix Suns",
+                "color": "29127a",
+                "alternateColor": "e56020",
+                "logos": [
+                  {
+                    "href": "https://a.espncdn.com/i/teamlogos/nba/500/phx.png",
+                    "width": 500,
+                    "height": 500,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "default"
+                    ],
+                    "lastUpdated": "2024-06-25T21:17Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/i/teamlogos/nba/500-dark/phx.png",
+                    "width": 500,
+                    "height": 500,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "dark"
+                    ],
+                    "lastUpdated": "2024-06-25T21:13Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phx.png",
+                    "width": 500,
+                    "height": 500,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "scoreboard"
+                    ],
+                    "lastUpdated": "2024-06-25T21:18Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/i/teamlogos/nba/500-dark/scoreboard/phx.png",
+                    "width": 500,
+                    "height": 500,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "scoreboard",
+                      "dark"
+                    ],
+                    "lastUpdated": "2024-06-25T21:14Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/primary_logo_on_white_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_on_white_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/primary_logo_on_black_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_on_black_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/primary_logo_on_primary_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_on_primary_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/primary_logo_on_secondary_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_on_secondary_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/primary_logo_black.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_black"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/primary_logo_white.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "primary_logo_white"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/secondary_logo_on_white_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_on_white_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/secondary_logo_on_black_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_on_black_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/secondary_logo_on_primary_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_on_primary_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/secondary_logo_on_secondary_color.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_on_secondary_color"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/secondary_logo_black.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_black"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  },
+                  {
+                    "href": "https://a.espncdn.com/guid/c6eade89-5971-0e84-8ccb-cd91482b2b50/logos/secondary_logo_white.png",
+                    "width": 4096,
+                    "height": 4096,
+                    "alt": "",
+                    "rel": [
+                      "full",
+                      "secondary_logo_white"
+                    ],
+                    "lastUpdated": "2026-07-22T20:23Z"
+                  }
+                ],
+                "links": [
+                  {
+                    "rel": [
+                      "clubhouse",
+                      "desktop",
+                      "team"
+                    ],
+                    "href": "https://www.espn.com/nba/team/_/name/phx/phoenix-suns",
+                    "text": "Clubhouse"
+                  }
+                ]
+              },
+              "score": "128",
+              "linescores": [
+                {
+                  "displayValue": "36"
+                },
+                {
+                  "displayValue": "29"
+                },
+                {
+                  "displayValue": "34"
+                },
+                {
+                  "displayValue": "29"
+                }
+              ],
+              "record": [
+                {
+                  "type": "total",
+                  "summary": "7-7",
+                  "displayValue": "7-7"
+                },
+                {
+                  "type": "road",
+                  "summary": "2-3",
+                  "displayValue": "2-3"
+                },
+                {
+                  "type": "vsconf",
+                  "summary": "0-0",
+                  "displayValue": "0-0"
+                }
+              ],
+              "possession": false
+            }
+          ],
+          "status": {
+            "type": {
+              "id": "3",
+              "name": "STATUS_FINAL",
+              "state": "post",
+              "completed": true,
+              "description": "Final",
+              "detail": "Final",
+              "shortDetail": "Final"
+            }
+          },
+          "broadcasts": [
+            {
+              "type": {
+                "id": "4",
+                "shortName": "Streaming"
+              },
+              "market": {
+                "id": "3",
+                "type": "Away"
+              },
+              "media": {
+                "shortName": "Suns Live"
+              },
+              "lang": "en",
+              "region": "us",
+              "isNational": false
+            },
+            {
+              "type": {
+                "id": "1",
+                "shortName": "TV"
+              },
+              "market": {
+                "id": "3",
+                "type": "Away"
+              },
+              "media": {
+                "shortName": "Arizona's Family 3TV"
+              },
+              "lang": "en",
+              "region": "us",
+              "isNational": false
+            }
+          ],
+          "series": [
+            {
+              "type": "season",
+              "title": "Regular Season Series",
+              "description": "Regular Season Series",
+              "summary": "PHX leads series 1-0",
+              "completed": false,
+              "totalCompetitions": 4,
+              "competitors": [
+                {
+                  "id": "23",
+                  "uid": "s:40~l:46~t:23",
+                  "wins": 0,
+                  "ties": 0,
+                  "team": {
+                    "$ref": "http://sports.core.api.espn.pvt/v2/sports/basketball/leagues/nba/seasons/2027/teams/23?lang=en&region=us"
+                  }
+                },
+                {
+                  "id": "21",
+                  "uid": "s:40~l:46~t:21",
+                  "wins": 1,
+                  "ties": 0,
+                  "team": {
+                    "$ref": "http://sports.core.api.espn.pvt/v2/sports/basketball/leagues/nba/seasons/2027/teams/21?lang=en&region=us"
+                  }
+                }
+              ],
+              "events": [
+                {
+                  "$ref": "http://sports.core.api.espn.pvt/v2/sports/basketball/leagues/nba/events/401910018?lang=en&region=us",
+                  "id": "401910018"
+                },
+                {
+                  "$ref": "http://sports.core.api.espn.pvt/v2/sports/basketball/leagues/nba/events/401910083?lang=en&region=us",
+                  "id": "401910083"
+                },
+                {
+                  "$ref": "http://sports.core.api.espn.pvt/v2/sports/basketball/leagues/nba/events/401910249?lang=en&region=us",
+                  "id": "401910249"
+                },
+                {
+                  "$ref": "http://sports.core.api.espn.pvt/v2/sports/basketball/leagues/nba/events/401910512?lang=en&region=us",
+                  "id": "401910512"
+                }
+              ],
+              "startDate": "2026-11-19T03:00Z"
+            }
+          ],
+          "boxscoreMinutes": true
+        }
+      ],
+      "links": [
+        {
+          "rel": [
+            "summary",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/nba/game/_/gameId/401910018/suns-kings",
+          "text": "Gamecast",
+          "shortText": "Summary",
+          "isExternal": false,
+          "isPremium": false
+        },
+        {
+          "rel": [
+            "recap",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/nba/recap?gameId=401910018",
+          "text": "Recap",
+          "shortText": "Recap",
+          "isExternal": false,
+          "isPremium": false
+        },
+        {
+          "rel": [
+            "boxscore",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/nba/boxscore/_/gameId/401910018",
+          "text": "Box Score",
+          "shortText": "Box Score",
+          "isExternal": false,
+          "isPremium": false
+        },
+        {
+          "rel": [
+            "pbp",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/nba/playbyplay/_/gameId/401910018",
+          "text": "Play-by-Play",
+          "shortText": "Play-by-Play",
+          "isExternal": false,
+          "isPremium": false
+        },
+        {
+          "rel": [
+            "teamstats",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/nba/matchup?gameId=401910018",
+          "text": "Team Stats",
+          "shortText": "Team Stats",
+          "isExternal": false,
+          "isPremium": false
+        },
+        {
+          "rel": [
+            "videos",
+            "desktop",
+            "event"
+          ],
+          "href": "https://www.espn.com/nba/video?gameId=401910018",
+          "text": "Videos",
+          "shortText": "Videos",
+          "isExternal": false,
+          "isPremium": false
+        }
+      ],
+      "league": {
+        "id": "46",
+        "uid": "s:40~l:46",
+        "name": "National Basketball Association",
+        "abbreviation": "NBA",
+        "shortName": "NBA",
+        "slug": "nba",
+        "isTournament": false,
+        "links": [
+          {
+            "rel": [
+              "index",
+              "desktop",
+              "league"
+            ],
+            "href": "https://www.espn.com/nba/",
+            "text": "Index"
+          },
+          {
+            "rel": [
+              "index",
+              "sportscenter",
+              "app",
+              "league"
+            ],
+            "href": "sportscenter://x-callback-url/showClubhouse?uid=s:40~l:46",
+            "text": "Index"
+          },
+          {
+            "rel": [
+              "schedule",
+              "desktop",
+              "league"
+            ],
+            "href": "https://www.espn.com/nba/schedule",
+            "text": "Schedule"
+          },
+          {
+            "rel": [
+              "schedule",
+              "sportscenter",
+              "app",
+              "league"
+            ],
+            "href": "sportscenter://x-callback-url/showClubhouse?uid=s:40~l:46&section=scores",
+            "text": "Schedule"
+          },
+          {
+            "rel": [
+              "standings",
+              "desktop",
+              "league"
+            ],
+            "href": "https://www.espn.com/nba/standings",
+            "text": "Standings"
+          },
+          {
+            "rel": [
+              "standings",
+              "sportscenter",
+              "app",
+              "league"
+            ],
+            "href": "sportscenter://x-callback-url/showClubhouse?uid=s:40~l:46&section=standings",
+            "text": "Standings"
+          },
+          {
+            "rel": [
+              "rankings",
+              "desktop",
+              "league"
+            ],
+            "href": "https://www.espn.com/nba/rankings",
+            "text": "Rankings"
+          },
+          {
+            "rel": [
+              "rankings",
+              "sportscenter",
+              "app",
+              "league"
+            ],
+            "href": "sportscenter://x-callback-url/showClubhouse?uid=s:40~l:46&section=rankings",
+            "text": "Rankings"
+          },
+          {
+            "rel": [
+              "scores",
+              "desktop",
+              "league"
+            ],
+            "href": "https://www.espn.com/nba/scoreboard",
+            "text": "Scores"
+          },
+          {
+            "rel": [
+              "scores",
+              "sportscenter",
+              "app",
+              "league"
+            ],
+            "href": "sportscenter://x-callback-url/showClubhouse?uid=s:40~l:46&section=scores",
+            "text": "Scores"
+          },
+          {
+            "rel": [
+              "stats",
+              "desktop",
+              "league"
+            ],
+            "href": "https://www.espn.com/nba/stats",
+            "text": "Stats"
+          },
+          {
+            "rel": [
+              "stats",
+              "sportscenter",
+              "app",
+              "league"
+            ],
+            "href": "sportscenter://x-callback-url/showClubhouse?uid=s:40~l:46&section=stats",
+            "text": "Stats"
+          },
+          {
+            "rel": [
+              "teams",
+              "desktop",
+              "league"
+            ],
+            "href": "https://www.espn.com/nba/teams",
+            "text": "Teams"
+          },
+          {
+            "rel": [
+              "athletes",
+              "desktop",
+              "league"
+            ],
+            "href": "https://www.espn.com/nba/players",
+            "text": "Players"
+          },
+          {
+            "rel": [
+              "injuries",
+              "desktop",
+              "league"
+            ],
+            "href": "https://www.espn.com/nba/injuries",
+            "text": "Injuries"
+          },
+          {
+            "rel": [
+              "odds",
+              "desktop",
+              "league"
+            ],
+            "href": "https://www.espn.com/nba/odds",
+            "text": "Odds"
+          },
+          {
+            "rel": [
+              "odds",
+              "sportscenter",
+              "app",
+              "league"
+            ],
+            "href": "sportscenter://x-callback-url/showClubhouse?uid=s:40~l:46&section=odds",
+            "text": "Odds"
+          },
+          {
+            "rel": [
+              "playoff-bracket",
+              "desktop",
+              "league"
+            ],
+            "href": "https://www.espn.com/nba/playoff-bracket",
+            "text": "Bracket"
+          },
+          {
+            "rel": [
+              "playoff-bracket",
+              "sportscenter",
+              "app",
+              "league"
+            ],
+            "href": "sportscenter://x-callback-url/showClubhouse?uid=s:40~l:46&section=bracket",
+            "text": "Bracket"
+          }
+        ],
+        "logos": [
+          {
+            "href": "https://a.espncdn.com/i/teamlogos/leagues/500/nba.png",
+            "rel": [
+              "full",
+              "default"
+            ]
+          },
+          {
+            "href": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/leagues/500-dark/nba.png&w=500&h=500&transparent=true",
+            "rel": [
+              "full",
+              "dark"
+            ]
+          }
+        ]
+      }
+    },
+    "boxscore_players": [
+      {
+        "team": {
+          "id": "21",
+          "uid": "s:40~l:46~t:21",
+          "slug": "phoenix-suns",
+          "location": "Phoenix",
+          "name": "Suns",
+          "abbreviation": "PHX",
+          "displayName": "Phoenix Suns",
+          "shortDisplayName": "Suns",
+          "color": "29127a",
+          "alternateColor": "e56020",
+          "logo": "https://a.espncdn.com/i/teamlogos/nba/500/phx.png"
+        },
+        "statistics": [
+          {
+            "names": [
+              "MIN",
+              "PTS",
+              "FG",
+              "3PT",
+              "FT",
+              "REB",
+              "AST",
+              "TO",
+              "STL",
+              "BLK",
+              "OREB",
+              "DREB",
+              "PF",
+              "+/-"
+            ],
+            "keys": [
+              "minutes",
+              "points",
+              "fieldGoalsMade-fieldGoalsAttempted",
+              "threePointFieldGoalsMade-threePointFieldGoalsAttempted",
+              "freeThrowsMade-freeThrowsAttempted",
+              "rebounds",
+              "assists",
+              "turnovers",
+              "steals",
+              "blocks",
+              "offensiveRebounds",
+              "defensiveRebounds",
+              "fouls",
+              "plusMinus"
+            ],
+            "labels": [
+              "MIN",
+              "PTS",
+              "FG",
+              "3PT",
+              "FT",
+              "REB",
+              "AST",
+              "TO",
+              "STL",
+              "BLK",
+              "OREB",
+              "DREB",
+              "PF",
+              "+/-"
+            ],
+            "descriptions": [
+              "Minutes",
+              "Points",
+              "Field Goals Made/Attempted",
+              "3-Point Field Goals Made/Attempted",
+              "Free Throws Made/Attempted",
+              "Rebounds",
+              "Assists",
+              "Turnovers",
+              "Steals",
+              "Blocks",
+              "Offensive Rebounds",
+              "Defensive Rebounds",
+              "Personal Fouls",
+              "Teams net points while player is on the court."
+            ],
+            "athletes": [
+              {
+                "active": false,
+                "athlete": {
+                  "id": "3155526",
+                  "uid": "s:40~l:46~a:3155526",
+                  "guid": "653c07b5-8537-14ac-f4c6-b4e37919aca0",
+                  "displayName": "Dillon Brooks",
+                  "shortName": "D. Brooks",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/3155526/dillon-brooks",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/3155526.png",
+                    "alt": "Dillon Brooks"
+                  },
+                  "jersey": "3",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": true,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "31",
+                  "29",
+                  "12-18",
+                  "5-9",
+                  "0-1",
+                  "3",
+                  "5",
+                  "1",
+                  "0",
+                  "0",
+                  "0",
+                  "3",
+                  "3",
+                  "+26"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "4066383",
+                  "uid": "s:40~l:46~a:4066383",
+                  "guid": "f288347b-fa90-b31d-965a-98e20e1a8294",
+                  "displayName": "Miles Bridges",
+                  "shortName": "M. Bridges",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4066383/miles-bridges",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4066383.png",
+                    "alt": "Miles Bridges"
+                  },
+                  "jersey": "22",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": true,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "29",
+                  "13",
+                  "6-8",
+                  "1-2",
+                  "0-0",
+                  "6",
+                  "5",
+                  "0",
+                  "1",
+                  "1",
+                  "0",
+                  "6",
+                  "2",
+                  "+28"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "4601023",
+                  "uid": "s:40~l:46~a:4601023",
+                  "guid": "b093a530-f703-32ff-94a5-5b1f3ee08ebc",
+                  "displayName": "Oso Ighodaro",
+                  "shortName": "O. Ighodaro",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4601023/oso-ighodaro",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4601023.png",
+                    "alt": "Oso Ighodaro"
+                  },
+                  "jersey": "11",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": true,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "21",
+                  "7",
+                  "3-4",
+                  "0-0",
+                  "1-2",
+                  "4",
+                  "2",
+                  "0",
+                  "2",
+                  "0",
+                  "0",
+                  "4",
+                  "2",
+                  "0"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "3136193",
+                  "uid": "s:40~l:46~a:3136193",
+                  "guid": "493046d7-fa60-d8a1-1397-b9a6dca8dedf",
+                  "displayName": "Devin Booker",
+                  "shortName": "D. Booker",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/3136193/devin-booker",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/3136193.png",
+                    "alt": "Devin Booker"
+                  },
+                  "jersey": "15",
+                  "position": {
+                    "name": "Guard",
+                    "displayName": "Guard",
+                    "abbreviation": "G"
+                  }
+                },
+                "starter": true,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "33",
+                  "29",
+                  "10-18",
+                  "2-6",
+                  "7-7",
+                  "2",
+                  "6",
+                  "1",
+                  "1",
+                  "0",
+                  "0",
+                  "2",
+                  "0",
+                  "+31"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "4437244",
+                  "uid": "s:40~l:46~a:4437244",
+                  "guid": "e9d2d871-df56-3068-8d5f-e3fc27f49a96",
+                  "displayName": "Jalen Green",
+                  "shortName": "J. Green",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4437244/jalen-green",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4437244.png",
+                    "alt": "Jalen Green"
+                  },
+                  "jersey": "4",
+                  "position": {
+                    "name": "Guard",
+                    "displayName": "Guard",
+                    "abbreviation": "G"
+                  }
+                },
+                "starter": true,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "30",
+                  "18",
+                  "6-14",
+                  "4-7",
+                  "2-2",
+                  "7",
+                  "7",
+                  "2",
+                  "1",
+                  "0",
+                  "1",
+                  "6",
+                  "2",
+                  "+21"
+                ]
+              },
+              {
+                "active": true,
+                "athlete": {
+                  "id": "4888725",
+                  "uid": "s:40~l:46~a:4888725",
+                  "guid": "ca1ecfe6-1c97-3912-899f-f4f0c3cf596e",
+                  "displayName": "Ryan Dunn",
+                  "shortName": "R. Dunn",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4888725/ryan-dunn",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4888725.png",
+                    "alt": "Ryan Dunn"
+                  },
+                  "jersey": "0",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "13",
+                  "6",
+                  "2-5",
+                  "0-2",
+                  "2-4",
+                  "5",
+                  "2",
+                  "1",
+                  "0",
+                  "0",
+                  "0",
+                  "5",
+                  "1",
+                  "-7"
+                ]
+              },
+              {
+                "active": true,
+                "athlete": {
+                  "id": "5041953",
+                  "uid": "s:40~l:46~a:5041953",
+                  "guid": "2bb1c38f-a810-397f-b99f-a7e37a3feaa8",
+                  "displayName": "Koa Peat",
+                  "shortName": "K. Peat",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/5041953/koa-peat",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/5041953.png",
+                    "alt": "Koa Peat"
+                  },
+                  "jersey": "18",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "4",
+                  "2",
+                  "1-1",
+                  "0-0",
+                  "0-0",
+                  "0",
+                  "0",
+                  "0",
+                  "0",
+                  "1",
+                  "0",
+                  "0",
+                  "1",
+                  "-4"
+                ]
+              },
+              {
+                "active": true,
+                "athlete": {
+                  "id": "5105977",
+                  "uid": "s:40~l:46~a:5105977",
+                  "guid": "679d9209-1fb2-3229-8490-00152a64ca0f",
+                  "displayName": "Rasheer Fleming",
+                  "shortName": "R. Fleming",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/5105977/rasheer-fleming",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/5105977.png",
+                    "alt": "Rasheer Fleming"
+                  },
+                  "jersey": "20",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "4",
+                  "0",
+                  "0-0",
+                  "0-0",
+                  "0-0",
+                  "1",
+                  "1",
+                  "1",
+                  "0",
+                  "0",
+                  "0",
+                  "1",
+                  "0",
+                  "-4"
+                ]
+              },
+              {
+                "active": true,
+                "athlete": {
+                  "id": "5203685",
+                  "uid": "s:40~l:46~a:5203685",
+                  "guid": "2cf33fe2-4a92-3188-9d87-78ac5aac53be",
+                  "displayName": "Khaman Maluach",
+                  "shortName": "K. Maluach",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/5203685/khaman-maluach",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/5203685.png",
+                    "alt": "Khaman Maluach"
+                  },
+                  "jersey": "10",
+                  "position": {
+                    "name": "Center",
+                    "displayName": "Center",
+                    "abbreviation": "C"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "21",
+                  "10",
+                  "4-5",
+                  "0-0",
+                  "2-2",
+                  "2",
+                  "0",
+                  "2",
+                  "0",
+                  "0",
+                  "1",
+                  "1",
+                  "4",
+                  "+5"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "3913174",
+                  "uid": "s:40~l:46~a:3913174",
+                  "guid": "668a6a14-4003-d79c-c252-0ece0a960d36",
+                  "displayName": "Luke Kennard",
+                  "shortName": "L. Kennard",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/3913174/luke-kennard",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/3913174.png",
+                    "alt": "Luke Kennard"
+                  },
+                  "jersey": "8",
+                  "position": {
+                    "name": "Guard",
+                    "displayName": "Guard",
+                    "abbreviation": "G"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "17",
+                  "3",
+                  "1-4",
+                  "1-4",
+                  "0-0",
+                  "3",
+                  "1",
+                  "0",
+                  "0",
+                  "0",
+                  "0",
+                  "3",
+                  "1",
+                  "+11"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "4278402",
+                  "uid": "s:40~l:46~a:4278402",
+                  "guid": "0bd90eae-7fa2-1afb-904f-535595216bb3",
+                  "displayName": "Jordan Goodwin",
+                  "shortName": "J. Goodwin",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4278402/jordan-goodwin",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4278402.png",
+                    "alt": "Jordan Goodwin"
+                  },
+                  "jersey": "23",
+                  "position": {
+                    "name": "Guard",
+                    "displayName": "Guard",
+                    "abbreviation": "G"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "17",
+                  "2",
+                  "1-2",
+                  "0-0",
+                  "0-0",
+                  "5",
+                  "3",
+                  "0",
+                  "1",
+                  "0",
+                  "4",
+                  "1",
+                  "1",
+                  "+3"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "4278585",
+                  "uid": "s:40~l:46~a:4278585",
+                  "guid": "914151fa-d6c5-822e-fb8a-9f5c13711e98",
+                  "displayName": "Collin Gillespie",
+                  "shortName": "C. Gillespie",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4278585/collin-gillespie",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4278585.png",
+                    "alt": "Collin Gillespie"
+                  },
+                  "jersey": "12",
+                  "position": {
+                    "name": "Guard",
+                    "displayName": "Guard",
+                    "abbreviation": "G"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "17",
+                  "9",
+                  "2-4",
+                  "2-3",
+                  "3-4",
+                  "3",
+                  "1",
+                  "3",
+                  "1",
+                  "0",
+                  "1",
+                  "2",
+                  "0",
+                  "-1"
+                ]
+              },
+              {
+                "active": true,
+                "athlete": {
+                  "id": "4280245",
+                  "uid": "s:40~l:46~a:4280245",
+                  "guid": "d244218a-3889-ad96-ef57-e22101c8092e",
+                  "displayName": "Jamaree Bouyea",
+                  "shortName": "J. Bouyea",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4280245/jamaree-bouyea",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4280245.png",
+                    "alt": "Jamaree Bouyea"
+                  },
+                  "jersey": "17",
+                  "position": {
+                    "name": "Guard",
+                    "displayName": "Guard",
+                    "abbreviation": "G"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "4",
+                  "0",
+                  "0-1",
+                  "0-1",
+                  "0-0",
+                  "1",
+                  "1",
+                  "0",
+                  "1",
+                  "0",
+                  "0",
+                  "1",
+                  "0",
+                  "-4"
+                ]
+              }
+            ],
+            "totals": [
+              "",
+              "128",
+              "48-84",
+              "15-34",
+              "17-22",
+              "42",
+              "34",
+              "11",
+              "8",
+              "2",
+              "7",
+              "35",
+              "17",
+              ""
+            ]
+          }
+        ],
+        "displayOrder": 1
+      },
+      {
+        "team": {
+          "id": "23",
+          "uid": "s:40~l:46~t:23",
+          "slug": "sacramento-kings",
+          "location": "Sacramento",
+          "name": "Kings",
+          "abbreviation": "SAC",
+          "displayName": "Sacramento Kings",
+          "shortDisplayName": "Kings",
+          "color": "5a2d81",
+          "alternateColor": "6a7a82",
+          "logo": "https://a.espncdn.com/i/teamlogos/nba/500/sac.png"
+        },
+        "statistics": [
+          {
+            "names": [
+              "MIN",
+              "PTS",
+              "FG",
+              "3PT",
+              "FT",
+              "REB",
+              "AST",
+              "TO",
+              "STL",
+              "BLK",
+              "OREB",
+              "DREB",
+              "PF",
+              "+/-"
+            ],
+            "keys": [
+              "minutes",
+              "points",
+              "fieldGoalsMade-fieldGoalsAttempted",
+              "threePointFieldGoalsMade-threePointFieldGoalsAttempted",
+              "freeThrowsMade-freeThrowsAttempted",
+              "rebounds",
+              "assists",
+              "turnovers",
+              "steals",
+              "blocks",
+              "offensiveRebounds",
+              "defensiveRebounds",
+              "fouls",
+              "plusMinus"
+            ],
+            "labels": [
+              "MIN",
+              "PTS",
+              "FG",
+              "3PT",
+              "FT",
+              "REB",
+              "AST",
+              "TO",
+              "STL",
+              "BLK",
+              "OREB",
+              "DREB",
+              "PF",
+              "+/-"
+            ],
+            "descriptions": [
+              "Minutes",
+              "Points",
+              "Field Goals Made/Attempted",
+              "3-Point Field Goals Made/Attempted",
+              "Free Throws Made/Attempted",
+              "Rebounds",
+              "Assists",
+              "Turnovers",
+              "Steals",
+              "Blocks",
+              "Offensive Rebounds",
+              "Defensive Rebounds",
+              "Personal Fouls",
+              "Teams net points while player is on the court."
+            ],
+            "athletes": [
+              {
+                "active": false,
+                "athlete": {
+                  "id": "3155942",
+                  "uid": "s:40~l:46~a:3155942",
+                  "guid": "c2eb1a17-7809-2cc6-3fa7-7a5e63654ae4",
+                  "displayName": "Domantas Sabonis",
+                  "shortName": "D. Sabonis",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/3155942/domantas-sabonis",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/3155942.png",
+                    "alt": "Domantas Sabonis"
+                  },
+                  "jersey": "11",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": true,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "24",
+                  "8",
+                  "4-7",
+                  "0-1",
+                  "0-0",
+                  "13",
+                  "8",
+                  "3",
+                  "1",
+                  "0",
+                  "4",
+                  "9",
+                  "1",
+                  "-5"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "4065732",
+                  "uid": "s:40~l:46~a:4065732",
+                  "guid": "bb7bc777-960c-1ff4-57b1-cba0c72c6ca3",
+                  "displayName": "De'Andre Hunter",
+                  "shortName": "D. Hunter",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4065732/deandre-hunter",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4065732.png",
+                    "alt": "De'Andre Hunter"
+                  },
+                  "jersey": "15",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": true,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "35",
+                  "7",
+                  "3-11",
+                  "1-4",
+                  "0-0",
+                  "1",
+                  "4",
+                  "2",
+                  "1",
+                  "0",
+                  "0",
+                  "1",
+                  "2",
+                  "-22"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "4594327",
+                  "uid": "s:40~l:46~a:4594327",
+                  "guid": "3077c486-4dd1-36e7-ab23-aa28144b7a1b",
+                  "displayName": "Keegan Murray",
+                  "shortName": "K. Murray",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4594327/keegan-murray",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4594327.png",
+                    "alt": "Keegan Murray"
+                  },
+                  "jersey": "13",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": true,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "31",
+                  "12",
+                  "6-10",
+                  "0-3",
+                  "0-0",
+                  "7",
+                  "3",
+                  "1",
+                  "1",
+                  "0",
+                  "0",
+                  "7",
+                  "2",
+                  "-10"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "3064440",
+                  "uid": "s:40~l:46~a:3064440",
+                  "guid": "dba79cae-3f61-b87b-37d9-223f39b4f516",
+                  "displayName": "Zach LaVine",
+                  "shortName": "Z. LaVine",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/3064440/zach-lavine",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/3064440.png",
+                    "alt": "Zach LaVine"
+                  },
+                  "jersey": "8",
+                  "position": {
+                    "name": "Guard",
+                    "displayName": "Guard",
+                    "abbreviation": "G"
+                  }
+                },
+                "starter": true,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "32",
+                  "18",
+                  "8-12",
+                  "2-6",
+                  "0-0",
+                  "5",
+                  "2",
+                  "1",
+                  "1",
+                  "0",
+                  "0",
+                  "5",
+                  "2",
+                  "-22"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "5142620",
+                  "uid": "s:40~l:46~a:5142620",
+                  "guid": "2d9a5748-cbb5-3a2d-81d9-01a474f70dfd",
+                  "displayName": "Darius Acuff Jr.",
+                  "shortName": "D. Acuff Jr.",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/5142620/darius-acuff-jr",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/5142620.png",
+                    "alt": "Darius Acuff Jr."
+                  },
+                  "jersey": "5",
+                  "position": {
+                    "name": "Guard",
+                    "displayName": "Guard",
+                    "abbreviation": "G"
+                  }
+                },
+                "starter": true,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "35",
+                  "36",
+                  "11-22",
+                  "6-11",
+                  "8-10",
+                  "4",
+                  "6",
+                  "2",
+                  "0",
+                  "2",
+                  "0",
+                  "4",
+                  "2",
+                  "-19"
+                ]
+              },
+              {
+                "active": true,
+                "athlete": {
+                  "id": "4395650",
+                  "uid": "s:40~l:46~a:4395650",
+                  "guid": "ca5e732a-7afc-90f0-d378-afb4af228294",
+                  "displayName": "Leaky Black",
+                  "shortName": "L. Black",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4395650/leaky-black",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4395650.png",
+                    "alt": "Leaky Black"
+                  },
+                  "jersey": "19",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "17",
+                  "3",
+                  "1-5",
+                  "1-4",
+                  "0-0",
+                  "0",
+                  "2",
+                  "0",
+                  "0",
+                  "1",
+                  "0",
+                  "0",
+                  "3",
+                  "-26"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "4431679",
+                  "uid": "s:40~l:46~a:4431679",
+                  "guid": "79540e31-b541-3156-9ed2-fea920e18b17",
+                  "displayName": "Precious Achiuwa",
+                  "shortName": "P. Achiuwa",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4431679/precious-achiuwa",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4431679.png",
+                    "alt": "Precious Achiuwa"
+                  },
+                  "jersey": "9",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "8",
+                  "0",
+                  "0-1",
+                  "0-0",
+                  "0-0",
+                  "0",
+                  "0",
+                  "1",
+                  "0",
+                  "0",
+                  "0",
+                  "0",
+                  "0",
+                  "+3"
+                ]
+              },
+              {
+                "active": true,
+                "athlete": {
+                  "id": "4917149",
+                  "uid": "s:40~l:46~a:4917149",
+                  "guid": "80088292-4b09-39c6-b079-79c090c5a986",
+                  "displayName": "Alex Karaban",
+                  "shortName": "A. Karaban",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4917149/alex-karaban",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4917149.png",
+                    "alt": "Alex Karaban"
+                  },
+                  "jersey": "33",
+                  "position": {
+                    "name": "Forward",
+                    "displayName": "Forward",
+                    "abbreviation": "F"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "4",
+                  "0",
+                  "0-2",
+                  "0-2",
+                  "0-0",
+                  "1",
+                  "0",
+                  "0",
+                  "0",
+                  "0",
+                  "1",
+                  "0",
+                  "0",
+                  "+4"
+                ]
+              },
+              {
+                "active": true,
+                "athlete": {
+                  "id": "2488653",
+                  "uid": "s:40~l:46~a:2488653",
+                  "guid": "058a249e-8929-5de1-5f07-4f1b4ba96a90",
+                  "displayName": "Mason Plumlee",
+                  "shortName": "M. Plumlee",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/2488653/mason-plumlee",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/2488653.png",
+                    "alt": "Mason Plumlee"
+                  },
+                  "jersey": "24",
+                  "position": {
+                    "name": "Center",
+                    "displayName": "Center",
+                    "abbreviation": "C"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "4",
+                  "0",
+                  "0-0",
+                  "0-0",
+                  "0-0",
+                  "2",
+                  "1",
+                  "1",
+                  "1",
+                  "0",
+                  "1",
+                  "1",
+                  "1",
+                  "+4"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "4433174",
+                  "uid": "s:40~l:46~a:4433174",
+                  "guid": "8996eb0c-2838-3125-b3f6-48816b254314",
+                  "displayName": "Dylan Cardwell",
+                  "shortName": "D. Cardwell",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4433174/dylan-cardwell",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4433174.png",
+                    "alt": "Dylan Cardwell"
+                  },
+                  "jersey": "32",
+                  "position": {
+                    "name": "Center",
+                    "displayName": "Center",
+                    "abbreviation": "C"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "12",
+                  "6",
+                  "2-2",
+                  "0-0",
+                  "2-2",
+                  "4",
+                  "0",
+                  "1",
+                  "0",
+                  "0",
+                  "3",
+                  "1",
+                  "0",
+                  "-10"
+                ]
+              },
+              {
+                "active": false,
+                "athlete": {
+                  "id": "4066262",
+                  "uid": "s:40~l:46~a:4066262",
+                  "guid": "919db74b-1f21-4955-fa42-446e67f7811c",
+                  "displayName": "Malik Monk",
+                  "shortName": "M. Monk",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4066262/malik-monk",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4066262.png",
+                    "alt": "Malik Monk"
+                  },
+                  "jersey": "0",
+                  "position": {
+                    "name": "Guard",
+                    "displayName": "Guard",
+                    "abbreviation": "G"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "20",
+                  "8",
+                  "3-6",
+                  "2-4",
+                  "0-0",
+                  "1",
+                  "2",
+                  "3",
+                  "1",
+                  "0",
+                  "0",
+                  "1",
+                  "1",
+                  "+4"
+                ]
+              },
+              {
+                "active": true,
+                "athlete": {
+                  "id": "4279318",
+                  "uid": "s:40~l:46~a:4279318",
+                  "guid": "6d4365e8-26f4-4a15-1b5b-f998b4ecfbed",
+                  "displayName": "Daeqwon Plowden",
+                  "shortName": "D. Plowden",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/4279318/daeqwon-plowden",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/4279318.png",
+                    "alt": "Daeqwon Plowden"
+                  },
+                  "jersey": "29",
+                  "position": {
+                    "name": "Guard",
+                    "displayName": "Guard",
+                    "abbreviation": "G"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "4",
+                  "3",
+                  "1-3",
+                  "1-1",
+                  "0-2",
+                  "0",
+                  "0",
+                  "0",
+                  "0",
+                  "0",
+                  "0",
+                  "0",
+                  "0",
+                  "+4"
+                ]
+              },
+              {
+                "active": true,
+                "athlete": {
+                  "id": "5106058",
+                  "uid": "s:40~l:46~a:5106058",
+                  "guid": "7c1ed5bf-7a04-305b-830c-9e62bd7d6feb",
+                  "displayName": "Emanuel Sharp",
+                  "shortName": "E. Sharp",
+                  "links": [
+                    {
+                      "rel": [
+                        "playercard",
+                        "desktop",
+                        "athlete"
+                      ],
+                      "href": "https://www.espn.com/nba/player/_/id/5106058/emanuel-sharp",
+                      "text": "Player Card"
+                    }
+                  ],
+                  "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nba/players/full/5106058.png",
+                    "alt": "Emanuel Sharp"
+                  },
+                  "jersey": "34",
+                  "position": {
+                    "name": "Guard",
+                    "displayName": "Guard",
+                    "abbreviation": "G"
+                  }
+                },
+                "starter": false,
+                "didNotPlay": false,
+                "reason": "COACH'S DECISION",
+                "ejected": false,
+                "stats": [
+                  "14",
+                  "6",
+                  "2-7",
+                  "1-4",
+                  "1-1",
+                  "2",
+                  "1",
+                  "0",
+                  "2",
+                  "0",
+                  "2",
+                  "0",
+                  "3",
+                  "-10"
+                ]
+              }
+            ],
+            "totals": [
+              "",
+              "107",
+              "41-88",
+              "14-40",
+              "11-15",
+              "40",
+              "29",
+              "15",
+              "8",
+              "3",
+              "11",
+              "29",
+              "17",
+              ""
+            ]
+          }
+        ],
+        "displayOrder": 2
+      }
+    ]
+  },
+  "normalized_sha256": "8205c8b285a1ece47759a913ed71c714717840afba1706bd2c11a52e22e5e85c"
+}
