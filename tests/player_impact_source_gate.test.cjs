@@ -1,0 +1,11 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const {validate}=require('../predict/player-impact-source-gate.js');
+const priors=Array.from({length:10},(_,i)=>({player_id:String(i+1),box_prior:0,available_at_utc:'2026-11-18T00:00:00Z'}));
+const source={provider:'test-fixture',url:'https://example.org/fixture',dataset_version:'fixture-v1',retrieved_at_utc:'2026-11-19T04:00:00Z'};
+const o={game_id:'123',stint_id:'first',ended_at_utc:'2026-11-19T01:00:00Z',available_at_utc:'2026-11-19T04:00:00Z',home_player_ids:['1','2','3','4','5'],away_player_ids:['6','7','8','9','10'],margin_per_100:5,possessions:20};
+const input={as_of_utc:'2026-11-20T10:00:00Z',source,priors,observations:[o]};
+test('accepts structurally valid fixture but does not authenticate source',()=>{const r=validate(input);assert.equal(r.ready,true);assert.match(r.limitation,/not independently authenticated/);});
+test('rejects post-cutoff source retrieval',()=>assert.equal(validate({...input,source:{...source,retrieved_at_utc:'2026-11-21T00:00:00Z'}}).ready,false));
+test('rejects duplicated stints',()=>assert.equal(validate({...input,observations:[o,o]}).ready,false));
+test('rejects unknown players',()=>assert.equal(validate({...input,observations:[{...o,home_player_ids:['1','2','3','4','99']}]}).ready,false));

@@ -1,0 +1,12 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const {fitVerified}=require('../predict/player-impact-fit-verified.js');
+const priors=Array.from({length:10},(_,i)=>({player_id:String(i+1),box_prior:0,available_at_utc:'2026-11-18T00:00:00Z'}));
+const source={provider:'fixture-only',url:'https://example.org/test',dataset_version:'fixture-v1',retrieved_at_utc:'2026-11-19T04:00:00Z'};
+const base={ended_at_utc:'2026-11-19T01:00:00Z',available_at_utc:'2026-11-19T04:00:00Z',home_player_ids:['1','2','3','4','5'],away_player_ids:['6','7','8','9','10'],margin_per_100:5,possessions:20};
+const observations=Array.from({length:40},(_,i)=>({...base,game_id:String(100+Math.floor(i/20)),stint_id:String(i)}));
+const input={as_of_utc:'2026-11-20T10:00:00Z',source,priors,observations};
+test('gated fit remains research-only',()=>{const r=fitVerified(input);assert.equal(r.available,true);assert.equal(r.production,false);assert.equal(r.games_used,2);assert.equal(r.validated_probability,false);});
+test('rejects duplicate stints before fit',()=>assert.equal(fitVerified({...input,observations:[observations[0],observations[0],...observations.slice(2)]}).available,false));
+test('rejects single-game overfit',()=>assert.equal(fitVerified({...input,observations:observations.map(o=>({...o,game_id:'100'}))}).available,false));
+test('rejects future source retrieval',()=>assert.equal(fitVerified({...input,source:{...source,retrieved_at_utc:'2026-11-21T00:00:00Z'}}).available,false));
