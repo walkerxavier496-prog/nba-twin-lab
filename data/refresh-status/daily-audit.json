@@ -1,13 +1,9 @@
 {
   "workflow": "daily-audit",
-  "generation_observed_at_utc": "2026-11-24T01:44:07.478748+00:00",
-  "artifact_generation_timestamps": {
-    "data/availability-current.json": {
-      "built_at_utc": "2026-11-24T01:43:47.205646Z"
-    }
-  },
-  "source_revision": "6f81e9f905b50c4db8ce52317eab675b2cbd119e",
-  "run_id": "45307164180",
+  "generation_observed_at_utc": "2026-11-24T03:16:28.534220+00:00",
+  "artifact_generation_timestamps": {},
+  "source_revision": "c32dc413bcaca9bb344419b10300491ab35aa794",
+  "run_id": "45318286758",
   "run_attempt": "1",
   "changed_artifacts": [
     "audit/anchors/2026-10-31.json",
@@ -28,7 +24,6 @@
     "audit/anchors/2026-11-18.json",
     "audit/anchors/2026-11-19.json",
     "audit/anchors/2026-11-20.json",
-    "audit/anchors/2026-11-21.json",
-    "data/availability-current.json"
+    "audit/anchors/2026-11-21.json"
   ]
 }
