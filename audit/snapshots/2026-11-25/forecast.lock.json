@@ -1,0 +1,4291 @@
+{
+  "schema": "nba-twin-lab-daily-forecast-v2",
+  "locked_at_utc": "2026-11-24T23:08:34.276Z",
+  "locked_at_melbourne": "Wednesday 25 November 2026 at 10:08:34 am AEDT",
+  "immutable_intent": "Forecast fields are append-only and must never be edited after publication. Results belong in a separate review artifact.",
+  "scope": {
+    "melbourne_date": "2026-11-25",
+    "timezone": "Australia/Melbourne",
+    "games": 3,
+    "player_projections": 72,
+    "first_tip_utc": "2026-11-25T00:00:00.000Z",
+    "last_tip_utc": "2026-11-25T03:00:00.000Z"
+  },
+  "model_policy": {
+    "production": "production_elo_v7",
+    "research_comparisons": [
+      "m1_elo",
+      "m2_science",
+      "m3_player_roster",
+      "m4_monte_carlo",
+      "m5_regularized_ml",
+      "m6_ensemble",
+      "v9_conditional_player_stats"
+    ],
+    "promotion": "No automatic promotion. Research must beat the production model prospectively on probability and error metrics before a reviewed code change."
+  },
+  "source_provenance": {
+    "schedule_results": {
+      "name": "ESPN public scoreboard (unofficial)",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
+      "built_at_utc": "2026-11-24T21:32:19.000Z",
+      "status": "undocumented; may change or block automated requests"
+    },
+    "team_context": {
+      "name": "Basketball Reference dataset mirror",
+      "url": "https://github.com/sumitrodatta/bball-reference-datasets",
+      "built_at_utc": "2026-10-30T14:05:33+00:00"
+    },
+    "v9_player_rotation": {
+      "name": "NBA Stats-derived pregame player logs via repository V9 builder",
+      "built_at_utc": "2026-11-24T22:46:22.000Z",
+      "strict_no_future_data": true
+    },
+    "roster_research": {
+      "generated_at_utc": "2026-10-30T16:20:19.733Z",
+      "status": "research_only_not_promoted"
+    },
+    "five_model_challenge": {
+      "generated_at_utc": "2026-10-31T04:58:06.935Z",
+      "version": "1.0.0",
+      "schema": "nba-twin-lab-five-model-challenge-v1",
+      "status": "research_only_not_promoted",
+      "strict_no_future_data": true
+    },
+    "injuries": {
+      "name": "Availability source for V18 audit",
+      "status": "verified",
+      "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-11-24_06_00PM.pdf",
+      "published_at_utc": "2026-11-24T23:00:00Z",
+      "effect": "V18 checks current-roster and injury provenance; Elo/V9 model outputs are not recomputed from this audit"
+    }
+  },
+  "review_protocol": {
+    "game_metrics": [
+      "winner_accuracy",
+      "brier",
+      "log_loss",
+      "score_mae_per_team"
+    ],
+    "player_metrics": [
+      "pts_mae",
+      "reb_mae",
+      "ast_mae",
+      "three_pm_mae"
+    ],
+    "played_rule": "Score only provider-listed players with minutes > 0; DNP and absent rows are excluded, never zero-filled."
+  },
+  "forecasts": [
+    {
+      "game_id": "401909314",
+      "tip_utc": "2026-11-25T00:00:00.000Z",
+      "tip_melbourne": "Wednesday 25 November 2026 at 11:00:00 am AEDT",
+      "away": {
+        "id": "8",
+        "name": "Detroit Pistons",
+        "abbr": "DET"
+      },
+      "home": {
+        "id": "19",
+        "name": "Orlando Magic",
+        "abbr": "ORL"
+      },
+      "primary_forecast": {
+        "model_id": "production_elo_v7",
+        "model": "production Elo baseline",
+        "version_status": "production",
+        "winner": "DET",
+        "winner_probability": 0.6319014892243895,
+        "home_win_probability": 0.3680985107756105,
+        "away_win_probability": 0.6319014892243895,
+        "projected_score": {
+          "away": 113.88738703789546,
+          "home": 110.7582494583366
+        }
+      },
+      "diagnostics": {
+        "monte_carlo": {
+          "model_id": "possession_monte_carlo_v5",
+          "version_status": "diagnostic_not_promoted",
+          "simulations": 20000,
+          "seed": "daily-audit-v2|401909314|2026-11-25T00:00Z|20000",
+          "home_win_probability": 0.41105,
+          "away_win_probability": 0.58895,
+          "projected_score": {
+            "away": 114.6238,
+            "home": 111.0855
+          }
+        },
+        "roster_aware_beta": {
+          "model_id": "roster_beta_v1",
+          "version_status": "research_only_not_promoted",
+          "home_win_probability": 0.3743564424978238,
+          "away_win_probability": 0.6256435575021762,
+          "source_built_at": "2026-11-24T22:46:22+00:00",
+          "uncertainty": 0.06940367433290705
+        }
+      },
+      "challenge_predictions": {
+        "m1_elo": {
+          "model_id": "m1_elo",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.3680985107756105,
+          "away_win_probability": 0.6319014892243895,
+          "projected_score": {
+            "home": 110.7582494583366,
+            "away": 113.88738703789546
+          }
+        },
+        "m2_science": {
+          "model_id": "m2_science",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.34470970391460576,
+          "away_win_probability": 0.6552902960853942,
+          "projected_score": null
+        },
+        "m3_player_roster": {
+          "model_id": "m3_player_roster",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.3768479658244456,
+          "away_win_probability": 0.6231520341755544,
+          "projected_score": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.06940367433290705
+        },
+        "m4_monte_carlo": {
+          "model_id": "m4_monte_carlo",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.4995,
+          "away_win_probability": 0.5005,
+          "projected_score": {
+            "home": 112.7464,
+            "away": 112.8474
+          },
+          "simulations": 20000,
+          "seed": "five-model-live-v1|401909314|2026-11-25T00:00Z|20000"
+        },
+        "m5_regularized_ml": {
+          "model_id": "m5_regularized_ml",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.3614010019259972,
+          "away_win_probability": 0.6385989980740028,
+          "projected_score": null
+        },
+        "m6_ensemble": {
+          "model_id": "m6_ensemble",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.366704841980493,
+          "away_win_probability": 0.633295158019507,
+          "projected_score": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ]
+        }
+      },
+      "research_score_machine": {
+        "model_id": "joint_score_margin_v1",
+        "version_status": "research_only_not_promoted",
+        "available": true,
+        "home_win_probability": 0.33409408536064683,
+        "away_win_probability": 0.6659059146393531,
+        "projected_score": {
+          "home": 110.42692507481173,
+          "away": 115.94473103677454
+        },
+        "display_score": {
+          "home": 110,
+          "away": 116
+        },
+        "projected_home_margin": -5.517805961962807,
+        "margin_range_80": [
+          -23.0098691899353,
+          11.755693616871316
+        ],
+        "explanation": {
+          "baseline_offense_home": 111.68228133333332,
+          "baseline_offense_away": 114.69207399999999,
+          "baseline_defense_home": 113.69443066666666,
+          "baseline_defense_away": 108.26515333333333,
+          "pace": 99.82134299999998,
+          "home_current_games": 16,
+          "away_current_games": 16,
+          "drivers": [
+            {
+              "feature": "net_gap",
+              "label": "Current/prior adjusted net efficiency",
+              "margin_points": -2.9765929144750483,
+              "direction": "away"
+            },
+            {
+              "feature": "defense_gap",
+              "label": "Defensive rating difference",
+              "margin_points": -1.7969929652243193,
+              "direction": "away"
+            },
+            {
+              "feature": "recent_net_gap",
+              "label": "Recent efficiency trend",
+              "margin_points": -1.2716123113874005,
+              "direction": "away"
+            },
+            {
+              "feature": "offense_gap",
+              "label": "Offensive rating difference",
+              "margin_points": -0.5325187070590092,
+              "direction": "away"
+            },
+            {
+              "feature": "player_gap",
+              "label": "Pregame inferred player-impact difference",
+              "margin_points": -0.39579365470614847,
+              "direction": "away"
+            }
+          ],
+          "attribution_note": "Linear model contributions explain the fitted margin numerically. Correlated inputs mean they are not causal impact estimates. Historical player availability was inferred, not officially verified.",
+          "intercept_margin_points": 1.8941958444654483,
+          "impact_by_feature": {
+            "net_gap": {
+              "margin_points": -2.9765929144750483,
+              "total_points": 0.19304532879968295
+            },
+            "offense_gap": {
+              "margin_points": -0.5325187070590092,
+              "total_points": -0.26121309219548766
+            },
+            "defense_gap": {
+              "margin_points": -1.7969929652243193,
+              "total_points": 0.6500365693672303
+            },
+            "pace": {
+              "margin_points": -0.02694735630073574,
+              "total_points": -0.5135399657091674
+            },
+            "home_attack": {
+              "margin_points": -0.2519156878567117,
+              "total_points": -1.9127007194898347
+            },
+            "away_attack": {
+              "margin_points": -0.11111000002618228,
+              "total_points": 0.7678189274420173
+            },
+            "recent_net_gap": {
+              "margin_points": -1.2716123113874005,
+              "total_points": -0.11571593190623165
+            },
+            "player_gap": {
+              "margin_points": -0.39579365470614847,
+              "total_points": -0.013940690932284365
+            },
+            "continuity_gap": {
+              "margin_points": 0.21296875860629141,
+              "total_points": -0.03667770104010637
+            },
+            "rest_gap": {
+              "margin_points": 0,
+              "total_points": 0
+            },
+            "three_rate_gap": {
+              "margin_points": 0.018262105974320677,
+              "total_points": 0.020457009054635322
+            },
+            "efg_gap": {
+              "margin_points": -0.09193518705086816,
+              "total_points": 0.09065872391630753
+            },
+            "turnover_gap": {
+              "margin_points": -0.05924012712014094,
+              "total_points": 0.006031943986021845
+            },
+            "rebound_gap": {
+              "margin_points": -0.1309739560616927,
+              "total_points": 0.18332313877083836
+            },
+            "free_throw_gap": {
+              "margin_points": 0.002400196259394488,
+              "total_points": -0.0011086788313928965
+            }
+          }
+        },
+        "training_games": 6150,
+        "training_source_sha256": "3859ddd8eb30b824792c67b988bdcdca47f13623dba134e2baec022667972189",
+        "trained_on_seasons_before": 2027,
+        "team_snapshot_utc": "2026-11-24T22:46:22+00:00",
+        "official_game_day_availability_used": false,
+        "validation_status": "historical_walk_forward_only_prospective_unproven"
+      },
+      "v18_roster_integrity": {
+        "schema": "nba-twin-lab-roster-integrity-result-v18",
+        "game_id": "401909314",
+        "source_checks_passed": true,
+        "usable_for_new_validated_forecast": false,
+        "reason": "No V18 roster-first probability model has yet passed prospective validation",
+        "issues": [
+          "availability_scenario_required"
+        ],
+        "blocking_issues": [],
+        "team_snapshot_utc": "2026-11-24T22:46:22+00:00",
+        "injury_report_utc": "2026-11-24T23:00:00Z",
+        "home": {
+          "team": "ORL",
+          "official_roster_verified": true,
+          "players": [
+            {
+              "player_id": "1630532",
+              "name": "Franz Wagner",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 36.28308,
+              "inferred_minutes": 30.61143,
+              "min_minutes": 0,
+              "max_minutes": 36.28308,
+              "expected_minutes": 30.61143,
+              "impact_proxy": 1.65339,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1641710",
+              "name": "Anthony Black",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 35.40479,
+              "inferred_minutes": 29.87043,
+              "min_minutes": 0,
+              "max_minutes": 35.40479,
+              "expected_minutes": 29.87043,
+              "impact_proxy": -1.29673,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630217",
+              "name": "Desmond Bane",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 34.80238,
+              "inferred_minutes": 29.36218,
+              "min_minutes": 0,
+              "max_minutes": 34.80238,
+              "expected_minutes": 29.36218,
+              "impact_proxy": 2.89447,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628976",
+              "name": "Wendell Carter Jr.",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 30.90572,
+              "inferred_minutes": 26.07464,
+              "min_minutes": 0,
+              "max_minutes": 30.90572,
+              "expected_minutes": 26.07464,
+              "impact_proxy": -0.4674,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1641783",
+              "name": "Tristan da Silva",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 29.14588,
+              "inferred_minutes": 24.58989,
+              "min_minutes": 0,
+              "max_minutes": 29.14588,
+              "expected_minutes": 24.58989,
+              "impact_proxy": -0.27436,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630591",
+              "name": "Jalen Suggs",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 27.73219,
+              "inferred_minutes": 23.39718,
+              "min_minutes": 0,
+              "max_minutes": 27.73219,
+              "expected_minutes": 23.39718,
+              "impact_proxy": -2.31252,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642859",
+              "name": "Jase Richardson",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 19.83378,
+              "inferred_minutes": 16.73343,
+              "min_minutes": 0,
+              "max_minutes": 19.83378,
+              "expected_minutes": 16.73343,
+              "impact_proxy": -2.806,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629048",
+              "name": "Goga Bitadze",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 15.66721,
+              "inferred_minutes": 13.21816,
+              "min_minutes": 0,
+              "max_minutes": 15.66721,
+              "expected_minutes": 13.21816,
+              "impact_proxy": 3.77297,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1631288",
+              "name": "Jamal Cain",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 14.32549,
+              "inferred_minutes": 12.08617,
+              "min_minutes": 0,
+              "max_minutes": 14.32549,
+              "expected_minutes": 12.08617,
+              "impact_proxy": -3.59162,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "202696",
+              "name": "Nikola Vučević",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 13.93876,
+              "inferred_minutes": 11.75989,
+              "min_minutes": 0,
+              "max_minutes": 13.93876,
+              "expected_minutes": 11.75989,
+              "impact_proxy": -2.88756,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628975",
+              "name": "Jevon Carter",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 13.90799,
+              "inferred_minutes": 11.73393,
+              "min_minutes": 0,
+              "max_minutes": 13.90799,
+              "expected_minutes": 11.73393,
+              "impact_proxy": -2.66092,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1631457",
+              "name": "Alex Morales",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 12.5197,
+              "inferred_minutes": 10.56266,
+              "min_minutes": 0,
+              "max_minutes": 12.5197,
+              "expected_minutes": 10.56266,
+              "impact_proxy": -4.37866,
+              "excluded": false,
+              "reason": null
+            }
+          ],
+          "projected_leaders": [
+            {
+              "player_id": "1630532",
+              "name": "Franz Wagner",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 36.28308,
+              "inferred_minutes": 30.61143,
+              "min_minutes": 0,
+              "max_minutes": 36.28308,
+              "expected_minutes": 30.61143,
+              "impact_proxy": 1.65339,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1641710",
+              "name": "Anthony Black",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 35.40479,
+              "inferred_minutes": 29.87043,
+              "min_minutes": 0,
+              "max_minutes": 35.40479,
+              "expected_minutes": 29.87043,
+              "impact_proxy": -1.29673,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630217",
+              "name": "Desmond Bane",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 34.80238,
+              "inferred_minutes": 29.36218,
+              "min_minutes": 0,
+              "max_minutes": 34.80238,
+              "expected_minutes": 29.36218,
+              "impact_proxy": 2.89447,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628976",
+              "name": "Wendell Carter Jr.",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 30.90572,
+              "inferred_minutes": 26.07464,
+              "min_minutes": 0,
+              "max_minutes": 30.90572,
+              "expected_minutes": 26.07464,
+              "impact_proxy": -0.4674,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1641783",
+              "name": "Tristan da Silva",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 29.14588,
+              "inferred_minutes": 24.58989,
+              "min_minutes": 0,
+              "max_minutes": 29.14588,
+              "expected_minutes": 24.58989,
+              "impact_proxy": -0.27436,
+              "excluded": false,
+              "reason": null
+            }
+          ],
+          "minutes_range": {
+            "min": 0,
+            "max": 284.46697
+          },
+          "excluded_players": [],
+          "issues": []
+        },
+        "away": {
+          "team": "DET",
+          "official_roster_verified": true,
+          "players": [
+            {
+              "player_id": "1642450",
+              "name": "Daniss Jenkins",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 36.10821,
+              "inferred_minutes": 34.02324,
+              "min_minutes": 0,
+              "max_minutes": 36.10821,
+              "expected_minutes": 34.02324,
+              "impact_proxy": 0.3963,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630595",
+              "name": "Cade Cunningham",
+              "status": "PROBABLE",
+              "roster_verified": true,
+              "minutes_if_play": 35.60093,
+              "inferred_minutes": 33.54525,
+              "min_minutes": 0,
+              "max_minutes": 35.60093,
+              "expected_minutes": null,
+              "impact_proxy": -0.33543,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628989",
+              "name": "Kevin Huerter",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 32.37024,
+              "inferred_minutes": 30.50112,
+              "min_minutes": 0,
+              "max_minutes": 32.37024,
+              "expected_minutes": 30.50112,
+              "impact_proxy": 0.47279,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1641709",
+              "name": "Ausar Thompson",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 31.9119,
+              "inferred_minutes": 30.06924,
+              "min_minutes": 0,
+              "max_minutes": 31.9119,
+              "expected_minutes": 30.06924,
+              "impact_proxy": 1.90093,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630194",
+              "name": "Paul Reed",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 25.5276,
+              "inferred_minutes": 24.05358,
+              "min_minutes": 0,
+              "max_minutes": 25.5276,
+              "expected_minutes": 24.05358,
+              "impact_proxy": 2.42126,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628381",
+              "name": "John Collins",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 24.59403,
+              "inferred_minutes": 23.17392,
+              "min_minutes": 0,
+              "max_minutes": 24.59403,
+              "expected_minutes": 23.17392,
+              "impact_proxy": -1.33865,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629750",
+              "name": "Javonte Green",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 20.22332,
+              "inferred_minutes": 19.05558,
+              "min_minutes": 0,
+              "max_minutes": 20.22332,
+              "expected_minutes": 19.05558,
+              "impact_proxy": 0.56656,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630198",
+              "name": "Isaiah Joe",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 17.81317,
+              "inferred_minutes": 16.7846,
+              "min_minutes": 0,
+              "max_minutes": 17.81317,
+              "expected_minutes": 16.7846,
+              "impact_proxy": 1.13548,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1641842",
+              "name": "Ronald Holland II",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 15.07073,
+              "inferred_minutes": 14.20051,
+              "min_minutes": 0,
+              "max_minutes": 15.07073,
+              "expected_minutes": 14.20051,
+              "impact_proxy": -4.9494,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642404",
+              "name": "Chaz Lanier",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 9.01283,
+              "inferred_minutes": 5.95344,
+              "min_minutes": 0,
+              "max_minutes": 9.01283,
+              "expected_minutes": 5.95344,
+              "impact_proxy": 1.77796,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629130",
+              "name": "Duncan Robinson",
+              "status": "OUT",
+              "roster_verified": true,
+              "minutes_if_play": 30.32085,
+              "inferred_minutes": 4.71259,
+              "min_minutes": 0,
+              "max_minutes": 0,
+              "expected_minutes": 0,
+              "impact_proxy": 1.85365,
+              "excluded": true,
+              "reason": "Officially OUT"
+            },
+            {
+              "player_id": "1631105",
+              "name": "Jalen Duren",
+              "status": "OUT",
+              "roster_verified": true,
+              "minutes_if_play": 25.2659,
+              "inferred_minutes": 3.92693,
+              "min_minutes": 0,
+              "max_minutes": 0,
+              "expected_minutes": 0,
+              "impact_proxy": 5.89624,
+              "excluded": true,
+              "reason": "Officially OUT"
+            }
+          ],
+          "projected_leaders": [
+            {
+              "player_id": "1642450",
+              "name": "Daniss Jenkins",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 36.10821,
+              "inferred_minutes": 34.02324,
+              "min_minutes": 0,
+              "max_minutes": 36.10821,
+              "expected_minutes": 34.02324,
+              "impact_proxy": 0.3963,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630595",
+              "name": "Cade Cunningham",
+              "status": "PROBABLE",
+              "roster_verified": true,
+              "minutes_if_play": 35.60093,
+              "inferred_minutes": 33.54525,
+              "min_minutes": 0,
+              "max_minutes": 35.60093,
+              "expected_minutes": null,
+              "impact_proxy": -0.33543,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628989",
+              "name": "Kevin Huerter",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 32.37024,
+              "inferred_minutes": 30.50112,
+              "min_minutes": 0,
+              "max_minutes": 32.37024,
+              "expected_minutes": 30.50112,
+              "impact_proxy": 0.47279,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1641709",
+              "name": "Ausar Thompson",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 31.9119,
+              "inferred_minutes": 30.06924,
+              "min_minutes": 0,
+              "max_minutes": 31.9119,
+              "expected_minutes": 30.06924,
+              "impact_proxy": 1.90093,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630194",
+              "name": "Paul Reed",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 25.5276,
+              "inferred_minutes": 24.05358,
+              "min_minutes": 0,
+              "max_minutes": 25.5276,
+              "expected_minutes": 24.05358,
+              "impact_proxy": 2.42126,
+              "excluded": false,
+              "reason": null
+            }
+          ],
+          "minutes_range": {
+            "min": 0,
+            "max": 248.23296000000002
+          },
+          "excluded_players": [
+            {
+              "player_id": "1629130",
+              "name": "Duncan Robinson",
+              "status": "OUT",
+              "roster_verified": true,
+              "minutes_if_play": 30.32085,
+              "inferred_minutes": 4.71259,
+              "min_minutes": 0,
+              "max_minutes": 0,
+              "expected_minutes": 0,
+              "impact_proxy": 1.85365,
+              "excluded": true,
+              "reason": "Officially OUT"
+            },
+            {
+              "player_id": "1631105",
+              "name": "Jalen Duren",
+              "status": "OUT",
+              "roster_verified": true,
+              "minutes_if_play": 25.2659,
+              "inferred_minutes": 3.92693,
+              "min_minutes": 0,
+              "max_minutes": 0,
+              "expected_minutes": 0,
+              "impact_proxy": 5.89624,
+              "excluded": true,
+              "reason": "Officially OUT"
+            }
+          ],
+          "issues": [
+            "availability_scenario_required"
+          ]
+        }
+      },
+      "v18_roster_strength": {
+        "available": true,
+        "validated_probability": false,
+        "label": "V18 active-roster impact proxy · NOT a win probability or projected score",
+        "source": "NBA.com active-roster IDs + pregame inferred player impact and minutes",
+        "historical_franchise_strength_used": false,
+        "home": {
+          "available": true,
+          "team": "ORL",
+          "scenarios": 1,
+          "possible_scenarios": 1,
+          "uncertain_players": [],
+          "strength_range": [
+            -0.5337311123323191,
+            -0.5337311123323191
+          ],
+          "rotation": [
+            {
+              "player_id": "1630532",
+              "minutes": 30.611431572890282,
+              "impact": 1.65339
+            },
+            {
+              "player_id": "1641710",
+              "minutes": 29.870431497663365,
+              "impact": -1.29673
+            },
+            {
+              "player_id": "1630217",
+              "minutes": 29.36218144713209,
+              "impact": 2.89447
+            },
+            {
+              "player_id": "1628976",
+              "minutes": 26.074641141216095,
+              "impact": -0.4674
+            },
+            {
+              "player_id": "1641783",
+              "minutes": 24.58989101494978,
+              "impact": -0.27436
+            },
+            {
+              "player_id": "1630591",
+              "minutes": 23.397180918879627,
+              "impact": -2.31252
+            },
+            {
+              "player_id": "1642859",
+              "minutes": 16.733430573060247,
+              "impact": -2.806
+            },
+            {
+              "player_id": "1629048",
+              "minutes": 13.218160420277462,
+              "impact": 3.77297
+            },
+            {
+              "player_id": "1631288",
+              "minutes": 12.08617037474624,
+              "impact": -3.59162
+            },
+            {
+              "player_id": "202696",
+              "minutes": 11.759890361954334,
+              "impact": -2.88756
+            },
+            {
+              "player_id": "1628975",
+              "minutes": 11.733930360942923,
+              "impact": -2.66092
+            },
+            {
+              "player_id": "1631457",
+              "minutes": 10.56266031628752,
+              "impact": -4.37866
+            }
+          ],
+          "completeness": true
+        },
+        "away": {
+          "available": true,
+          "team": "DET",
+          "scenarios": 2,
+          "possible_scenarios": 2,
+          "uncertain_players": [
+            {
+              "player_id": "1630595",
+              "name": "Cade Cunningham",
+              "status": "PROBABLE"
+            }
+          ],
+          "strength_range": [
+            0.3091995310932305,
+            0.42934779418675817
+          ],
+          "rotation": [
+            {
+              "player_id": "1642450",
+              "minutes": 35.51855980271515,
+              "impact": 0.3963
+            },
+            {
+              "player_id": "1630595",
+              "minutes": 34.99884994654282,
+              "impact": -0.33543
+            },
+            {
+              "player_id": "1628989",
+              "minutes": 31.70286860101709,
+              "impact": 0.47279
+            },
+            {
+              "player_id": "1641709",
+              "minutes": 31.237198197164094,
+              "impact": 1.90093
+            },
+            {
+              "player_id": "1630194",
+              "minutes": 24.84143166183417,
+              "impact": 2.42126
+            },
+            {
+              "player_id": "1628381",
+              "minutes": 23.927484313165774,
+              "impact": -1.33865
+            },
+            {
+              "player_id": "1629750",
+              "minutes": 19.65414992472764,
+              "impact": 0.56656
+            },
+            {
+              "player_id": "1630198",
+              "minutes": 17.30159750431136,
+              "impact": 1.13548
+            },
+            {
+              "player_id": "1641842",
+              "minutes": 14.628058180595989,
+              "impact": -4.9494
+            },
+            {
+              "player_id": "1642404",
+              "minutes": 6.189801867925901,
+              "impact": 1.77796
+            }
+          ],
+          "completeness": true
+        },
+        "home_minus_away_impact_range": [
+          -0.9630789065190772,
+          -0.8429306434255496
+        ],
+        "limitation": "Individual impact proxy and minute reallocations are unvalidated; do not combine this number with Elo without walk-forward calibration"
+      },
+      "v9_player_projections": [
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1642450",
+          "name": "Daniss Jenkins",
+          "expected_minutes_if_play": 36.10821,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 16.04242217827627,
+            "reb": 3.8101081097416443,
+            "ast": 4.630746012182825,
+            "three_pm": 2.2894465743349586
+          }
+        },
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1630595",
+          "name": "Cade Cunningham",
+          "expected_minutes_if_play": 35.60093,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 23.7234590866515,
+            "reb": 4.746611924014761,
+            "ast": 9.411873308986094,
+            "three_pm": 1.6499245991620226
+          }
+        },
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1628989",
+          "name": "Kevin Huerter",
+          "expected_minutes_if_play": 32.37024,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 12.195892806207855,
+            "reb": 2.8605163853244466,
+            "ast": 2.8611847465894265,
+            "three_pm": 1.5912384898802934
+          }
+        },
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1641709",
+          "name": "Ausar Thompson",
+          "expected_minutes_if_play": 31.9119,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 13.312783442615975,
+            "reb": 9.298032432031631,
+            "ast": 5.735307770203908,
+            "three_pm": 0
+          }
+        },
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1630194",
+          "name": "Paul Reed",
+          "expected_minutes_if_play": 25.5276,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 11.798856665610682,
+            "reb": 7.590369400008372,
+            "ast": 2.3490404578721082,
+            "three_pm": 0
+          }
+        },
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1628381",
+          "name": "John Collins",
+          "expected_minutes_if_play": 24.59403,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 12.444523914147705,
+            "reb": 5.25747934344973,
+            "ast": 0.7066074902026198,
+            "three_pm": 1.880329675837206
+          }
+        },
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1629750",
+          "name": "Javonte Green",
+          "expected_minutes_if_play": 20.22332,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 8.177515312778517,
+            "reb": 2.7626164233168162,
+            "ast": 0.42568627254448993,
+            "three_pm": 1.2848796419878596
+          }
+        },
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1630198",
+          "name": "Isaiah Joe",
+          "expected_minutes_if_play": 17.81317,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 11.074981318719438,
+            "reb": 1.7776314784794964,
+            "ast": 1.4150604555398854,
+            "three_pm": 1.8575555151215524
+          }
+        },
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1641842",
+          "name": "Ronald Holland II",
+          "expected_minutes_if_play": 15.07073,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 4.017318838967689,
+            "reb": 4.105134742753227,
+            "ast": 1.2165272332170949,
+            "three_pm": 0.5680671730677131
+          }
+        },
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1642404",
+          "name": "Chaz Lanier",
+          "expected_minutes_if_play": 9.01283,
+          "play_probability_inferred": 0.68,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "missed last game · inferred uncertain",
+            "last_observed_game": "2026-11-20",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 3.168328857575371,
+            "reb": 0.6346040333276374,
+            "ast": 0.22710317251535767,
+            "three_pm": 0.7736431275259619
+          }
+        },
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1629130",
+          "name": "Duncan Robinson",
+          "expected_minutes_if_play": 30.32085,
+          "play_probability_inferred": 0.16,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "missed 4+ games · inferred out of rotation",
+            "last_observed_game": "2026-11-14",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 16.984858774648636,
+            "reb": 1.8475400716881247,
+            "ast": 1.9752768776294036,
+            "three_pm": 3.548449662272707
+          }
+        },
+        {
+          "side": "away",
+          "team": "DET",
+          "player_id": "1631105",
+          "name": "Jalen Duren",
+          "expected_minutes_if_play": 25.2659,
+          "play_probability_inferred": 0.16,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "missed 14+ games · inferred out of rotation",
+            "last_observed_game": "2026-10-23",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 17.115907981756834,
+            "reb": 9.566733611636026,
+            "ast": 3.7701760180444217,
+            "three_pm": 0
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "1630532",
+          "name": "Franz Wagner",
+          "expected_minutes_if_play": 36.28308,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 26.213554796290463,
+            "reb": 7.25270268506006,
+            "ast": 8.205558964908807,
+            "three_pm": 1.2628463352054218
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "1641710",
+          "name": "Anthony Black",
+          "expected_minutes_if_play": 35.40479,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 15.521341641558774,
+            "reb": 5.057199596621801,
+            "ast": 5.261851376206787,
+            "three_pm": 2.0077727981473936
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "1630217",
+          "name": "Desmond Bane",
+          "expected_minutes_if_play": 34.80238,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 18.82225577323085,
+            "reb": 3.54504198253915,
+            "ast": 3.3095846717925337,
+            "three_pm": 4.817281348235443
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "1628976",
+          "name": "Wendell Carter Jr.",
+          "expected_minutes_if_play": 30.90572,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 11.074539889789618,
+            "reb": 7.5972574886905075,
+            "ast": 1.893713138675536,
+            "three_pm": 0.9503701842652496
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "1641783",
+          "name": "Tristan da Silva",
+          "expected_minutes_if_play": 29.14588,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 13.001733147198513,
+            "reb": 3.5083319743667167,
+            "ast": 1.3430229177731772,
+            "three_pm": 2.9958353993237163
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "1630591",
+          "name": "Jalen Suggs",
+          "expected_minutes_if_play": 27.73219,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 10.124742025290606,
+            "reb": 5.00423974594595,
+            "ast": 3.5478187909126517,
+            "three_pm": 1.8623261819338954
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "1642859",
+          "name": "Jase Richardson",
+          "expected_minutes_if_play": 19.83378,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 5.854636644007884,
+            "reb": 1.8482416484870716,
+            "ast": 2.214279124841037,
+            "three_pm": 0.5585294416535447
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "1629048",
+          "name": "Goga Bitadze",
+          "expected_minutes_if_play": 15.66721,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 4.86152558539637,
+            "reb": 4.548923369323364,
+            "ast": 0.9791206767389083,
+            "three_pm": 0
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "1631288",
+          "name": "Jamal Cain",
+          "expected_minutes_if_play": 14.32549,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 4.325251661984969,
+            "reb": 2.634399204715012,
+            "ast": 0.271024516916958,
+            "three_pm": 0.6348465613195012
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "202696",
+          "name": "Nikola Vučević",
+          "expected_minutes_if_play": 13.93876,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 4.480652378699422,
+            "reb": 4.027404673211223,
+            "ast": 1.5307231343271466,
+            "three_pm": 0.7558532540145967
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "1628975",
+          "name": "Jevon Carter",
+          "expected_minutes_if_play": 13.90799,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 4.286025906686237,
+            "reb": 1.3907599628078922,
+            "ast": 1.5063233091246064,
+            "three_pm": 1.341368862243835
+          }
+        },
+        {
+          "side": "home",
+          "team": "ORL",
+          "player_id": "1631457",
+          "name": "Alex Morales",
+          "expected_minutes_if_play": 12.5197,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 1.7785041347370993,
+            "reb": 1.965158312964157,
+            "ast": 0.6953248462196346,
+            "three_pm": 0.21775390429317065
+          }
+        }
+      ]
+    },
+    {
+      "game_id": "401909315",
+      "tip_utc": "2026-11-25T01:00:00.000Z",
+      "tip_melbourne": "Wednesday 25 November 2026 at 12:00:00 pm AEDT",
+      "away": {
+        "id": "2",
+        "name": "Boston Celtics",
+        "abbr": "BOS"
+      },
+      "home": {
+        "id": "27",
+        "name": "Washington Wizards",
+        "abbr": "WSH"
+      },
+      "primary_forecast": {
+        "model_id": "production_elo_v7",
+        "model": "production Elo baseline",
+        "version_status": "production",
+        "winner": "BOS",
+        "winner_probability": 0.7725960254216081,
+        "home_win_probability": 0.22740397457839187,
+        "away_win_probability": 0.7725960254216081,
+        "projected_score": {
+          "away": 115.2394991176567,
+          "home": 108.15744020338043
+        }
+      },
+      "diagnostics": {
+        "monte_carlo": {
+          "model_id": "possession_monte_carlo_v5",
+          "version_status": "diagnostic_not_promoted",
+          "simulations": 20000,
+          "seed": "daily-audit-v2|401909315|2026-11-25T01:00Z|20000",
+          "home_win_probability": 0.34535,
+          "away_win_probability": 0.65465,
+          "projected_score": {
+            "away": 115.96025,
+            "home": 109.29325
+          }
+        },
+        "roster_aware_beta": {
+          "model_id": "roster_beta_v1",
+          "version_status": "research_only_not_promoted",
+          "home_win_probability": 0.3220463721235049,
+          "away_win_probability": 0.677953627876495,
+          "source_built_at": "2026-11-24T22:46:22+00:00",
+          "uncertainty": 0.13017358560682113
+        }
+      },
+      "challenge_predictions": {
+        "m1_elo": {
+          "model_id": "m1_elo",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.22740397457839187,
+          "away_win_probability": 0.7725960254216081,
+          "projected_score": {
+            "home": 108.15744020338043,
+            "away": 115.2394991176567
+          }
+        },
+        "m2_science": {
+          "model_id": "m2_science",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.22996463124292235,
+          "away_win_probability": 0.7700353687570777,
+          "projected_score": null
+        },
+        "m3_player_roster": {
+          "model_id": "m3_player_roster",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.31819822317628516,
+          "away_win_probability": 0.6818017768237148,
+          "projected_score": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.13017358560682113
+        },
+        "m4_monte_carlo": {
+          "model_id": "m4_monte_carlo",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.4238,
+          "away_win_probability": 0.5762,
+          "projected_score": {
+            "home": 109.366,
+            "away": 112.3662
+          },
+          "simulations": 20000,
+          "seed": "five-model-live-v1|401909315|2026-11-25T01:00Z|20000"
+        },
+        "m5_regularized_ml": {
+          "model_id": "m5_regularized_ml",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.24784859935731635,
+          "away_win_probability": 0.7521514006426837,
+          "projected_score": null
+        },
+        "m6_ensemble": {
+          "model_id": "m6_ensemble",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.2669090240251145,
+          "away_win_probability": 0.7330909759748855,
+          "projected_score": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ]
+        }
+      },
+      "research_score_machine": {
+        "model_id": "joint_score_margin_v1",
+        "version_status": "research_only_not_promoted",
+        "available": true,
+        "home_win_probability": 0.22057752465740602,
+        "away_win_probability": 0.779422475342594,
+        "projected_score": {
+          "home": 107.42044937819529,
+          "away": 117.51888146115314
+        },
+        "display_score": {
+          "home": 107,
+          "away": 118
+        },
+        "projected_home_margin": -10.098432082957856,
+        "margin_range_80": [
+          -27.590495310930365,
+          7.175067495876254
+        ],
+        "explanation": {
+          "baseline_offense_home": 109.4796875,
+          "baseline_offense_away": 115.94491451612903,
+          "baseline_defense_home": 116.76822625,
+          "baseline_defense_away": 108.1482,
+          "pace": 98.84853938508064,
+          "home_current_games": 18,
+          "away_current_games": 17,
+          "drivers": [
+            {
+              "feature": "net_gap",
+              "label": "Current/prior adjusted net efficiency",
+              "margin_points": -5.320806437797203,
+              "direction": "away"
+            },
+            {
+              "feature": "defense_gap",
+              "label": "Defensive rating difference",
+              "margin_points": -2.85307336138394,
+              "direction": "away"
+            },
+            {
+              "feature": "offense_gap",
+              "label": "Offensive rating difference",
+              "margin_points": -1.1438842182059514,
+              "direction": "away"
+            },
+            {
+              "feature": "recent_net_gap",
+              "label": "Recent efficiency trend",
+              "margin_points": -1.000740122050934,
+              "direction": "away"
+            },
+            {
+              "feature": "rebound_gap",
+              "label": "Offensive rebounding",
+              "margin_points": -0.49573998522751733,
+              "direction": "away"
+            }
+          ],
+          "attribution_note": "Linear model contributions explain the fitted margin numerically. Correlated inputs mean they are not causal impact estimates. Historical player availability was inferred, not officially verified.",
+          "intercept_margin_points": 1.8941958444654483,
+          "impact_by_feature": {
+            "net_gap": {
+              "margin_points": -5.320806437797203,
+              "total_points": 0.34507803309918855
+            },
+            "offense_gap": {
+              "margin_points": -1.1438842182059514,
+              "total_points": -0.5611024172303573
+            },
+            "defense_gap": {
+              "margin_points": -2.85307336138394,
+              "total_points": 1.0320585866932082
+            },
+            "pace": {
+              "margin_points": -0.1736781623809509,
+              "total_points": -3.3098117885170644
+            },
+            "home_attack": {
+              "margin_points": -0.348458275639917,
+              "total_points": -2.6457121436111435
+            },
+            "away_attack": {
+              "margin_points": -0.312547920445589,
+              "total_points": 2.159843479382733
+            },
+            "recent_net_gap": {
+              "margin_points": -1.000740122050934,
+              "total_points": -0.09106673062384384
+            },
+            "player_gap": {
+              "margin_points": -0.48254985111291115,
+              "total_points": -0.016996427946222022
+            },
+            "continuity_gap": {
+              "margin_points": 0.36243219495054235,
+              "total_points": -0.06241844945098366
+            },
+            "rest_gap": {
+              "margin_points": 0,
+              "total_points": 0
+            },
+            "three_rate_gap": {
+              "margin_points": -0.03228573192970736,
+              "total_points": -0.03616611968796335
+            },
+            "efg_gap": {
+              "margin_points": -0.13627352418174343,
+              "total_points": 0.13438145069590382
+            },
+            "turnover_gap": {
+              "margin_points": -0.12007144107027076,
+              "total_points": 0.012225905683624957
+            },
+            "rebound_gap": {
+              "margin_points": -0.49573998522751733,
+              "total_points": 0.6938830652966609
+            },
+            "free_throw_gap": {
+              "margin_points": 0.06504890905277823,
+              "total_points": -0.030046854789370723
+            }
+          }
+        },
+        "training_games": 6150,
+        "training_source_sha256": "3859ddd8eb30b824792c67b988bdcdca47f13623dba134e2baec022667972189",
+        "trained_on_seasons_before": 2027,
+        "team_snapshot_utc": "2026-11-24T22:46:22+00:00",
+        "official_game_day_availability_used": false,
+        "validation_status": "historical_walk_forward_only_prospective_unproven"
+      },
+      "v18_roster_integrity": {
+        "schema": "nba-twin-lab-roster-integrity-result-v18",
+        "game_id": "401909315",
+        "source_checks_passed": true,
+        "usable_for_new_validated_forecast": false,
+        "reason": "No V18 roster-first probability model has yet passed prospective validation",
+        "issues": [],
+        "blocking_issues": [],
+        "team_snapshot_utc": "2026-11-24T22:46:22+00:00",
+        "injury_report_utc": "2026-11-24T23:00:00Z",
+        "home": {
+          "team": "WAS",
+          "official_roster_verified": true,
+          "players": [
+            {
+              "player_id": "1643407",
+              "name": "AJ Dybantsa",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 35.23434,
+              "inferred_minutes": 32.31796,
+              "min_minutes": 0,
+              "max_minutes": 35.23434,
+              "expected_minutes": 32.31796,
+              "impact_proxy": -1.53775,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642273",
+              "name": "Kyshawn George",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 35.07964,
+              "inferred_minutes": 32.17606,
+              "min_minutes": 0,
+              "max_minutes": 35.07964,
+              "expected_minutes": 32.17606,
+              "impact_proxy": 0.21972,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "203076",
+              "name": "Anthony Davis",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 34.07012,
+              "inferred_minutes": 31.2501,
+              "min_minutes": 0,
+              "max_minutes": 34.07012,
+              "expected_minutes": 31.2501,
+              "impact_proxy": 2.51216,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629027",
+              "name": "Trae Young",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 32.88075,
+              "inferred_minutes": 30.15918,
+              "min_minutes": 0,
+              "max_minutes": 32.88075,
+              "expected_minutes": 30.15918,
+              "impact_proxy": -1.94641,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642259",
+              "name": "Alex Sarr",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 26.69961,
+              "inferred_minutes": 24.48965,
+              "min_minutes": 0,
+              "max_minutes": 26.69961,
+              "expected_minutes": 24.48965,
+              "impact_proxy": 0.29631,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1641731",
+              "name": "Bilal Coulibaly",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 23.44305,
+              "inferred_minutes": 21.50264,
+              "min_minutes": 0,
+              "max_minutes": 23.44305,
+              "expected_minutes": 21.50264,
+              "impact_proxy": -2.65976,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "203114",
+              "name": "Khris Middleton",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 18.19176,
+              "inferred_minutes": 16.68601,
+              "min_minutes": 0,
+              "max_minutes": 18.19176,
+              "expected_minutes": 16.68601,
+              "impact_proxy": -0.96149,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642848",
+              "name": "Tre Johnson",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 17.87885,
+              "inferred_minutes": 16.399,
+              "min_minutes": 0,
+              "max_minutes": 17.87885,
+              "expected_minutes": 16.399,
+              "impact_proxy": -4.63794,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642267",
+              "name": "Bub Carrington",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 10.87823,
+              "inferred_minutes": 9.97782,
+              "min_minutes": 0,
+              "max_minutes": 10.87823,
+              "expected_minutes": 9.97782,
+              "impact_proxy": -6.33041,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630264",
+              "name": "Anthony Gill",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 9.44289,
+              "inferred_minutes": 8.66129,
+              "min_minutes": 0,
+              "max_minutes": 9.44289,
+              "expected_minutes": 8.66129,
+              "impact_proxy": -1.45616,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629028",
+              "name": "Deandre Ayton",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 9.32547,
+              "inferred_minutes": 8.55359,
+              "min_minutes": 0,
+              "max_minutes": 9.32547,
+              "expected_minutes": 8.55359,
+              "impact_proxy": -5.65746,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642860",
+              "name": "Will Riley",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 8.53297,
+              "inferred_minutes": 7.82669,
+              "min_minutes": 0,
+              "max_minutes": 8.53297,
+              "expected_minutes": 7.82669,
+              "impact_proxy": -0.76764,
+              "excluded": false,
+              "reason": null
+            }
+          ],
+          "projected_leaders": [
+            {
+              "player_id": "1643407",
+              "name": "AJ Dybantsa",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 35.23434,
+              "inferred_minutes": 32.31796,
+              "min_minutes": 0,
+              "max_minutes": 35.23434,
+              "expected_minutes": 32.31796,
+              "impact_proxy": -1.53775,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642273",
+              "name": "Kyshawn George",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 35.07964,
+              "inferred_minutes": 32.17606,
+              "min_minutes": 0,
+              "max_minutes": 35.07964,
+              "expected_minutes": 32.17606,
+              "impact_proxy": 0.21972,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "203076",
+              "name": "Anthony Davis",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 34.07012,
+              "inferred_minutes": 31.2501,
+              "min_minutes": 0,
+              "max_minutes": 34.07012,
+              "expected_minutes": 31.2501,
+              "impact_proxy": 2.51216,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629027",
+              "name": "Trae Young",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 32.88075,
+              "inferred_minutes": 30.15918,
+              "min_minutes": 0,
+              "max_minutes": 32.88075,
+              "expected_minutes": 30.15918,
+              "impact_proxy": -1.94641,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642259",
+              "name": "Alex Sarr",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 26.69961,
+              "inferred_minutes": 24.48965,
+              "min_minutes": 0,
+              "max_minutes": 26.69961,
+              "expected_minutes": 24.48965,
+              "impact_proxy": 0.29631,
+              "excluded": false,
+              "reason": null
+            }
+          ],
+          "minutes_range": {
+            "min": 0,
+            "max": 261.65767999999997
+          },
+          "excluded_players": [],
+          "issues": []
+        },
+        "away": {
+          "team": "BOS",
+          "official_roster_verified": true,
+          "players": [
+            {
+              "player_id": "1628369",
+              "name": "Jayson Tatum",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 34.64953,
+              "inferred_minutes": 33.61004,
+              "min_minutes": 0,
+              "max_minutes": 34.64953,
+              "expected_minutes": 33.61004,
+              "impact_proxy": 3.52911,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628401",
+              "name": "Derrick White",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 30.68916,
+              "inferred_minutes": 29.76849,
+              "min_minutes": 0,
+              "max_minutes": 30.68916,
+              "expected_minutes": 29.76849,
+              "impact_proxy": 1.93027,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630202",
+              "name": "Payton Pritchard",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 28.62934,
+              "inferred_minutes": 27.77046,
+              "min_minutes": 0,
+              "max_minutes": 28.62934,
+              "expected_minutes": 27.77046,
+              "impact_proxy": -1.58555,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629674",
+              "name": "Neemias Queta",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 25.60353,
+              "inferred_minutes": 24.83542,
+              "min_minutes": 0,
+              "max_minutes": 25.60353,
+              "expected_minutes": 24.83542,
+              "impact_proxy": 4.6452,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630573",
+              "name": "Sam Hauser",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 22.1969,
+              "inferred_minutes": 21.53099,
+              "min_minutes": 0,
+              "max_minutes": 22.1969,
+              "expected_minutes": 21.53099,
+              "impact_proxy": 3.99828,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "202331",
+              "name": "Paul George",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 30.0485,
+              "inferred_minutes": 20.43298,
+              "min_minutes": 0,
+              "max_minutes": 30.0485,
+              "expected_minutes": 20.43298,
+              "impact_proxy": 3.8773,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1631248",
+              "name": "Baylor Scheierman",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 17.29991,
+              "inferred_minutes": 16.78091,
+              "min_minutes": 0,
+              "max_minutes": 17.29991,
+              "expected_minutes": 16.78091,
+              "impact_proxy": -1.18671,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642864",
+              "name": "Hugo González",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 15.15467,
+              "inferred_minutes": 14.70003,
+              "min_minutes": 0,
+              "max_minutes": 15.15467,
+              "expected_minutes": 14.70003,
+              "impact_proxy": -1.31426,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630568",
+              "name": "Luka Garza",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 13.71305,
+              "inferred_minutes": 13.30166,
+              "min_minutes": 0,
+              "max_minutes": 13.71305,
+              "expected_minutes": 13.30166,
+              "impact_proxy": -0.94472,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1641775",
+              "name": "Jordan Walsh",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 12.57447,
+              "inferred_minutes": 12.19724,
+              "min_minutes": 0,
+              "max_minutes": 12.57447,
+              "expected_minutes": 12.19724,
+              "impact_proxy": -2.28052,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "201144",
+              "name": "Mike Conley",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 12.23442,
+              "inferred_minutes": 11.86739,
+              "min_minutes": 0,
+              "max_minutes": 12.23442,
+              "expected_minutes": 11.86739,
+              "impact_proxy": 5.41093,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1631199",
+              "name": "Ron Harper Jr.",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 9.07628,
+              "inferred_minutes": 8.80399,
+              "min_minutes": 0,
+              "max_minutes": 9.07628,
+              "expected_minutes": 8.80399,
+              "impact_proxy": -1.27434,
+              "excluded": false,
+              "reason": null
+            }
+          ],
+          "projected_leaders": [
+            {
+              "player_id": "1628369",
+              "name": "Jayson Tatum",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 34.64953,
+              "inferred_minutes": 33.61004,
+              "min_minutes": 0,
+              "max_minutes": 34.64953,
+              "expected_minutes": 33.61004,
+              "impact_proxy": 3.52911,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628401",
+              "name": "Derrick White",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 30.68916,
+              "inferred_minutes": 29.76849,
+              "min_minutes": 0,
+              "max_minutes": 30.68916,
+              "expected_minutes": 29.76849,
+              "impact_proxy": 1.93027,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "202331",
+              "name": "Paul George",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 30.0485,
+              "inferred_minutes": 20.43298,
+              "min_minutes": 0,
+              "max_minutes": 30.0485,
+              "expected_minutes": 20.43298,
+              "impact_proxy": 3.8773,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630202",
+              "name": "Payton Pritchard",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 28.62934,
+              "inferred_minutes": 27.77046,
+              "min_minutes": 0,
+              "max_minutes": 28.62934,
+              "expected_minutes": 27.77046,
+              "impact_proxy": -1.58555,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629674",
+              "name": "Neemias Queta",
+              "status": "NOT_LISTED",
+              "roster_verified": true,
+              "minutes_if_play": 25.60353,
+              "inferred_minutes": 24.83542,
+              "min_minutes": 0,
+              "max_minutes": 25.60353,
+              "expected_minutes": 24.83542,
+              "impact_proxy": 4.6452,
+              "excluded": false,
+              "reason": null
+            }
+          ],
+          "minutes_range": {
+            "min": 0,
+            "max": 251.86976
+          },
+          "excluded_players": [],
+          "issues": []
+        }
+      },
+      "v18_roster_strength": {
+        "available": true,
+        "validated_probability": false,
+        "label": "V18 active-roster impact proxy · NOT a win probability or projected score",
+        "source": "NBA.com active-roster IDs + pregame inferred player impact and minutes",
+        "historical_franchise_strength_used": false,
+        "home": {
+          "available": true,
+          "team": "WAS",
+          "scenarios": 1,
+          "possible_scenarios": 1,
+          "uncertain_players": [],
+          "strength_range": [
+            -1.2293168338189908,
+            -1.2293168338189908
+          ],
+          "rotation": [
+            {
+              "player_id": "1643407",
+              "minutes": 32.317961591116955,
+              "impact": -1.53775
+            },
+            {
+              "player_id": "1642273",
+              "minutes": 32.17606157717617,
+              "impact": 0.21972
+            },
+            {
+              "player_id": "203076",
+              "minutes": 31.250101487706466,
+              "impact": 2.51216
+            },
+            {
+              "player_id": "1629027",
+              "minutes": 30.15918138564896,
+              "impact": -1.94641
+            },
+            {
+              "player_id": "1642259",
+              "minutes": 24.489650927900552,
+              "impact": 0.29631
+            },
+            {
+              "player_id": "1641731",
+              "minutes": 21.502640787975153,
+              "impact": -2.65976
+            },
+            {
+              "player_id": "203114",
+              "minutes": 16.686010577995432,
+              "impact": -0.96149
+            },
+            {
+              "player_id": "1642848",
+              "minutes": 16.39900056609337,
+              "impact": -4.63794
+            },
+            {
+              "player_id": "1642267",
+              "minutes": 9.977820317752059,
+              "impact": -6.33041
+            },
+            {
+              "player_id": "1630264",
+              "minutes": 8.661290271076933,
+              "impact": -1.45616
+            },
+            {
+              "player_id": "1629028",
+              "minutes": 8.553590267322488,
+              "impact": -5.65746
+            },
+            {
+              "player_id": "1642860",
+              "minutes": 7.82669024223541,
+              "impact": -0.76764
+            }
+          ],
+          "completeness": true
+        },
+        "away": {
+          "available": true,
+          "team": "BOS",
+          "scenarios": 1,
+          "possible_scenarios": 1,
+          "uncertain_players": [],
+          "strength_range": [
+            1.6444305483191102,
+            1.6444305483191102
+          ],
+          "rotation": [
+            {
+              "player_id": "1628369",
+              "minutes": 34.29898171455033,
+              "impact": 3.52911
+            },
+            {
+              "player_id": "1628401",
+              "minutes": 30.308942380414386,
+              "impact": 1.93027
+            },
+            {
+              "player_id": "1630202",
+              "minutes": 28.240798247149257,
+              "impact": -1.58555
+            },
+            {
+              "player_id": "1629674",
+              "minutes": 25.233174230384606,
+              "impact": 4.6452
+            },
+            {
+              "player_id": "1630573",
+              "minutes": 21.870614752466558,
+              "impact": 3.99828
+            },
+            {
+              "player_id": "202331",
+              "minutes": 21.217536377168717,
+              "impact": 3.8773
+            },
+            {
+              "player_id": "1631248",
+              "minutes": 17.03977443004204,
+              "impact": -1.18671
+            },
+            {
+              "player_id": "1642864",
+              "minutes": 14.924555739778349,
+              "impact": -1.31426
+            },
+            {
+              "player_id": "1630568",
+              "minutes": 13.503465932086456,
+              "impact": -0.94472
+            },
+            {
+              "player_id": "1641775",
+              "minutes": 12.381304289902312,
+              "impact": -2.28052
+            },
+            {
+              "player_id": "201144",
+              "minutes": 12.046190200302098,
+              "impact": 5.41093
+            },
+            {
+              "player_id": "1631199",
+              "minutes": 8.934661705754907,
+              "impact": -1.27434
+            }
+          ],
+          "completeness": true
+        },
+        "home_minus_away_impact_range": [
+          -2.873747382138101,
+          -2.873747382138101
+        ],
+        "limitation": "Individual impact proxy and minute reallocations are unvalidated; do not combine this number with Elo without walk-forward calibration"
+      },
+      "v9_player_projections": [
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "1628369",
+          "name": "Jayson Tatum",
+          "expected_minutes_if_play": 34.64953,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 28.190603716329612,
+            "reb": 7.962009436956672,
+            "ast": 5.98692970371591,
+            "three_pm": 3.582383243121438
+          }
+        },
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "1628401",
+          "name": "Derrick White",
+          "expected_minutes_if_play": 30.68916,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 14.254511164123626,
+            "reb": 3.0119945440141525,
+            "ast": 4.9359985153535355,
+            "three_pm": 1.9620367152065685
+          }
+        },
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "1630202",
+          "name": "Payton Pritchard",
+          "expected_minutes_if_play": 28.62934,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 13.181389865162396,
+            "reb": 2.9961339062160914,
+            "ast": 4.9261727067951755,
+            "three_pm": 2.27358349396991
+          }
+        },
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "1629674",
+          "name": "Neemias Queta",
+          "expected_minutes_if_play": 25.60353,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 11.406596190733449,
+            "reb": 8.592141920947999,
+            "ast": 2.7542899174658064,
+            "three_pm": 0.4635752953315815
+          }
+        },
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "1630573",
+          "name": "Sam Hauser",
+          "expected_minutes_if_play": 22.1969,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 10.326178919522132,
+            "reb": 3.0740743918296918,
+            "ast": 1.614239977444815,
+            "three_pm": 2.9069536792171724
+          }
+        },
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "202331",
+          "name": "Paul George",
+          "expected_minutes_if_play": 30.0485,
+          "play_probability_inferred": 0.68,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "missed last game · inferred uncertain",
+            "last_observed_game": "2026-11-21",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 19.465449503840482,
+            "reb": 6.00562845305794,
+            "ast": 3.537250097449306,
+            "three_pm": 3.016748636997551
+          }
+        },
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "1631248",
+          "name": "Baylor Scheierman",
+          "expected_minutes_if_play": 17.29991,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 4.4097049977921605,
+            "reb": 3.2695454822117425,
+            "ast": 1.46855366681779,
+            "three_pm": 0.8381547896851518
+          }
+        },
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "1642864",
+          "name": "Hugo González",
+          "expected_minutes_if_play": 15.15467,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 4.485839221493318,
+            "reb": 3.0459289318611678,
+            "ast": 0.6162288111928972,
+            "three_pm": 0.8384826581667654
+          }
+        },
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "1630568",
+          "name": "Luka Garza",
+          "expected_minutes_if_play": 13.71305,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 5.301255589119516,
+            "reb": 3.181113205186505,
+            "ast": 1.7351619718199576,
+            "three_pm": 0.4730220059580754
+          }
+        },
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "1641775",
+          "name": "Jordan Walsh",
+          "expected_minutes_if_play": 12.57447,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 3.750398762071648,
+            "reb": 2.3498641453953413,
+            "ast": 0.11963101222878872,
+            "three_pm": 0.5238108829380433
+          }
+        },
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "201144",
+          "name": "Mike Conley",
+          "expected_minutes_if_play": 12.23442,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 6.7729113014761415,
+            "reb": 1.7458586810326038,
+            "ast": 1.5809715724510778,
+            "three_pm": 1.7854488001874547
+          }
+        },
+        {
+          "side": "away",
+          "team": "BOS",
+          "player_id": "1631199",
+          "name": "Ron Harper Jr.",
+          "expected_minutes_if_play": 9.07628,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 4.923091788510875,
+            "reb": 0.9189333868427203,
+            "ast": 0.6300812545410749,
+            "three_pm": 1.0846401666282803
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "1643407",
+          "name": "AJ Dybantsa",
+          "expected_minutes_if_play": 35.23434,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 16.503987211900423,
+            "reb": 7.813065063579667,
+            "ast": 3.493206890887401,
+            "three_pm": 0.8637313999044659
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "1642273",
+          "name": "Kyshawn George",
+          "expected_minutes_if_play": 35.07964,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 16.6683651279275,
+            "reb": 4.124154836712284,
+            "ast": 4.030961376869122,
+            "three_pm": 3.0653939296792645
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "203076",
+          "name": "Anthony Davis",
+          "expected_minutes_if_play": 34.07012,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 24.73374926261549,
+            "reb": 9.762403102583468,
+            "ast": 1.9782638514375694,
+            "three_pm": 0.7901766331079976
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "1629027",
+          "name": "Trae Young",
+          "expected_minutes_if_play": 32.88075,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 12.451045691132803,
+            "reb": 2.353635349860651,
+            "ast": 8.428807914887544,
+            "three_pm": 2.264299316051026
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "1642259",
+          "name": "Alex Sarr",
+          "expected_minutes_if_play": 26.69961,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 10.477258349444732,
+            "reb": 6.39102251490716,
+            "ast": 1.4012319793624606,
+            "three_pm": 1.790539039683917
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "1641731",
+          "name": "Bilal Coulibaly",
+          "expected_minutes_if_play": 23.44305,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 6.5200791822313,
+            "reb": 4.792866495123724,
+            "ast": 0.6180768381990542,
+            "three_pm": 0.9827744969900937
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "203114",
+          "name": "Khris Middleton",
+          "expected_minutes_if_play": 18.19176,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 5.795081894925056,
+            "reb": 1.9993087960002869,
+            "ast": 1.6457927898887426,
+            "three_pm": 1.1511438191273629
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "1642848",
+          "name": "Tre Johnson",
+          "expected_minutes_if_play": 17.87885,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 6.51436357273205,
+            "reb": 1.9891232381446422,
+            "ast": 0.7401863448404562,
+            "three_pm": 1.3586049802829885
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "1642267",
+          "name": "Bub Carrington",
+          "expected_minutes_if_play": 10.87823,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 3.025685477405391,
+            "reb": 0.37770548531425985,
+            "ast": 0.8838779059986127,
+            "three_pm": 0.8675302321248358
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "1630264",
+          "name": "Anthony Gill",
+          "expected_minutes_if_play": 9.44289,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 4.038431217244806,
+            "reb": 1.1793860370741744,
+            "ast": 0.1308399848033832,
+            "three_pm": 0.23889674192007493
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "1629028",
+          "name": "Deandre Ayton",
+          "expected_minutes_if_play": 9.32547,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 1.6079506690934573,
+            "reb": 2.563616044982486,
+            "ast": 0.3726273548397294,
+            "three_pm": 0
+          }
+        },
+        {
+          "side": "home",
+          "team": "WAS",
+          "player_id": "1642860",
+          "name": "Will Riley",
+          "expected_minutes_if_play": 8.53297,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 2.61615781951172,
+            "reb": 1.567667705665197,
+            "ast": 0.49295951581504566,
+            "three_pm": 0.23889674192007493
+          }
+        }
+      ]
+    },
+    {
+      "game_id": "401909316",
+      "tip_utc": "2026-11-25T03:00:00.000Z",
+      "tip_melbourne": "Wednesday 25 November 2026 at 2:00:00 pm AEDT",
+      "away": {
+        "id": "6",
+        "name": "Dallas Mavericks",
+        "abbr": "DAL"
+      },
+      "home": {
+        "id": "7",
+        "name": "Denver Nuggets",
+        "abbr": "DEN"
+      },
+      "primary_forecast": {
+        "model_id": "production_elo_v7",
+        "model": "production Elo baseline",
+        "version_status": "production",
+        "winner": "DEN",
+        "winner_probability": 0.7924435275725672,
+        "home_win_probability": 0.7924435275725672,
+        "away_win_probability": 0.2075564724274328,
+        "projected_score": {
+          "away": 111.45207227409918,
+          "home": 119.20983282931434
+        }
+      },
+      "diagnostics": {
+        "monte_carlo": {
+          "model_id": "possession_monte_carlo_v5",
+          "version_status": "diagnostic_not_promoted",
+          "simulations": 20000,
+          "seed": "daily-audit-v2|401909316|2026-11-25T03:00Z|20000",
+          "home_win_probability": 0.661,
+          "away_win_probability": 0.33899999999999997,
+          "projected_score": {
+            "away": 112.82225,
+            "home": 119.3097
+          }
+        },
+        "roster_aware_beta": {
+          "model_id": "roster_beta_v1",
+          "version_status": "research_only_not_promoted",
+          "home_win_probability": 0.7282089949934436,
+          "away_win_probability": 0.2717910050065564,
+          "source_built_at": "2026-11-24T22:46:22+00:00",
+          "uncertainty": 0.20551600055445648
+        }
+      },
+      "challenge_predictions": {
+        "m1_elo": {
+          "model_id": "m1_elo",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.7924435275725672,
+          "away_win_probability": 0.2075564724274328,
+          "projected_score": {
+            "home": 119.20983282931434,
+            "away": 111.45207227409918
+          }
+        },
+        "m2_science": {
+          "model_id": "m2_science",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.7320259071538987,
+          "away_win_probability": 0.2679740928461013,
+          "projected_score": null
+        },
+        "m3_player_roster": {
+          "model_id": "m3_player_roster",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.7310325527947868,
+          "away_win_probability": 0.26896744720521315,
+          "projected_score": null,
+          "availability": "inferred_unless_official_sidecar",
+          "roster_uncertainty": 0.20551600055445648
+        },
+        "m4_monte_carlo": {
+          "model_id": "m4_monte_carlo",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.6898,
+          "away_win_probability": 0.31020000000000003,
+          "projected_score": {
+            "home": 121.1821,
+            "away": 113.20045
+          },
+          "simulations": 20000,
+          "seed": "five-model-live-v1|401909316|2026-11-25T03:00Z|20000"
+        },
+        "m5_regularized_ml": {
+          "model_id": "m5_regularized_ml",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.7462058596568958,
+          "away_win_probability": 0.2537941403431042,
+          "projected_score": null
+        },
+        "m6_ensemble": {
+          "model_id": "m6_ensemble",
+          "model_version": "1.0.0",
+          "version_status": "research_only_not_promoted",
+          "available": true,
+          "home_win_probability": 0.7462776343898303,
+          "away_win_probability": 0.2537223656101697,
+          "projected_score": null,
+          "weights": {
+            "m1_elo": 0.1,
+            "m2_science": 0,
+            "m3_player_roster": 0.3,
+            "m4_monte_carlo": 0,
+            "m5_regularized_ml": 0.6
+          },
+          "weights_training_seasons": [
+            2023,
+            2024,
+            2025,
+            2026
+          ]
+        }
+      },
+      "research_score_machine": {
+        "model_id": "joint_score_margin_v1",
+        "version_status": "research_only_not_promoted",
+        "available": true,
+        "home_win_probability": 0.6999349201491301,
+        "away_win_probability": 0.30006507985086994,
+        "projected_score": {
+          "home": 119.16353639206329,
+          "away": 112.38763258774429
+        },
+        "display_score": {
+          "home": 119,
+          "away": 112
+        },
+        "projected_home_margin": 6.775903804319,
+        "margin_range_80": [
+          -10.716159423653487,
+          24.04940338315313
+        ],
+        "explanation": {
+          "baseline_offense_home": 117.89044448275862,
+          "baseline_offense_away": 110.6789706451613,
+          "baseline_defense_home": 114.4668572413793,
+          "baseline_defense_away": 113.09002064516129,
+          "pace": 100.83167710789766,
+          "home_current_games": 15,
+          "away_current_games": 17,
+          "drivers": [
+            {
+              "feature": "net_gap",
+              "label": "Current/prior adjusted net efficiency",
+              "margin_points": 2.057968457569602,
+              "direction": "home"
+            },
+            {
+              "feature": "offense_gap",
+              "label": "Offensive rating difference",
+              "margin_points": 1.2759166990197535,
+              "direction": "home"
+            },
+            {
+              "feature": "recent_net_gap",
+              "label": "Recent efficiency trend",
+              "margin_points": 1.1752783177668025,
+              "direction": "home"
+            },
+            {
+              "feature": "defense_gap",
+              "label": "Defensive rating difference",
+              "margin_points": -0.4557081036323004,
+              "direction": "away"
+            },
+            {
+              "feature": "efg_gap",
+              "label": "Effective field-goal percentage",
+              "margin_points": 0.3535728146537265,
+              "direction": "home"
+            }
+          ],
+          "attribution_note": "Linear model contributions explain the fitted margin numerically. Correlated inputs mean they are not causal impact estimates. Historical player availability was inferred, not officially verified.",
+          "intercept_margin_points": 1.8941958444654483,
+          "impact_by_feature": {
+            "net_gap": {
+              "margin_points": 2.057968457569602,
+              "total_points": -0.1334684348736228
+            },
+            "offense_gap": {
+              "margin_points": 1.2759166990197535,
+              "total_points": 0.6258674895676054
+            },
+            "defense_gap": {
+              "margin_points": -0.4557081036323004,
+              "total_points": 0.16484590538227772
+            },
+            "pace": {
+              "margin_points": 0.12544428347997444,
+              "total_points": 2.3906112465272997
+            },
+            "home_attack": {
+              "margin_points": 0.20729347465883954,
+              "total_points": 1.5739010996053244
+            },
+            "away_attack": {
+              "margin_points": 0.039768228771746024,
+              "total_points": -0.274815936950729
+            },
+            "recent_net_gap": {
+              "margin_points": 1.1752783177668025,
+              "total_points": 0.10694959821613545
+            },
+            "player_gap": {
+              "margin_points": -0.213300819421639,
+              "total_points": -0.00751290669722269
+            },
+            "continuity_gap": {
+              "margin_points": 0.22775047178587282,
+              "total_points": -0.039223423053087444
+            },
+            "rest_gap": {
+              "margin_points": 0,
+              "total_points": 0
+            },
+            "three_rate_gap": {
+              "margin_points": -0.0045434295044545535,
+              "total_points": -0.0050894994609284915
+            },
+            "efg_gap": {
+              "margin_points": 0.3535728146537265,
+              "total_points": -0.34866367509828505
+            },
+            "turnover_gap": {
+              "margin_points": 0.20969798073888665,
+              "total_points": -0.021351852794536046
+            },
+            "rebound_gap": {
+              "margin_points": -0.15962769797031987,
+              "total_points": 0.22342953902147117
+            },
+            "free_throw_gap": {
+              "margin_points": 0.04219728193707246,
+              "total_points": -0.019491419938198036
+            }
+          }
+        },
+        "training_games": 6150,
+        "training_source_sha256": "3859ddd8eb30b824792c67b988bdcdca47f13623dba134e2baec022667972189",
+        "trained_on_seasons_before": 2027,
+        "team_snapshot_utc": "2026-11-24T22:46:22+00:00",
+        "official_game_day_availability_used": false,
+        "validation_status": "historical_walk_forward_only_prospective_unproven"
+      },
+      "v18_roster_integrity": {
+        "schema": "nba-twin-lab-roster-integrity-result-v18",
+        "game_id": "401909316",
+        "source_checks_passed": false,
+        "usable_for_new_validated_forecast": false,
+        "reason": "No V18 roster-first probability model has yet passed prospective validation",
+        "issues": [
+          "game_injury_report_unverified",
+          "official_roster_unverified"
+        ],
+        "blocking_issues": [
+          "game_injury_report_unverified",
+          "official_roster_unverified"
+        ],
+        "team_snapshot_utc": "2026-11-24T22:46:22+00:00",
+        "injury_report_utc": null,
+        "home": {
+          "team": "DEN",
+          "official_roster_verified": false,
+          "players": [
+            {
+              "player_id": "203999",
+              "name": "Nikola Jokić",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 38.13786,
+              "inferred_minutes": 36.41007,
+              "min_minutes": 0,
+              "max_minutes": 38.13786,
+              "expected_minutes": 36.41007,
+              "impact_proxy": 5.08957,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1627750",
+              "name": "Jamal Murray",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 37.60889,
+              "inferred_minutes": 35.90506,
+              "min_minutes": 0,
+              "max_minutes": 37.60889,
+              "expected_minutes": 35.90506,
+              "impact_proxy": 5.74486,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1631128",
+              "name": "Christian Braun",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 33.49231,
+              "inferred_minutes": 31.97498,
+              "min_minutes": 0,
+              "max_minutes": 33.49231,
+              "expected_minutes": 31.97498,
+              "impact_proxy": 4.45844,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629661",
+              "name": "Cameron Johnson",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 30.17347,
+              "inferred_minutes": 28.8065,
+              "min_minutes": 0,
+              "max_minutes": 30.17347,
+              "expected_minutes": 28.8065,
+              "impact_proxy": 2.70925,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "203932",
+              "name": "Aaron Gordon",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 29.7662,
+              "inferred_minutes": 28.41768,
+              "min_minutes": 0,
+              "max_minutes": 29.7662,
+              "expected_minutes": 28.41768,
+              "impact_proxy": 2.57329,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "201942",
+              "name": "DeMar DeRozan",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 20.57732,
+              "inferred_minutes": 19.64509,
+              "min_minutes": 0,
+              "max_minutes": 20.57732,
+              "expected_minutes": 19.64509,
+              "impact_proxy": -4.14539,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642461",
+              "name": "Spencer Jones",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 17.39065,
+              "inferred_minutes": 16.60279,
+              "min_minutes": 0,
+              "max_minutes": 17.39065,
+              "expected_minutes": 16.60279,
+              "impact_proxy": -4.77911,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642350",
+              "name": "Trevon Brazile",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 14.98756,
+              "inferred_minutes": 14.30857,
+              "min_minutes": 0,
+              "max_minutes": 14.98756,
+              "expected_minutes": 14.30857,
+              "impact_proxy": -2.02908,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628963",
+              "name": "Marvin Bagley III",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 11.17026,
+              "inferred_minutes": 10.66421,
+              "min_minutes": 0,
+              "max_minutes": 11.17026,
+              "expected_minutes": 10.66421,
+              "impact_proxy": -1.61333,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1626145",
+              "name": "Tyus Jones",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 10.31518,
+              "inferred_minutes": 9.84786,
+              "min_minutes": 0,
+              "max_minutes": 10.31518,
+              "expected_minutes": 9.84786,
+              "impact_proxy": -7.19377,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628971",
+              "name": "Bruce Brown",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 23.69382,
+              "inferred_minutes": 3.7312,
+              "min_minutes": 0,
+              "max_minutes": 23.69382,
+              "expected_minutes": 3.7312,
+              "impact_proxy": 1.6728,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1631212",
+              "name": "Peyton Watson",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 23.40675,
+              "inferred_minutes": 3.68599,
+              "min_minutes": 0,
+              "max_minutes": 23.40675,
+              "expected_minutes": 3.68599,
+              "impact_proxy": 3.00539,
+              "excluded": false,
+              "reason": null
+            }
+          ],
+          "projected_leaders": [
+            {
+              "player_id": "203999",
+              "name": "Nikola Jokić",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 38.13786,
+              "inferred_minutes": 36.41007,
+              "min_minutes": 0,
+              "max_minutes": 38.13786,
+              "expected_minutes": 36.41007,
+              "impact_proxy": 5.08957,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1627750",
+              "name": "Jamal Murray",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 37.60889,
+              "inferred_minutes": 35.90506,
+              "min_minutes": 0,
+              "max_minutes": 37.60889,
+              "expected_minutes": 35.90506,
+              "impact_proxy": 5.74486,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1631128",
+              "name": "Christian Braun",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 33.49231,
+              "inferred_minutes": 31.97498,
+              "min_minutes": 0,
+              "max_minutes": 33.49231,
+              "expected_minutes": 31.97498,
+              "impact_proxy": 4.45844,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629661",
+              "name": "Cameron Johnson",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 30.17347,
+              "inferred_minutes": 28.8065,
+              "min_minutes": 0,
+              "max_minutes": 30.17347,
+              "expected_minutes": 28.8065,
+              "impact_proxy": 2.70925,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "203932",
+              "name": "Aaron Gordon",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 29.7662,
+              "inferred_minutes": 28.41768,
+              "min_minutes": 0,
+              "max_minutes": 29.7662,
+              "expected_minutes": 28.41768,
+              "impact_proxy": 2.57329,
+              "excluded": false,
+              "reason": null
+            }
+          ],
+          "minutes_range": {
+            "min": 0,
+            "max": 290.72027
+          },
+          "excluded_players": [],
+          "issues": [
+            "official_roster_unverified"
+          ]
+        },
+        "away": {
+          "team": "DAL",
+          "official_roster_verified": false,
+          "players": [
+            {
+              "player_id": "1642843",
+              "name": "Cooper Flagg",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 33.0031,
+              "inferred_minutes": 32.01301,
+              "min_minutes": 0,
+              "max_minutes": 33.0031,
+              "expected_minutes": 32.01301,
+              "impact_proxy": 2.7729,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "202681",
+              "name": "Kyrie Irving",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 31.65735,
+              "inferred_minutes": 30.70763,
+              "min_minutes": 0,
+              "max_minutes": 31.65735,
+              "expected_minutes": 30.70763,
+              "impact_proxy": 3.53265,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628997",
+              "name": "Caleb Martin",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 24.10092,
+              "inferred_minutes": 23.37789,
+              "min_minutes": 0,
+              "max_minutes": 24.10092,
+              "expected_minutes": 23.37789,
+              "impact_proxy": -3.01756,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630230",
+              "name": "Naji Marshall",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 23.01224,
+              "inferred_minutes": 22.32187,
+              "min_minutes": 0,
+              "max_minutes": 23.01224,
+              "expected_minutes": 22.32187,
+              "impact_proxy": -0.46751,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629655",
+              "name": "Daniel Gafford",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 22.85331,
+              "inferred_minutes": 22.16771,
+              "min_minutes": 0,
+              "max_minutes": 22.85331,
+              "expected_minutes": 22.16771,
+              "impact_proxy": 1.8521,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642258",
+              "name": "Zaccharie Risacher",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 22.65874,
+              "inferred_minutes": 21.97898,
+              "min_minutes": 0,
+              "max_minutes": 22.65874,
+              "expected_minutes": 21.97898,
+              "impact_proxy": -2.76116,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642383",
+              "name": "Walter Clayton Jr.",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 22.01552,
+              "inferred_minutes": 21.35505,
+              "min_minutes": 0,
+              "max_minutes": 22.01552,
+              "expected_minutes": 21.35505,
+              "impact_proxy": -1.72903,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1643516",
+              "name": "Morez Johnson Jr.",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 18.26231,
+              "inferred_minutes": 17.71444,
+              "min_minutes": 0,
+              "max_minutes": 18.26231,
+              "expected_minutes": 17.71444,
+              "impact_proxy": -3.52692,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1631108",
+              "name": "Max Christie",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 13.47281,
+              "inferred_minutes": 13.06863,
+              "min_minutes": 0,
+              "max_minutes": 13.47281,
+              "expected_minutes": 13.06863,
+              "impact_proxy": -1.79908,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1630583",
+              "name": "Santi Aldama",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 12.65252,
+              "inferred_minutes": 12.27294,
+              "min_minutes": 0,
+              "max_minutes": 12.65252,
+              "expected_minutes": 12.27294,
+              "impact_proxy": -3.52779,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629023",
+              "name": "P.J. Washington",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 27.23794,
+              "inferred_minutes": 10.35042,
+              "min_minutes": 0,
+              "max_minutes": 27.23794,
+              "expected_minutes": 10.35042,
+              "impact_proxy": -1.0799,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "203076",
+              "name": "Anthony Davis",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 33.63241,
+              "inferred_minutes": 5.38119,
+              "min_minutes": 0,
+              "max_minutes": 33.63241,
+              "expected_minutes": 5.38119,
+              "impact_proxy": -1.85388,
+              "excluded": false,
+              "reason": null
+            }
+          ],
+          "projected_leaders": [
+            {
+              "player_id": "203076",
+              "name": "Anthony Davis",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 33.63241,
+              "inferred_minutes": 5.38119,
+              "min_minutes": 0,
+              "max_minutes": 33.63241,
+              "expected_minutes": 5.38119,
+              "impact_proxy": -1.85388,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1642843",
+              "name": "Cooper Flagg",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 33.0031,
+              "inferred_minutes": 32.01301,
+              "min_minutes": 0,
+              "max_minutes": 33.0031,
+              "expected_minutes": 32.01301,
+              "impact_proxy": 2.7729,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "202681",
+              "name": "Kyrie Irving",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 31.65735,
+              "inferred_minutes": 30.70763,
+              "min_minutes": 0,
+              "max_minutes": 31.65735,
+              "expected_minutes": 30.70763,
+              "impact_proxy": 3.53265,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1629023",
+              "name": "P.J. Washington",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 27.23794,
+              "inferred_minutes": 10.35042,
+              "min_minutes": 0,
+              "max_minutes": 27.23794,
+              "expected_minutes": 10.35042,
+              "impact_proxy": -1.0799,
+              "excluded": false,
+              "reason": null
+            },
+            {
+              "player_id": "1628997",
+              "name": "Caleb Martin",
+              "status": "NOT_LISTED",
+              "roster_verified": false,
+              "minutes_if_play": 24.10092,
+              "inferred_minutes": 23.37789,
+              "min_minutes": 0,
+              "max_minutes": 24.10092,
+              "expected_minutes": 23.37789,
+              "impact_proxy": -3.01756,
+              "excluded": false,
+              "reason": null
+            }
+          ],
+          "minutes_range": {
+            "min": 0,
+            "max": 284.55917000000005
+          },
+          "excluded_players": [],
+          "issues": [
+            "official_roster_unverified"
+          ]
+        }
+      },
+      "v18_roster_strength": {
+        "available": false,
+        "reason": "Official roster/injury provenance not verified",
+        "validated_probability": false
+      },
+      "v9_player_projections": [
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "1642843",
+          "name": "Cooper Flagg",
+          "expected_minutes_if_play": 33.0031,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 24.90563628047773,
+            "reb": 5.7582220662262396,
+            "ast": 6.134467382337639,
+            "three_pm": 2.2166541905329096
+          }
+        },
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "202681",
+          "name": "Kyrie Irving",
+          "expected_minutes_if_play": 31.65735,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 22.331913572708515,
+            "reb": 3.7060825357464826,
+            "ast": 5.235850954259244,
+            "three_pm": 3.3911831870473907
+          }
+        },
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "1628997",
+          "name": "Caleb Martin",
+          "expected_minutes_if_play": 24.10092,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 6.316087002154663,
+            "reb": 4.207716422070777,
+            "ast": 3.4661814930306134,
+            "three_pm": 1.2607516741507587
+          }
+        },
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "1630230",
+          "name": "Naji Marshall",
+          "expected_minutes_if_play": 23.01224,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 9.55999257189011,
+            "reb": 2.528180257325631,
+            "ast": 2.772379995568202,
+            "three_pm": 1.040453479091377
+          }
+        },
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "1629655",
+          "name": "Daniel Gafford",
+          "expected_minutes_if_play": 22.85331,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 8.338340311835456,
+            "reb": 4.629585624732935,
+            "ast": 2.232883756283027,
+            "three_pm": 0.13351827911408745
+          }
+        },
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "1642258",
+          "name": "Zaccharie Risacher",
+          "expected_minutes_if_play": 22.65874,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 10.297832440041425,
+            "reb": 4.798269621419626,
+            "ast": 0.9046166905844159,
+            "three_pm": 0.9350259811621958
+          }
+        },
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "1642383",
+          "name": "Walter Clayton Jr.",
+          "expected_minutes_if_play": 22.01552,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 9.035954191663594,
+            "reb": 2.973443518282411,
+            "ast": 3.5574989209207595,
+            "three_pm": 1.489219380847692
+          }
+        },
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "1643516",
+          "name": "Morez Johnson Jr.",
+          "expected_minutes_if_play": 18.26231,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 5.984919430681977,
+            "reb": 4.989382460044247,
+            "ast": 1.4242314630585948,
+            "three_pm": 0.4376012342077973
+          }
+        },
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "1631108",
+          "name": "Max Christie",
+          "expected_minutes_if_play": 13.47281,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 4.526004808408181,
+            "reb": 2.178732133467491,
+            "ast": 0.6522076379679348,
+            "three_pm": 1.0811816290700595
+          }
+        },
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "1630583",
+          "name": "Santi Aldama",
+          "expected_minutes_if_play": 12.65252,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 4.68223921460329,
+            "reb": 2.1918570857816566,
+            "ast": 0.5271872430663552,
+            "three_pm": 0.6977220669937089
+          }
+        },
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "1629023",
+          "name": "P.J. Washington",
+          "expected_minutes_if_play": 27.23794,
+          "play_probability_inferred": 0.38,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "missed 2 games · inferred unlikely",
+            "last_observed_game": "2026-11-18",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 13.867197214202928,
+            "reb": 5.336293159459542,
+            "ast": 1.5621976979607277,
+            "three_pm": 2.403169813108141
+          }
+        },
+        {
+          "side": "away",
+          "team": "DAL",
+          "player_id": "203076",
+          "name": "Anthony Davis",
+          "expected_minutes_if_play": 33.63241,
+          "play_probability_inferred": 0.16,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "missed 17+ games · inferred out of rotation",
+            "last_observed_game": null,
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 20.433032988657107,
+            "reb": 11.454660334940229,
+            "ast": 2.3392565692007192,
+            "three_pm": 0.1959886738285189
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "203999",
+          "name": "Nikola Jokić",
+          "expected_minutes_if_play": 38.13786,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 28.610133498877804,
+            "reb": 11.755440340441641,
+            "ast": 9.572823219787676,
+            "three_pm": 1.5308067273793784
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "1627750",
+          "name": "Jamal Murray",
+          "expected_minutes_if_play": 37.60889,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 27.38917630852976,
+            "reb": 4.724143004683542,
+            "ast": 6.1026449044383195,
+            "three_pm": 2.6639827843664796
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "1631128",
+          "name": "Christian Braun",
+          "expected_minutes_if_play": 33.49231,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 14.813587416498818,
+            "reb": 5.295534841003193,
+            "ast": 2.750179980442771,
+            "three_pm": 1.7114520112165414
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "1629661",
+          "name": "Cameron Johnson",
+          "expected_minutes_if_play": 30.17347,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 14.061976452899463,
+            "reb": 3.0905066503655356,
+            "ast": 2.8131420223476296,
+            "three_pm": 1.915402797875311
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "203932",
+          "name": "Aaron Gordon",
+          "expected_minutes_if_play": 29.7662,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 13.315277644825027,
+            "reb": 4.715158477075731,
+            "ast": 2.0319504115976796,
+            "three_pm": 0.8893878347160635
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "201942",
+          "name": "DeMar DeRozan",
+          "expected_minutes_if_play": 20.57732,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 8.744261087454126,
+            "reb": 1.4315045827565687,
+            "ast": 2.104731115105259,
+            "three_pm": 0.1089298598893468
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "1642461",
+          "name": "Spencer Jones",
+          "expected_minutes_if_play": 17.39065,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 2.6162549672013373,
+            "reb": 2.3794727434524274,
+            "ast": 0.8260238005245024,
+            "three_pm": 0.46444178844231687
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "1642350",
+          "name": "Trevon Brazile",
+          "expected_minutes_if_play": 14.98756,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 5.301914598506846,
+            "reb": 3.8397097249010934,
+            "ast": 0.20490551833968926,
+            "three_pm": 0.6138623214098239
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "1628963",
+          "name": "Marvin Bagley III",
+          "expected_minutes_if_play": 11.17026,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 5.88271558738448,
+            "reb": 3.4939461093006714,
+            "ast": 0.16147025176142957,
+            "three_pm": 0.3364876435847504
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "1626145",
+          "name": "Tyus Jones",
+          "expected_minutes_if_play": 10.31518,
+          "play_probability_inferred": 0.97,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "rotation inferred",
+            "last_observed_game": "2026-11-22",
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 1.5448115106430254,
+            "reb": 0.7806388713557331,
+            "ast": 2.0908824808283404,
+            "three_pm": 0.16673635071723894
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "1628971",
+          "name": "Bruce Brown",
+          "expected_minutes_if_play": 23.69382,
+          "play_probability_inferred": 0.16,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "missed 15+ games · inferred out of rotation",
+            "last_observed_game": null,
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 10.437972312446265,
+            "reb": 4.7449762549419265,
+            "ast": 2.682635226469499,
+            "three_pm": 0.9206829342358925
+          }
+        },
+        {
+          "side": "home",
+          "team": "DEN",
+          "player_id": "1631212",
+          "name": "Peyton Watson",
+          "expected_minutes_if_play": 23.40675,
+          "play_probability_inferred": 0.16,
+          "availability": {
+            "classification": "inferred_only",
+            "source": "inferred from prior appearances; no official pregame injury archive",
+            "status": "missed 15+ games · inferred out of rotation",
+            "last_observed_game": null,
+            "warning": "Conditional projection is not a claim that the player will play. Official injury and confirmed rotation status are unavailable unless separately snapshotted."
+          },
+          "projection_if_play": {
+            "pts": 13.541052593139124,
+            "reb": 5.074871225024746,
+            "ast": 2.6391899100840717,
+            "three_pm": 1.2147603915734757
+          }
+        }
+      ]
+    }
+  ],
+  "integrity": {
+    "algorithm": "sha256",
+    "canonical_payload_without_integrity": "3929575c8adaba055bc243eb42a0b557f032efdd2bee11631c95a0d26c34d650"
+  }
+}
