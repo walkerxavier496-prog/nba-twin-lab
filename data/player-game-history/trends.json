@@ -1,7 +1,7 @@
 {
   "schema": "nba-twin-lab-player-trends-v1",
-  "generated_at_utc": "2026-11-24T23:14:47.954Z",
-  "as_of_utc": "2026-11-24T23:14:47.954Z",
+  "generated_at_utc": "2026-11-25T22:43:34.586Z",
+  "as_of_utc": "2026-11-25T22:43:34.586Z",
   "methodology": {
     "source": "ESPN public NBA summary (unofficial)",
     "observation_rule": "Latest complete ESPN summary locally retrieved by the as-of timestamp; game event also must precede that timestamp.",
@@ -11,13 +11,13 @@
     "recent_form_rule": "Last 5 appearances are compared with the prior 5 only when both groups are available within 60 days."
   },
   "coverage": {
-    "verified_final_games": 258,
+    "verified_final_games": 261,
     "players_meeting_minimum": 400,
     "identity_conflict_count": 0,
-    "window_start_utc": "2026-10-25T23:14:47.954Z",
-    "window_end_utc": "2026-11-24T23:14:47.954Z",
+    "window_start_utc": "2026-10-26T22:43:34.586Z",
+    "window_end_utc": "2026-11-25T22:43:34.586Z",
     "coverage_start_utc": "2026-10-01T17:54:52.841Z",
-    "observation_count": 301,
+    "observation_count": 309,
     "unavailable_game_count": 0
   },
   "identity_conflicts": [],
@@ -200,6 +200,65 @@
       }
     },
     {
+      "player_id": "4065648",
+      "name": "Jayson Tatum",
+      "last_recorded_team": {
+        "id": "2",
+        "abbr": "BOS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-15T23:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909989",
+        "401909994",
+        "401910015",
+        "401910035",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 29.6
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 8.4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5.4
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.2
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 48.2
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 16,
+        "required_games": 10,
+        "points_change": 5.8,
+        "fantasy_points_change": 4
+      }
+    },
+    {
       "player_id": "3908809",
       "name": "Donovan Mitchell",
       "last_recorded_team": {
@@ -315,65 +374,6 @@
         "required_games": 10,
         "points_change": -7.6,
         "fantasy_points_change": -13.6
-      }
-    },
-    {
-      "player_id": "3112335",
-      "name": "Nikola Jokic",
-      "last_recorded_team": {
-        "id": "7",
-        "abbr": "DEN"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909980",
-        "401910001",
-        "401910015",
-        "401909312",
-        "401910032"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 28.2
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 11.2
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 9.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.8
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 62.2
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 15,
-        "required_games": 10,
-        "points_change": 2.4,
-        "fantasy_points_change": -2.6
       }
     },
     {
@@ -495,6 +495,65 @@
       }
     },
     {
+      "player_id": "6583",
+      "name": "Anthony Davis",
+      "last_recorded_team": {
+        "id": "27",
+        "abbr": "WAS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909996",
+        "401910012",
+        "401909309",
+        "401910031",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 27.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 9.8
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.4
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 47.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 17,
+        "required_games": 10,
+        "points_change": 0.8,
+        "fantasy_points_change": -4.2
+      }
+    },
+    {
       "player_id": "4066457",
       "name": "Austin Reaves",
       "last_recorded_team": {
@@ -554,62 +613,62 @@
       }
     },
     {
-      "player_id": "4566434",
-      "name": "Franz Wagner",
+      "player_id": "3112335",
+      "name": "Nikola Jokic",
       "last_recorded_team": {
-        "id": "19",
-        "abbr": "ORL"
+        "id": "7",
+        "abbr": "DEN"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-14T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-17T02:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
       },
       "game_ids": [
-        "401909297",
-        "401909994",
-        "401910010",
-        "401909306",
-        "401910031"
+        "401910001",
+        "401910015",
+        "401909312",
+        "401910032",
+        "401909316"
       ],
       "metrics": {
         "points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 26.8
+          "average": 26.6
         },
         "rebounds": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 7.6
+          "average": 11.8
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 9
+          "average": 8.6
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 1.2
+          "average": 1.8
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 55.8
+          "average": 56
         }
       },
       "recent_form": {
         "available": true,
         "sample_size": 16,
         "required_games": 10,
-        "points_change": -1.2,
-        "fantasy_points_change": 4.4
+        "points_change": 0.8,
+        "fantasy_points_change": -8
       }
     },
     {
@@ -731,124 +790,6 @@
       }
     },
     {
-      "player_id": "3936299",
-      "name": "Jamal Murray",
-      "last_recorded_team": {
-        "id": "7",
-        "abbr": "DEN"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909980",
-        "401910001",
-        "401910015",
-        "401909312",
-        "401910032"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 26.2
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.8
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 51
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 15,
-        "required_games": 10,
-        "points_change": -0.4,
-        "fantasy_points_change": -0.2
-      }
-    },
-    {
-      "player_id": "4065648",
-      "name": "Jayson Tatum",
-      "last_recorded_team": {
-        "id": "2",
-        "abbr": "BOS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-12T00:00:00.000Z",
-        "end_utc": "2026-11-23T01:30:00.000Z"
-      },
-      "game_ids": [
-        "401909968",
-        "401909989",
-        "401909994",
-        "401910015",
-        "401910035"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 26.2
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 8.6
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.4
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.4
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 42.4
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 15,
-        "required_games": 10,
-        "points_change": 0.8,
-        "fantasy_points_change": -2.6
-      }
-    },
-    {
       "player_id": "3064514",
       "name": "Julius Randle",
       "last_recorded_team": {
@@ -905,6 +846,65 @@
         "required_games": 10,
         "points_change": 7.2,
         "fantasy_points_change": 16.2
+      }
+    },
+    {
+      "player_id": "3936299",
+      "name": "Jamal Murray",
+      "last_recorded_team": {
+        "id": "7",
+        "abbr": "DEN"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T02:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401910001",
+        "401910015",
+        "401909312",
+        "401910032",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 25.6
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.6
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.4
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 47
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 16,
+        "required_games": 10,
+        "points_change": 1.4,
+        "fantasy_points_change": -1.8
       }
     },
     {
@@ -1026,6 +1026,65 @@
       }
     },
     {
+      "player_id": "5041939",
+      "name": "Cooper Flagg",
+      "last_recorded_team": {
+        "id": "6",
+        "abbr": "DAL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-15T23:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401909989",
+        "401910016",
+        "401910025",
+        "401910033",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 24.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.6
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 7.4
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.4
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 43.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 17,
+        "required_games": 10,
+        "points_change": 1,
+        "fantasy_points_change": -6.6
+      }
+    },
+    {
       "player_id": "3149673",
       "name": "Pascal Siakam",
       "last_recorded_team": {
@@ -1082,65 +1141,6 @@
         "required_games": 10,
         "points_change": 0.4,
         "fantasy_points_change": -2.8
-      }
-    },
-    {
-      "player_id": "6583",
-      "name": "Anthony Davis",
-      "last_recorded_team": {
-        "id": "27",
-        "abbr": "WAS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-16T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909991",
-        "401909996",
-        "401910012",
-        "401909309",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 24
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 8.8
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.8
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 43.4
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 16,
-        "required_games": 10,
-        "points_change": -5.6,
-        "fantasy_points_change": -11.4
       }
     },
     {
@@ -1203,62 +1203,62 @@
       }
     },
     {
-      "player_id": "5041939",
-      "name": "Cooper Flagg",
+      "player_id": "4566434",
+      "name": "Franz Wagner",
       "last_recorded_team": {
-        "id": "6",
-        "abbr": "DAL"
+        "id": "19",
+        "abbr": "ORL"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-15T00:30:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
       },
       "game_ids": [
-        "401909981",
-        "401909989",
-        "401910016",
-        "401910025",
-        "401910033"
+        "401909994",
+        "401910010",
+        "401909306",
+        "401910031",
+        "401909314"
       ],
       "metrics": {
         "points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 23.6
+          "average": 23.8
         },
         "rebounds": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 5
+          "average": 7.6
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 6
+          "average": 7.8
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 2.2
+          "average": 0.6
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 39.8
+          "average": 48.2
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 16,
+        "sample_size": 17,
         "required_games": 10,
-        "points_change": -0.4,
-        "fantasy_points_change": -10.2
+        "points_change": -6.4,
+        "fantasy_points_change": -10.6
       }
     },
     {
@@ -2155,54 +2155,113 @@
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-13T01:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-15T00:30:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
       },
       "game_ids": [
-        "401909978",
         "401909981",
         "401910016",
         "401910025",
-        "401910033"
+        "401910033",
+        "401909316"
       ],
       "metrics": {
         "points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 20.4
+          "average": 20.6
         },
         "rebounds": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 4.4
+          "average": 4.8
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 5.2
+          "average": 5.6
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 3.4
+          "average": 3.2
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 39.6
+          "average": 40.4
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 14,
+        "sample_size": 15,
         "required_games": 10,
-        "points_change": -6.4,
-        "fantasy_points_change": -3.4
+        "points_change": -1.2,
+        "fantasy_points_change": 5.6
+      }
+    },
+    {
+      "player_id": "5142718",
+      "name": "AJ Dybantsa",
+      "last_recorded_team": {
+        "id": "27",
+        "abbr": "WAS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909996",
+        "401910012",
+        "401909309",
+        "401910031",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 20
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 9.2
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.8
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 39
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 15,
+        "required_games": 10,
+        "points_change": 5.2,
+        "fantasy_points_change": 18.6
       }
     },
     {
@@ -2332,15 +2391,15 @@
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-14T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
       },
       "game_ids": [
-        "401909297",
         "401909994",
         "401910010",
         "401909306",
-        "401910031"
+        "401910031",
+        "401909314"
       ],
       "metrics": {
         "points": {
@@ -2353,33 +2412,33 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 3.8
+          "average": 3
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 3.8
+          "average": 4.2
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 4.8
+          "average": 4.4
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 43
+          "average": 40.6
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 15,
+        "sample_size": 16,
         "required_games": 10,
-        "points_change": 0.8,
-        "fantasy_points_change": 14.6
+        "points_change": 0.4,
+        "fantasy_points_change": 9.8
       }
     },
     {
@@ -2560,6 +2619,65 @@
       }
     },
     {
+      "player_id": "5174563",
+      "name": "Kyshawn George",
+      "last_recorded_team": {
+        "id": "27",
+        "abbr": "WAS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909996",
+        "401910012",
+        "401909309",
+        "401910031",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 19.4
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5.4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.4
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.4
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 36.8
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 19,
+        "required_games": 10,
+        "points_change": 4.2,
+        "fantasy_points_change": 6.8
+      }
+    },
+    {
       "player_id": "4065732",
       "name": "De'Andre Hunter",
       "last_recorded_team": {
@@ -2675,65 +2793,6 @@
         "required_games": 10,
         "points_change": 6.2,
         "fantasy_points_change": 5
-      }
-    },
-    {
-      "player_id": "5142718",
-      "name": "AJ Dybantsa",
-      "last_recorded_team": {
-        "id": "27",
-        "abbr": "WAS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-16T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909991",
-        "401909996",
-        "401910012",
-        "401909309",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 19.2
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 8.4
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 35.6
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 14,
-        "required_games": 10,
-        "points_change": 5.4,
-        "fantasy_points_change": 12.6
       }
     },
     {
@@ -2911,65 +2970,6 @@
         "required_games": 10,
         "points_change": 0,
         "fantasy_points_change": 4
-      }
-    },
-    {
-      "player_id": "4251",
-      "name": "Paul George",
-      "last_recorded_team": {
-        "id": "2",
-        "abbr": "BOS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-11T01:00:00.000Z",
-        "end_utc": "2026-11-22T03:00:00.000Z"
-      },
-      "game_ids": [
-        "401909961",
-        "401909989",
-        "401909994",
-        "401910015",
-        "401910028"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 18.8
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 6.4
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 37.6
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 14,
-        "required_games": 10,
-        "points_change": -0.2,
-        "fantasy_points_change": -2.8
       }
     },
     {
@@ -3622,6 +3622,65 @@
       }
     },
     {
+      "player_id": "4251",
+      "name": "Paul George",
+      "last_recorded_team": {
+        "id": "2",
+        "abbr": "BOS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-15T23:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909989",
+        "401909994",
+        "401910015",
+        "401910028",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 17.2
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 6.2
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.8
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 39
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 15,
+        "required_games": 10,
+        "points_change": -5.4,
+        "fantasy_points_change": -2.2
+      }
+    },
+    {
       "player_id": "4395724",
       "name": "Immanuel Quickley",
       "last_recorded_team": {
@@ -3787,7 +3846,7 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 29
+          "average": 29.8
         }
       },
       "recent_form": {
@@ -3795,7 +3854,7 @@
         "sample_size": 16,
         "required_games": 10,
         "points_change": 5.6,
-        "fantasy_points_change": 5.6
+        "fantasy_points_change": 6.4
       }
     },
     {
@@ -3973,65 +4032,6 @@
         "required_games": 10,
         "points_change": -0.6,
         "fantasy_points_change": -10
-      }
-    },
-    {
-      "player_id": "5174563",
-      "name": "Kyshawn George",
-      "last_recorded_team": {
-        "id": "27",
-        "abbr": "WAS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-16T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909991",
-        "401909996",
-        "401910012",
-        "401909309",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 16.8
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.8
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 34.4
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 18,
-        "required_games": 10,
-        "points_change": -2.8,
-        "fantasy_points_change": -2.4
       }
     },
     {
@@ -4330,65 +4330,6 @@
       }
     },
     {
-      "player_id": "4431767",
-      "name": "Christian Braun",
-      "last_recorded_team": {
-        "id": "7",
-        "abbr": "DEN"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909980",
-        "401910001",
-        "401910015",
-        "401909312",
-        "401910032"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 16.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.6
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 40
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 15,
-        "required_games": 10,
-        "points_change": 7,
-        "fantasy_points_change": 16
-      }
-    },
-    {
       "player_id": "4437244",
       "name": "Jalen Green",
       "last_recorded_team": {
@@ -4504,6 +4445,65 @@
         "required_games": 10,
         "points_change": 7,
         "fantasy_points_change": 13.2
+      }
+    },
+    {
+      "player_id": "5107199",
+      "name": "Daniss Jenkins",
+      "last_recorded_team": {
+        "id": "8",
+        "abbr": "DET"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-18T01:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401910004",
+        "401910013",
+        "401909308",
+        "401910029",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 16.4
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.2
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5.6
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 31.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 17,
+        "required_games": 10,
+        "points_change": -1.4,
+        "fantasy_points_change": -3.6
       }
     },
     {
@@ -4681,6 +4681,65 @@
         "required_games": 10,
         "points_change": 1,
         "fantasy_points_change": 4.8
+      }
+    },
+    {
+      "player_id": "4431767",
+      "name": "Christian Braun",
+      "last_recorded_team": {
+        "id": "7",
+        "abbr": "DEN"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T02:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401910001",
+        "401910015",
+        "401909312",
+        "401910032",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 16
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.6
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.4
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 38.4
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 16,
+        "required_games": 10,
+        "points_change": 6,
+        "fantasy_points_change": 11.6
       }
     },
     {
@@ -5333,65 +5392,6 @@
       }
     },
     {
-      "player_id": "5107199",
-      "name": "Daniss Jenkins",
-      "last_recorded_team": {
-        "id": "8",
-        "abbr": "DET"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T01:00:00.000Z",
-        "end_utc": "2026-11-22T20:30:00.000Z"
-      },
-      "game_ids": [
-        "401909982",
-        "401910004",
-        "401910013",
-        "401909308",
-        "401910029"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 15.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.6
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 29
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 16,
-        "required_games": 10,
-        "points_change": -0.8,
-        "fantasy_points_change": -4.2
-      }
-    },
-    {
       "player_id": "5124612",
       "name": "VJ Edgecombe",
       "last_recorded_team": {
@@ -5982,101 +5982,42 @@
       }
     },
     {
-      "player_id": "3064290",
-      "name": "Aaron Gordon",
+      "player_id": "3138196",
+      "name": "Cameron Johnson",
       "last_recorded_team": {
         "id": "7",
         "abbr": "DEN"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-15T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-17T02:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
       },
       "game_ids": [
-        "401909980",
         "401910001",
         "401910015",
         "401909312",
-        "401910032"
+        "401910032",
+        "401909316"
       ],
       "metrics": {
         "points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 14.2
+          "average": 13.8
         },
         "rebounds": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 5
+          "average": 3
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 2.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 26.8
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 15,
-        "required_games": 10,
-        "points_change": 5,
-        "fantasy_points_change": 9.4
-      }
-    },
-    {
-      "player_id": "3078576",
-      "name": "Derrick White",
-      "last_recorded_team": {
-        "id": "2",
-        "abbr": "BOS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-12T00:00:00.000Z",
-        "end_utc": "2026-11-23T01:30:00.000Z"
-      },
-      "game_ids": [
-        "401909968",
-        "401909989",
-        "401909994",
-        "401910015",
-        "401910035"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 14
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.8
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4.8
+          "average": 3.2
         },
         "three_pointers": {
           "available": true,
@@ -6088,15 +6029,15 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 30.4
+          "average": 24.4
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 16,
+        "sample_size": 13,
         "required_games": 10,
-        "points_change": 1.4,
-        "fantasy_points_change": 2.2
+        "points_change": -0.8,
+        "fantasy_points_change": -2.2
       }
     },
     {
@@ -6277,6 +6218,65 @@
       }
     },
     {
+      "player_id": "4277905",
+      "name": "Trae Young",
+      "last_recorded_team": {
+        "id": "27",
+        "abbr": "WAS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909996",
+        "401910012",
+        "401909309",
+        "401910031",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 13.6
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.8
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 9.6
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.2
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 35.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 19,
+        "required_games": 10,
+        "points_change": -1.6,
+        "fantasy_points_change": 6.4
+      }
+    },
+    {
       "player_id": "4432816",
       "name": "LaMelo Ball",
       "last_recorded_team": {
@@ -6336,23 +6336,23 @@
       }
     },
     {
-      "player_id": "4712849",
-      "name": "Anthony Black",
+      "player_id": "4397424",
+      "name": "Neemias Queta",
       "last_recorded_team": {
-        "id": "19",
-        "abbr": "ORL"
+        "id": "2",
+        "abbr": "BOS"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-14T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-15T23:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
       },
       "game_ids": [
-        "401909297",
-        "401909994",
-        "401910010",
-        "401909306",
-        "401910031"
+        "401909989",
+        "401910015",
+        "401910028",
+        "401910035",
+        "401909315"
       ],
       "metrics": {
         "points": {
@@ -6365,33 +6365,92 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 3.6
+          "average": 7.6
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 5.2
+          "average": 2.4
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 2
+          "average": 0.4
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 30.8
+          "average": 30.6
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 13,
+        "sample_size": 17,
         "required_games": 10,
-        "points_change": -6.4,
-        "fantasy_points_change": -12
+        "points_change": 5.2,
+        "fantasy_points_change": 6.6
+      }
+    },
+    {
+      "player_id": "4712849",
+      "name": "Anthony Black",
+      "last_recorded_team": {
+        "id": "19",
+        "abbr": "ORL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401909994",
+        "401910010",
+        "401909306",
+        "401910031",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 13.4
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.6
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.8
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 28
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 14,
+        "required_games": 10,
+        "points_change": -2.8,
+        "fantasy_points_change": -10
       }
     },
     {
@@ -6690,23 +6749,23 @@
       }
     },
     {
-      "player_id": "4684742",
-      "name": "Ausar Thompson",
+      "player_id": "4702382",
+      "name": "Tristan da Silva",
       "last_recorded_team": {
-        "id": "8",
-        "abbr": "DET"
+        "id": "19",
+        "abbr": "ORL"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-15T01:00:00.000Z",
-        "end_utc": "2026-11-22T20:30:00.000Z"
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
       },
       "game_ids": [
-        "401909982",
-        "401910004",
-        "401910013",
-        "401909308",
-        "401910029"
+        "401909994",
+        "401910010",
+        "401909306",
+        "401910031",
+        "401909314"
       ],
       "metrics": {
         "points": {
@@ -6719,33 +6778,33 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 8.2
+          "average": 3
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 5.8
+          "average": 1.2
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 0
+          "average": 3
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 43.8
+          "average": 22.8
         }
       },
       "recent_form": {
         "available": true,
         "sample_size": 15,
         "required_games": 10,
-        "points_change": 1.6,
-        "fantasy_points_change": 9.4
+        "points_change": -3.4,
+        "fantasy_points_change": -0.4
       }
     },
     {
@@ -6926,23 +6985,23 @@
       }
     },
     {
-      "player_id": "3138196",
-      "name": "Cameron Johnson",
+      "player_id": "3908845",
+      "name": "John Collins",
       "last_recorded_team": {
-        "id": "7",
-        "abbr": "DEN"
+        "id": "8",
+        "abbr": "DET"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-15T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-18T01:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
       },
       "game_ids": [
-        "401909980",
-        "401910001",
-        "401910015",
-        "401909312",
-        "401910032"
+        "401910004",
+        "401910013",
+        "401909308",
+        "401910029",
+        "401909314"
       ],
       "metrics": {
         "points": {
@@ -6955,33 +7014,92 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 3
+          "average": 4.8
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 3
+          "average": 0.6
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 1.4
+          "average": 2.2
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 24
+          "average": 25
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 12,
+        "sample_size": 17,
         "required_games": 10,
-        "points_change": -0.8,
-        "fantasy_points_change": -2
+        "points_change": -0.4,
+        "fantasy_points_change": 0.6
+      }
+    },
+    {
+      "player_id": "4066354",
+      "name": "Payton Pritchard",
+      "last_recorded_team": {
+        "id": "2",
+        "abbr": "BOS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909994",
+        "401910015",
+        "401910028",
+        "401910035",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 12.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.2
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.4
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 23.4
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 18,
+        "required_games": 10,
+        "points_change": -0.4,
+        "fantasy_points_change": -3.4
       }
     },
     {
@@ -7100,6 +7218,65 @@
         "required_games": 10,
         "points_change": 0.2,
         "fantasy_points_change": -0.8
+      }
+    },
+    {
+      "player_id": "4278078",
+      "name": "P.J. Washington",
+      "last_recorded_team": {
+        "id": "6",
+        "abbr": "DAL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-13T01:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401909978",
+        "401909981",
+        "401909989",
+        "401910016",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 12.6
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.4
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.8
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 25.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 16,
+        "required_games": 10,
+        "points_change": -3,
+        "fantasy_points_change": -4.4
       }
     },
     {
@@ -7398,124 +7575,6 @@
       }
     },
     {
-      "player_id": "4066372",
-      "name": "Kevin Huerter",
-      "last_recorded_team": {
-        "id": "8",
-        "abbr": "DET"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T01:00:00.000Z",
-        "end_utc": "2026-11-22T20:30:00.000Z"
-      },
-      "game_ids": [
-        "401909982",
-        "401910004",
-        "401910013",
-        "401909308",
-        "401910029"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 12.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.6
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.8
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.4
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 23.4
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 16,
-        "required_games": 10,
-        "points_change": -0.4,
-        "fantasy_points_change": -6.2
-      }
-    },
-    {
-      "player_id": "4278078",
-      "name": "P.J. Washington",
-      "last_recorded_team": {
-        "id": "6",
-        "abbr": "DAL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-10T01:00:00.000Z",
-        "end_utc": "2026-11-19T01:00:00.000Z"
-      },
-      "game_ids": [
-        "401909956",
-        "401909978",
-        "401909981",
-        "401909989",
-        "401910016"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 12.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 25.2
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 15,
-        "required_games": 10,
-        "points_change": -1.2,
-        "fantasy_points_change": -0.2
-      }
-    },
-    {
       "player_id": "2995706",
       "name": "Mario Hezonja",
       "last_recorded_team": {
@@ -7575,23 +7634,23 @@
       }
     },
     {
-      "player_id": "4702382",
-      "name": "Tristan da Silva",
+      "player_id": "3064290",
+      "name": "Aaron Gordon",
       "last_recorded_team": {
-        "id": "19",
-        "abbr": "ORL"
+        "id": "7",
+        "abbr": "DEN"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-14T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-17T02:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
       },
       "game_ids": [
-        "401909297",
-        "401909994",
-        "401910010",
-        "401909306",
-        "401910031"
+        "401910001",
+        "401910015",
+        "401909312",
+        "401910032",
+        "401909316"
       ],
       "metrics": {
         "points": {
@@ -7604,33 +7663,92 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 3.6
+          "average": 4.6
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 1.4
+          "average": 2.6
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 2.6
+          "average": 0.8
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 22.2
+          "average": 23.6
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 14,
+        "sample_size": 16,
         "required_games": 10,
-        "points_change": -3.4,
-        "fantasy_points_change": 0.2
+        "points_change": 1.8,
+        "fantasy_points_change": 4.6
+      }
+    },
+    {
+      "player_id": "4684742",
+      "name": "Ausar Thompson",
+      "last_recorded_team": {
+        "id": "8",
+        "abbr": "DET"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-18T01:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401910004",
+        "401910013",
+        "401909308",
+        "401910029",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 12.2
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 8.8
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 6.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 45.4
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 16,
+        "required_games": 10,
+        "points_change": 1.6,
+        "fantasy_points_change": 8.6
       }
     },
     {
@@ -7690,124 +7808,6 @@
         "required_games": 10,
         "points_change": -0.8,
         "fantasy_points_change": -4.4
-      }
-    },
-    {
-      "player_id": "3908845",
-      "name": "John Collins",
-      "last_recorded_team": {
-        "id": "8",
-        "abbr": "DET"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T01:00:00.000Z",
-        "end_utc": "2026-11-22T20:30:00.000Z"
-      },
-      "game_ids": [
-        "401909982",
-        "401910004",
-        "401910013",
-        "401909308",
-        "401910029"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 12
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.4
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 21.8
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 16,
-        "required_games": 10,
-        "points_change": -0.4,
-        "fantasy_points_change": -3.6
-      }
-    },
-    {
-      "player_id": "4066354",
-      "name": "Payton Pritchard",
-      "last_recorded_team": {
-        "id": "2",
-        "abbr": "BOS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T23:00:00.000Z",
-        "end_utc": "2026-11-23T01:30:00.000Z"
-      },
-      "game_ids": [
-        "401909989",
-        "401909994",
-        "401910015",
-        "401910028",
-        "401910035"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 12
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.6
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 25
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 17,
-        "required_games": 10,
-        "points_change": -1.2,
-        "fantasy_points_change": -0.6
       }
     },
     {
@@ -7878,15 +7878,15 @@
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-15T01:00:00.000Z",
-        "end_utc": "2026-11-22T20:30:00.000Z"
+        "start_utc": "2026-11-18T01:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
       },
       "game_ids": [
-        "401909982",
         "401910004",
         "401910013",
         "401909308",
-        "401910029"
+        "401910029",
+        "401909314"
       ],
       "metrics": {
         "points": {
@@ -7899,7 +7899,7 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 6.8
+          "average": 6.2
         },
         "assists": {
           "available": true,
@@ -7917,15 +7917,15 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 32.2
+          "average": 32
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 16,
+        "sample_size": 17,
         "required_games": 10,
-        "points_change": 3.2,
-        "fantasy_points_change": 7.6
+        "points_change": 3.6,
+        "fantasy_points_change": 11.6
       }
     },
     {
@@ -8135,7 +8135,7 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 4.8
+          "average": 5
         },
         "assists": {
           "available": true,
@@ -8153,7 +8153,7 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 28.2
+          "average": 28.4
         }
       },
       "recent_form": {
@@ -8161,7 +8161,7 @@
         "sample_size": 16,
         "required_games": 10,
         "points_change": 1,
-        "fantasy_points_change": 3.8
+        "fantasy_points_change": 4
       }
     },
     {
@@ -8283,6 +8283,65 @@
       }
     },
     {
+      "player_id": "5211175",
+      "name": "Zaccharie Risacher",
+      "last_recorded_team": {
+        "id": "6",
+        "abbr": "DAL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-15T23:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401909989",
+        "401910016",
+        "401910025",
+        "401910033",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 11.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5.8
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.8
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.8
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 22.2
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 18,
+        "required_games": 10,
+        "points_change": 2.6,
+        "fantasy_points_change": 2.2
+      }
+    },
+    {
       "player_id": "3133626",
       "name": "Kenrich Williams",
       "last_recorded_team": {
@@ -8330,7 +8389,7 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 31.2
+          "average": 31.6
         }
       },
       "recent_form": {
@@ -8338,7 +8397,7 @@
         "sample_size": 18,
         "required_games": 10,
         "points_change": 4.6,
-        "fantasy_points_change": 14
+        "fantasy_points_change": 14.4
       }
     },
     {
@@ -8578,6 +8637,65 @@
       }
     },
     {
+      "player_id": "3078576",
+      "name": "Derrick White",
+      "last_recorded_team": {
+        "id": "2",
+        "abbr": "BOS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-15T23:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909989",
+        "401909994",
+        "401910015",
+        "401910035",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 11.4
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.4
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.8
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 24.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 17,
+        "required_games": 10,
+        "points_change": -3.6,
+        "fantasy_points_change": -12.4
+      }
+    },
+    {
       "player_id": "4017837",
       "name": "Ivica Zubac",
       "last_recorded_team": {
@@ -8637,65 +8755,6 @@
       }
     },
     {
-      "player_id": "4397424",
-      "name": "Neemias Queta",
-      "last_recorded_team": {
-        "id": "2",
-        "abbr": "BOS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-12T00:00:00.000Z",
-        "end_utc": "2026-11-23T01:30:00.000Z"
-      },
-      "game_ids": [
-        "401909968",
-        "401909989",
-        "401910015",
-        "401910028",
-        "401910035"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 11.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 9.2
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.6
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 28.6
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 16,
-        "required_games": 10,
-        "points_change": 2.2,
-        "fantasy_points_change": 6.2
-      }
-    },
-    {
       "player_id": "4432822",
       "name": "Isaac Okoro",
       "last_recorded_team": {
@@ -8752,65 +8811,6 @@
         "required_games": 10,
         "points_change": 3,
         "fantasy_points_change": 11
-      }
-    },
-    {
-      "player_id": "5160992",
-      "name": "Alex Sarr",
-      "last_recorded_team": {
-        "id": "27",
-        "abbr": "WAS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-16T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909991",
-        "401909996",
-        "401910012",
-        "401909309",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 11.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.4
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 29.6
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 17,
-        "required_games": 10,
-        "points_change": -2,
-        "fantasy_points_change": -1.8
       }
     },
     {
@@ -8932,6 +8932,65 @@
       }
     },
     {
+      "player_id": "4066372",
+      "name": "Kevin Huerter",
+      "last_recorded_team": {
+        "id": "8",
+        "abbr": "DET"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-18T01:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401910004",
+        "401910013",
+        "401909308",
+        "401910029",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 11
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.4
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.2
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 19.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 17,
+        "required_games": 10,
+        "points_change": -4,
+        "fantasy_points_change": -15.8
+      }
+    },
+    {
       "player_id": "4397077",
       "name": "Jaxson Hayes",
       "last_recorded_team": {
@@ -9047,65 +9106,6 @@
         "required_games": 10,
         "points_change": 2.4,
         "fantasy_points_change": 7
-      }
-    },
-    {
-      "player_id": "4277847",
-      "name": "Wendell Carter Jr.",
-      "last_recorded_team": {
-        "id": "19",
-        "abbr": "ORL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-14T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909297",
-        "401909994",
-        "401910010",
-        "401909306",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 10.8
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 6.6
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.8
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 25
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 16,
-        "required_games": 10,
-        "points_change": -3,
-        "fantasy_points_change": -7
       }
     },
     {
@@ -9522,65 +9522,6 @@
       }
     },
     {
-      "player_id": "5211175",
-      "name": "Zaccharie Risacher",
-      "last_recorded_team": {
-        "id": "6",
-        "abbr": "DAL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T00:30:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909981",
-        "401909989",
-        "401910016",
-        "401910025",
-        "401910033"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 10.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.8
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 18.8
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 17,
-        "required_games": 10,
-        "points_change": 1.8,
-        "fantasy_points_change": -0.4
-      }
-    },
-    {
       "player_id": "3059319",
       "name": "Andrew Wiggins",
       "last_recorded_team": {
@@ -9640,23 +9581,23 @@
       }
     },
     {
-      "player_id": "4277905",
-      "name": "Trae Young",
+      "player_id": "4277847",
+      "name": "Wendell Carter Jr.",
       "last_recorded_team": {
-        "id": "27",
-        "abbr": "WAS"
+        "id": "19",
+        "abbr": "ORL"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-16T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
       },
       "game_ids": [
-        "401909991",
-        "401909996",
-        "401910012",
-        "401909309",
-        "401910031"
+        "401909994",
+        "401910010",
+        "401909306",
+        "401910031",
+        "401909314"
       ],
       "metrics": {
         "points": {
@@ -9669,33 +9610,92 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 2
+          "average": 7.6
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 8.8
+          "average": 2.2
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 2
+          "average": 1
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 29.2
+          "average": 26.4
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 18,
+        "sample_size": 17,
         "required_games": 10,
-        "points_change": -9.6,
-        "fantasy_points_change": -3.6
+        "points_change": -4.8,
+        "fantasy_points_change": -7.2
+      }
+    },
+    {
+      "player_id": "4432165",
+      "name": "Jalen Suggs",
+      "last_recorded_team": {
+        "id": "19",
+        "abbr": "ORL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401909994",
+        "401910010",
+        "401909306",
+        "401910031",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 10.2
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5.4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.4
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.8
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 22.2
+        }
+      },
+      "recent_form": {
+        "available": false,
+        "sample_size": 9,
+        "required_games": 10,
+        "points_change": null,
+        "fantasy_points_change": null
       }
     },
     {
@@ -9814,6 +9814,65 @@
         "required_games": 10,
         "points_change": -2,
         "fantasy_points_change": 3.2
+      }
+    },
+    {
+      "player_id": "4896372",
+      "name": "Walter Clayton Jr.",
+      "last_recorded_team": {
+        "id": "6",
+        "abbr": "DAL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-15T23:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401909989",
+        "401910016",
+        "401910025",
+        "401910033",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 10.2
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.6
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 20.2
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 17,
+        "required_games": 10,
+        "points_change": 4.2,
+        "fantasy_points_change": 5.8
       }
     },
     {
@@ -9988,65 +10047,6 @@
       "recent_form": {
         "available": false,
         "sample_size": 9,
-        "required_games": 10,
-        "points_change": null,
-        "fantasy_points_change": null
-      }
-    },
-    {
-      "player_id": "4432165",
-      "name": "Jalen Suggs",
-      "last_recorded_team": {
-        "id": "19",
-        "abbr": "ORL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-14T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909297",
-        "401909994",
-        "401910010",
-        "401909306",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 10
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.2
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 20
-        }
-      },
-      "recent_form": {
-        "available": false,
-        "sample_size": 8,
         "required_games": 10,
         "points_change": null,
         "fantasy_points_change": null
@@ -10230,6 +10230,65 @@
       }
     },
     {
+      "player_id": "4278594",
+      "name": "Naji Marshall",
+      "last_recorded_team": {
+        "id": "6",
+        "abbr": "DAL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-15T23:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401909989",
+        "401910016",
+        "401910025",
+        "401910033",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 9.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.2
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.4
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 21
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 15,
+        "required_games": 10,
+        "points_change": 0.6,
+        "fantasy_points_change": 2.8
+      }
+    },
+    {
       "player_id": "4397040",
       "name": "Brandon Williams",
       "last_recorded_team": {
@@ -10289,23 +10348,23 @@
       }
     },
     {
-      "player_id": "3138160",
-      "name": "Caleb Martin",
+      "player_id": "2596112",
+      "name": "Javonte Green",
       "last_recorded_team": {
-        "id": "6",
-        "abbr": "DAL"
+        "id": "8",
+        "abbr": "DET"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-15T00:30:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-18T01:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
       },
       "game_ids": [
-        "401909981",
-        "401909989",
-        "401910016",
-        "401910025",
-        "401910033"
+        "401910004",
+        "401910013",
+        "401909308",
+        "401910029",
+        "401909314"
       ],
       "metrics": {
         "points": {
@@ -10318,13 +10377,13 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 5.6
+          "average": 3.8
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 3.6
+          "average": 0.4
         },
         "three_pointers": {
           "available": true,
@@ -10336,15 +10395,15 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 30.2
+          "average": 21.2
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 13,
+        "sample_size": 17,
         "required_games": 10,
-        "points_change": 7.8,
-        "fantasy_points_change": 19
+        "points_change": 4.6,
+        "fantasy_points_change": 9.8
       }
     },
     {
@@ -10356,15 +10415,15 @@
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-15T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-17T02:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
       },
       "game_ids": [
-        "401909980",
         "401910001",
         "401910015",
         "401909312",
-        "401910032"
+        "401910032",
+        "401909316"
       ],
       "metrics": {
         "points": {
@@ -10377,13 +10436,13 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 1.6
+          "average": 2
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 1.6
+          "average": 1.4
         },
         "three_pointers": {
           "available": true,
@@ -10395,15 +10454,15 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 10.6
+          "average": 11.6
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 14,
+        "sample_size": 15,
         "required_games": 10,
-        "points_change": 2,
-        "fantasy_points_change": -4.8
+        "points_change": 0.8,
+        "fantasy_points_change": -2.8
       }
     },
     {
@@ -10643,124 +10702,6 @@
       }
     },
     {
-      "player_id": "4896372",
-      "name": "Walter Clayton Jr.",
-      "last_recorded_team": {
-        "id": "6",
-        "abbr": "DAL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T00:30:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909981",
-        "401909989",
-        "401910016",
-        "401910025",
-        "401910033"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 9.6
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.6
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.8
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 18.6
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 16,
-        "required_games": 10,
-        "points_change": 2.4,
-        "fantasy_points_change": 0.6
-      }
-    },
-    {
-      "player_id": "2596112",
-      "name": "Javonte Green",
-      "last_recorded_team": {
-        "id": "8",
-        "abbr": "DET"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T01:00:00.000Z",
-        "end_utc": "2026-11-22T20:30:00.000Z"
-      },
-      "game_ids": [
-        "401909982",
-        "401910004",
-        "401910013",
-        "401909308",
-        "401910029"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 9.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.6
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.6
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 17
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 16,
-        "required_games": 10,
-        "points_change": 4.4,
-        "fantasy_points_change": 3.8
-      }
-    },
-    {
       "player_id": "3064482",
       "name": "Bobby Portis",
       "last_recorded_team": {
@@ -10876,65 +10817,6 @@
         "required_games": 10,
         "points_change": -2.6,
         "fantasy_points_change": -3
-      }
-    },
-    {
-      "player_id": "4278594",
-      "name": "Naji Marshall",
-      "last_recorded_team": {
-        "id": "6",
-        "abbr": "DAL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T00:30:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909981",
-        "401909989",
-        "401910016",
-        "401910025",
-        "401910033"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 9.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.6
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.8
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 21
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 14,
-        "required_games": 10,
-        "points_change": -1.8,
-        "fantasy_points_change": -1.4
       }
     },
     {
@@ -11056,23 +10938,23 @@
       }
     },
     {
-      "player_id": "4065804",
-      "name": "Sam Hauser",
+      "player_id": "3138160",
+      "name": "Caleb Martin",
       "last_recorded_team": {
-        "id": "2",
-        "abbr": "BOS"
+        "id": "6",
+        "abbr": "DAL"
       },
       "sample_size": 5,
       "date_range": {
         "start_utc": "2026-11-15T23:00:00.000Z",
-        "end_utc": "2026-11-23T01:30:00.000Z"
+        "end_utc": "2026-11-25T03:00:00.000Z"
       },
       "game_ids": [
         "401909989",
-        "401909994",
-        "401910015",
-        "401910028",
-        "401910035"
+        "401910016",
+        "401910025",
+        "401910033",
+        "401909316"
       ],
       "metrics": {
         "points": {
@@ -11085,33 +10967,33 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 2.2
+          "average": 4.8
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 1.6
+          "average": 3.8
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 2.8
+          "average": 2.4
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 19.8
+          "average": 34
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 17,
+        "sample_size": 14,
         "required_games": 10,
-        "points_change": -0.2,
-        "fantasy_points_change": -0.2
+        "points_change": 4.4,
+        "fantasy_points_change": 17.6
       }
     },
     {
@@ -11882,6 +11764,65 @@
       }
     },
     {
+      "player_id": "4065804",
+      "name": "Sam Hauser",
+      "last_recorded_team": {
+        "id": "2",
+        "abbr": "BOS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909994",
+        "401910015",
+        "401910028",
+        "401910035",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 8.4
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.6
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.8
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.6
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 18.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 18,
+        "required_games": 10,
+        "points_change": -0.4,
+        "fantasy_points_change": -3
+      }
+    },
+    {
       "player_id": "4066262",
       "name": "Malik Monk",
       "last_recorded_team": {
@@ -11938,6 +11879,65 @@
         "required_games": 10,
         "points_change": 0,
         "fantasy_points_change": 4.2
+      }
+    },
+    {
+      "player_id": "4278049",
+      "name": "Daniel Gafford",
+      "last_recorded_team": {
+        "id": "6",
+        "abbr": "DAL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-15T23:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401909989",
+        "401910016",
+        "401910025",
+        "401910033",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 8.4
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 6
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.8
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 28.8
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 18,
+        "required_games": 10,
+        "points_change": -0.8,
+        "fantasy_points_change": 7.2
       }
     },
     {
@@ -12460,7 +12460,7 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 40.6
+          "average": 39.8
         }
       },
       "recent_form": {
@@ -12468,7 +12468,7 @@
         "sample_size": 17,
         "required_games": 10,
         "points_change": -1,
-        "fantasy_points_change": -3.4
+        "fantasy_points_change": -4.2
       }
     },
     {
@@ -12885,65 +12885,6 @@
       }
     },
     {
-      "player_id": "4278049",
-      "name": "Daniel Gafford",
-      "last_recorded_team": {
-        "id": "6",
-        "abbr": "DAL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T00:30:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909981",
-        "401909989",
-        "401910016",
-        "401910025",
-        "401910033"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 7.8
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.4
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.4
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 25.2
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 17,
-        "required_games": 10,
-        "points_change": 0.2,
-        "fantasy_points_change": 4.6
-      }
-    },
-    {
       "player_id": "4703115",
       "name": "Jaron Pierre Jr.",
       "last_recorded_team": {
@@ -13062,6 +13003,65 @@
       }
     },
     {
+      "player_id": "5160992",
+      "name": "Alex Sarr",
+      "last_recorded_team": {
+        "id": "27",
+        "abbr": "WAS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909996",
+        "401910012",
+        "401909309",
+        "401910031",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 7.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.6
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 22
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 18,
+        "required_games": 10,
+        "points_change": -8,
+        "fantasy_points_change": -11.8
+      }
+    },
+    {
       "player_id": "5164559",
       "name": "Nate Ament",
       "last_recorded_team": {
@@ -13177,6 +13177,65 @@
         "required_games": 10,
         "points_change": -2.6,
         "fantasy_points_change": -1.8
+      }
+    },
+    {
+      "player_id": "5104155",
+      "name": "Bilal Coulibaly",
+      "last_recorded_team": {
+        "id": "27",
+        "abbr": "WAS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909996",
+        "401910012",
+        "401909309",
+        "401910031",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 7.6
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.8
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.8
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.4
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 17.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 18,
+        "required_games": 10,
+        "points_change": 2.2,
+        "fantasy_points_change": 3.4
       }
     },
     {
@@ -13416,65 +13475,6 @@
       }
     },
     {
-      "player_id": "5104155",
-      "name": "Bilal Coulibaly",
-      "last_recorded_team": {
-        "id": "27",
-        "abbr": "WAS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-16T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909991",
-        "401909996",
-        "401910012",
-        "401909309",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 7.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4.6
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 18.6
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 17,
-        "required_games": 10,
-        "points_change": 2.6,
-        "fantasy_points_change": 4
-      }
-    },
-    {
       "player_id": "3032979",
       "name": "Dennis Schroder",
       "last_recorded_team": {
@@ -13652,65 +13652,6 @@
       }
     },
     {
-      "player_id": "6609",
-      "name": "Khris Middleton",
-      "last_recorded_team": {
-        "id": "27",
-        "abbr": "WAS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-16T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909991",
-        "401909996",
-        "401910012",
-        "401909309",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 7.2
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.2
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.4
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 14.6
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 10,
-        "required_games": 10,
-        "points_change": 4.8,
-        "fantasy_points_change": 11.2
-      }
-    },
-    {
       "player_id": "4066757",
       "name": "Sam Merrill",
       "last_recorded_team": {
@@ -13829,65 +13770,6 @@
       }
     },
     {
-      "player_id": "4348700",
-      "name": "Goga Bitadze",
-      "last_recorded_team": {
-        "id": "19",
-        "abbr": "ORL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-14T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909297",
-        "401909994",
-        "401910010",
-        "401909306",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 7
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4.2
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 19
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 14,
-        "required_games": 10,
-        "points_change": 4.2,
-        "fantasy_points_change": 8.8
-      }
-    },
-    {
       "player_id": "4431675",
       "name": "Trendon Watford",
       "last_recorded_team": {
@@ -14003,65 +13885,6 @@
         "required_games": 10,
         "points_change": -4.8,
         "fantasy_points_change": 0.2
-      }
-    },
-    {
-      "player_id": "5238230",
-      "name": "Tre Johnson",
-      "last_recorded_team": {
-        "id": "27",
-        "abbr": "WAS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-13T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909977",
-        "401909996",
-        "401910012",
-        "401909309",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 7
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 10.6
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 16,
-        "required_games": 10,
-        "points_change": -2.4,
-        "fantasy_points_change": -3.2
       }
     },
     {
@@ -14832,6 +14655,65 @@
       }
     },
     {
+      "player_id": "4873153",
+      "name": "Morez Johnson Jr.",
+      "last_recorded_team": {
+        "id": "6",
+        "abbr": "DAL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-15T23:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401909989",
+        "401910016",
+        "401910025",
+        "401910033",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 6
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 6
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.6
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 16.8
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 17,
+        "required_games": 10,
+        "points_change": 0.2,
+        "fantasy_points_change": 3.6
+      }
+    },
+    {
       "player_id": "6478",
       "name": "Nikola Vucevic",
       "last_recorded_team": {
@@ -14888,6 +14770,65 @@
         "required_games": 10,
         "points_change": 3.6,
         "fantasy_points_change": 6.2
+      }
+    },
+    {
+      "player_id": "4277848",
+      "name": "Marvin Bagley III",
+      "last_recorded_team": {
+        "id": "7",
+        "abbr": "DEN"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T02:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401910001",
+        "401910015",
+        "401909312",
+        "401910032",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.2
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.6
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 13.2
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 16,
+        "required_games": 10,
+        "points_change": -1.6,
+        "fantasy_points_change": -0.6
       }
     },
     {
@@ -15068,6 +15009,65 @@
       }
     },
     {
+      "player_id": "6609",
+      "name": "Khris Middleton",
+      "last_recorded_team": {
+        "id": "27",
+        "abbr": "WAS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909996",
+        "401910012",
+        "401909309",
+        "401910031",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5.6
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.2
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.8
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 11.2
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 11,
+        "required_games": 10,
+        "points_change": 2,
+        "fantasy_points_change": 5
+      }
+    },
+    {
       "player_id": "2991139",
       "name": "Kris Dunn",
       "last_recorded_team": {
@@ -15183,65 +15183,6 @@
         "required_games": 10,
         "points_change": -2.2,
         "fantasy_points_change": -2.4
-      }
-    },
-    {
-      "player_id": "4277848",
-      "name": "Marvin Bagley III",
-      "last_recorded_team": {
-        "id": "7",
-        "abbr": "DEN"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909980",
-        "401910001",
-        "401910015",
-        "401909312",
-        "401910032"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.4
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 13.6
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 15,
-        "required_games": 10,
-        "points_change": -1.8,
-        "fantasy_points_change": 1.4
       }
     },
     {
@@ -15510,7 +15451,7 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 9.6
+          "average": 9.8
         },
         "assists": {
           "available": true,
@@ -15528,7 +15469,7 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 20.2
+          "average": 20.4
         }
       },
       "recent_form": {
@@ -15717,23 +15658,23 @@
       }
     },
     {
-      "player_id": "4698719",
-      "name": "Trevon Brazile",
+      "player_id": "4432582",
+      "name": "Max Christie",
       "last_recorded_team": {
-        "id": "7",
-        "abbr": "DEN"
+        "id": "6",
+        "abbr": "DAL"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-15T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-13T01:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
       },
       "game_ids": [
-        "401909980",
-        "401910001",
-        "401910015",
-        "401909312",
-        "401910032"
+        "401909978",
+        "401910016",
+        "401910025",
+        "401910033",
+        "401909316"
       ],
       "metrics": {
         "points": {
@@ -15746,78 +15687,19 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 3.4
+          "average": 2
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 0
+          "average": 0.4
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 0.6
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 10.6
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 15,
-        "required_games": 10,
-        "points_change": -0.2,
-        "fantasy_points_change": -4.6
-      }
-    },
-    {
-      "player_id": "5239561",
-      "name": "Jase Richardson",
-      "last_recorded_team": {
-        "id": "19",
-        "abbr": "ORL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-06T02:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909936",
-        "401909942",
-        "401909964",
-        "401909973",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.2
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.8
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.6
+          "average": 1.2
         },
         "fantasy_points": {
           "available": true,
@@ -15828,10 +15710,128 @@
       },
       "recent_form": {
         "available": true,
-        "sample_size": 12,
+        "sample_size": 15,
         "required_games": 10,
-        "points_change": -1.4,
-        "fantasy_points_change": -1.2
+        "points_change": 3.8,
+        "fantasy_points_change": 10.6
+      }
+    },
+    {
+      "player_id": "4277951",
+      "name": "Luka Garza",
+      "last_recorded_team": {
+        "id": "2",
+        "abbr": "BOS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909994",
+        "401910015",
+        "401910028",
+        "401910035",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.4
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 10.8
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 18,
+        "required_games": 10,
+        "points_change": 1.2,
+        "fantasy_points_change": -1.6
+      }
+    },
+    {
+      "player_id": "4348700",
+      "name": "Goga Bitadze",
+      "last_recorded_team": {
+        "id": "19",
+        "abbr": "ORL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401909994",
+        "401910010",
+        "401909306",
+        "401910031",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 15
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 15,
+        "required_games": 10,
+        "points_change": -0.2,
+        "fantasy_points_change": -1
       }
     },
     {
@@ -15894,65 +15894,6 @@
       }
     },
     {
-      "player_id": "4873153",
-      "name": "Morez Johnson Jr.",
-      "last_recorded_team": {
-        "id": "6",
-        "abbr": "DAL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T00:30:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909981",
-        "401909989",
-        "401910016",
-        "401910025",
-        "401910033"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4.4
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.8
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.4
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 13.8
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 16,
-        "required_games": 10,
-        "points_change": -2.6,
-        "fantasy_points_change": -2.4
-      }
-    },
-    {
       "player_id": "5105854",
       "name": "Braden Smith",
       "last_recorded_team": {
@@ -16000,7 +15941,7 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 18.2
+          "average": 17.4
         }
       },
       "recent_form": {
@@ -16008,7 +15949,7 @@
         "sample_size": 11,
         "required_games": 10,
         "points_change": -1,
-        "fantasy_points_change": -0.2
+        "fantasy_points_change": -1
       }
     },
     {
@@ -16068,6 +16009,65 @@
         "required_games": 10,
         "points_change": 2.6,
         "fantasy_points_change": -6
+      }
+    },
+    {
+      "player_id": "3133635",
+      "name": "Jevon Carter",
+      "last_recorded_team": {
+        "id": "19",
+        "abbr": "ORL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401909994",
+        "401910010",
+        "401909306",
+        "401910031",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.2
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.6
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 11.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 13,
+        "required_games": 10,
+        "points_change": -0.2,
+        "fantasy_points_change": -0.6
       }
     },
     {
@@ -16186,65 +16186,6 @@
         "required_games": 10,
         "points_change": -7.6,
         "fantasy_points_change": -13.6
-      }
-    },
-    {
-      "player_id": "4432582",
-      "name": "Max Christie",
-      "last_recorded_team": {
-        "id": "6",
-        "abbr": "DAL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-10T01:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909956",
-        "401909978",
-        "401910016",
-        "401910025",
-        "401910033"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4.8
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.2
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.4
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 13.2
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 14,
-        "required_games": 10,
-        "points_change": 1.2,
-        "fantasy_points_change": 7.4
       }
     },
     {
@@ -16661,6 +16602,65 @@
       }
     },
     {
+      "player_id": "4683771",
+      "name": "Ronald Holland II",
+      "last_recorded_team": {
+        "id": "8",
+        "abbr": "DET"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-10T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401909954",
+        "401909977",
+        "401909982",
+        "401910029",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.6
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.8
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.6
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.6
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 13
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 14,
+        "required_games": 10,
+        "points_change": -2.8,
+        "fantasy_points_change": -0.6
+      }
+    },
+    {
       "player_id": "4702134",
       "name": "Norchad Omier",
       "last_recorded_team": {
@@ -17015,65 +17015,6 @@
       }
     },
     {
-      "player_id": "5175647",
-      "name": "Hugo Gonzalez",
-      "last_recorded_team": {
-        "id": "2",
-        "abbr": "BOS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T23:00:00.000Z",
-        "end_utc": "2026-11-23T01:30:00.000Z"
-      },
-      "game_ids": [
-        "401909989",
-        "401909994",
-        "401910015",
-        "401910028",
-        "401910035"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.8
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 9.4
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 17,
-        "required_games": 10,
-        "points_change": 0,
-        "fantasy_points_change": 0
-      }
-    },
-    {
       "player_id": "5211983",
       "name": "Pacome Dadiet",
       "last_recorded_team": {
@@ -17130,6 +17071,65 @@
         "required_games": 10,
         "points_change": null,
         "fantasy_points_change": null
+      }
+    },
+    {
+      "player_id": "5238230",
+      "name": "Tre Johnson",
+      "last_recorded_team": {
+        "id": "27",
+        "abbr": "WAS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909996",
+        "401910012",
+        "401909309",
+        "401910031",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.4
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.6
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5.8
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 17,
+        "required_games": 10,
+        "points_change": -7,
+        "fantasy_points_change": -12.2
       }
     },
     {
@@ -17428,6 +17428,65 @@
       }
     },
     {
+      "player_id": "4698719",
+      "name": "Trevon Brazile",
+      "last_recorded_team": {
+        "id": "7",
+        "abbr": "DEN"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T02:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401910001",
+        "401910015",
+        "401909312",
+        "401910032",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.2
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.6
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 10.8
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 16,
+        "required_games": 10,
+        "points_change": -1,
+        "fantasy_points_change": -1.2
+      }
+    },
+    {
       "player_id": "5106058",
       "name": "Emanuel Sharp",
       "last_recorded_team": {
@@ -17664,65 +17723,6 @@
       }
     },
     {
-      "player_id": "3133635",
-      "name": "Jevon Carter",
-      "last_recorded_team": {
-        "id": "19",
-        "abbr": "ORL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-14T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909297",
-        "401909994",
-        "401910010",
-        "401909306",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.6
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.6
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 11
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 12,
-        "required_games": 10,
-        "points_change": -1,
-        "fantasy_points_change": 0.2
-      }
-    },
-    {
       "player_id": "3134916",
       "name": "Jordan McLaughlin",
       "last_recorded_team": {
@@ -17900,65 +17900,6 @@
       }
     },
     {
-      "player_id": "4277951",
-      "name": "Luka Garza",
-      "last_recorded_team": {
-        "id": "2",
-        "abbr": "BOS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T23:00:00.000Z",
-        "end_utc": "2026-11-23T01:30:00.000Z"
-      },
-      "game_ids": [
-        "401909989",
-        "401909994",
-        "401910015",
-        "401910028",
-        "401910035"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.8
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 10.6
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 17,
-        "required_games": 10,
-        "points_change": -1.6,
-        "fantasy_points_change": -3.8
-      }
-    },
-    {
       "player_id": "4395650",
       "name": "Leaky Black",
       "last_recorded_team": {
@@ -18026,15 +17967,15 @@
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-09T01:00:00.000Z",
-        "end_utc": "2026-11-23T01:30:00.000Z"
+        "start_utc": "2026-11-11T01:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
       },
       "game_ids": [
-        "401909949",
         "401909961",
         "401909989",
         "401910028",
-        "401910035"
+        "401910035",
+        "401909315"
       ],
       "metrics": {
         "points": {
@@ -18065,15 +18006,15 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 5.8
+          "average": 5.4
         }
       },
       "recent_form": {
-        "available": false,
-        "sample_size": 9,
+        "available": true,
+        "sample_size": 10,
         "required_games": 10,
-        "points_change": null,
-        "fantasy_points_change": null
+        "points_change": 2.4,
+        "fantasy_points_change": 3
       }
     },
     {
@@ -18136,65 +18077,6 @@
       }
     },
     {
-      "player_id": "4683689",
-      "name": "Jordan Walsh",
-      "last_recorded_team": {
-        "id": "2",
-        "abbr": "BOS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T23:00:00.000Z",
-        "end_utc": "2026-11-23T01:30:00.000Z"
-      },
-      "game_ids": [
-        "401909989",
-        "401909994",
-        "401910015",
-        "401910028",
-        "401910035"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.4
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.8
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 7.8
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 17,
-        "required_games": 10,
-        "points_change": -0.6,
-        "fantasy_points_change": -1.8
-      }
-    },
-    {
       "player_id": "5105800",
       "name": "Josh Dix",
       "last_recorded_team": {
@@ -18251,65 +18133,6 @@
         "required_games": 10,
         "points_change": null,
         "fantasy_points_change": null
-      }
-    },
-    {
-      "player_id": "5144126",
-      "name": "Will Riley",
-      "last_recorded_team": {
-        "id": "27",
-        "abbr": "WAS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-16T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909991",
-        "401909996",
-        "401910012",
-        "401909309",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.2
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.4
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.4
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 6.8
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 15,
-        "required_games": 10,
-        "points_change": 1,
-        "fantasy_points_change": 1.8
       }
     },
     {
@@ -18439,15 +18262,15 @@
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-13T01:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-15T00:30:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
       },
       "game_ids": [
-        "401909978",
         "401909981",
         "401910016",
         "401910025",
-        "401910033"
+        "401910033",
+        "401909316"
       ],
       "metrics": {
         "points": {
@@ -18466,7 +18289,7 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 0.6
+          "average": 0.4
         },
         "three_pointers": {
           "available": true,
@@ -18478,74 +18301,15 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 6.8
+          "average": 5.6
         }
       },
       "recent_form": {
         "available": false,
-        "sample_size": 8,
+        "sample_size": 9,
         "required_games": 10,
         "points_change": null,
         "fantasy_points_change": null
-      }
-    },
-    {
-      "player_id": "4593841",
-      "name": "Baylor Scheierman",
-      "last_recorded_team": {
-        "id": "2",
-        "abbr": "BOS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T23:00:00.000Z",
-        "end_utc": "2026-11-23T01:30:00.000Z"
-      },
-      "game_ids": [
-        "401909989",
-        "401909994",
-        "401910015",
-        "401910028",
-        "401910035"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.8
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.8
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.4
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.6
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 12.2
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 17,
-        "required_games": 10,
-        "points_change": -3.2,
-        "fantasy_points_change": -7.8
       }
     },
     {
@@ -18661,65 +18425,6 @@
       "recent_form": {
         "available": false,
         "sample_size": 7,
-        "required_games": 10,
-        "points_change": null,
-        "fantasy_points_change": null
-      }
-    },
-    {
-      "player_id": "5142621",
-      "name": "Chris Cenac Jr.",
-      "last_recorded_team": {
-        "id": "2",
-        "abbr": "BOS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T23:00:00.000Z",
-        "end_utc": "2026-11-23T01:30:00.000Z"
-      },
-      "game_ids": [
-        "401909989",
-        "401909994",
-        "401910015",
-        "401910028",
-        "401910035"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.6
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.2
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 7
-        }
-      },
-      "recent_form": {
-        "available": false,
-        "sample_size": 8,
         "required_games": 10,
         "points_change": null,
         "fantasy_points_change": null
@@ -18900,65 +18605,6 @@
         "required_games": 10,
         "points_change": 1.8,
         "fantasy_points_change": 7.4
-      }
-    },
-    {
-      "player_id": "4700852",
-      "name": "Chaz Lanier",
-      "last_recorded_team": {
-        "id": "8",
-        "abbr": "DET"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-03T00:30:00.000Z",
-        "end_utc": "2026-11-21T00:30:00.000Z"
-      },
-      "game_ids": [
-        "401909908",
-        "401909954",
-        "401910004",
-        "401910013",
-        "401909308"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.8
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5
-        }
-      },
-      "recent_form": {
-        "available": false,
-        "sample_size": 7,
-        "required_games": 10,
-        "points_change": null,
-        "fantasy_points_change": null
       }
     },
     {
@@ -19611,6 +19257,65 @@
       }
     },
     {
+      "player_id": "4592427",
+      "name": "Spencer Jones",
+      "last_recorded_team": {
+        "id": "7",
+        "abbr": "DEN"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T02:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
+      },
+      "game_ids": [
+        "401910001",
+        "401910015",
+        "401909312",
+        "401910032",
+        "401909316"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.2
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.6
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.6
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 8.6
+        }
+      },
+      "recent_form": {
+        "available": false,
+        "sample_size": 9,
+        "required_games": 10,
+        "points_change": null,
+        "fantasy_points_change": null
+      }
+    },
+    {
       "player_id": "4683634",
       "name": "Bennedict Mathurin",
       "last_recorded_team": {
@@ -19667,65 +19372,6 @@
         "required_games": 10,
         "points_change": -3.8,
         "fantasy_points_change": -9.2
-      }
-    },
-    {
-      "player_id": "4845374",
-      "name": "Bub Carrington",
-      "last_recorded_team": {
-        "id": "27",
-        "abbr": "WAS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-13T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909977",
-        "401909991",
-        "401909996",
-        "401909309",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.2
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.8
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.2
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 17,
-        "required_games": 10,
-        "points_change": -0.4,
-        "fantasy_points_change": -5.6
       }
     },
     {
@@ -19847,6 +19493,124 @@
       }
     },
     {
+      "player_id": "5239561",
+      "name": "Jase Richardson",
+      "last_recorded_team": {
+        "id": "19",
+        "abbr": "ORL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-08T01:30:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401909942",
+        "401909964",
+        "401909973",
+        "401910031",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.2
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.6
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.2
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 7.2
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 13,
+        "required_games": 10,
+        "points_change": -4.2,
+        "fantasy_points_change": -12
+      }
+    },
+    {
+      "player_id": "4397449",
+      "name": "Elijah Harkless",
+      "last_recorded_team": {
+        "id": "8",
+        "abbr": "DET"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-10-28T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401909878",
+        "401909982",
+        "401910004",
+        "401910013",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.8
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.4
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.4
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5.4
+        }
+      },
+      "recent_form": {
+        "available": false,
+        "sample_size": 5,
+        "required_games": 10,
+        "points_change": null,
+        "fantasy_points_change": null
+      }
+    },
+    {
       "player_id": "4592857",
       "name": "Isaiah Crawford",
       "last_recorded_team": {
@@ -19906,23 +19670,23 @@
       }
     },
     {
-      "player_id": "4683771",
-      "name": "Ronald Holland II",
+      "player_id": "4593841",
+      "name": "Baylor Scheierman",
       "last_recorded_team": {
-        "id": "8",
-        "abbr": "DET"
+        "id": "2",
+        "abbr": "BOS"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-08T23:00:00.000Z",
-        "end_utc": "2026-11-22T20:30:00.000Z"
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
       },
       "game_ids": [
-        "401909946",
-        "401909954",
-        "401909977",
-        "401909982",
-        "401910029"
+        "401909994",
+        "401910015",
+        "401910028",
+        "401910035",
+        "401909315"
       ],
       "metrics": {
         "points": {
@@ -19935,33 +19699,33 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 4.6
+          "average": 2.6
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 1.6
+          "average": 1
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 0.4
+          "average": 0.6
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 9.6
+          "average": 8.2
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 13,
+        "sample_size": 18,
         "required_games": 10,
-        "points_change": -4.2,
-        "fantasy_points_change": -6.4
+        "points_change": -4.6,
+        "fantasy_points_change": -12.8
       }
     },
     {
@@ -20260,6 +20024,124 @@
       }
     },
     {
+      "player_id": "4700852",
+      "name": "Chaz Lanier",
+      "last_recorded_team": {
+        "id": "8",
+        "abbr": "DET"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-10T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401909954",
+        "401910004",
+        "401910013",
+        "401909308",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.2
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.8
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.8
+        }
+      },
+      "recent_form": {
+        "available": false,
+        "sample_size": 8,
+        "required_games": 10,
+        "points_change": null,
+        "fantasy_points_change": null
+      }
+    },
+    {
+      "player_id": "4845374",
+      "name": "Bub Carrington",
+      "last_recorded_team": {
+        "id": "27",
+        "abbr": "WAS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-16T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909991",
+        "401909996",
+        "401909309",
+        "401910031",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.4
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.8
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.8
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 6.2
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 18,
+        "required_games": 10,
+        "points_change": -1.2,
+        "fantasy_points_change": -3.6
+      }
+    },
+    {
       "player_id": "5105637",
       "name": "Adem Bona",
       "last_recorded_team": {
@@ -20431,65 +20313,6 @@
       "recent_form": {
         "available": false,
         "sample_size": 7,
-        "required_games": 10,
-        "points_change": null,
-        "fantasy_points_change": null
-      }
-    },
-    {
-      "player_id": "4592427",
-      "name": "Spencer Jones",
-      "last_recorded_team": {
-        "id": "7",
-        "abbr": "DEN"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-15T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909980",
-        "401910001",
-        "401910015",
-        "401909312",
-        "401910032"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.6
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.4
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.4
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 7.4
-        }
-      },
-      "recent_form": {
-        "available": false,
-        "sample_size": 8,
         "required_games": 10,
         "points_change": null,
         "fantasy_points_change": null
@@ -20670,6 +20493,65 @@
         "required_games": 10,
         "points_change": 0.2,
         "fantasy_points_change": 4.2
+      }
+    },
+    {
+      "player_id": "5175647",
+      "name": "Hugo Gonzalez",
+      "last_recorded_team": {
+        "id": "2",
+        "abbr": "BOS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909994",
+        "401910015",
+        "401910028",
+        "401910035",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.6
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3.8
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.6
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 8
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 18,
+        "required_games": 10,
+        "points_change": -2.8,
+        "fantasy_points_change": -3
       }
     },
     {
@@ -20858,15 +20740,15 @@
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-06T02:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-08T01:30:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
       },
       "game_ids": [
-        "401909936",
         "401909942",
         "401909964",
         "401909973",
-        "401910031"
+        "401910031",
+        "401909314"
       ],
       "metrics": {
         "points": {
@@ -20897,15 +20779,15 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 8.6
+          "average": 7.4
         }
       },
       "recent_form": {
-        "available": false,
-        "sample_size": 9,
+        "available": true,
+        "sample_size": 10,
         "required_games": 10,
-        "points_change": null,
-        "fantasy_points_change": null
+        "points_change": 1.4,
+        "fantasy_points_change": 4
       }
     },
     {
@@ -20965,6 +20847,65 @@
         "required_games": 10,
         "points_change": -3.6,
         "fantasy_points_change": -2.2
+      }
+    },
+    {
+      "player_id": "5142621",
+      "name": "Chris Cenac Jr.",
+      "last_recorded_team": {
+        "id": "2",
+        "abbr": "BOS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909994",
+        "401910015",
+        "401910028",
+        "401910035",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.4
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 3
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.4
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.2
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 6.4
+        }
+      },
+      "recent_form": {
+        "available": false,
+        "sample_size": 9,
+        "required_games": 10,
+        "points_change": null,
+        "fantasy_points_change": null
       }
     },
     {
@@ -21145,23 +21086,23 @@
       }
     },
     {
-      "player_id": "5258459",
-      "name": "Ebuka Okorie",
+      "player_id": "5144126",
+      "name": "Will Riley",
       "last_recorded_team": {
-        "id": "8",
-        "abbr": "DET"
+        "id": "27",
+        "abbr": "WAS"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-10-25T23:30:00.000Z",
-        "end_utc": "2026-11-10T00:00:00.000Z"
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
       },
       "game_ids": [
-        "401909866",
-        "401909878",
-        "401909279",
-        "401909908",
-        "401909954"
+        "401909996",
+        "401910012",
+        "401909309",
+        "401910031",
+        "401909315"
       ],
       "metrics": {
         "points": {
@@ -21174,33 +21115,33 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 0.4
+          "average": 1.6
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 0.6
+          "average": 0.4
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 0
+          "average": 0.2
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 3
+          "average": 3.2
         }
       },
       "recent_form": {
-        "available": false,
-        "sample_size": 5,
+        "available": true,
+        "sample_size": 16,
         "required_games": 10,
-        "points_change": null,
-        "fantasy_points_change": null
+        "points_change": -3.6,
+        "fantasy_points_change": -6.4
       }
     },
     {
@@ -21617,65 +21558,6 @@
       }
     },
     {
-      "player_id": "4278572",
-      "name": "Jamal Cain",
-      "last_recorded_team": {
-        "id": "19",
-        "abbr": "ORL"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-11T03:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909964",
-        "401909297",
-        "401909994",
-        "401910010",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.8
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 2.8
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.4
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5
-        }
-      },
-      "recent_form": {
-        "available": true,
-        "sample_size": 14,
-        "required_games": 10,
-        "points_change": -8.4,
-        "fantasy_points_change": -10.6
-      }
-    },
-    {
       "player_id": "4397882",
       "name": "Tolu Smith",
       "last_recorded_team": {
@@ -21791,6 +21673,65 @@
         "required_games": 10,
         "points_change": null,
         "fantasy_points_change": null
+      }
+    },
+    {
+      "player_id": "4683689",
+      "name": "Jordan Walsh",
+      "last_recorded_team": {
+        "id": "2",
+        "abbr": "BOS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909994",
+        "401910015",
+        "401910028",
+        "401910035",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 1.6
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.4
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 5.2
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 18,
+        "required_games": 10,
+        "points_change": -4.4,
+        "fantasy_points_change": -6.4
       }
     },
     {
@@ -22148,65 +22089,6 @@
       }
     },
     {
-      "player_id": "4432819",
-      "name": "Tre Mann",
-      "last_recorded_team": {
-        "id": "27",
-        "abbr": "WAS"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-11-08T01:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909941",
-        "401909954",
-        "401909991",
-        "401909996",
-        "401910031"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.6
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.2
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.8
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.2
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.4
-        }
-      },
-      "recent_form": {
-        "available": false,
-        "sample_size": 8,
-        "required_games": 10,
-        "points_change": null,
-        "fantasy_points_change": null
-      }
-    },
-    {
       "player_id": "5279133",
       "name": "Joan Beringer",
       "last_recorded_team": {
@@ -22274,15 +22156,15 @@
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-15T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-17T02:00:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
       },
       "game_ids": [
-        "401909980",
         "401910001",
         "401910015",
         "401909312",
-        "401910032"
+        "401910032",
+        "401909316"
       ],
       "metrics": {
         "points": {
@@ -22295,13 +22177,13 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 0.8
+          "average": 1.2
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 2
+          "average": 1.6
         },
         "three_pointers": {
           "available": true,
@@ -22313,15 +22195,15 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 3.6
+          "average": 3.2
         }
       },
       "recent_form": {
         "available": true,
-        "sample_size": 15,
+        "sample_size": 16,
         "required_games": 10,
         "points_change": -1.2,
-        "fantasy_points_change": -7.4
+        "fantasy_points_change": -8.4
       }
     },
     {
@@ -22561,23 +22443,23 @@
       }
     },
     {
-      "player_id": "4278129",
-      "name": "Deandre Ayton",
+      "player_id": "4432819",
+      "name": "Tre Mann",
       "last_recorded_team": {
         "id": "27",
         "abbr": "WAS"
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-16T00:00:00.000Z",
-        "end_utc": "2026-11-23T00:00:00.000Z"
+        "start_utc": "2026-11-10T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
       },
       "game_ids": [
+        "401909954",
         "401909991",
         "401909996",
-        "401910012",
-        "401909309",
-        "401910031"
+        "401910031",
+        "401909315"
       ],
       "metrics": {
         "points": {
@@ -22590,33 +22472,33 @@
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 2
+          "average": 0.2
         },
         "assists": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 0.8
+          "average": 0.6
         },
         "three_pointers": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 0
+          "average": 0.2
         },
         "fantasy_points": {
           "available": true,
           "sample_size": 5,
           "required_games": 5,
-          "average": 5.2
+          "average": 2.4
         }
       },
       "recent_form": {
-        "available": true,
-        "sample_size": 18,
+        "available": false,
+        "sample_size": 9,
         "required_games": 10,
-        "points_change": -2,
-        "fantasy_points_change": -5.8
+        "points_change": null,
+        "fantasy_points_change": null
       }
     },
     {
@@ -23033,6 +22915,124 @@
       }
     },
     {
+      "player_id": "4278129",
+      "name": "Deandre Ayton",
+      "last_recorded_team": {
+        "id": "27",
+        "abbr": "WAS"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-17T00:00:00.000Z",
+        "end_utc": "2026-11-25T01:00:00.000Z"
+      },
+      "game_ids": [
+        "401909996",
+        "401910012",
+        "401909309",
+        "401910031",
+        "401909315"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.2
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.8
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 4.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 19,
+        "required_games": 10,
+        "points_change": -1.2,
+        "fantasy_points_change": -0.4
+      }
+    },
+    {
+      "player_id": "4278572",
+      "name": "Jamal Cain",
+      "last_recorded_team": {
+        "id": "19",
+        "abbr": "ORL"
+      },
+      "sample_size": 5,
+      "date_range": {
+        "start_utc": "2026-11-14T00:00:00.000Z",
+        "end_utc": "2026-11-25T00:00:00.000Z"
+      },
+      "game_ids": [
+        "401909297",
+        "401909994",
+        "401910010",
+        "401910031",
+        "401909314"
+      ],
+      "metrics": {
+        "points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.8
+        },
+        "rebounds": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.2
+        },
+        "assists": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0.2
+        },
+        "three_pointers": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 0
+        },
+        "fantasy_points": {
+          "available": true,
+          "sample_size": 5,
+          "required_games": 5,
+          "average": 2.6
+        }
+      },
+      "recent_form": {
+        "available": true,
+        "sample_size": 15,
+        "required_games": 10,
+        "points_change": -7.8,
+        "fantasy_points_change": -11.2
+      }
+    },
+    {
       "player_id": "4683742",
       "name": "Julian Reese",
       "last_recorded_team": {
@@ -23336,15 +23336,15 @@
       },
       "sample_size": 5,
       "date_range": {
-        "start_utc": "2026-11-07T01:00:00.000Z",
-        "end_utc": "2026-11-19T01:00:00.000Z"
+        "start_utc": "2026-11-09T00:30:00.000Z",
+        "end_utc": "2026-11-25T03:00:00.000Z"
       },
       "game_ids": [
-        "401909290",
         "401909948",
         "401909978",
         "401909989",
-        "401910016"
+        "401910016",
+        "401909316"
       ],
       "metrics": {
         "points": {
@@ -23380,10 +23380,10 @@
       },
       "recent_form": {
         "available": true,
-        "sample_size": 10,
+        "sample_size": 11,
         "required_games": 10,
-        "points_change": -1.4,
-        "fantasy_points_change": -2
+        "points_change": -0.8,
+        "fantasy_points_change": -1.4
       }
     },
     {
@@ -23625,6 +23625,6 @@
   ],
   "source": {
     "index_path": "data/player-game-history/index.json",
-    "index_sha256": "c79da4a65211dc952f9f8498e634534f221dd0f8b993fee709963df335076569"
+    "index_sha256": "b1f4e4171b1be7fa11449012ec96b9fede971928ed205dd5073eae9405faa0a7"
   }
 }
