@@ -1,22 +1,25 @@
 {
   "workflow": "daily-audit",
-  "generation_observed_at_utc": "2026-11-25T03:31:13.246845+00:00",
+  "generation_observed_at_utc": "2026-11-25T06:39:27.019348+00:00",
   "artifact_generation_timestamps": {
-    "audit/reviews/2026-11-25/games/401909314.review.json": {
-      "reviewed_at_utc": "2026-11-25T03:30:57.959Z"
+    "audit/reviews/2026-11-25/games/401909315.review.json": {
+      "reviewed_at_utc": "2026-11-25T06:39:14.448Z"
+    },
+    "audit/reviews/2026-11-25/games/401909316.review.json": {
+      "reviewed_at_utc": "2026-11-25T06:39:14.448Z"
     },
     "audit/reviews/2026-11-25/review.json": {
-      "generated_at_utc": "2026-11-25T03:30:57.959Z"
+      "generated_at_utc": "2026-11-25T06:39:14.448Z"
     },
     "data/audit-ledger.json": {
-      "generated_at_utc": "2026-11-25T03:30:57.959Z"
+      "generated_at_utc": "2026-11-25T06:39:14.448Z"
     },
     "data/performance-centre.json": {
-      "generated_at_utc": "2026-11-25T03:30:57.959Z"
+      "generated_at_utc": "2026-11-25T06:39:14.448Z"
     }
   },
-  "source_revision": "e45c79a3839f79fa0d7cd01fefe806f89abe7222",
-  "run_id": "45540481180",
+  "source_revision": "64b966f3e7319abe6691edf2ec31cbf5700c5c62",
+  "run_id": "45562173426",
   "run_attempt": "1",
   "changed_artifacts": [
     "audit/anchors/2026-10-31.json",
@@ -39,7 +42,8 @@
     "audit/anchors/2026-11-20.json",
     "audit/anchors/2026-11-21.json",
     "audit/anchors/2026-11-25.json",
-    "audit/reviews/2026-11-25/games/401909314.review.json",
+    "audit/reviews/2026-11-25/games/401909315.review.json",
+    "audit/reviews/2026-11-25/games/401909316.review.json",
     "audit/reviews/2026-11-25/review.json",
     "data/audit-ledger.json",
     "data/performance-centre.json"
