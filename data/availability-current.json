@@ -2,13 +2,13 @@
   "schema": "nba-twin-lab-availability-v18",
   "status": "verified",
   "strict_no_future_data": true,
-  "published_at_utc": "2026-11-27T22:00:00Z",
-  "built_at_utc": "2026-11-27T22:10:17.415815Z",
+  "published_at_utc": "2026-11-27T22:30:00Z",
+  "built_at_utc": "2026-11-27T22:46:21.058423Z",
   "source": {
     "type": "official",
-    "url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-11-27_05_00PM.pdf",
+    "url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-11-27_05_30PM.pdf",
     "league_roster": "https://www.nba.com/team/{team-id}/roster",
-    "sha256": "d9d0c20410d35268c1b6ba4939227e1b0b3a9a2ccdc48a1a13a9abc9b641d464",
+    "sha256": "341ef1167a9f15c6bcc6133609596d577dbcf475169376a51ebd971dbcbca03e",
     "team_rosters": [
       "https://www.nba.com/team/1610612737/roster",
       "https://www.nba.com/team/1610612751/roster",
@@ -65,7 +65,7 @@
           "injuries": [
             {
               "player_id": "203507",
-              "status": "PROBABLE"
+              "status": "AVAILABLE"
             },
             {
               "player_id": "1643621",
