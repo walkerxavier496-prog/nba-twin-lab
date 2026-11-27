@@ -1,7 +1,7 @@
 {
   "schema": "nba-twin-lab-player-trends-v1",
-  "generated_at_utc": "2026-11-26T22:33:33.123Z",
-  "as_of_utc": "2026-11-26T22:33:33.123Z",
+  "generated_at_utc": "2026-11-27T22:18:25.164Z",
+  "as_of_utc": "2026-11-27T22:18:25.164Z",
   "methodology": {
     "source": "ESPN public NBA summary (unofficial)",
     "observation_rule": "Latest complete ESPN summary locally retrieved by the as-of timestamp; game event also must precede that timestamp.",
@@ -12,10 +12,10 @@
   },
   "coverage": {
     "verified_final_games": 270,
-    "players_meeting_minimum": 401,
+    "players_meeting_minimum": 398,
     "identity_conflict_count": 0,
-    "window_start_utc": "2026-10-27T22:33:33.123Z",
-    "window_end_utc": "2026-11-26T22:33:33.123Z",
+    "window_start_utc": "2026-10-28T22:18:25.164Z",
+    "window_end_utc": "2026-11-27T22:18:25.164Z",
     "coverage_start_utc": "2026-10-01T17:54:52.841Z",
     "observation_count": 318,
     "unavailable_game_count": 0
@@ -18431,65 +18431,6 @@
       }
     },
     {
-      "player_id": "4578893",
-      "name": "Vit Krejci",
-      "last_recorded_team": {
-        "id": "22",
-        "abbr": "POR"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-10-28T03:00:00.000Z",
-        "end_utc": "2026-11-05T02:00:00.000Z"
-      },
-      "game_ids": [
-        "401909880",
-        "401909895",
-        "401909896",
-        "401909918",
-        "401909932"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3.6
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.4
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.6
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 7.2
-        }
-      },
-      "recent_form": {
-        "available": false,
-        "sample_size": 7,
-        "required_games": 10,
-        "points_change": null,
-        "fantasy_points_change": null
-      }
-    },
-    {
       "player_id": "6585",
       "name": "Andre Drummond",
       "last_recorded_team": {
@@ -19254,65 +19195,6 @@
         "required_games": 10,
         "points_change": -4.2,
         "fantasy_points_change": -12
-      }
-    },
-    {
-      "player_id": "4397449",
-      "name": "Elijah Harkless",
-      "last_recorded_team": {
-        "id": "8",
-        "abbr": "DET"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-10-28T00:00:00.000Z",
-        "end_utc": "2026-11-25T00:00:00.000Z"
-      },
-      "game_ids": [
-        "401909878",
-        "401909982",
-        "401910004",
-        "401910013",
-        "401909314"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.8
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.4
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.4
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 5.4
-        }
-      },
-      "recent_form": {
-        "available": false,
-        "sample_size": 5,
-        "required_games": 10,
-        "points_change": null,
-        "fantasy_points_change": null
       }
     },
     {
@@ -23446,65 +23328,6 @@
       }
     },
     {
-      "player_id": "5107818",
-      "name": "Isaac Jones",
-      "last_recorded_team": {
-        "id": "8",
-        "abbr": "DET"
-      },
-      "sample_size": 5,
-      "date_range": {
-        "start_utc": "2026-10-28T00:00:00.000Z",
-        "end_utc": "2026-11-15T01:00:00.000Z"
-      },
-      "game_ids": [
-        "401909878",
-        "401909279",
-        "401909908",
-        "401909954",
-        "401909982"
-      ],
-      "metrics": {
-        "points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.4
-        },
-        "rebounds": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 1.2
-        },
-        "assists": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0.2
-        },
-        "three_pointers": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 0
-        },
-        "fantasy_points": {
-          "available": true,
-          "sample_size": 5,
-          "required_games": 5,
-          "average": 3
-        }
-      },
-      "recent_form": {
-        "available": false,
-        "sample_size": 5,
-        "required_games": 10,
-        "points_change": null,
-        "fantasy_points_change": null
-      }
-    },
-    {
       "player_id": "4278076",
       "name": "Nick Richards",
       "last_recorded_team": {
@@ -23684,6 +23507,6 @@
   ],
   "source": {
     "index_path": "data/player-game-history/index.json",
-    "index_sha256": "a723c5bcdc6b798e524d840783db1b7ddd0b437c14be4570adf79d8fb9553cca"
+    "index_sha256": "ba2a484023f350f147d9c2f2e80db996de94e0880e6632b4df5f27b599cd9546"
   }
 }
